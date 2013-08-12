@@ -1,0 +1,48 @@
+.node {
+  cursor: pointer;
+  stroke: #000;
+}
+.node{
+  stroke-width: .5px;
+  opacity: .2;
+}
+.node.highlight {
+  opacity: 1;
+  stroke-width:2px;
+}
+
+text{
+  opacity: 0;
+}
+
+
+text.show{
+  opacity: 1;
+}
+.link {
+  stroke: #000;
+  stroke-width: 1px;
+  opacity:0.2;
+}
+
+.link.highlight{
+  opacity: 1.0;
+  stroke-width:2px;
+}
+
+#tip{
+  margin-left: 6px;
+  display: none
+}
+.notclickable{
+  pointer-events:none;
+}
+.desc{
+  font-size: 1em;
+  stroke:none;
+  font-weight: bold;
+}
+.spin {
+  width:150px;
+  height:150px;
+}

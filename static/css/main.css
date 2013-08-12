@@ -1,0 +1,40 @@
+﻿
+.button {	
+	min-width: 64px;
+	min-height: 32px;
+	border: solid 1px rgb(153, 153, 153);
+	background-color: #555;
+	color: #eee;
+	text-decoration: none;
+	cursor: pointer;
+	display: inline-block;
+	text-align: center;
+	font-size:1em;
+	line-height: 0;
+	-moz-transition: all .2s; /* Firefox 4 */
+	/*-webkit-transition: background-color .2s;  Safari and Chrome */
+	-o-transition: all .2s; /* Opera */
+}
+.button:hover{
+	background-color:#888;
+	color: white;
+}
+
+#msg {color: red}
+
+
+#contents{display:block;padding:0px;margin:0px}
+h1{margin:0px;}
+h2{padding:0px;margin:0px; color:#ddd}
+.clearfix:after{
+	 visibility: hidden;
+     display: block;
+     font-size: 0;
+     content: " ";
+     clear: both;
+     height: 0;
+}
+body{font-family:微软雅黑,simsun;margin:0;padding:0;width:100%;background:#eee;}
+a{
+	color: black;
+}

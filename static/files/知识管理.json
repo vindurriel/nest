@@ -1,0 +1,446 @@
+{
+  "nodes": [
+    {
+      "index": 0, 
+      "name": "\u77e5\u8bc6\u7ba1\u7406"
+    }, 
+    {
+      "index": 1, 
+      "type": "baiduBaikeCrawler", 
+      "name": "\u667a\u80fd\u77e5\u8bc6\u7ba1\u7406"
+    }, 
+    {
+      "index": 2, 
+      "type": "baiduBaikeCrawler", 
+      "name": "\u7ba1\u7406"
+    }, 
+    {
+      "index": 3, 
+      "type": "hudongBaikeCrawler", 
+      "name": "\u7ba1\u7406\u5b66"
+    }, 
+    {
+      "url": "http://www.eucita.com/products/zetascope/", 
+      "index": 4, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:\u7f51\u6458\u77e5\u8bc6\u7ba1\u7406\u7cfb\u7edf"
+    }, 
+    {
+      "url": "http://www.baike.com/wiki/\u77e5\u8bc6\u7ba1\u7406&prd=resoukuang", 
+      "index": 5, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:\u77e5\u8bc6\u7ba1\u7406"
+    }, 
+    {
+      "url": "http://wiki.mbalib.com/wiki/%E7%9F%A5%E8%AF%86%E7%AE%A1%E7%90%86", 
+      "index": 6, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:http://wiki.mbalib.com/wiki/%E7%9F%A5%E8%AF%86%E7%AE%A1%E7%90%86"
+    }, 
+    {
+      "url": "http://202.116.45.198:8080/0518/index0.htm", 
+      "index": 7, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:\u77e5\u8bc6\u7ba1\u7406 "
+    }, 
+    {
+      "index": 8, 
+      "type": "baiduBaikeCrawler", 
+      "name": "\u7814\u7a76"
+    }, 
+    {
+      "url": "http://baike.baidu.com/view/4345596.htm", 
+      "index": 9, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:\u667a\u80fd\u77e5\u8bc6\u7ba1\u7406"
+    }, 
+    {
+      "index": 10, 
+      "type": "baiduBaikeCrawler", 
+      "name": "\u6570\u636e\u6316\u6398"
+    }, 
+    {
+      "index": 11, 
+      "type": "baiduBaikeCrawler", 
+      "name": "\u5546\u4e1a\u667a\u80fd"
+    }, 
+    {
+      "url": "http://www.baike.com/wiki/\u6570\u636e\u6316\u6398&prd=resoukuang", 
+      "index": 12, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:\u6570\u636e\u6316\u6398"
+    }, 
+    {
+      "index": 13, 
+      "type": "hudongBaikeCrawler", 
+      "name": "\u8ba1\u7b97\u673a\u7f16\u7a0b"
+    }, 
+    {
+      "url": "http://www.tenly.com", 
+      "index": 14, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:\u4e0a\u6d77\u5929\u5f8b\u4fe1\u606f\u6280\u672f\u6709\u9650\u516c\u53f8 "
+    }, 
+    {
+      "index": 15, 
+      "type": "hudongBaikeCrawler", 
+      "name": "\u5e94\u7528\u79d1\u5b66"
+    }, 
+    {
+      "index": 16, 
+      "type": "hudongBaikeCrawler", 
+      "name": "\u5730\u7406\u4fe1\u606f\u7cfb\u7edf\u540d\u8bcd"
+    }, 
+    {
+      "url": "http://mie168.com/DSM/2004-09/54020.htm", 
+      "index": 17, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:http://mie168.com/DSM/2004-09/54020.htm"
+    }, 
+    {
+      "index": 18, 
+      "type": "hudongBaikeCrawler", 
+      "name": "\u8ba1\u7b97\u673a\u79d1\u5b66\u57fa\u7840\u7406\u8bba"
+    }, 
+    {
+      "index": 19, 
+      "type": "baiduBaikeCrawler", 
+      "name": "\u77e5\u8bc6\u53d1\u73b0"
+    }, 
+    {
+      "url": "http://www.stcsm.gov.cn/learning/lesson/xinxi/20021125/lesson-9.asp", 
+      "index": 20, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:\u4e0a\u6d77\u79d1\u6280 "
+    }, 
+    {
+      "url": "http://www-31.ibm.com/ibm/cn/bao/industry/retail.shtml", 
+      "index": 21, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:\u6570\u636e\u6316\u6398\u6210\u529f\u6848\u4f8b"
+    }, 
+    {
+      "url": "http://www.hanspub.org/Journal/HJDM.html", 
+      "index": 22, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:\u6570\u636e\u6316\u6398\u7814\u7a76"
+    }, 
+    {
+      "url": "http://www.qlikview.com/cn", 
+      "index": 23, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:Business intelligence for everyone"
+    }, 
+    {
+      "url": "http://www.sap.com/china/solutions/sapbusinessobjects/index.epx", 
+      "index": 24, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:SAP BUSINESS OBJECTS \u4ea7\u54c1\u7ec4\u5408"
+    }, 
+    {
+      "index": 25, 
+      "type": "baiduBaikeCrawler", 
+      "name": "\u8ba1\u7b97\u673a"
+    }, 
+    {
+      "url": "http://www.yeewe.com/edition-view-13472-1.html", 
+      "index": 26, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:http://www.yeewe.com/edition-view-13472-1.html"
+    }, 
+    {
+      "url": "http://www-31.ibm.com/ibm/cn/bao/index.shtml?re=baike", 
+      "index": 27, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:\u660e\u667a\u7684\u51b3\u7b56 \u667a\u6167\u7684\u5206\u6790"
+    }, 
+    {
+      "index": 28, 
+      "type": "hudongBaikeCrawler", 
+      "name": "\u5546\u4e1a"
+    }, 
+    {
+      "url": "http://www.runqian.com.cn/", 
+      "index": 29, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:\u6da6\u4e7e\u62a5\u8868"
+    }, 
+    {
+      "index": 30, 
+      "type": "hudongBaikeCrawler", 
+      "name": "\u5546\u4e1a\u672f\u8bed"
+    }, 
+    {
+      "url": "http://www.mhjy.net/dz55/viewthread.php?tid=6615DBA", 
+      "index": 31, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:\u91d1\u878d\u7f51 "
+    }, 
+    {
+      "url": "http://www.shufe-cec.com/c/1754.html", 
+      "index": 32, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:http://www.shufe-cec.com/c/1754.html"
+    }, 
+    {
+      "url": "http://www.baike.com/wiki/\u5546\u4e1a\u667a\u80fd&prd=resoukuang", 
+      "index": 33, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:\u5546\u4e1a\u667a\u80fd"
+    }, 
+    {
+      "url": "http://www-01.ibm.com/software/cn/data/cognos/index.html?csr=apch_cit3_20120801_1343818841612&amp;cm=k&amp;cr=google&amp;ct=201MC23W&amp;ck=cognos&amp;cmp=201MC&amp;gclid=CMzww9qjnrICFfFV4god7BQAEQ", 
+      "index": 34, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:Cognos \u5546\u4e1a\u667a\u80fd\u548c\u8d22\u52a1\u7ee9\u6548\u7ba1\u7406"
+    }, 
+    {
+      "url": "http://www.bizsmart.com.cn/productlines?cat=10", 
+      "index": 35, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:\u5546\u4e1a\u667a\u80fd\u4e0e\u4e1a\u52a1\u5206\u6790"
+    }, 
+    {
+      "index": 36, 
+      "type": "hudongBaikeCrawler", 
+      "name": "\u4e92\u8054\u5546\u52a1"
+    }, 
+    {
+      "url": "http://www.evget.com/zh-CN/Info/catalog/18523.html", 
+      "index": 37, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:\u524d\u7aef\u5546\u4e1a\u667a\u80fdBI 2013\u53d1\u5c55\u8d8b\u52bf\u5206\u6790"
+    }, 
+    {
+      "url": "http://www.gcpowertools.com.cn/products/business.htm", 
+      "index": 38, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:\u5546\u4e1a\u667a\u80fd\u89e3\u51b3\u65b9\u6848"
+    }, 
+    {
+      "url": "http://www.cellsoft.cc/", 
+      "index": 39, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:\u7528\u53cb\u5546\u4e1a\u5206\u6790"
+    }, 
+    {
+      "url": "http://www.inetsoft.com.cn/products/", 
+      "index": 40, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:\u601d\u8fbe\u5546\u4e1a\u667a\u80fdStyle Intelligence "
+    }
+  ], 
+  "name": "\u77e5\u8bc6\u7ba1\u7406", 
+  "links": [
+    {
+      "source": 0, 
+      "name": "\u77e5\u8bc6\u7ba1\u7406->\u667a\u80fd\u77e5\u8bc6\u7ba1\u7406", 
+      "target": 1
+    }, 
+    {
+      "source": 0, 
+      "name": "\u77e5\u8bc6\u7ba1\u7406->\u7ba1\u7406", 
+      "target": 2
+    }, 
+    {
+      "source": 0, 
+      "name": "\u77e5\u8bc6\u7ba1\u7406->\u7ba1\u7406\u5b66", 
+      "target": 3
+    }, 
+    {
+      "source": 0, 
+      "name": "\u77e5\u8bc6\u7ba1\u7406->\u77e5\u8bc6\u70b9:\u7f51\u6458\u77e5\u8bc6\u7ba1\u7406\u7cfb\u7edf", 
+      "target": 4
+    }, 
+    {
+      "source": 0, 
+      "name": "\u77e5\u8bc6\u7ba1\u7406->\u77e5\u8bc6\u70b9:\u77e5\u8bc6\u7ba1\u7406", 
+      "target": 5
+    }, 
+    {
+      "source": 0, 
+      "name": "\u77e5\u8bc6\u7ba1\u7406->\u77e5\u8bc6\u70b9:http://wiki.mbalib.com/wiki/%E7%9F%A5%E8%AF%86%E7%AE%A1%E7%90%86", 
+      "target": 6
+    }, 
+    {
+      "source": 0, 
+      "name": "\u77e5\u8bc6\u7ba1\u7406->\u77e5\u8bc6\u70b9:\u77e5\u8bc6\u7ba1\u7406 ", 
+      "target": 7
+    }, 
+    {
+      "source": 1, 
+      "name": "\u667a\u80fd\u77e5\u8bc6\u7ba1\u7406->\u7814\u7a76", 
+      "target": 8
+    }, 
+    {
+      "source": 1, 
+      "name": "\u667a\u80fd\u77e5\u8bc6\u7ba1\u7406->\u77e5\u8bc6\u7ba1\u7406", 
+      "target": 0
+    }, 
+    {
+      "source": 1, 
+      "name": "\u667a\u80fd\u77e5\u8bc6\u7ba1\u7406->\u77e5\u8bc6\u70b9:\u667a\u80fd\u77e5\u8bc6\u7ba1\u7406", 
+      "target": 9
+    }, 
+    {
+      "source": 1, 
+      "name": "\u667a\u80fd\u77e5\u8bc6\u7ba1\u7406->\u6570\u636e\u6316\u6398", 
+      "target": 10
+    }, 
+    {
+      "source": 1, 
+      "name": "\u667a\u80fd\u77e5\u8bc6\u7ba1\u7406->\u5546\u4e1a\u667a\u80fd", 
+      "target": 11
+    }, 
+    {
+      "source": 10, 
+      "name": "\u6570\u636e\u6316\u6398->\u77e5\u8bc6\u70b9:\u6570\u636e\u6316\u6398", 
+      "target": 12
+    }, 
+    {
+      "source": 10, 
+      "name": "\u6570\u636e\u6316\u6398->\u8ba1\u7b97\u673a\u7f16\u7a0b", 
+      "target": 13
+    }, 
+    {
+      "source": 10, 
+      "name": "\u6570\u636e\u6316\u6398->\u77e5\u8bc6\u70b9:\u4e0a\u6d77\u5929\u5f8b\u4fe1\u606f\u6280\u672f\u6709\u9650\u516c\u53f8 ", 
+      "target": 14
+    }, 
+    {
+      "source": 10, 
+      "name": "\u6570\u636e\u6316\u6398->\u5e94\u7528\u79d1\u5b66", 
+      "target": 15
+    }, 
+    {
+      "source": 10, 
+      "name": "\u6570\u636e\u6316\u6398->\u5730\u7406\u4fe1\u606f\u7cfb\u7edf\u540d\u8bcd", 
+      "target": 16
+    }, 
+    {
+      "source": 10, 
+      "name": "\u6570\u636e\u6316\u6398->\u77e5\u8bc6\u70b9:http://mie168.com/DSM/2004-09/54020.htm", 
+      "target": 17
+    }, 
+    {
+      "source": 10, 
+      "name": "\u6570\u636e\u6316\u6398->\u8ba1\u7b97\u673a\u79d1\u5b66\u57fa\u7840\u7406\u8bba", 
+      "target": 18
+    }, 
+    {
+      "source": 10, 
+      "name": "\u6570\u636e\u6316\u6398->\u77e5\u8bc6\u53d1\u73b0", 
+      "target": 19
+    }, 
+    {
+      "source": 10, 
+      "name": "\u6570\u636e\u6316\u6398->\u77e5\u8bc6\u70b9:\u4e0a\u6d77\u79d1\u6280 ", 
+      "target": 20
+    }, 
+    {
+      "source": 10, 
+      "name": "\u6570\u636e\u6316\u6398->\u77e5\u8bc6\u70b9:\u6570\u636e\u6316\u6398\u6210\u529f\u6848\u4f8b", 
+      "target": 21
+    }, 
+    {
+      "source": 10, 
+      "name": "\u6570\u636e\u6316\u6398->\u77e5\u8bc6\u70b9:\u6570\u636e\u6316\u6398\u7814\u7a76", 
+      "target": 22
+    }, 
+    {
+      "source": 11, 
+      "name": "\u5546\u4e1a\u667a\u80fd->\u77e5\u8bc6\u70b9:Business intelligence for everyone", 
+      "target": 23
+    }, 
+    {
+      "source": 11, 
+      "name": "\u5546\u4e1a\u667a\u80fd->\u77e5\u8bc6\u70b9:SAP BUSINESS OBJECTS \u4ea7\u54c1\u7ec4\u5408", 
+      "target": 24
+    }, 
+    {
+      "source": 11, 
+      "name": "\u5546\u4e1a\u667a\u80fd->\u8ba1\u7b97\u673a", 
+      "target": 25
+    }, 
+    {
+      "source": 11, 
+      "name": "\u5546\u4e1a\u667a\u80fd->\u77e5\u8bc6\u70b9:http://www.yeewe.com/edition-view-13472-1.html", 
+      "target": 26
+    }, 
+    {
+      "source": 11, 
+      "name": "\u5546\u4e1a\u667a\u80fd->\u77e5\u8bc6\u70b9:\u660e\u667a\u7684\u51b3\u7b56 \u667a\u6167\u7684\u5206\u6790", 
+      "target": 27
+    }, 
+    {
+      "source": 11, 
+      "name": "\u5546\u4e1a\u667a\u80fd->\u5546\u4e1a", 
+      "target": 28
+    }, 
+    {
+      "source": 11, 
+      "name": "\u5546\u4e1a\u667a\u80fd->\u77e5\u8bc6\u70b9:\u6da6\u4e7e\u62a5\u8868", 
+      "target": 29
+    }, 
+    {
+      "source": 11, 
+      "name": "\u5546\u4e1a\u667a\u80fd->\u5546\u4e1a\u672f\u8bed", 
+      "target": 30
+    }, 
+    {
+      "source": 11, 
+      "name": "\u5546\u4e1a\u667a\u80fd->\u77e5\u8bc6\u70b9:\u91d1\u878d\u7f51 ", 
+      "target": 31
+    }, 
+    {
+      "source": 11, 
+      "name": "\u5546\u4e1a\u667a\u80fd->\u77e5\u8bc6\u70b9:http://www.shufe-cec.com/c/1754.html", 
+      "target": 32
+    }, 
+    {
+      "source": 11, 
+      "name": "\u5546\u4e1a\u667a\u80fd->\u77e5\u8bc6\u70b9:\u5546\u4e1a\u667a\u80fd", 
+      "target": 33
+    }, 
+    {
+      "source": 11, 
+      "name": "\u5546\u4e1a\u667a\u80fd->\u77e5\u8bc6\u70b9:Cognos \u5546\u4e1a\u667a\u80fd\u548c\u8d22\u52a1\u7ee9\u6548\u7ba1\u7406", 
+      "target": 34
+    }, 
+    {
+      "source": 11, 
+      "name": "\u5546\u4e1a\u667a\u80fd->\u77e5\u8bc6\u70b9:\u5546\u4e1a\u667a\u80fd\u4e0e\u4e1a\u52a1\u5206\u6790", 
+      "target": 35
+    }, 
+    {
+      "source": 11, 
+      "name": "\u5546\u4e1a\u667a\u80fd->\u4e92\u8054\u5546\u52a1", 
+      "target": 36
+    }, 
+    {
+      "source": 11, 
+      "name": "\u5546\u4e1a\u667a\u80fd->\u77e5\u8bc6\u70b9:\u524d\u7aef\u5546\u4e1a\u667a\u80fdBI 2013\u53d1\u5c55\u8d8b\u52bf\u5206\u6790", 
+      "target": 37
+    }, 
+    {
+      "source": 11, 
+      "name": "\u5546\u4e1a\u667a\u80fd->\u77e5\u8bc6\u70b9:\u5546\u4e1a\u667a\u80fd\u89e3\u51b3\u65b9\u6848", 
+      "target": 38
+    }, 
+    {
+      "source": 11, 
+      "name": "\u5546\u4e1a\u667a\u80fd->\u77e5\u8bc6\u70b9:\u7528\u53cb\u5546\u4e1a\u5206\u6790", 
+      "target": 39
+    }, 
+    {
+      "source": 11, 
+      "name": "\u5546\u4e1a\u667a\u80fd->\u77e5\u8bc6\u70b9:\u601d\u8fbe\u5546\u4e1a\u667a\u80fdStyle Intelligence ", 
+      "target": 40
+    }, 
+    {
+      "source": 11, 
+      "name": "\u5546\u4e1a\u667a\u80fd->\u5546\u4e1a\u667a\u80fd", 
+      "target": 11
+    }
+  ]
+}

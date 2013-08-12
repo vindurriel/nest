@@ -1,0 +1,384 @@
+{
+  "nodes": [
+    {
+      "index": 0, 
+      "name": "cae"
+    }, 
+    {
+      "url": "http://baike.baidu.com/view/109162.htm", 
+      "index": 1, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:ABAQUS\u8f6f\u4ef6"
+    }, 
+    {
+      "url": "http://www.lixuezixun.com/html/news/2012-11-20/370.html", 
+      "index": 2, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:CAE\u8f6f\u4ef6\u5728\u5bf9\u5e94\u7528CAD\u6280\u672f"
+    }, 
+    {
+      "index": 3, 
+      "type": "baiduBaikeCrawler", 
+      "name": "\u4eff\u771f\u8f6f\u4ef6"
+    }, 
+    {
+      "url": "http://www.gzfyz.com/qbrjye.asp?id=2", 
+      "index": 4, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:\u6700\u65b0\u7248"
+    }, 
+    {
+      "url": "http://baike.baidu.com/view/112169.htm", 
+      "index": 5, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:CAE"
+    }, 
+    {
+      "url": "http://www.caetecc.com/thread-1284-1-1.html", 
+      "index": 6, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:abaqus\u7b80\u4ecb"
+    }, 
+    {
+      "url": "http://www.5dcad.cn/html/soft/2010-07/4397.html", 
+      "index": 7, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:Pro/ENGINEER Mechanica\u4ecb\u7ecd"
+    }, 
+    {
+      "url": "http://www.baike.com/wiki/cae&prd=resoukuang", 
+      "index": 8, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:\u96d5\u5177\u5ea7"
+    }, 
+    {
+      "index": 9, 
+      "type": "hudongBaikeCrawler", 
+      "name": "\u673a\u68b0\u5236\u9020"
+    }, 
+    {
+      "url": "http://www.baike.com/wiki/\u4eff\u771f\u8f6f\u4ef6&prd=resoukuang", 
+      "index": 10, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:\u4eff\u771f\u8f6f\u4ef6"
+    }, 
+    {
+      "url": "http://www.vrp3d.com/article/html/vrplatform_232.html", 
+      "index": 11, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:VR-Platform\u865a\u62df\u73b0\u5b9e\u4eff\u771f\u5e73\u53f0\u5b50\u4ea7\u54c1"
+    }, 
+    {
+      "index": 12, 
+      "type": "hudongBaikeCrawler", 
+      "name": "\u6570\u63a7\u6280\u672f"
+    }, 
+    {
+      "index": 13, 
+      "type": "hudongBaikeCrawler", 
+      "name": "\u8ba1\u7b97\u673a"
+    }, 
+    {
+      "url": "http://www.hikeytech.com/ProductDetail.aspx?id=43", 
+      "index": 14, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:\u4e2d\u4f4e\u9891\u7535\u78c1\u573a\u5206\u6790\u8f6f\u4ef6 - INFOLYTICA"
+    }, 
+    {
+      "url": "http://www.wanfangdata.com.cn/", 
+      "index": 15, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:\u4e07\u65b9\u6570\u636e "
+    }, 
+    {
+      "index": 16, 
+      "type": "hudongBaikeCrawler", 
+      "name": "\u6280\u672f"
+    }, 
+    {
+      "index": 17, 
+      "type": "hudongBaikeCrawler", 
+      "name": "\u9ad8\u65b0\u6280\u672f"
+    }, 
+    {
+      "index": 18, 
+      "type": "hudongBaikeCrawler", 
+      "name": "\u6d41\u884c\u8bed"
+    }, 
+    {
+      "index": 19, 
+      "type": "hudongBaikeCrawler", 
+      "name": "\u751f\u6d3b"
+    }, 
+    {
+      "index": 20, 
+      "type": "baiduBaikeCrawler", 
+      "name": "\u9ad8\u79d1\u6280"
+    }, 
+    {
+      "url": "http://www.baike.com/wiki/\u9ad8\u65b0\u6280\u672f&prd=resoukuang", 
+      "index": 21, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:\u9ad8\u65b0\u6280\u672f"
+    }, 
+    {
+      "index": 22, 
+      "type": "hudongBaikeCrawler", 
+      "name": "\u7f51\u7edc"
+    }, 
+    {
+      "index": 23, 
+      "type": "baiduBaikeCrawler", 
+      "name": "\u9ad8\u65b0\u6280\u672f\u9886\u57df"
+    }, 
+    {
+      "url": "http://www.izhcn.com/a/guzhang/touzi/2012/0512/41.html", 
+      "index": 24, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:\u4e2d\u56fd\u201c\u7ec7\u201d\u7f51\uff1a\u7269\u8054\u7f51\u7b2c\u4e00\u4e2a\u4e94\u5e74\u8ba1\u5212\u9881\u5e03"
+    }, 
+    {
+      "url": "http://www.gov.cn/zwgk/2012-02/14/content_2065999.htm", 
+      "index": 25, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:\u300a\u7269\u8054\u7f51\u201c\u5341\u4e8c\u4e94\u201d\u53d1\u5c55\u89c4\u5212\u300b\u53d1\u5e03"
+    }, 
+    {
+      "index": 26, 
+      "type": "hudongBaikeCrawler", 
+      "name": "\u6570\u63a7\u7ef4\u4fee"
+    }, 
+    {
+      "url": "http://www.baike.com/wiki/\u6570\u63a7\u6280\u672f&prd=resoukuang", 
+      "index": 27, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:\u6570\u63a7\u6280\u672f"
+    }, 
+    {
+      "index": 28, 
+      "type": "baiduBaikeCrawler", 
+      "name": "\u673a\u5e8a"
+    }, 
+    {
+      "index": 29, 
+      "type": "baiduBaikeCrawler", 
+      "name": "\u4e66"
+    }, 
+    {
+      "index": 30, 
+      "type": "baiduBaikeCrawler", 
+      "name": "\u56fe\u4e66  \u6570\u63a7 \u673a\u5e8a"
+    }, 
+    {
+      "url": "http://www.diangon.com/thread-5256-1-1.html", 
+      "index": 31, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:\u6570\u63a7\u6280\u672f\u4e0e\u4ea7\u4e1a\u53d1\u5c55\u9014\u5f84"
+    }, 
+    {
+      "url": "http://www.tup.tsinghua.edu.cn/book/Showbook.asp?CPBH=047951-01&amp;DJ=30", 
+      "index": 32, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:\u6570\u63a7\u6280\u672f\uff08\u4fee\u8ba2\u7248\uff09 "
+    }, 
+    {
+      "index": 33, 
+      "type": "baiduBaikeCrawler", 
+      "name": "\u6570\u63a7\u52a0\u5de5"
+    }, 
+    {
+      "url": "http://www.scuwz.com/zhuanye/2012/0311/6.html", 
+      "index": 34, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:\u6570\u63a7\u6280\u672f\u4e13\u4e1a\u5c31\u4e1a\u524d\u666f\u5982\u4f55"
+    }
+  ], 
+  "name": "cae", 
+  "links": [
+    {
+      "source": 0, 
+      "name": "cae->\u77e5\u8bc6\u70b9:ABAQUS\u8f6f\u4ef6", 
+      "target": 1
+    }, 
+    {
+      "source": 0, 
+      "name": "cae->\u77e5\u8bc6\u70b9:CAE\u8f6f\u4ef6\u5728\u5bf9\u5e94\u7528CAD\u6280\u672f", 
+      "target": 2
+    }, 
+    {
+      "source": 0, 
+      "name": "cae->\u4eff\u771f\u8f6f\u4ef6", 
+      "target": 3
+    }, 
+    {
+      "source": 0, 
+      "name": "cae->\u77e5\u8bc6\u70b9:\u6700\u65b0\u7248", 
+      "target": 4
+    }, 
+    {
+      "source": 0, 
+      "name": "cae->\u77e5\u8bc6\u70b9:CAE", 
+      "target": 5
+    }, 
+    {
+      "source": 0, 
+      "name": "cae->\u77e5\u8bc6\u70b9:abaqus\u7b80\u4ecb", 
+      "target": 6
+    }, 
+    {
+      "source": 0, 
+      "name": "cae->\u77e5\u8bc6\u70b9:Pro/ENGINEER Mechanica\u4ecb\u7ecd", 
+      "target": 7
+    }, 
+    {
+      "source": 0, 
+      "name": "cae->\u77e5\u8bc6\u70b9:\u96d5\u5177\u5ea7", 
+      "target": 8
+    }, 
+    {
+      "source": 3, 
+      "name": "\u4eff\u771f\u8f6f\u4ef6->\u673a\u68b0\u5236\u9020", 
+      "target": 9
+    }, 
+    {
+      "source": 3, 
+      "name": "\u4eff\u771f\u8f6f\u4ef6->\u77e5\u8bc6\u70b9:\u4eff\u771f\u8f6f\u4ef6", 
+      "target": 10
+    }, 
+    {
+      "source": 3, 
+      "name": "\u4eff\u771f\u8f6f\u4ef6->\u77e5\u8bc6\u70b9:VR-Platform\u865a\u62df\u73b0\u5b9e\u4eff\u771f\u5e73\u53f0\u5b50\u4ea7\u54c1", 
+      "target": 11
+    }, 
+    {
+      "source": 3, 
+      "name": "\u4eff\u771f\u8f6f\u4ef6->\u6570\u63a7\u6280\u672f", 
+      "target": 12
+    }, 
+    {
+      "source": 3, 
+      "name": "\u4eff\u771f\u8f6f\u4ef6->\u8ba1\u7b97\u673a", 
+      "target": 13
+    }, 
+    {
+      "source": 3, 
+      "name": "\u4eff\u771f\u8f6f\u4ef6->\u77e5\u8bc6\u70b9:\u4e2d\u4f4e\u9891\u7535\u78c1\u573a\u5206\u6790\u8f6f\u4ef6 - INFOLYTICA", 
+      "target": 14
+    }, 
+    {
+      "source": 3, 
+      "name": "\u4eff\u771f\u8f6f\u4ef6->\u77e5\u8bc6\u70b9:\u4e07\u65b9\u6570\u636e ", 
+      "target": 15
+    }, 
+    {
+      "source": 3, 
+      "name": "\u4eff\u771f\u8f6f\u4ef6->\u6280\u672f", 
+      "target": 16
+    }, 
+    {
+      "source": 3, 
+      "name": "\u4eff\u771f\u8f6f\u4ef6->\u9ad8\u65b0\u6280\u672f", 
+      "target": 17
+    }, 
+    {
+      "source": 17, 
+      "name": "\u9ad8\u65b0\u6280\u672f->\u6d41\u884c\u8bed", 
+      "target": 18
+    }, 
+    {
+      "source": 17, 
+      "name": "\u9ad8\u65b0\u6280\u672f->\u751f\u6d3b", 
+      "target": 19
+    }, 
+    {
+      "source": 17, 
+      "name": "\u9ad8\u65b0\u6280\u672f->\u9ad8\u79d1\u6280", 
+      "target": 20
+    }, 
+    {
+      "source": 17, 
+      "name": "\u9ad8\u65b0\u6280\u672f->\u77e5\u8bc6\u70b9:\u9ad8\u65b0\u6280\u672f", 
+      "target": 21
+    }, 
+    {
+      "source": 17, 
+      "name": "\u9ad8\u65b0\u6280\u672f->\u7f51\u7edc", 
+      "target": 22
+    }, 
+    {
+      "source": 17, 
+      "name": "\u9ad8\u65b0\u6280\u672f->\u9ad8\u65b0\u6280\u672f\u9886\u57df", 
+      "target": 23
+    }, 
+    {
+      "source": 17, 
+      "name": "\u9ad8\u65b0\u6280\u672f->\u9ad8\u65b0\u6280\u672f", 
+      "target": 17
+    }, 
+    {
+      "source": 17, 
+      "name": "\u9ad8\u65b0\u6280\u672f->\u77e5\u8bc6\u70b9:\u4e2d\u56fd\u201c\u7ec7\u201d\u7f51\uff1a\u7269\u8054\u7f51\u7b2c\u4e00\u4e2a\u4e94\u5e74\u8ba1\u5212\u9881\u5e03", 
+      "target": 24
+    }, 
+    {
+      "source": 17, 
+      "name": "\u9ad8\u65b0\u6280\u672f->\u77e5\u8bc6\u70b9:\u300a\u7269\u8054\u7f51\u201c\u5341\u4e8c\u4e94\u201d\u53d1\u5c55\u89c4\u5212\u300b\u53d1\u5e03", 
+      "target": 25
+    }, 
+    {
+      "source": 12, 
+      "name": "\u6570\u63a7\u6280\u672f->\u6570\u63a7\u7ef4\u4fee", 
+      "target": 26
+    }, 
+    {
+      "source": 12, 
+      "name": "\u6570\u63a7\u6280\u672f->\u77e5\u8bc6\u70b9:\u6570\u63a7\u6280\u672f", 
+      "target": 27
+    }, 
+    {
+      "source": 12, 
+      "name": "\u6570\u63a7\u6280\u672f->\u673a\u5e8a", 
+      "target": 28
+    }, 
+    {
+      "source": 12, 
+      "name": "\u6570\u63a7\u6280\u672f->\u4e66", 
+      "target": 29
+    }, 
+    {
+      "source": 12, 
+      "name": "\u6570\u63a7\u6280\u672f->\u56fe\u4e66  \u6570\u63a7 \u673a\u5e8a", 
+      "target": 30
+    }, 
+    {
+      "source": 12, 
+      "name": "\u6570\u63a7\u6280\u672f->\u77e5\u8bc6\u70b9:\u6570\u63a7\u6280\u672f\u4e0e\u4ea7\u4e1a\u53d1\u5c55\u9014\u5f84", 
+      "target": 31
+    }, 
+    {
+      "source": 12, 
+      "name": "\u6570\u63a7\u6280\u672f->\u77e5\u8bc6\u70b9:\u6570\u63a7\u6280\u672f\uff08\u4fee\u8ba2\u7248\uff09 ", 
+      "target": 32
+    }, 
+    {
+      "source": 12, 
+      "name": "\u6570\u63a7\u6280\u672f->\u6570\u63a7\u52a0\u5de5", 
+      "target": 33
+    }, 
+    {
+      "source": 12, 
+      "name": "\u6570\u63a7\u6280\u672f->\u6280\u672f", 
+      "target": 16
+    }, 
+    {
+      "source": 12, 
+      "name": "\u6570\u63a7\u6280\u672f->\u77e5\u8bc6\u70b9:\u6570\u63a7\u6280\u672f\u4e13\u4e1a\u5c31\u4e1a\u524d\u666f\u5982\u4f55", 
+      "target": 34
+    }, 
+    {
+      "source": 12, 
+      "name": "\u6570\u63a7\u6280\u672f->\u6570\u63a7\u6280\u672f", 
+      "target": 12
+    }
+  ]
+}

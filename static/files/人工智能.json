@@ -1,0 +1,121 @@
+{
+  "nodes": [
+    {
+      "index": 0, 
+      "name": "\u4eba\u5de5\u667a\u80fd"
+    }, 
+    {
+      "index": 1, 
+      "type": "hudongBaikeCrawler", 
+      "name": "\u5fc3\u7406\u5b66\u540d\u8bcd"
+    }, 
+    {
+      "url": "http://www.vapsec.com/html/keyan/softai/2012/1221/23.html", 
+      "index": 2, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:\u77e9\u7f51\u667a\u6167\uff1a\u4eba\u5de5\u667a\u80fdjava\u5766\u514b\u7cfb\u5217--\u9057\u4f20\u7b97\u6cd5 "
+    }, 
+    {
+      "url": "http://data.ent.sina.com.cn/movie/692.html", 
+      "index": 3, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:\u65b0\u6d6a\u5927\u7247\uff0c \u4eba\u5de5\u667a\u80fd "
+    }, 
+    {
+      "index": 4, 
+      "type": "hudongBaikeCrawler", 
+      "name": "\u6570\u636e\u6316\u6398"
+    }, 
+    {
+      "index": 5, 
+      "type": "hudongBaikeCrawler", 
+      "name": "\u591a\u4e49\u8bcd"
+    }, 
+    {
+      "index": 6, 
+      "type": "baiduBaikeCrawler", 
+      "name": "\u9648\u5955\u8fc5"
+    }, 
+    {
+      "index": 7, 
+      "type": "hudongBaikeCrawler", 
+      "name": "\u8ba1\u7b97\u673a\u79d1\u5b66\u6280\u672f\u540d\u8bcd"
+    }, 
+    {
+      "url": "http://movie.mtime.com/11634/behind_the_scene.html#menu", 
+      "index": 8, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:\u4eba\u5de5\u667a\u80fdA.I.: Artificial Intelligence (2001)"
+    }, 
+    {
+      "url": "http://blog.sina.com.cn/s/blog_c225689a0101kc68.html", 
+      "index": 9, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:AI\u8f6f\u4ef6\u4e0b\u8f7d\u5730\u5740\u4e0e\u8bd5\u5b66\u8bfe\u7a0b"
+    }, 
+    {
+      "url": "http://www.baike.com/wiki/\u4eba\u5de5\u667a\u80fd&prd=resoukuang", 
+      "index": 10, 
+      "type": "referData", 
+      "name": "\u77e5\u8bc6\u70b9:\u4eba\u5de5\u667a\u80fd"
+    }
+  ], 
+  "name": "\u4eba\u5de5\u667a\u80fd", 
+  "links": [
+    {
+      "source": 0, 
+      "name": "\u4eba\u5de5\u667a\u80fd->\u5fc3\u7406\u5b66\u540d\u8bcd", 
+      "target": 1
+    }, 
+    {
+      "source": 0, 
+      "name": "\u4eba\u5de5\u667a\u80fd->\u77e5\u8bc6\u70b9:\u77e9\u7f51\u667a\u6167\uff1a\u4eba\u5de5\u667a\u80fdjava\u5766\u514b\u7cfb\u5217--\u9057\u4f20\u7b97\u6cd5 ", 
+      "target": 2
+    }, 
+    {
+      "source": 0, 
+      "name": "\u4eba\u5de5\u667a\u80fd->\u77e5\u8bc6\u70b9:\u65b0\u6d6a\u5927\u7247\uff0c \u4eba\u5de5\u667a\u80fd ", 
+      "target": 3
+    }, 
+    {
+      "source": 0, 
+      "name": "\u4eba\u5de5\u667a\u80fd->\u6570\u636e\u6316\u6398", 
+      "target": 4
+    }, 
+    {
+      "source": 0, 
+      "name": "\u4eba\u5de5\u667a\u80fd->\u591a\u4e49\u8bcd", 
+      "target": 5
+    }, 
+    {
+      "source": 0, 
+      "name": "\u4eba\u5de5\u667a\u80fd->\u9648\u5955\u8fc5", 
+      "target": 6
+    }, 
+    {
+      "source": 0, 
+      "name": "\u4eba\u5de5\u667a\u80fd->\u8ba1\u7b97\u673a\u79d1\u5b66\u6280\u672f\u540d\u8bcd", 
+      "target": 7
+    }, 
+    {
+      "source": 0, 
+      "name": "\u4eba\u5de5\u667a\u80fd->\u4eba\u5de5\u667a\u80fd", 
+      "target": 0
+    }, 
+    {
+      "source": 0, 
+      "name": "\u4eba\u5de5\u667a\u80fd->\u77e5\u8bc6\u70b9:\u4eba\u5de5\u667a\u80fdA.I.: Artificial Intelligence (2001)", 
+      "target": 8
+    }, 
+    {
+      "source": 0, 
+      "name": "\u4eba\u5de5\u667a\u80fd->\u77e5\u8bc6\u70b9:AI\u8f6f\u4ef6\u4e0b\u8f7d\u5730\u5740\u4e0e\u8bd5\u5b66\u8bfe\u7a0b", 
+      "target": 9
+    }, 
+    {
+      "source": 0, 
+      "name": "\u4eba\u5de5\u667a\u80fd->\u77e5\u8bc6\u70b9:\u4eba\u5de5\u667a\u80fd", 
+      "target": 10
+    }
+  ]
+}
