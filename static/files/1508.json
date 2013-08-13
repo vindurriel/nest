@@ -1,4 +1,51 @@
 {
+  "name": "\u8303\u73ae\u742a", 
+  "links": [
+    {
+      "source": 0, 
+      "target": 3
+    }, 
+    {
+      "source": 0, 
+      "target": 2
+    }, 
+    {
+      "source": 0, 
+      "target": 1
+    }, 
+    {
+      "source": 0, 
+      "target": 4
+    }, 
+    {
+      "source": 5, 
+      "target": 6
+    }, 
+    {
+      "source": 5, 
+      "target": 7
+    }, 
+    {
+      "source": 5, 
+      "target": 8
+    }, 
+    {
+      "source": 5, 
+      "target": 9
+    }, 
+    {
+      "source": 5, 
+      "target": 10
+    }
+  ], 
+  "blacklist": [
+    "1836", 
+    "1578", 
+    "2017", 
+    "2132", 
+    "23517", 
+    "7243"
+  ], 
   "nodes": [
     {
       "index": 0, 
@@ -9,293 +56,64 @@
     {
       "index": 1, 
       "type": "artist", 
-      "id": "2132", 
-      "name": "\u5b59\u71d5\u59ff"
-    }, 
-    {
-      "index": 2, 
-      "type": "artist", 
-      "id": "1836", 
-      "name": "\u6881\u9759\u8339"
-    }, 
-    {
-      "index": 3, 
-      "type": "artist", 
       "id": "1930", 
       "name": "\u5218\u82e5\u82f1"
     }, 
     {
-      "index": 4, 
+      "index": 2, 
       "type": "artist", 
       "id": "78523", 
       "name": "\u7530\u99a5\u7504"
     }, 
     {
-      "index": 5, 
-      "type": "artist", 
-      "id": "23517", 
-      "name": "\u6797\u5ba5\u5609"
-    }, 
-    {
-      "index": 6, 
+      "index": 3, 
       "type": "artist", 
       "id": "1473", 
       "name": "\u6234\u4f69\u59ae"
     }, 
     {
-      "index": 7, 
-      "type": "artist", 
-      "id": "1578", 
-      "name": "\u90ed\u9759"
-    }, 
-    {
-      "index": 8, 
-      "type": "artist", 
-      "id": "7299", 
-      "name": "\u90ed\u91c7\u6d01"
-    }, 
-    {
-      "index": 9, 
-      "type": "artist", 
-      "id": "7137", 
-      "name": "\u8521\u65fb\u4f51"
-    }, 
-    {
-      "index": 10, 
-      "type": "artist", 
-      "id": "79359", 
-      "name": "\u80e1\u590f"
-    }, 
-    {
-      "index": 11, 
-      "type": "artist", 
-      "id": "1340", 
-      "name": "\u8521\u6df3\u4f73"
-    }, 
-    {
-      "index": 12, 
-      "type": "artist", 
-      "id": "1700", 
-      "name": "\u6c5f\u7f8e\u742a"
-    }, 
-    {
-      "index": 13, 
-      "type": "artist", 
-      "id": "1725", 
-      "name": "\u91d1\u838e"
-    }, 
-    {
-      "index": 14, 
-      "type": "artist", 
-      "id": "2347", 
-      "name": "\u6768\u4e1e\u7433"
-    }, 
-    {
-      "index": 15, 
-      "type": "artist", 
-      "id": "2282", 
-      "name": "\u8427\u6f47"
-    }, 
-    {
-      "index": 16, 
-      "type": "artist", 
-      "id": "2471", 
-      "name": "\u5f20\u97f6\u6db5"
-    }, 
-    {
-      "index": 17, 
-      "type": "artist", 
-      "id": "849", 
-      "name": "Tank"
-    }, 
-    {
-      "index": 18, 
-      "type": "artist", 
-      "id": "7243", 
-      "name": "\u4e01\u5f53"
-    }, 
-    {
-      "index": 19, 
+      "index": 4, 
       "type": "artist", 
       "id": "1414", 
       "name": "\u9648\u7eee\u8d1e"
     }, 
     {
-      "index": 20, 
-      "type": "artist", 
-      "id": "2017", 
-      "name": "\u83ab\u6587\u851a"
-    }, 
-    {
-      "index": 21, 
-      "type": "artist", 
-      "id": "2228", 
-      "name": "\u6e29\u5c9a"
-    }, 
-    {
-      "index": 22, 
-      "type": "artist", 
-      "id": "2177", 
-      "name": "\u738b\u83f2"
-    }, 
-    {
-      "index": 23, 
+      "index": 5, 
       "type": "artist", 
       "id": "2450", 
       "name": "\u5f20\u60e0\u59b9"
+    }, 
+    {
+      "index": 6, 
+      "type": "artist", 
+      "id": "23748", 
+      "name": "\u8427\u656c\u817e"
+    }, 
+    {
+      "index": 7, 
+      "type": "artist", 
+      "id": "7319", 
+      "name": "\u6768\u5b97\u7eac"
+    }, 
+    {
+      "index": 8, 
+      "type": "artist", 
+      "id": "2452", 
+      "name": "\u5f20\u9753\u9896"
+    }, 
+    {
+      "index": 9, 
+      "type": "artist", 
+      "id": "1654", 
+      "name": "A-Lin"
+    }, 
+    {
+      "index": 10, 
+      "type": "artist", 
+      "id": "2021", 
+      "name": "\u90a3\u82f1"
     }
   ], 
   "type": "artist", 
-  "id": "1508", 
-  "links": [
-    {
-      "source": 1, 
-      "target": 0
-    }, 
-    {
-      "source": 2, 
-      "target": 0
-    }, 
-    {
-      "source": 2, 
-      "target": 1
-    }, 
-    {
-      "source": 2, 
-      "target": 3
-    }, 
-    {
-      "source": 2, 
-      "target": 4
-    }, 
-    {
-      "source": 2, 
-      "target": 5
-    }, 
-    {
-      "source": 2, 
-      "target": 6
-    }, 
-    {
-      "source": 2, 
-      "target": 7
-    }, 
-    {
-      "source": 7, 
-      "target": 8
-    }, 
-    {
-      "source": 7, 
-      "target": 9
-    }, 
-    {
-      "source": 7, 
-      "target": 10
-    }, 
-    {
-      "source": 7, 
-      "target": 11
-    }, 
-    {
-      "source": 7, 
-      "target": 12
-    }, 
-    {
-      "source": 7, 
-      "target": 13
-    }, 
-    {
-      "source": 7, 
-      "target": 14
-    }, 
-    {
-      "source": 7, 
-      "target": 15
-    }, 
-    {
-      "source": 7, 
-      "target": 16
-    }, 
-    {
-      "source": 7, 
-      "target": 17
-    }, 
-    {
-      "source": 0, 
-      "target": 6
-    }, 
-    {
-      "source": 0, 
-      "target": 2
-    }, 
-    {
-      "source": 0, 
-      "target": 4
-    }, 
-    {
-      "source": 0, 
-      "target": 3
-    }, 
-    {
-      "source": 0, 
-      "target": 7
-    }, 
-    {
-      "source": 0, 
-      "target": 1
-    }, 
-    {
-      "source": 0, 
-      "target": 5
-    }, 
-    {
-      "source": 0, 
-      "target": 18
-    }, 
-    {
-      "source": 0, 
-      "target": 19
-    }, 
-    {
-      "source": 0, 
-      "target": 20
-    }, 
-    {
-      "source": 1, 
-      "target": 2
-    }, 
-    {
-      "source": 1, 
-      "target": 5
-    }, 
-    {
-      "source": 1, 
-      "target": 3
-    }, 
-    {
-      "source": 1, 
-      "target": 20
-    }, 
-    {
-      "source": 1, 
-      "target": 21
-    }, 
-    {
-      "source": 1, 
-      "target": 22
-    }, 
-    {
-      "source": 1, 
-      "target": 18
-    }, 
-    {
-      "source": 1, 
-      "target": 23
-    }, 
-    {
-      "source": 1, 
-      "target": 6
-    }
-  ], 
-  "name": "\u8303\u73ae\u742a"
+  "id": "1508"
 }

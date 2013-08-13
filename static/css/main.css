@@ -22,6 +22,16 @@
 
 #msg {color: red}
 
+#side{
+	position: absolute;
+	top: 1em;
+	left: 1em;
+	z-index: 100;
+}
+#container{
+	position: absolute;
+	top:0;
+}
 
 #contents{display:block;padding:0px;margin:0px}
 h1{margin:0px;}

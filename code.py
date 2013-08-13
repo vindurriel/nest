@@ -15,5 +15,8 @@ for x in [x.split() for x in file('.\\routers.txt','r').readlines()]:
         pass
 web.webapi.internalerror = web.debugerror
 app = web.application(urls, globals(), autoreload=True)
+class favicon:
+	def GET(self):
+		return ""
 if __name__ == "__main__":
     app.run()

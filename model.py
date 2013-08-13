@@ -9,12 +9,20 @@ class model:
 		print "###model.get##",key
 		render=web.template.render('.\\templates',globals=locals())
 		return render.model()
-	def POST(self):
+	def POST(self,key):
 		import json
 		data=json.loads(web.data())
 		print "###model.post##"
-		file(get_file_name(data["id"]),"w").write(json.dumps(data,indent=2))
+		file(get_file_name(key),"w").write(json.dumps(data,indent=2))
 		return "ok"
+class list:
+	def GET(self):
+		import os
+		l=os.listdir(".\\static\\files")
+		l= filter(lambda x:x.endswith(".json"),l)
+		l= map(lambda x:x.decode('gbk')[:-5],l)
+		render=web.template.render('.\\templates',globals=locals())
+		return render.list()
 class load:
 	def GET(self,key="机器学习"):
 		web.header('Content-Type', 'application/json')
@@ -75,8 +83,8 @@ class search:
 		web.header('Content-Type', 'application/json')
 		self.result={}
 		print key
-		# print self.do_search(key,"baiduBaikeCrawler")
-		# print self.do_search(key,"hudongBaikeCrawler")
+		print self.do_search(key,"baiduBaikeCrawler")
+		print self.do_search(key,"hudongBaikeCrawler")
 		res=self.result.values()
 		for x in res:
 			print x["name"]

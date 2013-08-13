@@ -4,8 +4,12 @@ cacheIt = (e) ->
   r.shiftPressed = e.shiftKey
   return true
 redraw = ->
-  r.vis.attr "transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")"
+  r.scale=d3.event.scale
+  r.vis.attr "transform", "translate(" + d3.event.translate + ")" + " scale(" + r.scale + ")"
+  d3.selectAll(".node text").style("font-size", (1 / r.scale) + "em");
 draw = (json) ->
+  if json.blacklist?
+    r.blacklist=json.blacklist
   r.nodes= json.nodes
   r.links= json.links
   r.root = json.nodes[0]
@@ -23,6 +27,8 @@ draw = (json) ->
   .links(r.links)
   n=r.nodes.length
   r.nodes.forEach (d,i)->
+    if not d.id?
+      d.id= d.name
     d.x=i*r.w/n
     d.y=i*r.h/n
   update()
@@ -40,10 +46,13 @@ update = ->
 
   # Exit any old links.
   r.link.exit().remove()
-  r.node.remove()
-  r.node = r.vis.selectAll(".node").data(r.nodes,(d)->(d.id))
+
+  #update nodes
+  # r.node.remove()
+  r.node = r.vis.selectAll(".node").data(r.nodes,(d)->d.id)
   .classed("highlight",(d)->d.isHigh==true)
 
+  #enter new nodes
   nodeEnter=r.node.enter()
   .append("g")
   .attr("class", "node")
@@ -52,25 +61,18 @@ update = ->
   .attr "transform", (d) ->
       "translate(" + d.x + "," + d.y + ")"
   .call(r.force.drag)
-
+  
   nodeEnter.append("circle")
   .attr("cx",0)
   .attr("cy",0)
   .attr("r", getR)
   .style("fill", color)
 
-  nodeEnter.append("title")
-    .text (d) ->
-      d.name
-
   nodeEnter.append("text")
   .attr("class","notclickable desc")
-  .attr "dx", (d) ->
-    getR(d)
   .text (d) ->
-    if  d.type=="referData"
-      return ""
     d.name
+
 
   r.node.exit().remove()
 
@@ -79,35 +81,37 @@ update = ->
   .style("fill", color)
   
   d3.selectAll(".node text")
-  .attr("dx", getR)
+  .attr("dx", (d)->getR(d)+5)
   .classed("show", (d)->d==r.theFocus)
+  .attr("font-size", (1 / r.scale) + "em")
 
   d3.selectAll(".search-img").remove()
-
-  r.node.filter((d) ->
-    d.isSelected
-  ).append("image").attr("x", (d) ->
-    -1.2 * 32 * getR(d) / 15.0
-  ).attr("y", (d) ->
-    -1.2 * 32 * getR(d) / 15.0
-  ).attr("width", (d) ->
-    1.2 * 64 * getR(d) / 15.0
-  ).attr("height", (d) ->
-    1.2 * 64 * getR(d) / 15.0
-  ).attr("xlink:href", "/static/images/loader.gif")
+  d3.selectAll(".node circle").filter((d) ->d.isSearching)
+  .append("animate")
+  .attr("attributeName",'cx')
+  .attr("begin",'0s')
+  .attr("dur",'0.1s')
+  .attr("from",'-5')
+  .attr("to",'5')
+  .attr("fill",'remove')
+  .attr("repeatCount",'indefinite')
   .classed("search-img",true)
 
   r.force.start()
+  # calculate graph info
   r.matrix=[]
-  n = r.nodes.length
-  for i in [0..n]
+  r.degree=[]
+  r.hNode={}
+  n=r.nodes.length
+  for i in [0..n-1]
+    r.hNode[r.nodes[i].id]=r.nodes[i]
+    r.degree.push 0
     r.matrix.push []
-    for j in [0..n]
+    for j in [0..n-1]
       r.matrix[i].push null
-  for x in r.nodes
-    if not r.hNode[x.name]?
-      r.hNode[x.name]=x
   for x in r.links
+    r.degree[x.source.index]+=1
+    r.degree[x.target.index]+=1
     r.matrix[x.source.index][x.target.index]=x
 getR = (d) ->
   if d == r.theFocus
@@ -138,16 +142,19 @@ click = (d) ->
       return
     n = r.nodes.length
     i= d.index
-    for j in [0..n]
+    for j in [0..n-1]
       link=r.matrix[i][j]
       if link?
        r.links.remove link
+       if r.degree[j]==1
+        r.nodes.remove link.target 
       link=r.matrix[j][i]
       if link?
-       r.links.remove link
-    r.nodes.splice i,1
-    r.hNode[d.name]=undefined
-    blacklist.push d.name
+        r.links.remove link
+        if r.degree[j]==1
+          r.nodes.remove link.target 
+    r.nodes.remove d
+    r.blacklist.push d.id
   else if r.altPressed
     save().done ->
       window.location.href = "/model/#{d.name}"
@@ -156,41 +163,44 @@ click = (d) ->
     if d.type=="referData"
       window.open if d.url? then d.url else d.name
       return
-    if d.isSelected? and d.isSelected==true
-      d.isSelected= false
+    if d.isSearching? and d.isSearching==true
+      d.isSearching= false
     else 
-      d.isSelected = true
-    if not d.isSelected
+      d.isSearching = true
+    if not d.isSearching
       return
     url= "/roaming/#{d.type}s/#{d.id}"
-    d3.json url , (data)-> 
-      expand(d,data)
+    d3.json url , expand
   else
     highlight d
     history.pushState {},d.name,"/model/#{d.id}"
   update()
-expand = (d,data)->
-  source=r.hNode[d.name]
-  if not source?
-    return
-  i=0
-  for x in data
-    if r.blacklist.indexOf(x.name)>=0 then continue
-    if x.type=="referData"
-      if not r.hNode[x.name]?
-        r.nodes.push x
-        r.links.push {"source":source,"target":x }
-    else 
-      target=x
-      if not r.hNode[x.name]?
-        if i==5 then continue
-        r.nodes.push x
-        i+=1
-      else
-        target=r.hNode[x.name]
-      if not r.matrix[source.index][target.index]?
-        r.links.push {"source":source,"target":target }
-  d.isSelected= false
+expand = (data)->
+  for id of data
+    source=r.hNode[id]
+    if not source?
+      continue
+    i=0
+    for x in data[id]
+      if not x.id?
+        x.id= x.name
+      if r.blacklist.indexOf(x.id)>=0
+        continue
+      if x.type=="referData"
+        if not r.hNode[x.id]?
+          r.nodes.push x
+          r.links.push {"source":source,"target":x }
+      else 
+        target=x
+        if not r.hNode[x.id]?
+          if i==5 then continue
+          r.nodes.push x
+          i+=1
+        else
+          target=r.hNode[x.id]
+        if not r.matrix[source.index][target.index]?
+          r.links.push {"source":source,"target":target }
+    source.isSearching= false
   update()
 highlight = (d)->
   for x in r.links
@@ -200,7 +210,7 @@ highlight = (d)->
   d.isHigh=true
   r.theFocus = d
   i=d.index
-  for j in [0..r.nodes.length]
+  for j in [0..r.nodes.length-1]
     if r.matrix[i][j]?
       r.matrix[i][j].isHigh= true
       r.nodes[j].isHigh = true
@@ -209,12 +219,14 @@ highlight = (d)->
       r.nodes[j].isHigh= true
   return
 save = ->
-  res=
+  res={
     "id":r.root.id,
     "name":r.root.name,
     "type":r.root.type,
     "nodes":[],
     "links":[],
+    "blacklist":r.blacklist,
+  }
   for x in r.nodes
     res.nodes.push 
       "id":x.id,
@@ -230,7 +242,7 @@ save = ->
       "target":x.target.index,
   res= JSON.stringify res
   return $.ajax
-    "url":"/model",
+    "url":"/model/#{r.root.id}",
     "type": "POST",
     "contentType": "json", 
     "data": res
@@ -248,6 +260,7 @@ Array::remove = (b) ->
     @splice a, 1
     return true
   false
+r.scale=1
 r.vis = d3.select("#container")
   .append("svg:svg")
   .attr("width", r.w)
@@ -256,11 +269,11 @@ r.vis = d3.select("#container")
   .attr("pointer-events", "all")
   .attr("preserveAspectRatio","XMidYMid")
   .append("svg:g")
-  .call(d3.behavior.zoom()
-  .on("zoom", redraw))
+  .call(d3.behavior.zoom().scaleExtent([0.5,10]).on("zoom", redraw))
+  .on("dblclick", null)
   .append("svg:g")
-r.link=r.vis.selectAll(".link")
-r.node=r.vis.selectAll(".node")
+r.link = r.vis.selectAll(".link")
+r.node = r.vis.selectAll(".node")
 $(document).ready ->
   $(document).keydown cacheIt
   $(document).keyup cacheIt
@@ -286,13 +299,14 @@ $(document).ready ->
           draw d
       else
         draw d
-  $.getJSON "/model/load/#{document.title}", (d)->
+  id=document.title
+  $.getJSON "/model/load/#{id}", (d)->
     if not d or d.error?
-      draw {"nodes":[{"name":"Everybody","id":"1769077491","type":"song"}],"links":[]}
+      draw {"nodes":[{"name":id,"id":id,"type":"Baike"}],"links":[]}
     else
       draw d
 r.vis.append("svg:rect").attr("width", r.w).attr("height", r.h).attr "fill", "none"
-r.palette= d3.scale.category10()
+r.palette= d3.scale.category20()
 r.colors =[
    "baiduBaikeCrawler",
    "hudongBaikeCrawler",
