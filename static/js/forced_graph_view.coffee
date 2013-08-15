@@ -266,7 +266,7 @@ save = ->
       "target":x.target.index,
   res= JSON.stringify res
   return $.ajax
-    "url":"/model/#{r.root.id}",
+    "url":"/model/#{r.root.type}_#{r.root.id}",
     "type": "POST",
     "contentType": "json", 
     "data": res
@@ -307,23 +307,39 @@ $(document).ready ->
     .fail (d,e)->
       alert e
   $("#btn_search").click ->
-    type=$("input[name='music_type']:checked").val()
     query=$("#q").val()
-    if parseInt(query)==NaN 
-      return
+    if ":" in query
+      query = query.replace ":","_"
+    id= query
+    type= "unknown"
+    if "_" in query
+      s= query.split "_"
+      type= s[0]
+      id=s[1]
     $.getJSON "/model/load/#{query}", (d)->
       if not d or d.error?
-        $.getJSON "/info/#{type}s/#{query}", (d)->
+        $.getJSON "/info/#{type}s/#{id}", (d)->
           if not d or d.error?
             alert d.error
             return
           draw d
       else
         draw d
-  id=document.title
-  $.getJSON "/model/load/#{id}", (d)->
+  query= document.title
+  type= "unknown"
+  if ":" in query
+    query = query.replace ":","_"
+  if "_" in query
+    s= query.split "_"
+    type= s[0]
+    id= s[1]
+  $.getJSON "/model/load/#{query}", (d)->
     if not d or d.error?
-      draw {"nodes":[{"name":id,"id":id,"type":"Baike"}],"links":[]}
+      $.getJSON "/info/#{type}s/#{id}", (d)->
+          if not d or d.error?
+            alert d.error
+            return
+          draw d
     else
       draw d
 # r.vis.append("svg:rect").attr("width", r.w).attr("height", r.h).attr "fill", "#33ffff"

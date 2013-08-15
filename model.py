@@ -12,6 +12,9 @@ class model:
 		render=web.template.render('.\\templates',globals=locals())
 		return render.model()
 	def POST(self,key):
+		'''
+		save
+		'''
 		import json
 		data=json.loads(web.data())
 		print "###model.post##"
