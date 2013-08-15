@@ -7,6 +7,8 @@ def get_file_name(name):
 class model:
 	def GET(self,key="1769077491"):
 		print "###model.get##",key
+		theme="light"
+		if "theme" in web.input(): theme=web.input().theme
 		render=web.template.render('.\\templates',globals=locals())
 		return render.model()
 	def POST(self,key):
@@ -17,6 +19,8 @@ class model:
 		return "ok"
 class list:
 	def GET(self):
+		theme="light"
+		if "theme" in web.input(): theme=web.input().theme
 		import os
 		l=os.listdir(".\\static\\files")
 		l= filter(lambda x:x.endswith(".json"),l)

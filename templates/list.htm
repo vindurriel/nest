@@ -8,12 +8,14 @@
 	<link rel="stylesheet" href="/static/css/model.css">
 	<script src="/static/js/jquery-2.0.2.min.js" charset="utf-8"></script>
 	<script src="/static/js/d3.v3.js" charset="utf-8"></script>
-	<script src="/static/js/fisheye.js" charset="utf-8"></script>
 </head>
-<body>
+<body 
+$if theme=="dark":
+	class="dark"
+>
 	<ul>
 		$for x in l:
-			<li><a href="/model/$x">$x</a></li> 
+			<li><a href="/model/$x?theme=$theme">$x</a></li> 
 	</ul>
 </body>
 </html>

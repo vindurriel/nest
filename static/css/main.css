@@ -1,4 +1,5 @@
 ﻿
+
 .button {	
 	min-width: 64px;
 	min-height: 32px;
@@ -44,7 +45,21 @@ h2{padding:0px;margin:0px; color:#ddd}
      clear: both;
      height: 0;
 }
-body{font-family:微软雅黑,simsun;margin:0;padding:0;width:100%;background:#eee;}
+body{
+	font-family:微软雅黑,simsun;margin:0;padding:0;width:100%;
+	background:#eee;
+	color:black;
+}
+
+body.dark{
+	background: #333;
+	color:white;
+}
+
 a{
 	color: black;
+}
+
+body.dark a{
+	color:white;
 }

@@ -36,6 +36,26 @@
     {
       "source": 5, 
       "target": 10
+    }, 
+    {
+      "source": 8, 
+      "target": 5
+    }, 
+    {
+      "source": 8, 
+      "target": 9
+    }, 
+    {
+      "source": 8, 
+      "target": 11
+    }, 
+    {
+      "source": 8, 
+      "target": 12
+    }, 
+    {
+      "source": 8, 
+      "target": 0
     }
   ], 
   "blacklist": [
@@ -112,6 +132,18 @@
       "type": "artist", 
       "id": "2021", 
       "name": "\u90a3\u82f1"
+    }, 
+    {
+      "index": 11, 
+      "type": "artist", 
+      "id": "2177", 
+      "name": "\u738b\u83f2"
+    }, 
+    {
+      "index": 12, 
+      "type": "artist", 
+      "id": "1195", 
+      "name": "\u5f20\u4fe1\u54f2"
     }
   ], 
   "type": "artist", 

@@ -11,7 +11,7 @@ cacheIt = function(e) {
 redraw = function() {
   r.scale = d3.event.scale;
   r.vis.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + r.scale + ")");
-  return d3.selectAll(".node text").style("font-size", (1 / r.scale) + "em");
+  return d3.selectAll("text").style("font-size", (1 / r.scale) + "em");
 };
 
 draw = function(json) {
@@ -19,6 +19,21 @@ draw = function(json) {
   if (json.blacklist != null) {
     r.blacklist = json.blacklist;
   }
+  r.legend = r.vis.selectAll("rect.leg").data([
+    {
+      "type": "artist"
+    }, {
+      "type": "album"
+    }, {
+      "type": "song"
+    }
+  ]).enter().append('g').attr("transform", function(d, i) {
+    return "translate(" + 100 + "," + (50 + i * 70) + ")";
+  }).classed('leg', true);
+  r.legend.append("circle").style("fill", color).attr("r", "10px").attr('cx', '0').attr('cy', '0');
+  r.legend.append("text").text(function(d) {
+    return d.type;
+  }).attr("dx", '15').attr("dy", '3');
   r.nodes = json.nodes;
   r.links = json.links;
   r.root = json.nodes[0];
@@ -188,7 +203,7 @@ click = function(d) {
     d3.json(url, expand);
   } else {
     highlight(d);
-    history.pushState({}, d.name, "/model/" + d.id);
+    history.pushState({}, d.name, "/model/" + d.type + "_" + d.id);
   }
   return update();
 };
@@ -313,9 +328,9 @@ r = typeof exports !== "undefined" && exports !== null ? exports : this;
 
 r.hNode = {};
 
-r.w = $(this).width();
+r.w = $(window).width();
 
-r.h = $(this).height();
+r.h = $(window).height();
 
 r.ctrlPressed = false;
 
@@ -337,7 +352,7 @@ Array.prototype.remove = function(b) {
 
 r.scale = 1;
 
-r.vis = d3.select("#container").append("svg:svg").attr("width", r.w).attr("height", r.h).attr("viewBox", "0 0 " + r.w + " " + r.h).attr("pointer-events", "all").attr("preserveAspectRatio", "XMidYMid").append("svg:g").call(d3.behavior.zoom().scaleExtent([0.5, 10]).on("zoom", redraw)).on("dblclick", null).append("svg:g");
+r.vis = d3.select("#container").append("svg:svg").attr("viewBox", "0 0 " + r.w + " " + r.h).attr("pointer-events", "all").call(d3.behavior.zoom().scaleExtent([0.5, 10]).on("zoom", redraw)).on("dblclick", null).append("svg:g");
 
 r.link = r.vis.selectAll(".link");
 
@@ -396,8 +411,6 @@ $(document).ready(function() {
     }
   });
 });
-
-r.vis.append("svg:rect").attr("width", r.w).attr("height", r.h).attr("fill", "none");
 
 r.palette = d3.scale.category20();
 

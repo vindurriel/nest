@@ -6,10 +6,34 @@ cacheIt = (e) ->
 redraw = ->
   r.scale=d3.event.scale
   r.vis.attr "transform", "translate(" + d3.event.translate + ")" + " scale(" + r.scale + ")"
-  d3.selectAll(".node text").style("font-size", (1 / r.scale) + "em");
+  d3.selectAll("text").style("font-size", (1 / r.scale) + "em");
 draw = (json) ->
   if json.blacklist?
     r.blacklist=json.blacklist
+  r.legend=r.vis
+  .selectAll("rect.leg")
+  .data([
+    {"type":"artist",},
+    {"type":"album",},
+    {"type":"song",}
+  ])
+  .enter()
+  .append('g')
+  .attr "transform", (d,i) ->
+    "translate(" + 100 + "," + (50+i*70) + ")"
+  .classed('leg',true)
+  
+  r.legend.append("circle")
+  .style("fill",color)
+  .attr("r","10px")
+  .attr('cx','0')
+  .attr('cy','0')
+
+  r.legend.append("text")
+  .text((d)->d.type)
+  .attr("dx",'15')
+  .attr("dy",'3')
+
   r.nodes= json.nodes
   r.links= json.links
   r.root = json.nodes[0]
@@ -173,7 +197,7 @@ click = (d) ->
     d3.json url , expand
   else
     highlight d
-    history.pushState {},d.name,"/model/#{d.id}"
+    history.pushState {},d.name,"/model/#{d.type}_#{d.id}"
   update()
 expand = (data)->
   for id of data
@@ -248,8 +272,8 @@ save = ->
     "data": res
 r = exports ? this
 r.hNode={}
-r.w = $(this).width()
-r.h = $(this).height()
+r.w = $(window).width()
+r.h = $(window).height()
 r.ctrlPressed = false
 r.altPressed = false
 r.shiftPressed = false
@@ -263,12 +287,9 @@ Array::remove = (b) ->
 r.scale=1
 r.vis = d3.select("#container")
   .append("svg:svg")
-  .attr("width", r.w)
-  .attr("height", r.h)
   .attr("viewBox","0 0 #{r.w} #{r.h}")
   .attr("pointer-events", "all")
-  .attr("preserveAspectRatio","XMidYMid")
-  .append("svg:g")
+  # .attr("preserveAspectRatio","XMidYMid")
   .call(d3.behavior.zoom().scaleExtent([0.5,10]).on("zoom", redraw))
   .on("dblclick", null)
   .append("svg:g")
@@ -305,7 +326,7 @@ $(document).ready ->
       draw {"nodes":[{"name":id,"id":id,"type":"Baike"}],"links":[]}
     else
       draw d
-r.vis.append("svg:rect").attr("width", r.w).attr("height", r.h).attr "fill", "none"
+# r.vis.append("svg:rect").attr("width", r.w).attr("height", r.h).attr "fill", "#33ffff"
 r.palette= d3.scale.category20()
 r.colors =[
    "baiduBaikeCrawler",
