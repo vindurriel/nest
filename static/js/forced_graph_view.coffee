@@ -53,7 +53,7 @@ draw = (json) ->
   r.nodes.forEach (d,i)->
     if not d.id?
       d.id= d.name
-    d.x=i*r.w/n
+    d.x=r.w*(i%10)/10
     d.y=i*r.h/n
   update()
 getLinkName= (source,target)->
@@ -174,8 +174,7 @@ dblclick = (d)->
   if d.type=="relationship"
     s=d.id.split('_')
     t=s[0]
-    id=s[1]
-  url= "/roaming/#{t}s/#{id}"
+  url= "/roaming/#{t}/#{id}"
   d3.json url , expand
   update()
 click = (d) ->
@@ -240,7 +239,6 @@ expand = (data)->
 highlight = (d)->
   for x in r.links
     x.isHigh= false
-  tmp=[]
   relationships=[]
   for x in r.nodes
     x.isHigh= false
@@ -254,35 +252,38 @@ highlight = (d)->
     link.target.isHigh=true
     link.source.isHigh=true
   if d.type == "artist"
-    r.nodes.push {
-      'id':'hotsong_'+d.id,
-      'name':"热门歌曲",
-      'type':'relationship',
-      'isHigh':true,
-      'x':d.x+Math.random()*100-50,
-      'y':d.y+Math.random()*100-50,
-    }
-    r.links.push {
-      'source':d,
-      'target':r.nodes.slice(-1)[0],
-      'isHigh':true,
-    }
-    r.nodes.push {
-      'id':'similar_'+d.id,
-      'name':"相似艺术家",
-      'type':'relationship',
-      'isHigh':true,
-      'x':d.x+10,
-      'y':d.y+10,
-    }
-    r.links.push {
-      'source':d,
-      'target':r.nodes.slice(-1)[0],
-      'isHigh':true,
-    }
+    if not r.hNode['hitsongs_'+d.id]?
+      r.nodes.push {
+        'id':'hitsongs_'+d.id,
+        'name':"#{d.name}的热门歌曲",
+        'type':'relationship',
+        'isHigh':true,
+        'x':d.x+Math.random()*100-50,
+        'y':d.y+Math.random()*100-50,
+      }
+      r.links.push {
+        'source':d,
+        'target':r.nodes.slice(-1)[0],
+        'isHigh':true,
+      }
+    if not r.hNode['albums_'+d.id]?
+      r.nodes.push {
+        'id':'albums_'+d.id,
+        'name':"#{d.name}的专辑",
+        'type':'relationship',
+        'isHigh':true,
+        'x':d.x+Math.random()*100-50,
+        'y':d.y+Math.random()*100-50,
+      }
+      r.links.push {
+        'source':d,
+        'target':r.nodes.slice(-1)[0],
+        'isHigh':true,
+      }
     for x in relationships
-      r.nodes.remove x
-      r.links.remove r.degree[x.index][0]
+      if r.degree[x.index].length==1 and r.degree[x.index][0].source!=d
+        r.nodes.remove x
+        r.links.remove r.degree[x.index][0]
   return
 save = ->
   res={
@@ -386,12 +387,12 @@ $(document).ready ->
 # r.vis.append("svg:rect").attr("width", r.w).attr("height", r.h).attr "fill", "#33ffff"
 r.palette= d3.scale.category20()
 r.colors =[
-   "baiduBaikeCrawler",
-   "hudongBaikeCrawler",
-   "referData",
-   "song",
-   "artist",
-   "user",
-   "album",
-   'relationship'
+  "referData",
+  "song",
+  "artist",
+  "user",
+  "album",
+  'relationship',
+  "baiduBaikeCrawler",
+  "hudongBaikeCrawler"
 ]

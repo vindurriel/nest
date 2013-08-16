@@ -53,7 +53,7 @@ draw = function(json) {
     if (d.id == null) {
       d.id = d.name;
     }
-    d.x = i * r.w / n;
+    d.x = r.w * (i % 10) / 10;
     return d.y = i * r.h / n;
   });
   return update();
@@ -173,9 +173,8 @@ dblclick = function(d) {
   if (d.type === "relationship") {
     s = d.id.split('_');
     t = s[0];
-    id = s[1];
   }
-  url = "/roaming/" + t + "s/" + id;
+  url = "/roaming/" + t + "/" + id;
   d3.json(url, expand);
   return update();
 };
@@ -274,13 +273,12 @@ expand = function(data) {
 };
 
 highlight = function(d) {
-  var i, link, relationships, tmp, x, _i, _j, _k, _l, _len, _len1, _len2, _len3, _ref, _ref1, _ref2;
+  var i, link, relationships, x, _i, _j, _k, _l, _len, _len1, _len2, _len3, _ref, _ref1, _ref2;
   _ref = r.links;
   for (_i = 0, _len = _ref.length; _i < _len; _i++) {
     x = _ref[_i];
     x.isHigh = false;
   }
-  tmp = [];
   relationships = [];
   _ref1 = r.nodes;
   for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
@@ -301,36 +299,42 @@ highlight = function(d) {
     link.source.isHigh = true;
   }
   if (d.type === "artist") {
-    r.nodes.push({
-      'id': 'hotsong_' + d.id,
-      'name': "热门歌曲",
-      'type': 'relationship',
-      'isHigh': true,
-      'x': d.x + Math.random() * 100 - 50,
-      'y': d.y + Math.random() * 100 - 50
-    });
-    r.links.push({
-      'source': d,
-      'target': r.nodes.slice(-1)[0],
-      'isHigh': true
-    });
-    r.nodes.push({
-      'id': 'similar_' + d.id,
-      'name': "相似艺术家",
-      'type': 'relationship',
-      'isHigh': true,
-      'x': d.x + 10,
-      'y': d.y + 10
-    });
-    r.links.push({
-      'source': d,
-      'target': r.nodes.slice(-1)[0],
-      'isHigh': true
-    });
+    if (r.hNode['hitsongs_' + d.id] == null) {
+      r.nodes.push({
+        'id': 'hitsongs_' + d.id,
+        'name': "" + d.name + "的热门歌曲",
+        'type': 'relationship',
+        'isHigh': true,
+        'x': d.x + Math.random() * 100 - 50,
+        'y': d.y + Math.random() * 100 - 50
+      });
+      r.links.push({
+        'source': d,
+        'target': r.nodes.slice(-1)[0],
+        'isHigh': true
+      });
+    }
+    if (r.hNode['albums_' + d.id] == null) {
+      r.nodes.push({
+        'id': 'albums_' + d.id,
+        'name': "" + d.name + "的专辑",
+        'type': 'relationship',
+        'isHigh': true,
+        'x': d.x + Math.random() * 100 - 50,
+        'y': d.y + Math.random() * 100 - 50
+      });
+      r.links.push({
+        'source': d,
+        'target': r.nodes.slice(-1)[0],
+        'isHigh': true
+      });
+    }
     for (_l = 0, _len3 = relationships.length; _l < _len3; _l++) {
       x = relationships[_l];
-      r.nodes.remove(x);
-      r.links.remove(r.degree[x.index][0]);
+      if (r.degree[x.index].length === 1 && r.degree[x.index][0].source !== d) {
+        r.nodes.remove(x);
+        r.links.remove(r.degree[x.index][0]);
+      }
     }
   }
 };
@@ -477,4 +481,4 @@ $(document).ready(function() {
 
 r.palette = d3.scale.category20();
 
-r.colors = ["baiduBaikeCrawler", "hudongBaikeCrawler", "referData", "song", "artist", "user", "album", 'relationship'];
+r.colors = ["referData", "song", "artist", "user", "album", 'relationship', "baiduBaikeCrawler", "hudongBaikeCrawler"];

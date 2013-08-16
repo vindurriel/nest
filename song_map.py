@@ -15,14 +15,16 @@ class roaming:
 	def GET(self,t,ids):
 		t=t.lower()
 		print "###roaming",t,ids
-		if t=="artists":
+		if t=="artist":
 			return self.artist(ids)
-		if t=="songs":
+		if t=="song":
 			return self.song(ids)
 		if "baike" in t:
 			return self.baike(ids)
-		if t=="similar":
-			return json.dumps(dict(map(lambda x:(x,[]) , split_id(ids) )))
+		if t=="hitsongs":
+			return self.hitsongs(ids)
+		if t=="albums":
+			return self.albums(ids)
 		else:
 			return json.dumps(dict(map(lambda x:(x,[]) , split_id(ids) )))
 	def baike(self,ids):
@@ -34,6 +36,32 @@ class roaming:
 				res[id]=json.loads(proxy.GET(id))
 			except Exception, e:
 				res[id]=[]
+		return json.dumps(res)
+	def hitsongs(self,ids):
+		api="Artists.hotSongs"
+		res={}
+		for id in split_id(ids):
+			res[id]=[]
+			r=xiami_api.api_get(api,{"id":id[id.index('_')+1:]})
+			for song in r['songs']:
+				res[id].append({
+					"id":song["song_id"],
+					"name":song["name"],
+					"type":"song"
+				})
+		return json.dumps(res)
+	def albums(self,ids):
+		api="Artists.albums"
+		res={}
+		for id in split_id(ids):
+			res[id]=[]
+			r=xiami_api.api_get(api,{"id":id[id.index('_')+1:]})
+			for album in r['albums']:
+				res[id].append({
+					"id":album["album_id"],
+					"name":album["album_name"],
+					"type":"album"
+				})
 		return json.dumps(res)
 	def song(self,ids):
 		api="Songs.roaming"
