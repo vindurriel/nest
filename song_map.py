@@ -13,12 +13,16 @@ class roaming:
 		"user-agent":"Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1500.95 Safari/537.36"
 	}
 	def GET(self,t,ids):
+		t=t.lower()
+		print "###roaming",t,ids
 		if t=="artists":
 			return self.artist(ids)
 		if t=="songs":
 			return self.song(ids)
-		if "Baike" in t:
+		if "baike" in t:
 			return self.baike(ids)
+		if t=="similar":
+			return json.dumps(dict(map(lambda x:(x,[]) , split_id(ids) )))
 		else:
 			return json.dumps(dict(map(lambda x:(x,[]) , split_id(ids) )))
 	def baike(self,ids):

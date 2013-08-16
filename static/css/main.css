@@ -54,6 +54,7 @@ body{
 body.dark{
 	background: #333;
 	color:white;
+	overflow: hidden;
 }
 
 a{

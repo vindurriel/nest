@@ -81,6 +81,7 @@ update = ->
   .append("g")
   .attr("class", "node")
   .on("click", click)
+  .on('dblclick',dblclick)
   .classed("highlight",(d)->d.isHigh==true)
   .attr "transform", (d) ->
       "translate(" + d.x + "," + d.y + ")"
@@ -129,13 +130,13 @@ update = ->
   n=r.nodes.length
   for i in [0..n-1]
     r.hNode[r.nodes[i].id]=r.nodes[i]
-    r.degree.push 0
+    r.degree.push []
     r.matrix.push []
     for j in [0..n-1]
       r.matrix[i].push null
   for x in r.links
-    r.degree[x.source.index]+=1
-    r.degree[x.target.index]+=1
+    r.degree[x.source.index].push x
+    r.degree[x.target.index].push x
     r.matrix[x.source.index][x.target.index]=x
 getR = (d) ->
   if d == r.theFocus
@@ -158,6 +159,25 @@ color = (d) ->
   if i>=0
     return r.palette(i+1)
   return r.palette(0)
+dblclick = (d)->
+  if d.type=="referData"
+    window.open if d.url? then d.url else d.name
+    return
+  if d.isSearching? and d.isSearching==true
+    d.isSearching= false
+  else 
+    d.isSearching = true
+  if not d.isSearching
+    return
+  t=d.type
+  id=d.id
+  if d.type=="relationship"
+    s=d.id.split('_')
+    t=s[0]
+    id=s[1]
+  url= "/roaming/#{t}s/#{id}"
+  d3.json url , expand
+  update()
 click = (d) ->
   if r.shiftPressed
     if d==r.root
@@ -166,39 +186,26 @@ click = (d) ->
       return
     n = r.nodes.length
     i= d.index
-    for j in [0..n-1]
-      link=r.matrix[i][j]
-      if link?
-       r.links.remove link
-       if r.degree[j]==1
-        r.nodes.remove link.target 
-      link=r.matrix[j][i]
-      if link?
-        r.links.remove link
-        if r.degree[j]==1
-          r.nodes.remove link.target 
+    for link in r.degree[d.index]
+      r.links.remove link
+      if r.degree[link.target.index].length==1
+        r.nodes.remove link.target
+      if r.degree[link.source.index].length==1
+        r.nodes.remove link.source
     r.nodes.remove d
     r.blacklist.push d.id
+    update()
   else if r.altPressed
     save().done ->
       window.location.href = "/model/#{d.name}"
-    return
   else if r.ctrlPressed
-    if d.type=="referData"
-      window.open if d.url? then d.url else d.name
-      return
-    if d.isSearching? and d.isSearching==true
-      d.isSearching= false
-    else 
-      d.isSearching = true
-    if not d.isSearching
-      return
-    url= "/roaming/#{d.type}s/#{d.id}"
-    d3.json url , expand
+    dblclick d
+    update()
   else
     highlight d
-    history.pushState {},d.name,"/model/#{d.type}_#{d.id}"
-  update()
+    if d.type!='relationship'
+      history.pushState {},d.name,"/model/#{d.type}_#{d.id}"
+    update()
 expand = (data)->
   for id of data
     source=r.hNode[id]
@@ -212,6 +219,8 @@ expand = (data)->
         continue
       if x.type=="referData"
         if not r.hNode[x.id]?
+          x.x=source.x+10
+          x.y=source.y+10
           r.nodes.push x
           r.links.push {"source":source,"target":x }
       else 
@@ -219,6 +228,8 @@ expand = (data)->
         if not r.hNode[x.id]?
           if i==5 then continue
           r.nodes.push x
+          x.x=source.x+10
+          x.y=source.y+10
           i+=1
         else
           target=r.hNode[x.id]
@@ -229,18 +240,49 @@ expand = (data)->
 highlight = (d)->
   for x in r.links
     x.isHigh= false
+  tmp=[]
+  relationships=[]
   for x in r.nodes
     x.isHigh= false
+    if x.type=="relationship"
+        relationships.push x
   d.isHigh=true
   r.theFocus = d
   i=d.index
-  for j in [0..r.nodes.length-1]
-    if r.matrix[i][j]?
-      r.matrix[i][j].isHigh= true
-      r.nodes[j].isHigh = true
-    if r.matrix[j][i]?
-      r.matrix[j][i].isHigh= true
-      r.nodes[j].isHigh= true
+  for link in r.degree[d.index]
+    link.isHigh= true
+    link.target.isHigh=true
+    link.source.isHigh=true
+  if d.type == "artist"
+    r.nodes.push {
+      'id':'hotsong_'+d.id,
+      'name':"热门歌曲",
+      'type':'relationship',
+      'isHigh':true,
+      'x':d.x+Math.random()*100-50,
+      'y':d.y+Math.random()*100-50,
+    }
+    r.links.push {
+      'source':d,
+      'target':r.nodes.slice(-1)[0],
+      'isHigh':true,
+    }
+    r.nodes.push {
+      'id':'similar_'+d.id,
+      'name':"相似艺术家",
+      'type':'relationship',
+      'isHigh':true,
+      'x':d.x+10,
+      'y':d.y+10,
+    }
+    r.links.push {
+      'source':d,
+      'target':r.nodes.slice(-1)[0],
+      'isHigh':true,
+    }
+    for x in relationships
+      r.nodes.remove x
+      r.links.remove r.degree[x.index][0]
   return
 save = ->
   res={
@@ -290,8 +332,7 @@ r.vis = d3.select("#container")
   .attr("viewBox","0 0 #{r.w} #{r.h}")
   .attr("pointer-events", "all")
   # .attr("preserveAspectRatio","XMidYMid")
-  .call(d3.behavior.zoom().scaleExtent([0.5,10]).on("zoom", redraw))
-  .on("dblclick", null)
+  .call(d3.behavior.zoom().scaleExtent([0.5,10]).on("zoom", redraw)).on('dblclick.zoom',null)
   .append("svg:g")
 r.link = r.vis.selectAll(".link")
 r.node = r.vis.selectAll(".node")
@@ -351,5 +392,6 @@ r.colors =[
    "song",
    "artist",
    "user",
-   "album"
+   "album",
+   'relationship'
 ]
