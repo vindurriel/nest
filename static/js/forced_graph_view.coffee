@@ -16,6 +16,7 @@ draw = (json) ->
     {"type":"artist",},
     {"type":"album",},
     {"type":"song",}
+    {"type":"relationship",}
   ])
   .enter()
   .append('g')
@@ -385,14 +386,40 @@ $(document).ready ->
     else
       draw d
 # r.vis.append("svg:rect").attr("width", r.w).attr("height", r.h).attr "fill", "#33ffff"
-r.palette= d3.scale.category20()
+r.palette= d3.scale.category10()
 r.colors =[
-  "referData",
   "song",
   "artist",
   "user",
   "album",
   'relationship',
   "baiduBaikeCrawler",
-  "hudongBaikeCrawler"
+  "hudongBaikeCrawler",
+  "referData",
 ]
+r.relationships={
+  'artist':[{
+      "id": (d)-> "hitsongs_#{d.id}",
+      'name': (d)->"#{d.name}的热门歌曲",
+    },{
+      "id": (d)-> "albums_#{d.id}",
+      'name': (d)->"#{d.name}的专辑",
+    }
+  ],
+  'song':[{
+      "id": (d)-> "artist_of_song_#{d.id}",
+      'name': (d)->"#{d.name}的艺术家",
+    },{
+      "id": (d)-> "album_of_song_#{d.id}",
+      'name': (d)->"#{d.name}所属的专辑",      
+    }
+  ],
+  'album':[{
+      "id": (d)-> "artist_of_album_#{d.id}",
+      'name': (d)->"#{d.name}的艺术家",
+    },{
+      "id": (d)-> "album_of_song_#{d.id}",
+      'name': (d)->"#{d.name}中包含的的歌曲",      
+    }
+  ],
+}

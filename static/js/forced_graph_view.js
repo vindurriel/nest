@@ -27,6 +27,8 @@ draw = function(json) {
       "type": "album"
     }, {
       "type": "song"
+    }, {
+      "type": "relationship"
     }
   ]).enter().append('g').attr("transform", function(d, i) {
     return "translate(" + 100 + "," + (50 + i * 70) + ")";
@@ -479,6 +481,60 @@ $(document).ready(function() {
   });
 });
 
-r.palette = d3.scale.category20();
+r.palette = d3.scale.category10();
 
-r.colors = ["referData", "song", "artist", "user", "album", 'relationship', "baiduBaikeCrawler", "hudongBaikeCrawler"];
+r.colors = ["song", "artist", "user", "album", 'relationship', "baiduBaikeCrawler", "hudongBaikeCrawler", "referData"];
+
+r.relationships = {
+  'artist': [
+    {
+      "id": function(d) {
+        return "hitsongs_" + d.id;
+      },
+      'name': function(d) {
+        return "" + d.name + "的热门歌曲";
+      }
+    }, {
+      "id": function(d) {
+        return "albums_" + d.id;
+      },
+      'name': function(d) {
+        return "" + d.name + "的专辑";
+      }
+    }
+  ],
+  'song': [
+    {
+      "id": function(d) {
+        return "artist_of_song_" + d.id;
+      },
+      'name': function(d) {
+        return "" + d.name + "的艺术家";
+      }
+    }, {
+      "id": function(d) {
+        return "album_of_song_" + d.id;
+      },
+      'name': function(d) {
+        return "" + d.name + "所属的专辑";
+      }
+    }
+  ],
+  'album': [
+    {
+      "id": function(d) {
+        return "artist_of_album_" + d.id;
+      },
+      'name': function(d) {
+        return "" + d.name + "的艺术家";
+      }
+    }, {
+      "id": function(d) {
+        return "album_of_song_" + d.id;
+      },
+      'name': function(d) {
+        return "" + d.name + "中包含的的歌曲";
+      }
+    }
+  ]
+};
