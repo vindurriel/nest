@@ -21,7 +21,7 @@ draw = (json) ->
   .enter()
   .append('g')
   .attr "transform", (d,i) ->
-    "translate(" + 100 + "," + (50+i*70) + ")"
+    "translate(" + (100+i*100)  + "," + 30 + ")"
   .classed('leg',true)
   
   r.legend.append("circle")
@@ -29,6 +29,7 @@ draw = (json) ->
   .attr("r","10px")
   .attr('cx','0')
   .attr('cy','0')
+  .attr('stroke-width','1px')
 
   r.legend.append("text")
   .text((d)->d.type)
@@ -54,6 +55,8 @@ draw = (json) ->
   r.nodes.forEach (d,i)->
     if not d.id?
       d.id= d.name
+    if '_' not in d.id
+      d.id= "#{d.type}_#{d.id}"
     d.x=r.w*(i%10)/10
     d.y=i*r.h/n
   update()
@@ -61,9 +64,7 @@ getLinkName= (source,target)->
   return "#{source.name}->#{target.name}"
 update = ->
   # Update the links…
-  r.link = r.link.data(r.links)
-  .classed "highlight", (d)->d.isHigh==true
-  
+  r.link = r.link.data(r.links)  
   # Enter any new links.
   r.link.enter()
   .insert("line", ".node")
@@ -99,8 +100,10 @@ update = ->
   .text (d) ->
     d.name
 
-
   r.node.exit().remove()
+
+  r.node.classed "highlight", (d)->d.isHigh==true
+  r.link.classed "highlight", (d)->d.isHigh==true
 
   d3.selectAll(".node circle")
   .attr("r", getR)
@@ -172,10 +175,7 @@ dblclick = (d)->
     return
   t=d.type
   id=d.id
-  if d.type=="relationship"
-    s=d.id.split('_')
-    t=s[0]
-  url= "/roaming/#{t}/#{id}"
+  url= "/roaming/#{id}"
   d3.json url , expand
   update()
 click = (d) ->
@@ -197,14 +197,13 @@ click = (d) ->
     update()
   else if r.altPressed
     save().done ->
-      window.location.href = "/model/#{d.name}"
+      window.location.href = "/model/#{d.id}"
   else if r.ctrlPressed
     dblclick d
     update()
   else
     highlight d
-    if d.type!='relationship'
-      history.pushState {},d.name,"/model/#{d.type}_#{d.id}"
+    history.pushState {},d.name,"/model/#{d.id}"
     update()
 expand = (data)->
   for id of data
@@ -213,38 +212,28 @@ expand = (data)->
       continue
     i=0
     for x in data[id]
+      x.id= "#{x.type}_#{x.id}"
       if not x.id?
         x.id= x.name
       if r.blacklist.indexOf(x.id)>=0
         continue
-      if x.type=="referData"
-        if not r.hNode[x.id]?
-          x.x=source.x+10
-          x.y=source.y+10
-          r.nodes.push x
-          r.links.push {"source":source,"target":x }
-      else 
+      target=r.hNode[x.id]
+      if not target?
+        if i==5 then continue
+        r.nodes.push x
+        x.x=source.x+Math.random()*100-50
+        x.y=source.y+Math.random()*100-50
+        i+=1
         target=x
-        if not r.hNode[x.id]?
-          if i==5 then continue
-          r.nodes.push x
-          x.x=source.x+10
-          x.y=source.y+10
-          i+=1
-        else
-          target=r.hNode[x.id]
-        if not r.matrix[source.index][target.index]?
-          r.links.push {"source":source,"target":target }
+      if not r.matrix[source.index][target.index]?
+        r.links.push {"source":source,"target":target }
     source.isSearching= false
   update()
 highlight = (d)->
   for x in r.links
     x.isHigh= false
-  relationships=[]
   for x in r.nodes
     x.isHigh= false
-    if x.type=="relationship"
-        relationships.push x
   d.isHigh=true
   r.theFocus = d
   i=d.index
@@ -252,39 +241,35 @@ highlight = (d)->
     link.isHigh= true
     link.target.isHigh=true
     link.source.isHigh=true
-  if d.type == "artist"
-    if not r.hNode['hitsongs_'+d.id]?
-      r.nodes.push {
-        'id':'hitsongs_'+d.id,
-        'name':"#{d.name}的热门歌曲",
-        'type':'relationship',
-        'isHigh':true,
-        'x':d.x+Math.random()*100-50,
-        'y':d.y+Math.random()*100-50,
-      }
-      r.links.push {
-        'source':d,
-        'target':r.nodes.slice(-1)[0],
-        'isHigh':true,
-      }
-    if not r.hNode['albums_'+d.id]?
-      r.nodes.push {
-        'id':'albums_'+d.id,
-        'name':"#{d.name}的专辑",
-        'type':'relationship',
-        'isHigh':true,
-        'x':d.x+Math.random()*100-50,
-        'y':d.y+Math.random()*100-50,
-      }
-      r.links.push {
-        'source':d,
-        'target':r.nodes.slice(-1)[0],
-        'isHigh':true,
-      }
-    for x in relationships
-      if r.degree[x.index].length==1 and r.degree[x.index][0].source!=d
-        r.nodes.remove x
-        r.links.remove r.degree[x.index][0]
+  if not r.existing_relation_links?
+    r.existing_relation_links=[]
+  if r.relationships[d.type]?
+    for rel in r.relationships[d.type]
+      id= rel.id d
+      if not r.hNode[id]?
+        n= {
+          'id':id,
+          'name': rel.name(d),
+          'type':"relationship",
+          'isHigh':true,
+          'x':d.x+Math.random()*100-50,
+          'y':d.y+Math.random()*100-50,
+        }
+        r.nodes.push n
+        l= {
+          'source':d,
+          'target':n,
+          'isHigh':true,
+        }
+        r.links.push l
+        r.existing_relation_links.push l
+    for link in r.existing_relation_links
+      if link.source==d
+        continue
+      if r.degree[link.target.index]? and r.degree[link.target.index].length>1
+        continue
+      r.links.remove link
+      r.nodes.remove link.target
   return
 save = ->
   res={
@@ -310,7 +295,7 @@ save = ->
       "target":x.target.index,
   res= JSON.stringify res
   return $.ajax
-    "url":"/model/#{r.root.type}_#{r.root.id}",
+    "url":"/model/#{r.root.id}",
     "type": "POST",
     "contentType": "json", 
     "data": res
@@ -349,43 +334,17 @@ $(document).ready ->
       alert "保存完成"
     .fail (d,e)->
       alert e
-  $("#btn_search").click ->
-    query=$("#q").val()
-    if ":" in query
-      query = query.replace ":","_"
-    id= query
-    type= "unknown"
-    if "_" in query
-      s= query.split "_"
-      type= s[0]
-      id=s[1]
-    $.getJSON "/model/load/#{query}", (d)->
-      if not d or d.error?
-        $.getJSON "/info/#{type}s/#{id}", (d)->
-          if not d or d.error?
-            alert d.error
-            return
-          draw d
-      else
-        draw d
-  query= document.title
+  id= document.title
   type= "unknown"
-  if ":" in query
+  if ":" in id
     query = query.replace ":","_"
-  if "_" in query
-    s= query.split "_"
-    type= s[0]
-    id= s[1]
-  $.getJSON "/model/load/#{query}", (d)->
+  $.getJSON "/model/load/#{id}", (d)->
     if not d or d.error?
-      $.getJSON "/info/#{type}s/#{id}", (d)->
+      $.getJSON "/info/#{id}", (d)->
           if not d or d.error?
-            alert d.error
             return
           draw d
-    else
-      draw d
-# r.vis.append("svg:rect").attr("width", r.w).attr("height", r.h).attr "fill", "#33ffff"
+    else draw d
 r.palette= d3.scale.category10()
 r.colors =[
   "song",
@@ -399,26 +358,31 @@ r.colors =[
 ]
 r.relationships={
   'artist':[{
-      "id": (d)-> "hitsongs_#{d.id}",
+      "id": (d)-> "hitsongs_of_#{d.id}",
       'name': (d)->"#{d.name}的热门歌曲",
     },{
-      "id": (d)-> "albums_#{d.id}",
+      "id": (d)-> "albums_of_#{d.id}",
       'name': (d)->"#{d.name}的专辑",
     }
   ],
   'song':[{
-      "id": (d)-> "artist_of_song_#{d.id}",
+      "id": (d)-> "artist_of_#{d.id}",
       'name': (d)->"#{d.name}的艺术家",
     },{
-      "id": (d)-> "album_of_song_#{d.id}",
+      "id": (d)-> "album_of_#{d.id}",
       'name': (d)->"#{d.name}所属的专辑",      
     }
   ],
   'album':[{
-      "id": (d)-> "artist_of_album_#{d.id}",
+      "id": (d)-> "artist_of_#{d.id}",
       'name': (d)->"#{d.name}的艺术家",
     },{
-      "id": (d)-> "album_of_song_#{d.id}",
+      "id": (d)-> "songs_of_#{d.id}",
+      'name': (d)->"#{d.name}中包含的的歌曲",      
+    }
+  ],
+  'collect':[{
+      "id": (d)-> "songs_of_#{d.id}",
       'name': (d)->"#{d.name}中包含的的歌曲",      
     }
   ],

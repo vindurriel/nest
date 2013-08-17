@@ -65,7 +65,8 @@ def die(why):
 	 f.write(why.encode("gbk"))
 	 f.write("\n")
 	print_json({"error":why})
-	sys.exit(0)
+	if __name__ == '__main__':
+		sys.exit(0)
 if __name__ == '__main__':
 	if len(sys.argv)<2:
 		die(__doc__) 

@@ -1,4 +1,4 @@
-import web,time,multiprocessing,json,requests
+import web,time,multiprocessing,json,requests,traceback
 import xiami_api
 def split_id(ids):
 	if type(ids)==type([]):
@@ -12,118 +12,160 @@ class roaming:
 	headers={
 		"user-agent":"Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1500.95 Safari/537.36"
 	}
-	def GET(self,t,ids):
-		t=t.lower()
-		print "###roaming",t,ids
-		if t=="artist":
-			return self.artist(ids)
-		if t=="song":
-			return self.song(ids)
+	def GET(self,tid):
+		print "###roaming",tid
+		res=[]
+		self.info=info()
+		if '_' not in tid:
+			return json.dumps({tid:res})
+		i=tid.rindex('_')
+		t,id=tid[:i],tid[i+1:]
 		if "baike" in t:
-			return self.baike(ids)
-		if t=="hitsongs":
-			return self.hitsongs(ids)
-		if t=="albums":
-			return self.albums(ids)
-		else:
-			return json.dumps(dict(map(lambda x:(x,[]) , split_id(ids) )))
-	def baike(self,ids):
+			res = self.baike(tid)
+		func_name=t.replace('.','_')
+		if hasattr(self,func_name):
+			res = getattr(self,func_name)(id)
+		return json.dumps({tid:res})
+	def artist_of_song(self,id):
+		return self._artist_of('song',id)
+	def artist_of_album(self,id):
+		return self._artist_of('album',id)
+	def _artist_of(self,t,id):
+		r=json.loads(self.info.GET(t+'_'+id))["nodes"][0]
+		return [{
+			'id':r["artist_id"],
+			'name':r['artist_name'],
+			'type':'artist',
+		}]
+		return res
+	def album_of_song(self,id):
+		r=json.loads(self.info.GET('song_'+id))["nodes"][0]
+		return [{
+			'id':r["album_id"],
+			'name':r['album_name'],
+			'type':'album',
+		}]
+	def songs_of_album(self,id):
+		api="Albums.detail"
+		res=[]
+		r=xiami_api.api_get(api,{"id":id})
+		for song in r["songs"]:
+			res.append({
+				"id":song["song_id"],
+				"name":song["name"],
+				"type":"song"
+			})
+		return res
+	def songs_of_collect(self,id):
+		api="Collects.detail"
+		res=[]
+		r=xiami_api.api_get(api,{"id":id})
+		for song in r["songs"]:
+			res.append({
+				"id":song["song_id"],
+				"name":song["name"],
+				"type":"song"
+			})
+		return res		
+	def baike(self,id):
 		import model
-		res={}
+		res=[]
 		proxy=model.search()
-		for id in split_id(ids):
-			try:
-				res[id]=json.loads(proxy.GET(id))
-			except Exception, e:
-				res[id]=[]
-		return json.dumps(res)
-	def hitsongs(self,ids):
+		try:
+			res=json.loads(proxy.GET(id))
+		except Exception,e:
+			traceback.print_exc()
+		return res
+	def hitsongs_of_artist(self,id):
 		api="Artists.hotSongs"
-		res={}
-		for id in split_id(ids):
-			res[id]=[]
-			r=xiami_api.api_get(api,{"id":id[id.index('_')+1:]})
-			for song in r['songs']:
-				res[id].append({
-					"id":song["song_id"],
-					"name":song["name"],
-					"type":"song"
-				})
-		return json.dumps(res)
-	def albums(self,ids):
+		res=[]
+		r=xiami_api.api_get(api,{"id":id})
+		for song in r["songs"]:
+			res.append({
+				"id":song["song_id"],
+				"name":song["name"],
+				"type":"song"
+			})
+		return res
+	def albums_of_artist(self,id):
 		api="Artists.albums"
-		res={}
-		for id in split_id(ids):
-			res[id]=[]
-			r=xiami_api.api_get(api,{"id":id[id.index('_')+1:]})
-			for album in r['albums']:
-				res[id].append({
-					"id":album["album_id"],
-					"name":album["album_name"],
-					"type":"album"
-				})
-		return json.dumps(res)
-	def song(self,ids):
+		res=[]
+		r=xiami_api.api_get(api,{"id":id})
+		for album in r['albums']:
+			res.append({
+				"id":album["album_id"],
+				"name":album["album_name"],
+				"type":"album"
+			})
+		return res
+	def song(self,id):
 		api="Songs.roaming"
-		res={}
-		for id in split_id(ids):
-			res[id]=[]
-			r=xiami_api.api_get(api,{"id":id})
-			for song in r:
-				res[id].append({
-					"id":song["song_id"],
-					"name":song["name"],
-					"type":"song"
-				})
-		return json.dumps(res)
-	def artist(self,ids):
-		res={}
-		print ids
-		for id in split_id(ids):
-			res[id]=[]
-			r=requests.get("http://www.xiami.com/app/android/artist-similar",params={"id":id},headers=self.headers)
-			artists=r.json()["artists"]
-			for a in artists:
-				res[id].append({
-					"id":a["artist_id"],
-					"name":a["name"],
-					"type":"artist"
-				})			
-		return json.dumps(res)
-class info:
-	def GET(self,t,ids):
+		res=[]
+		r=xiami_api.api_get(api,{"id":id})
+		for song in r:
+			res.append({
+				"id":song["song_id"],
+				"name":song["name"],
+				"type":"song"
+			})
+		return res
+	def artist(self,id):
+		res=[]
+		r=requests.get(
+			"http://www.xiami.com/app/android/artist-similar",
+			params={"id":id},
+			headers=self.headers)
+		for a in r.json()["artists"]:
+			res.append({
+				"id":a["artist_id"],
+				"name":a["name"],
+				"type":"artist"
+			})			
+		return res
+def captalize(t):
+	return t[0].upper()+t[1:]
+class info:	
+	def tryset(self,dic,keys):
+		for k in keys:
+			if k in dic:
+				return dic[k]
+		return ''
+	def GET(self,tid):
+		print "###info",tid
 		res={
 			'nodes':[],
 			'links':[]
 		}
-		api=t[0].upper()+t[1:]+".detail"
-		ro=roaming()
-		i=0
-		hash={}
-		ids=split_id(ids)
-		for id in ids:
-			r= xiami_api.api_get(api, {"id":id})
+		if '_' not in tid:
+			return res
+		i=tid.rindex('_')
+		t,id=tid[:i],tid[i+1:]
+		api=captalize(t)+"s.detail"
+		r= xiami_api.api_get(api, {"id":id})
+		if r and "error" not in r:
 			if "song" in r:
 				r=r["song"]
-			name_field="name"
-			if t=="artists":
-				name_field="artist_name"
 			res['nodes'].append({
-				"id":id,
-				"name":r[name_field],
-				"type":t[:-1],
+				"id":tid,
+				"name":self.tryset(r,['name',t+'_name']),
+				"artist_name":self.tryset(r,['artist_name']),
+				"artist_id":self.tryset(r,['artist_id']),
+				"album_id":self.tryset(r,['album_id']),
+				"album_name":self.tryset(r,['album_name']),
+				"type":t,
 			})
-			hash[id]=i
-			i+=1
-		s=json.loads(ro.GET(t,ids))
-		for k,v in s.iteritems():
-			for x in v:
-				if x["id"] in hash and k in hash:
-					res['links'].append({
-						"source":hash[k],
-						"target":hash[x["id"]],
-						"value":1,
-					})
 		return json.dumps(res)	
 if __name__ == '__main__':
-	print info().GET("artists","1508,2132,1836")
+	ro=roaming()
+	inf=info()
+	print inf.GET("song_1508")
+	print inf.GET("artist_1508")
+	print inf.GET("album_1508")
+	print ro.GET("song_1508")
+	print ro.GET("artist_1508")
+	print ro.GET("hotsongs_of_artist_1508")
+	print ro.GET("albums_of_artist_1508")
+	print ro.GET("songs_of_album_1508")
+	print ro.GET("artist_of_album_1508")
+	print ro.GET("artist_of_song_1508")
+	print ro.GET("album_of_song_1508")

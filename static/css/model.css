@@ -24,7 +24,7 @@ body.dark .node{
   font-weight: bold;
 }
 
-body.dark .node text{
+body.dark svg text{
   fill:white;
 }
 

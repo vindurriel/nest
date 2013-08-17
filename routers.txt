@@ -2,6 +2,6 @@
 /model  model.list
 /model/load/(.+) model.load
 /model/(.+)  model
-/roaming/(.+)/(.+) song_map.roaming
-/info/(.+)/(.+) song_map.info
+/roaming/(.+) song_map.roaming
+/info/(.+) song_map.info
 /favicon.ico favicon
