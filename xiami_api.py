@@ -40,7 +40,7 @@ def api_get(method,params={}):
 	dic={
 		"method":method,
 		"api_key":client_id,
-		"call_id":"1376293181",
+		"call_id":"1231223",
 		'av':"XMusic_1.1.1.3956",
 	}
 	for k,v in params.iteritems():
@@ -50,6 +50,7 @@ def api_get(method,params={}):
 	f=cwd("access_token")
 	if os.path.isfile(f):
 		access_token=file(f,'r').read()
+	dic['access_token']=access_token
 	resp=r.post(url_api,data=dic)
 	json=resp.json()
 	if "err" in json and json["err"]:
