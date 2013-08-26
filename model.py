@@ -33,6 +33,8 @@ class list:
 class load:
 	def GET(self,key="机器学习"):
 		web.header('Content-Type', 'application/json')
+		web.header('Cache-Control', 'private, must-revalidate, max-age=0')
+		web.header('Expires', 'Thu, 01 Jan 1970 00:00:00')
 		import os,json
 		fname=get_file_name(key)
 		print fname
