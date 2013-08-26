@@ -1,4 +1,4 @@
-import web,time,multiprocessing,json,requests,traceback
+import web,time,json,requests,traceback
 import xiami_api
 def split_id(ids):
 	if type(ids)==type([]):

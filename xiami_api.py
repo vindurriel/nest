@@ -68,6 +68,10 @@ def die(why):
 	if __name__ == '__main__':
 		sys.exit(0)
 if __name__ == '__main__':
+	api_get(
+		"Library.getLibrary",{
+		"type":1
+	})
 	if len(sys.argv)<2:
 		die(__doc__) 
 	method=sys.argv[1]
