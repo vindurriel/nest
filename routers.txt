@@ -5,3 +5,4 @@
 /roaming/(.+) song_map.roaming
 /info/(.+) song_map.info
 /favicon.ico favicon
+/(js|css|file|images)/(.+) static

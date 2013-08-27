@@ -94,7 +94,6 @@ update = ->
   .attr("cy",0)
   .attr("r", getR)
   .style("fill", color)
-
   nodeEnter.append("text")
   .attr("class","notclickable desc")
   .text (d) ->

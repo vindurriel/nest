@@ -3,6 +3,12 @@ import web
 def render_t(tname,globals={}):
 	r=web.template.render('.\\templates',globals=globals)
 	return getattr(r,tname)()
+def cwd(*args):
+    import sys,os
+    res=os.path.realpath(os.path.dirname(sys.argv[0]))
+    for x in args:
+        res=os.path.join(res,x)
+    return res
 def getUserId():
 	u=web.cookies().get('u')
 	if u is None or u=="":

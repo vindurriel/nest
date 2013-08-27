@@ -136,6 +136,34 @@
     {
       "source": 4, 
       "target": 27
+    }, 
+    {
+      "source": 7, 
+      "target": 28
+    }, 
+    {
+      "source": 7, 
+      "target": 29
+    }, 
+    {
+      "source": 7, 
+      "target": 30
+    }, 
+    {
+      "source": 7, 
+      "target": 31
+    }, 
+    {
+      "source": 7, 
+      "target": 32
+    }, 
+    {
+      "source": 7, 
+      "target": 33
+    }, 
+    {
+      "source": 7, 
+      "target": 34
     }
   ], 
   "blacklist": [], 
@@ -307,6 +335,48 @@
       "type": "relationship", 
       "id": "albums_of_artist_15785", 
       "name": "Joan Baez\u7684\u4e13\u8f91"
+    }, 
+    {
+      "index": 28, 
+      "type": "relationship", 
+      "id": "hitsongs_of_artist_10767", 
+      "name": "Chet Baker\u7684\u70ed\u95e8\u6b4c\u66f2"
+    }, 
+    {
+      "index": 29, 
+      "type": "relationship", 
+      "id": "albums_of_artist_10767", 
+      "name": "Chet Baker\u7684\u4e13\u8f91"
+    }, 
+    {
+      "index": 30, 
+      "type": "artist", 
+      "id": "artist_30214", 
+      "name": "Julie London"
+    }, 
+    {
+      "index": 31, 
+      "type": "artist", 
+      "id": "artist_10823", 
+      "name": "Dave Brubeck"
+    }, 
+    {
+      "index": 32, 
+      "type": "artist", 
+      "id": "artist_11479", 
+      "name": "Sarah Vaughan"
+    }, 
+    {
+      "index": 33, 
+      "type": "artist", 
+      "id": "artist_18093", 
+      "name": "June Christy"
+    }, 
+    {
+      "index": 34, 
+      "type": "artist", 
+      "id": "artist_10939", 
+      "name": "Bill Evans"
     }
   ], 
   "type": "artist", 

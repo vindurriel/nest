@@ -1,10 +1,12 @@
 #encoding=utf-8
-import sys,suds,json,requests
-sys.path.append('.\\controllers')
-import web
+import os,sys,suds,json,requests,traceback
+from utils import cwd
 urls=[]
+import web
 web.config.debug=False
-for x in [x.split() for x in file('.\\routers.txt','r').readlines()]:
+config=web.storage(static=cwd('static'))
+web.template.Template.globals['config']=config
+for x in [x.split() for x in file(cwd('routers.txt'),'r').readlines()]:
     if not x or len(x)!=2:continue;
     urls.append(x[0])
     urls.append(x[1])
@@ -15,6 +17,17 @@ for x in [x.split() for x in file('.\\routers.txt','r').readlines()]:
         pass
 web.webapi.internalerror = web.debugerror
 app = web.application(urls, globals(), autoreload=True)
+class static:
+    def GET(self,media, filename):
+        import mimetypes
+        mime_type = mimetypes.guess_type(filename)
+        web.header('Content-Type', "%s"%mime_type[0])  
+        try:
+            f = file(cwd("static",media,filename), 'r')
+            return f.read()
+        except :
+            traceback.print_exc()
+            return '' # you can send an 404 error here if you want
 class favicon:
 	def GET(self):
 		return ""

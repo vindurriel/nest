@@ -3,13 +3,13 @@ import web
 import suds
 from utils import *
 def get_file_name(name):
-	return u".\\static\\files\\{0}.json".format(name)
+	return cwd("static","files",u"{0}.json".format(name))
 class model:
 	def GET(self,key="1769077491"):
 		print "###model.get##",key
 		theme="light"
 		if "theme" in web.input(): theme=web.input().theme
-		render=web.template.render('.\\templates',globals=locals())
+		render=web.template.render(cwd('templates'),globals=locals())
 		return render.model()
 	def POST(self,key):
 		'''
@@ -25,10 +25,11 @@ class list:
 		theme="light"
 		if "theme" in web.input(): theme=web.input().theme
 		import os
-		l=os.listdir(".\\static\\files")
+		l=os.listdir(cwd('static','files'))
 		l= filter(lambda x:x.endswith(".json"),l)
 		l= map(lambda x:x.decode('gbk')[:-5],l)
-		render=web.template.render('.\\templates',globals=locals())
+		static=cwd("static")
+		render=web.template.render(cwd('templates'),globals=locals())
 		return render.list()
 class load:
 	def GET(self,key="机器学习"):
