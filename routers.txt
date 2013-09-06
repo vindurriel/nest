@@ -6,3 +6,4 @@
 /info/(.+) song_map.info
 /favicon.ico favicon
 /(js|css|file|images)/(.+) static
+/search/(.+) model.search

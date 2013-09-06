@@ -10,7 +10,8 @@ redraw = ->
 draw = (json) ->
   if json.blacklist?
     r.blacklist=json.blacklist
-  r.legend=r.vis
+  r.legend= d3.select("#tip")
+  .insert("svg")
   .selectAll("rect.leg")
   .data([
     {"type":"artist",},
@@ -21,7 +22,7 @@ draw = (json) ->
   .enter()
   .append('g')
   .attr "transform", (d,i) ->
-    "translate(" + (100+i*100)  + "," + 30 + ")"
+    "translate(" + 10  + "," + (30+i*30) + ")"
   .classed('leg',true)
   
   r.legend.append("circle")
@@ -298,91 +299,72 @@ save = ->
     "type": "POST",
     "contentType": "json", 
     "data": res
-r = exports ? this
-r.hNode={}
-r.w = $(window).width()
-r.h = $(window).height()
-r.ctrlPressed = false
-r.altPressed = false
-r.shiftPressed = false
-r.blacklist= []
+
 Array::remove = (b) ->
   a = @indexOf(b)
   if a >= 0
     @splice a, 1
     return true
   false
-r.scale=1
-r.vis = d3.select("#container")
-  .append("svg:svg")
-  .attr("viewBox","0 0 #{r.w} #{r.h}")
-  .attr("pointer-events", "all")
-  # .attr("preserveAspectRatio","XMidYMid")
-  .call(d3.behavior.zoom().scaleExtent([0.5,10]).on("zoom", redraw)).on('dblclick.zoom',null)
-  .append("svg:g")
-r.link = r.vis.selectAll(".link")
-r.node = r.vis.selectAll(".node")
-$(document).ready ->
-  $(document).keydown cacheIt
-  $(document).keyup cacheIt
-  $("#btn_tip").click ->
-    $("#tip").slideToggle 200
-  $("#btn_save").click ->
-    save()
-    .done ->
-      alert "保存完成"
-    .fail (d,e)->
-      alert e
-  id= document.title
-  type= "unknown"
-  if ":" in id
-    query = query.replace ":","_"
-  $.getJSON "/model/load/#{id}", (d)->
-    if not d or d.error?
-      $.getJSON "/info/#{id}", (d)->
-          if not d or d.error?
-            return
-          draw d
-    else draw d
-r.palette= d3.scale.category10()
-r.colors =[
-  "song",
-  "artist",
-  "user",
-  "album",
-  'relationship',
-  "baiduBaikeCrawler",
-  "hudongBaikeCrawler",
-  "referData",
-]
-r.relationships={
-  'artist':[{
-      "id": (d)-> "hitsongs_of_#{d.id}",
-      'name': (d)->"#{d.name}的热门歌曲",
-    },{
-      "id": (d)-> "albums_of_#{d.id}",
-      'name': (d)->"#{d.name}的专辑",
-    }
-  ],
-  'song':[{
-      "id": (d)-> "artist_of_#{d.id}",
-      'name': (d)->"#{d.name}的艺术家",
-    },{
-      "id": (d)-> "album_of_#{d.id}",
-      'name': (d)->"#{d.name}所属的专辑",      
-    }
-  ],
-  'album':[{
-      "id": (d)-> "artist_of_#{d.id}",
-      'name': (d)->"#{d.name}的艺术家",
-    },{
-      "id": (d)-> "songs_of_#{d.id}",
-      'name': (d)->"#{d.name}中包含的的歌曲",      
-    }
-  ],
-  'collect':[{
-      "id": (d)-> "songs_of_#{d.id}",
-      'name': (d)->"#{d.name}中包含的的歌曲",      
-    }
-  ],
-}
+
+r = exports ? this
+r.nest= (options)->
+  r.hNode= {}
+  container= options.container or "#container"
+  r.w = options.width or $(container).width()
+  r.h = options.height or $(container).height()
+  r.ctrlPressed = false
+  r.altPressed = false
+  r.shiftPressed = false
+  r.blacklist= []
+  r.vis = d3.select(container)
+    .append("svg:svg")
+    .attr("viewBox","0 0 #{r.w} #{r.h}")  
+    .attr("pointer-events", "all")
+    # .attr("preserveAspectRatio","XMidYMid")
+    .call(d3.behavior.zoom().scaleExtent([0.5,10]).on("zoom", redraw)).on('dblclick.zoom',null)
+    .append("svg:g")
+  r.link = r.vis.selectAll(".link")
+  r.node = r.vis.selectAll(".node")
+  r.palette= d3.scale.category10()
+  r.colors =[
+    "song",
+    "artist",
+    "user",
+    "album",
+    'relationship',
+    "baiduBaikeCrawler",
+    "hudongBaikeCrawler",
+    "referData",
+  ]
+  r.relationships={
+    'artist':[{
+        "id": (d)-> "hitsongs_of_#{d.id}",
+        'name': (d)->"Artist's best songs",
+      },{
+        "id": (d)-> "albums_of_#{d.id}",
+        'name': (d)->"Artist's album(s)",
+      }
+    ],
+    'song':[{
+        "id": (d)-> "artist_of_#{d.id}",
+        'name': (d)->"Song's artist(s)",
+      },{
+        "id": (d)-> "album_of_#{d.id}",
+        'name': (d)->"Song's album",      
+      }
+    ],
+    'album':[{
+        "id": (d)-> "artist_of_#{d.id}",
+        'name': (d)->"Album's artist",
+      },{
+        "id": (d)-> "songs_of_#{d.id}",
+        'name': (d)->"Album's songs",      
+      }
+    ],
+    'collect':[{
+        "id": (d)-> "songs_of_#{d.id}",
+        'name': (d)->"Collection's songs",      
+      }
+    ],
+  }

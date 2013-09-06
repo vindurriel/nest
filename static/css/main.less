@@ -1,0 +1,45 @@
+﻿.button {	
+	padding: 0 1em;
+	border: #ddd solid 1px;
+	border-radius: 4px;
+	background-color: transparent;
+	text-decoration: none;
+	cursor: pointer;
+	display: inline-block;
+	text-align: center;
+	vertical-align: center;
+	font-size:1em;
+	height: 2em;
+	line-height: 2em;
+	margin: 0 0 0 1em;
+	&:hover{
+		background-color:#ddd;
+		color: lighten(black,20%);
+	}
+	&.main{
+		color: white;
+		background-color: #0088dd;
+		&:hover{
+			background-color:#0099ee;
+			color: white;
+		}
+	}
+}
+
+
+body{
+	font-family:微软雅黑,simsun;margin:0;padding:0;width:100%;
+	background:#eee;
+	color:black;
+	&.dark{
+		background: #333;
+		color:white;
+		overflow: hidden;
+		a {
+			color:white;
+		}
+	}
+}
+a{
+	color: black;
+}

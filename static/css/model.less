@@ -1,0 +1,147 @@
+@width: 700px;
+#wrapper{
+  margin: 0 auto;
+  width: 800px;
+  min-height: 80%;
+  position: relative;
+  top:5em;
+  #nest-container{
+    position: relative;
+    width: @width;
+    height: 200px;
+    padding:0 1em;
+    .rounded-corners;
+    overflow: hidden;
+    .btn-toggle-nest{
+      background: #0088ee;
+      color: white;
+      width: 50;
+      height: 50;
+      border: none;
+      margin: 0 -1em;
+    }
+  }
+  #list-container{
+    position: relative;
+    width: 80%;
+  }
+}
+.node {
+  cursor: pointer;
+  stroke: black;
+  stroke-width: .5px;
+  opacity: .2;
+  &.highlight {
+    opacity: 1;
+    stroke-width:2px;
+  }
+  &:hover{
+    opacity: 1;
+  }
+  text{
+    opacity: 0;
+    fill:black;
+    stroke:none;
+    font-weight: bold;
+  }
+}
+
+body.dark {
+  .node{
+    stroke:white;
+  }
+  svg text{
+    fill:white;
+  }
+  .link{
+    stroke: white;
+  }
+}
+
+.node text.show,
+.node:hover text {
+  opacity: 1;
+}
+.link {
+  stroke: black;
+  stroke-width: 1px;
+  opacity:0.2;
+  &.highlight{
+    opacity: 1.0;
+    stroke-width:2px;
+  }
+}
+
+.rounded-corners (@radius: 3px) {
+    -webkit-border-radius: @radius;
+    -moz-border-radius: @radius;
+    -ms-border-radius: @radius;
+    -o-border-radius: @radius;
+    border-radius: @radius;
+    background-color: white;
+    border: #ddd solid 1px;
+}
+
+
+
+
+#tip{
+  display: none
+}
+
+.notclickable{
+  pointer-events:none;
+}
+#q{
+  height: 2em;
+  min-width: 20em;
+  padding: 2px;
+  margin: 0;
+}
+#nav{
+  width:100%;
+  position: absolute;
+  background: #ddd;
+  z-index: 100;
+  border-bottom: #ccc solid 1px;
+  padding: 1em 0;
+  .search{
+    position: relative;
+    width: @width+100px;
+    margin: 0 auto;
+  }  
+}
+
+
+.list-item{
+  width: @width;
+  margin: 1em 0;
+  padding: 1em;
+  .rounded-corners;
+  .item-headline{
+    margin: 0 0 1em 0;
+    a{
+      text-decoration: none;
+      &:hover{
+        text-decoration:underline;
+      }
+    }
+  }
+  .item-image{
+    width: 80px;
+    height: 80px;
+    background-color: #eee;
+  }
+  .item-prop{
+    margin-left: 1em;
+    font-weight: bold;
+  }
+  .item-detail{
+    margin-left: 1em;
+    margin-top:0;
+  }
+}
+
+.hide{
+  display: none;
+}

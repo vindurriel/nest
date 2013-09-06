@@ -1,5 +1,5 @@
 #encoding=utf-8
-import os,sys,suds,json,requests,traceback
+import os,sys,json,requests,traceback
 from utils import cwd
 urls=[]
 import web
@@ -31,5 +31,7 @@ class static:
 class favicon:
 	def GET(self):
 		return ""
+application=app.wsgifunc()
 if __name__ == "__main__":
     app.run()
+    a=1

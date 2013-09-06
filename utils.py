@@ -5,7 +5,7 @@ def render_t(tname,globals={}):
 	return getattr(r,tname)()
 def cwd(*args):
     import sys,os
-    res=os.path.realpath(os.path.dirname(sys.argv[0]))
+    res=os.path.realpath(os.path.dirname(__file__))
     for x in args:
         res=os.path.join(res,x)
     return res
@@ -29,3 +29,8 @@ def getTime(t=None):
 	if time.localtime().tm_hour>15: ampm=1
 	res+=str(ampm)
 	return res
+def tryget(dic,keys):
+	for k in keys:
+		if k in dic:
+			return dic[k]
+	return None

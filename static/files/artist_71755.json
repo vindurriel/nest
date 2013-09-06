@@ -1,0 +1,186 @@
+{
+  "name": "Lee DeWyze", 
+  "links": [
+    {
+      "source": 0, 
+      "target": 1
+    }, 
+    {
+      "source": 0, 
+      "target": 2
+    }, 
+    {
+      "source": 0, 
+      "target": 3
+    }, 
+    {
+      "source": 0, 
+      "target": 4
+    }, 
+    {
+      "source": 0, 
+      "target": 5
+    }, 
+    {
+      "source": 2, 
+      "target": 4
+    }, 
+    {
+      "source": 2, 
+      "target": 6
+    }, 
+    {
+      "source": 2, 
+      "target": 7
+    }, 
+    {
+      "source": 2, 
+      "target": 8
+    }, 
+    {
+      "source": 2, 
+      "target": 9
+    }, 
+    {
+      "source": 2, 
+      "target": 10
+    }, 
+    {
+      "source": 6, 
+      "target": 11
+    }, 
+    {
+      "source": 6, 
+      "target": 7
+    }, 
+    {
+      "source": 6, 
+      "target": 12
+    }, 
+    {
+      "source": 6, 
+      "target": 4
+    }, 
+    {
+      "source": 6, 
+      "target": 2
+    }, 
+    {
+      "source": 6, 
+      "target": 13
+    }, 
+    {
+      "source": 6, 
+      "target": 14
+    }, 
+    {
+      "source": 6, 
+      "target": 15
+    }, 
+    {
+      "source": 6, 
+      "target": 9
+    }
+  ], 
+  "blacklist": [], 
+  "nodes": [
+    {
+      "index": 0, 
+      "type": "artist", 
+      "id": "71755", 
+      "name": "Lee DeWyze"
+    }, 
+    {
+      "index": 1, 
+      "type": "artist", 
+      "id": "70112", 
+      "name": "Danny Gokey"
+    }, 
+    {
+      "index": 2, 
+      "type": "artist", 
+      "id": "74911", 
+      "name": "Chris Richardson"
+    }, 
+    {
+      "index": 3, 
+      "type": "artist", 
+      "id": "65164", 
+      "name": "Kevin Hammond"
+    }, 
+    {
+      "index": 4, 
+      "type": "artist", 
+      "id": "74472", 
+      "name": "Casey Darnell"
+    }, 
+    {
+      "index": 5, 
+      "type": "artist", 
+      "id": "79809", 
+      "name": "Fabian Buch"
+    }, 
+    {
+      "index": 6, 
+      "type": "artist", 
+      "id": "62541", 
+      "name": "Crosby Loggins"
+    }, 
+    {
+      "index": 7, 
+      "type": "artist", 
+      "id": "105322", 
+      "name": "Daniel Rinaldi"
+    }, 
+    {
+      "index": 8, 
+      "type": "artist", 
+      "id": "66723", 
+      "name": "Mark Read"
+    }, 
+    {
+      "index": 9, 
+      "type": "artist", 
+      "id": "78857", 
+      "name": "Stefan Ludik"
+    }, 
+    {
+      "index": 10, 
+      "type": "artist", 
+      "id": "111732", 
+      "name": "Chris Wallace"
+    }, 
+    {
+      "index": 11, 
+      "type": "artist", 
+      "id": "101365", 
+      "name": "Blake Aaron Guthrie"
+    }, 
+    {
+      "index": 12, 
+      "type": "artist", 
+      "id": "89505", 
+      "name": "Thomas Jonak"
+    }, 
+    {
+      "index": 13, 
+      "type": "artist", 
+      "id": "75379", 
+      "name": "Dan Bremnes"
+    }, 
+    {
+      "index": 14, 
+      "type": "artist", 
+      "id": "90685", 
+      "name": "Tim Blane"
+    }, 
+    {
+      "index": 15, 
+      "type": "artist", 
+      "id": "110341", 
+      "name": "Frank Foks"
+    }
+  ], 
+  "type": "artist", 
+  "id": "71755"
+}

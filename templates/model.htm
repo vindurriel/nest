@@ -1,28 +1,28 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<title>$key</title>
-		<link rel="stylesheet" href="/css/main.css">
-		<link rel="stylesheet" href="/css/model.css">
-		<script src="/js/jquery-2.0.2.min.js" charset="utf-8"></script>
-		<script src="/js/d3.v3.js" charset="utf-8"></script>
-		<script src="/js/fisheye.js" charset="utf-8"></script>
-	</head>
-	<body 
-	$if theme=="dark":
-		class="dark"
-	>
-		<div id="side">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>$key</title>
+	<link rel="stylesheet" href="/css/main.css">
+	<link rel="stylesheet" href="/css/model.css">
+	<script src="/js/jquery-2.0.2.min.js" charset="utf-8"></script>
+	<script src="/js/d3.v3.js" charset="utf-8"></script>
+	<script src="/js/fisheye.js" charset="utf-8"></script>
+</head>
+<body 
+$if theme=="dark": class="dark"
+>
+<div id="nav">
+	<div class="search">
+		<input type="text" name="q" id="q">
+		<input type="button"  id="btn_search" class="button main" isdefault="true" value="搜索">
+		<input type="button"  id="btn_tip" class="button" value="?" style="min-width:0px;padding:0 1em;">
+		<input type="button"  id="btn_save" class="button" value="保存" >
+		<a href="/?theme=$theme" class="button">see all</a>
+		<div style="display:inline">
 			<div id="actions">
-				<input type="button"  id="btn_tip" class="editbtn button" value="..." >
 			</div>
 			<div id="tip">
-				<input type="button"  id="btn_save" class="editbtn button" value="保存" >
-				<a href="/?theme=$theme">home</a>
-				<div class="search">
-					<input type="text" name="q" id="q"><input type="button"  id="btn_search" class="editbtn button" value="搜索">
-				</div>
 				<p>点击       = 选中节点和相邻节点</p>
 				<p>ctrl+点击  = 扩展节点（大圈）/访问知识链接（小圈）</p>
 				<p>shift+点击 = 删除节点和知识</p>
@@ -32,7 +32,15 @@
 				<p>网址后面可以输入词语,例如/model/<b>java</b></p>
 			</div>
 		</div>
-		<div id="container"></div>
-		<script src="/js/forced_graph_view.js"></script>
-	</body>
+	</div>
+</div>
+<div id="wrapper">
+	<div id="nest-container">
+		<input type="button"  class="btn-toggle-nest"   value="展开">
+	</div>
+	<div id="list-container"></div>
+</div>
+<script src="/js/forced_graph_view.js"></script>
+<script src="/js/model.js"></script>
+</body>
 </html>

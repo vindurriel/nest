@@ -1,6 +1,5 @@
 #encoding=utf-8
 import web
-import suds
 from utils import *
 def get_file_name(name):
 	return cwd("static","files",u"{0}.json".format(name))
@@ -27,7 +26,7 @@ class list:
 		import os
 		l=os.listdir(cwd('static','files'))
 		l= filter(lambda x:x.endswith(".json"),l)
-		l= map(lambda x:x.decode('gbk')[:-5],l)
+		l= map(lambda x:x[:-5],l)
 		static=cwd("static")
 		render=web.template.render(cwd('templates'),globals=locals())
 		return render.list()
@@ -85,7 +84,21 @@ class search:
 		if "ReferData" in children:
 			for x in children["ReferData"]:
 				self.result[node_prefix+x.key]={"name":node_prefix+x.key,"size":1,"type": "referData","url":x.value}
-		return code
+	def search(self,key):
+		import xiami_api
+		print type(key)
+		key=key.encode('gbk')
+		res=xiami_api.api_get("Search.summary",{"key":key})
+		self.result["nodes"]=[]
+		self.result['links']=[]
+		for t in "song album artist collect".split():
+			l=res.get(t+"s",[])
+			for x in l:
+				self.result['nodes'].append({
+					'id':"{0}_{1}".format(t,tryget(x,['id','song_id',t+"_id","list_id"])),
+					'name':tryget(x,["name",t+"_name"]),
+					'type':t,
+				})
 	def __init__(self):
 		self.result={}
 	def GET(self,key):
@@ -93,9 +106,10 @@ class search:
 		web.header('Content-Type', 'application/json')
 		self.result={}
 		print key
-		print self.do_search(key,"baiduBaikeCrawler")
-		print self.do_search(key,"hudongBaikeCrawler")
-		res=self.result.values()
-		for x in res:
-			print x["name"]
+		self.search(key)
+		# print self.do_search(key,"baiduBaikeCrawler")
+		# print self.do_search(key,"hudongBaikeCrawler")
+		res=self.result
+		# for x in res:
+		# 	print x["name"]
 		return json.dumps(res)

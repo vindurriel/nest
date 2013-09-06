@@ -1,69 +1,46 @@
-﻿
-.button {	
-	min-width: 64px;
-	min-height: 32px;
-	border: solid 1px rgb(153, 153, 153);
-	background-color: #555;
-	color: #eee;
-	text-decoration: none;
-	cursor: pointer;
-	display: inline-block;
-	text-align: center;
-	font-size:1em;
-	line-height: 0;
-	-moz-transition: all .2s; /* Firefox 4 */
-	/*-webkit-transition: background-color .2s;  Safari and Chrome */
-	-o-transition: all .2s; /* Opera */
+.button {
+  padding: 0 1em;
+  border: #ddd solid 1px;
+  border-radius: 4px;
+  background-color: transparent;
+  text-decoration: none;
+  cursor: pointer;
+  display: inline-block;
+  text-align: center;
+  vertical-align: center;
+  font-size: 1em;
+  height: 2em;
+  line-height: 2em;
+  margin: 0 0 0 1em;
 }
-.button:hover{
-	background-color:#888;
-	color: white;
+.button:hover {
+  background-color: #ddd;
+  color: #333333;
 }
-
-
-
-
-
-#msg {color: red}
-
-#side{
-	position: absolute;
-	top: 1em;
-	left: 1em;
-	z-index: 100;
+.button.main {
+  color: white;
+  background-color: #0088dd;
 }
-#container{
-	position: absolute;
-	top:0;
+.button.main:hover {
+  background-color: #0099ee;
+  color: white;
 }
-
-#contents{display:block;padding:0px;margin:0px}
-h1{margin:0px;}
-h2{padding:0px;margin:0px; color:#ddd}
-.clearfix:after{
-	 visibility: hidden;
-     display: block;
-     font-size: 0;
-     content: " ";
-     clear: both;
-     height: 0;
+body {
+  font-family: 微软雅黑,simsun;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  background: #eee;
+  color: black;
 }
-body{
-	font-family:微软雅黑,simsun;margin:0;padding:0;width:100%;
-	background:#eee;
-	color:black;
+body.dark {
+  background: #333;
+  color: white;
+  overflow: hidden;
 }
-
-body.dark{
-	background: #333;
-	color:white;
-	overflow: hidden;
+body.dark a {
+  color: white;
 }
-
-a{
-	color: black;
-}
-
-body.dark a{
-	color:white;
+a {
+  color: black;
 }

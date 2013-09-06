@@ -1,0 +1,66 @@
+{
+  "name": "The Script", 
+  "links": [
+    {
+      "source": 0, 
+      "target": 1
+    }, 
+    {
+      "source": 0, 
+      "target": 2
+    }, 
+    {
+      "source": 0, 
+      "target": 3
+    }, 
+    {
+      "source": 0, 
+      "target": 4
+    }, 
+    {
+      "source": 0, 
+      "target": 5
+    }
+  ], 
+  "blacklist": [], 
+  "nodes": [
+    {
+      "index": 0, 
+      "type": "artist", 
+      "id": "48658", 
+      "name": "The Script"
+    }, 
+    {
+      "index": 1, 
+      "type": "artist", 
+      "id": "26094", 
+      "name": "The Fray"
+    }, 
+    {
+      "index": 2, 
+      "type": "artist", 
+      "id": "23283", 
+      "name": "Keane"
+    }, 
+    {
+      "index": 3, 
+      "type": "artist", 
+      "id": "13879", 
+      "name": "Stereophonics"
+    }, 
+    {
+      "index": 4, 
+      "type": "artist", 
+      "id": "77535", 
+      "name": "The Wanted"
+    }, 
+    {
+      "index": 5, 
+      "type": "artist", 
+      "id": "13246", 
+      "name": "Travis"
+    }
+  ], 
+  "type": "artist", 
+  "id": "48658"
+}
