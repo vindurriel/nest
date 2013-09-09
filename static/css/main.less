@@ -1,6 +1,8 @@
-﻿.button {	
+﻿@light-border:#ccc;
+@dark-border:#555;
+.button {	
 	padding: 0 1em;
-	border: #ddd solid 1px;
+	border: @light-border solid 1px;
 	border-radius: 4px;
 	background-color: transparent;
 	text-decoration: none;
@@ -12,11 +14,12 @@
 	height: 2em;
 	line-height: 2em;
 	margin: 0 0 0 1em;
+	opacity: .8;
 	&:hover{
-		background-color:#ddd;
-		color: lighten(black,20%);
+		opacity: 11;
 	}
 	&.main{
+		opacity: 1;
 		color: white;
 		background-color: #0088dd;
 		&:hover{
@@ -26,17 +29,21 @@
 	}
 }
 
-
 body{
+	position: absolute;
+	top: 0;
 	font-family:微软雅黑,simsun;margin:0;padding:0;width:100%;
 	background:#eee;
 	color:black;
 	&.dark{
 		background: #333;
 		color:white;
-		overflow: hidden;
 		a {
 			color:white;
+		}
+		.button{
+			color:white;
+			border-color: @dark-border;
 		}
 	}
 }

@@ -1,6 +1,6 @@
 .button {
   padding: 0 1em;
-  border: #ddd solid 1px;
+  border: #cccccc solid 1px;
   border-radius: 4px;
   background-color: transparent;
   text-decoration: none;
@@ -12,12 +12,13 @@
   height: 2em;
   line-height: 2em;
   margin: 0 0 0 1em;
+  opacity: .8;
 }
 .button:hover {
-  background-color: #ddd;
-  color: #333333;
+  opacity: 11;
 }
 .button.main {
+  opacity: 1;
   color: white;
   background-color: #0088dd;
 }
@@ -26,6 +27,8 @@
   color: white;
 }
 body {
+  position: absolute;
+  top: 0;
   font-family: 微软雅黑,simsun;
   margin: 0;
   padding: 0;
@@ -36,10 +39,13 @@ body {
 body.dark {
   background: #333;
   color: white;
-  overflow: hidden;
 }
 body.dark a {
   color: white;
+}
+body.dark .button {
+  color: white;
+  border-color: #555555;
 }
 a {
   color: black;
