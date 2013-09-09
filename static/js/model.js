@@ -95,7 +95,7 @@ $(document).ready(function() {
   if (__indexOf.call(id, ":") >= 0) {
     query = query.replace(":", "_");
   }
-  return $.getJSON("/model/load/" + id, function(d) {
+  $.getJSON("/model/load/" + id, function(d) {
     if (!d || (d.error != null)) {
       return $.getJSON("/info/" + id, function(d) {
         if (!d || (d.error != null)) {

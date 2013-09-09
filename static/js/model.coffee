@@ -96,3 +96,4 @@ $(document).ready ->
     else 
       draw d
       list d
+  return
