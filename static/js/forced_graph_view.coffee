@@ -147,6 +147,9 @@ getR = (d) ->
     return 15
   if d.isHigh then 10 else 5
 tick = ->
+  r.node.attr "transform", (d) ->
+    radius= getR(d)
+    "translate(" + d.x + "," + d.y + ")"
   r.link.attr("x1", (d) ->
     d.source.x
   ).attr("y1", (d) ->
@@ -155,9 +158,7 @@ tick = ->
     d.target.x
   ).attr("y2", (d) ->
     d.target.y
-  )
-  r.node.attr "transform", (d) ->
-    "translate(" + d.x + "," + d.y + ")"
+  )    
 color = (d) ->
   i=r.colors.indexOf(d.type)
   if i>=0

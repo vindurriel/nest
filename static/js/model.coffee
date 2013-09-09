@@ -40,7 +40,6 @@ window.list= (d)->
   $(".item-prop").append t_item_action x
   $("#list-container").masonry {
     itemSelector: '.list-item',
-    gutter:10,
   }
   return
 $(document).ready ->

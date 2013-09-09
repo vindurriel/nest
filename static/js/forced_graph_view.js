@@ -139,7 +139,12 @@ getR = function(d) {
 };
 
 tick = function() {
-  r.link.attr("x1", function(d) {
+  r.node.attr("transform", function(d) {
+    var radius;
+    radius = getR(d);
+    return "translate(" + d.x + "," + d.y + ")";
+  });
+  return r.link.attr("x1", function(d) {
     return d.source.x;
   }).attr("y1", function(d) {
     return d.source.y;
@@ -147,9 +152,6 @@ tick = function() {
     return d.target.x;
   }).attr("y2", function(d) {
     return d.target.y;
-  });
-  return r.node.attr("transform", function(d) {
-    return "translate(" + d.x + "," + d.y + ")";
   });
 };
 

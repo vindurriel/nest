@@ -27,8 +27,7 @@ window.list = function(d) {
   }
   $(".item-prop").append(t_item_action(x));
   $("#list-container").masonry({
-    itemSelector: '.list-item',
-    gutter: 10
+    itemSelector: '.list-item'
   });
 };
 
