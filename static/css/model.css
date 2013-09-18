@@ -174,3 +174,15 @@ body.dark .list-item {
   background: #222;
   border-color: #444;
 }
+#nest-container.fullscreen {
+  position: fixed;
+  z-index: 200;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: 0;
+  padding: 0;
+  background: white;
+  height: auto;
+}

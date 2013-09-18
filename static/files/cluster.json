@@ -1,0 +1,4086 @@
+{
+  "nodes": [
+    {
+      "index": 0, 
+      "type": "relationship", 
+      "name": "41631", 
+      "id": "41631"
+    }, 
+    {
+      "index": 1, 
+      "type": "41631", 
+      "name": "09Geophysics_tle2710r1327.pdf.txt", 
+      "id": "09Geophysics_tle2710r1327.pdf.txt"
+    }, 
+    {
+      "index": 2, 
+      "type": "41631", 
+      "name": "02JGE_-1000686222.pdf.txt", 
+      "id": "02JGE_-1000686222.pdf.txt"
+    }, 
+    {
+      "index": 3, 
+      "type": "41631", 
+      "name": "09Geophysics_tle2610r1338.pdf.txt", 
+      "id": "09Geophysics_tle2610r1338.pdf.txt"
+    }, 
+    {
+      "index": 4, 
+      "type": "41631", 
+      "name": "09Geophysics_tle1712r1790.pdf.txt", 
+      "id": "09Geophysics_tle1712r1790.pdf.txt"
+    }, 
+    {
+      "index": 5, 
+      "type": "41631", 
+      "name": "09Geophysics_tle2607r0922.pdf.txt", 
+      "id": "09Geophysics_tle2607r0922.pdf.txt"
+    }, 
+    {
+      "index": 6, 
+      "type": "41631", 
+      "name": "09Geophysics_geo3906r07700780.pdf.txt", 
+      "id": "09Geophysics_geo3906r07700780.pdf.txt"
+    }, 
+    {
+      "index": 7, 
+      "type": "41631", 
+      "name": "09Geophysics_geo2401r00400048.pdf.txt", 
+      "id": "09Geophysics_geo2401r00400048.pdf.txt"
+    }, 
+    {
+      "index": 8, 
+      "type": "41631", 
+      "name": "09Geophysics_tle1810r1128.pdf.txt", 
+      "id": "09Geophysics_tle1810r1128.pdf.txt"
+    }, 
+    {
+      "index": 9, 
+      "type": "41631", 
+      "name": "09Geophysics_tle2905r0606.pdf.txt", 
+      "id": "09Geophysics_tle2905r0606.pdf.txt"
+    }, 
+    {
+      "index": 10, 
+      "type": "41631", 
+      "name": "09Geophysics_tle0701r0033.pdf.txt", 
+      "id": "09Geophysics_tle0701r0033.pdf.txt"
+    }, 
+    {
+      "index": 11, 
+      "type": "41631", 
+      "name": "09Geophysics_tle2904r0474.pdf.txt", 
+      "id": "09Geophysics_tle2904r0474.pdf.txt"
+    }, 
+    {
+      "index": 12, 
+      "type": "41631", 
+      "name": "09Geophysics_geo3902r02320234.pdf.txt", 
+      "id": "09Geophysics_geo3902r02320234.pdf.txt"
+    }, 
+    {
+      "index": 13, 
+      "type": "41631", 
+      "name": "09Geophysics_geo6505r13551363.pdf.txt", 
+      "id": "09Geophysics_geo6505r13551363.pdf.txt"
+    }, 
+    {
+      "index": 14, 
+      "type": "41631", 
+      "name": "09Geophysics_geo5801r0110.pdf.txt", 
+      "id": "09Geophysics_geo5801r0110.pdf.txt"
+    }, 
+    {
+      "index": 15, 
+      "type": "41631", 
+      "name": "11Geophysical Prospecting_829583.pdf.txt", 
+      "id": "11Geophysical Prospecting_829583.pdf.txt"
+    }, 
+    {
+      "index": 16, 
+      "type": "41631", 
+      "name": "09Geophysics_tle2504r0478.pdf.txt", 
+      "id": "09Geophysics_tle2504r0478.pdf.txt"
+    }, 
+    {
+      "index": 17, 
+      "type": "41631", 
+      "name": "09Geophysics_geo4707r11001105.pdf.txt", 
+      "id": "09Geophysics_geo4707r11001105.pdf.txt"
+    }, 
+    {
+      "index": 18, 
+      "type": "41631", 
+      "name": "11Geophysical Prospecting_061191.pdf.txt", 
+      "id": "11Geophysical Prospecting_061191.pdf.txt"
+    }, 
+    {
+      "index": 19, 
+      "type": "41631", 
+      "name": "09Geophysics_geo6706r1920.pdf.txt", 
+      "id": "09Geophysics_geo6706r1920.pdf.txt"
+    }, 
+    {
+      "index": 20, 
+      "type": "41631", 
+      "name": "09Geophysics_tle0804r00520056.pdf.txt", 
+      "id": "09Geophysics_tle0804r00520056.pdf.txt"
+    }, 
+    {
+      "index": 21, 
+      "type": "41631", 
+      "name": "09Geophysics_geo5206r08100814.pdf.txt", 
+      "id": "09Geophysics_geo5206r08100814.pdf.txt"
+    }, 
+    {
+      "index": 22, 
+      "type": "41631", 
+      "name": "09Geophysics_geo6404r1116.pdf.txt", 
+      "id": "09Geophysics_geo6404r1116.pdf.txt"
+    }, 
+    {
+      "index": 23, 
+      "type": "41631", 
+      "name": "09Geophysics_geo7204e0107.pdf.txt", 
+      "id": "09Geophysics_geo7204e0107.pdf.txt"
+    }, 
+    {
+      "index": 24, 
+      "type": "41631", 
+      "name": "09Geophysics_geo3402r01800195.pdf.txt", 
+      "id": "09Geophysics_geo3402r01800195.pdf.txt"
+    }, 
+    {
+      "index": 25, 
+      "type": "41631", 
+      "name": "09Geophysics_tle1308r0823.pdf.txt", 
+      "id": "09Geophysics_tle1308r0823.pdf.txt"
+    }, 
+    {
+      "index": 26, 
+      "type": "41631", 
+      "name": "09Geophysics_geo1304r06090624.pdf.txt", 
+      "id": "09Geophysics_geo1304r06090624.pdf.txt"
+    }, 
+    {
+      "index": 27, 
+      "type": "41631", 
+      "name": "09Geophysics_geo5411r14741482.pdf.txt", 
+      "id": "09Geophysics_geo5411r14741482.pdf.txt"
+    }, 
+    {
+      "index": 28, 
+      "type": "41631", 
+      "name": "09Geophysics_geo0401r00010007.pdf.txt", 
+      "id": "09Geophysics_geo0401r00010007.pdf.txt"
+    }, 
+    {
+      "index": 29, 
+      "type": "41631", 
+      "name": "09Geophysics_geo2901r00800086.pdf.txt", 
+      "id": "09Geophysics_geo2901r00800086.pdf.txt"
+    }, 
+    {
+      "index": 30, 
+      "type": "41631", 
+      "name": "09Geophysics_geo3102r03200325.pdf.txt", 
+      "id": "09Geophysics_geo3102r03200325.pdf.txt"
+    }, 
+    {
+      "index": 31, 
+      "type": "41631", 
+      "name": "09Geophysics_tle2608r1064.pdf.txt", 
+      "id": "09Geophysics_tle2608r1064.pdf.txt"
+    }, 
+    {
+      "index": 32, 
+      "type": "41631", 
+      "name": "09Geophysics_tle2605r05480548.pdf.txt", 
+      "id": "09Geophysics_tle2605r05480548.pdf.txt"
+    }, 
+    {
+      "index": 33, 
+      "type": "41631", 
+      "name": "09Geophysics_geo3303r05110520.pdf.txt", 
+      "id": "09Geophysics_geo3303r05110520.pdf.txt"
+    }, 
+    {
+      "index": 34, 
+      "type": "41631", 
+      "name": "09Geophysics_geo7103f0031.pdf.txt", 
+      "id": "09Geophysics_geo7103f0031.pdf.txt"
+    }, 
+    {
+      "index": 35, 
+      "type": "41631", 
+      "name": "09Geophysics_tle1706r0738.pdf.txt", 
+      "id": "09Geophysics_tle1706r0738.pdf.txt"
+    }, 
+    {
+      "index": 36, 
+      "type": "41631", 
+      "name": "09Geophysics_tle1801r0155.pdf.txt", 
+      "id": "09Geophysics_tle1801r0155.pdf.txt"
+    }, 
+    {
+      "index": 37, 
+      "type": "41631", 
+      "name": "09Geophysics_tle2610r1346.pdf.txt", 
+      "id": "09Geophysics_tle2610r1346.pdf.txt"
+    }, 
+    {
+      "index": 38, 
+      "type": "41631", 
+      "name": "09Geophysics_tle2004r04350442.pdf.txt", 
+      "id": "09Geophysics_tle2004r04350442.pdf.txt"
+    }, 
+    {
+      "index": 39, 
+      "type": "41631", 
+      "name": "11Geophysical Prospecting_445386.pdf.txt", 
+      "id": "11Geophysical Prospecting_445386.pdf.txt"
+    }, 
+    {
+      "index": 40, 
+      "type": "41631", 
+      "name": "09Geophysics_tle2010r1118.pdf.txt", 
+      "id": "09Geophysics_tle2010r1118.pdf.txt"
+    }, 
+    {
+      "index": 41, 
+      "type": "41631", 
+      "name": "09Geophysics_tle2507r0882.pdf.txt", 
+      "id": "09Geophysics_tle2507r0882.pdf.txt"
+    }, 
+    {
+      "index": 42, 
+      "type": "41631", 
+      "name": "09Geophysics_tle2009r10731075.pdf.txt", 
+      "id": "09Geophysics_tle2009r10731075.pdf.txt"
+    }, 
+    {
+      "index": 43, 
+      "type": "41631", 
+      "name": "11Geophysical Prospecting_186177.pdf.txt", 
+      "id": "11Geophysical Prospecting_186177.pdf.txt"
+    }, 
+    {
+      "index": 44, 
+      "type": "41631", 
+      "name": "09Geophysics_geo1501r00610069.pdf.txt", 
+      "id": "09Geophysics_geo1501r00610069.pdf.txt"
+    }, 
+    {
+      "index": 45, 
+      "type": "41631", 
+      "name": "09Geophysics_geo4005r08650885.pdf.txt", 
+      "id": "09Geophysics_geo4005r08650885.pdf.txt"
+    }, 
+    {
+      "index": 46, 
+      "type": "41631", 
+      "name": "11Geophysical Prospecting_101661.pdf.txt", 
+      "id": "11Geophysical Prospecting_101661.pdf.txt"
+    }, 
+    {
+      "index": 47, 
+      "type": "41631", 
+      "name": "09Geophysics_geo2501r00950105.pdf.txt", 
+      "id": "09Geophysics_geo2501r00950105.pdf.txt"
+    }, 
+    {
+      "index": 48, 
+      "type": "41631", 
+      "name": "09Geophysics_geo5309r11841193.pdf.txt", 
+      "id": "09Geophysics_geo5309r11841193.pdf.txt"
+    }, 
+    {
+      "index": 49, 
+      "type": "41631", 
+      "name": "09Geophysics_tle2208r0718.pdf.txt", 
+      "id": "09Geophysics_tle2208r0718.pdf.txt"
+    }, 
+    {
+      "index": 50, 
+      "type": "41631", 
+      "name": "09Geophysics_tle2601r00940095.pdf.txt", 
+      "id": "09Geophysics_tle2601r00940095.pdf.txt"
+    }, 
+    {
+      "index": 51, 
+      "type": "41631", 
+      "name": "09Geophysics_tle2901r0086.pdf.txt", 
+      "id": "09Geophysics_tle2901r0086.pdf.txt"
+    }, 
+    {
+      "index": 52, 
+      "type": "41631", 
+      "name": "09Geophysics_tle1509r1066.pdf.txt", 
+      "id": "09Geophysics_tle1509r1066.pdf.txt"
+    }, 
+    {
+      "index": 53, 
+      "type": "41631", 
+      "name": "09Geophysics_geo7406l0075.pdf.txt", 
+      "id": "09Geophysics_geo7406l0075.pdf.txt"
+    }, 
+    {
+      "index": 54, 
+      "type": "41631", 
+      "name": "09Geophysics_tle1810r12191220.pdf.txt", 
+      "id": "09Geophysics_tle1810r12191220.pdf.txt"
+    }, 
+    {
+      "index": 55, 
+      "type": "41631", 
+      "name": "09Geophysics_tle1410r1084.pdf.txt", 
+      "id": "09Geophysics_tle1410r1084.pdf.txt"
+    }, 
+    {
+      "index": 56, 
+      "type": "41631", 
+      "name": "09Geophysics_tle2401r01040104.pdf.txt", 
+      "id": "09Geophysics_tle2401r01040104.pdf.txt"
+    }, 
+    {
+      "index": 57, 
+      "type": "41631", 
+      "name": "09Geophysics_geo7105q0019.pdf.txt", 
+      "id": "09Geophysics_geo7105q0019.pdf.txt"
+    }, 
+    {
+      "index": 58, 
+      "type": "41631", 
+      "name": "09Geophysics_tle2105r0471.pdf.txt", 
+      "id": "09Geophysics_tle2105r0471.pdf.txt"
+    }, 
+    {
+      "index": 59, 
+      "type": "41631", 
+      "name": "11Geophysical Prospecting_917696.pdf.txt", 
+      "id": "11Geophysical Prospecting_917696.pdf.txt"
+    }, 
+    {
+      "index": 60, 
+      "type": "41631", 
+      "name": "09Geophysics_geo5705r07450748.pdf.txt", 
+      "id": "09Geophysics_geo5705r07450748.pdf.txt"
+    }, 
+    {
+      "index": 61, 
+      "type": "41631", 
+      "name": "09Geophysics_tle2905r0504.pdf.txt", 
+      "id": "09Geophysics_tle2905r0504.pdf.txt"
+    }, 
+    {
+      "index": 62, 
+      "type": "41631", 
+      "name": "09Geophysics_tle2805r0610.pdf.txt", 
+      "id": "09Geophysics_tle2805r0610.pdf.txt"
+    }, 
+    {
+      "index": 63, 
+      "type": "41631", 
+      "name": "09Geophysics_geo6004r1029.pdf.txt", 
+      "id": "09Geophysics_geo6004r1029.pdf.txt"
+    }, 
+    {
+      "index": 64, 
+      "type": "41631", 
+      "name": "09Geophysics_tle1902r01160116.pdf.txt", 
+      "id": "09Geophysics_tle1902r01160116.pdf.txt"
+    }, 
+    {
+      "index": 65, 
+      "type": "41631", 
+      "name": "09Geophysics_tle1111r00400041.pdf.txt", 
+      "id": "09Geophysics_tle1111r00400041.pdf.txt"
+    }, 
+    {
+      "index": 66, 
+      "type": "41631", 
+      "name": "09Geophysics_geo6702r0501.pdf.txt", 
+      "id": "09Geophysics_geo6702r0501.pdf.txt"
+    }, 
+    {
+      "index": 67, 
+      "type": "41631", 
+      "name": "09Geophysics_geo0903r0287.pdf.txt", 
+      "id": "09Geophysics_geo0903r0287.pdf.txt"
+    }, 
+    {
+      "index": 68, 
+      "type": "41631", 
+      "name": "09Geophysics_tle2205r0392.pdf.txt", 
+      "id": "09Geophysics_tle2205r0392.pdf.txt"
+    }, 
+    {
+      "index": 69, 
+      "type": "41631", 
+      "name": "09Geophysics_tle2612r1500.pdf.txt", 
+      "id": "09Geophysics_tle2612r1500.pdf.txt"
+    }, 
+    {
+      "index": 70, 
+      "type": "41631", 
+      "name": "09Geophysics_geo7505f0135.pdf.txt", 
+      "id": "09Geophysics_geo7505f0135.pdf.txt"
+    }, 
+    {
+      "index": 71, 
+      "type": "41631", 
+      "name": "09Geophysics_tle1509r1054.pdf.txt", 
+      "id": "09Geophysics_tle1509r1054.pdf.txt"
+    }, 
+    {
+      "index": 72, 
+      "type": "41631", 
+      "name": "09Geophysics_geo1001r00760090.pdf.txt", 
+      "id": "09Geophysics_geo1001r00760090.pdf.txt"
+    }, 
+    {
+      "index": 73, 
+      "type": "41631", 
+      "name": "09Geophysics_geo5705r07270735.pdf.txt", 
+      "id": "09Geophysics_geo5705r07270735.pdf.txt"
+    }, 
+    {
+      "index": 74, 
+      "type": "41631", 
+      "name": "09Geophysics_geo3505r08120830.pdf.txt", 
+      "id": "09Geophysics_geo3505r08120830.pdf.txt"
+    }, 
+    {
+      "index": 75, 
+      "type": "41631", 
+      "name": "02JGE_532660375.pdf.txt", 
+      "id": "02JGE_532660375.pdf.txt"
+    }, 
+    {
+      "index": 76, 
+      "type": "41631", 
+      "name": "09Geophysics_tle2702r0270.pdf.txt", 
+      "id": "09Geophysics_tle2702r0270.pdf.txt"
+    }, 
+    {
+      "index": 77, 
+      "type": "41631", 
+      "name": "09Geophysics_geo6802r0685.pdf.txt", 
+      "id": "09Geophysics_geo6802r0685.pdf.txt"
+    }, 
+    {
+      "index": 78, 
+      "type": "41631", 
+      "name": "09Geophysics_tle1811r1317.pdf.txt", 
+      "id": "09Geophysics_tle1811r1317.pdf.txt"
+    }, 
+    {
+      "index": 79, 
+      "type": "41631", 
+      "name": "09Geophysics_geo5804r0534.pdf.txt", 
+      "id": "09Geophysics_geo5804r0534.pdf.txt"
+    }, 
+    {
+      "index": 80, 
+      "type": "41631", 
+      "name": "09Geophysics_geo4707r10911099.pdf.txt", 
+      "id": "09Geophysics_geo4707r10911099.pdf.txt"
+    }, 
+    {
+      "index": 81, 
+      "type": "41631", 
+      "name": "09Geophysics_tle2807r0756.pdf.txt", 
+      "id": "09Geophysics_tle2807r0756.pdf.txt"
+    }, 
+    {
+      "index": 82, 
+      "type": "relationship", 
+      "name": "41616", 
+      "id": "41616"
+    }, 
+    {
+      "index": 83, 
+      "type": "41616", 
+      "name": "09Geophysics_geo6206r16831695.pdf.txt", 
+      "id": "09Geophysics_geo6206r16831695.pdf.txt"
+    }, 
+    {
+      "index": 84, 
+      "type": "41616", 
+      "name": "09Geophysics_geo4307r15151542.pdf.txt", 
+      "id": "09Geophysics_geo4307r15151542.pdf.txt"
+    }, 
+    {
+      "index": 85, 
+      "type": "41616", 
+      "name": "09Geophysics_tle1302r0096.pdf.txt", 
+      "id": "09Geophysics_tle1302r0096.pdf.txt"
+    }, 
+    {
+      "index": 86, 
+      "type": "41616", 
+      "name": "09Geophysics_geo4907r10511059.pdf.txt", 
+      "id": "09Geophysics_geo4907r10511059.pdf.txt"
+    }, 
+    {
+      "index": 87, 
+      "type": "41616", 
+      "name": "09Geophysics_geo5612r20572069.pdf.txt", 
+      "id": "09Geophysics_geo5612r20572069.pdf.txt"
+    }, 
+    {
+      "index": 88, 
+      "type": "41616", 
+      "name": "11Geophysical Prospecting_627483.pdf.txt", 
+      "id": "11Geophysical Prospecting_627483.pdf.txt"
+    }, 
+    {
+      "index": 89, 
+      "type": "41616", 
+      "name": "09Geophysics_geo6805r1497.pdf.txt", 
+      "id": "09Geophysics_geo6805r1497.pdf.txt"
+    }, 
+    {
+      "index": 90, 
+      "type": "41616", 
+      "name": "09Geophysics_tle2901r0012.pdf.txt", 
+      "id": "09Geophysics_tle2901r0012.pdf.txt"
+    }, 
+    {
+      "index": 91, 
+      "type": "41616", 
+      "name": "09Geophysics_tle2501r01070109.pdf.txt", 
+      "id": "09Geophysics_tle2501r01070109.pdf.txt"
+    }, 
+    {
+      "index": 92, 
+      "type": "41616", 
+      "name": "09Geophysics_tle0303r00500052.pdf.txt", 
+      "id": "09Geophysics_tle0303r00500052.pdf.txt"
+    }, 
+    {
+      "index": 93, 
+      "type": "41616", 
+      "name": "09Geophysics_geo7102v0019.pdf.txt", 
+      "id": "09Geophysics_geo7102v0019.pdf.txt"
+    }, 
+    {
+      "index": 94, 
+      "type": "41616", 
+      "name": "09Geophysics_geo6006r1671.pdf.txt", 
+      "id": "09Geophysics_geo6006r1671.pdf.txt"
+    }, 
+    {
+      "index": 95, 
+      "type": "41616", 
+      "name": "09Geophysics_tle2805r0508.pdf.txt", 
+      "id": "09Geophysics_tle2805r0508.pdf.txt"
+    }, 
+    {
+      "index": 96, 
+      "type": "41616", 
+      "name": "09Geophysics_tle2709r1138.pdf.txt", 
+      "id": "09Geophysics_tle2709r1138.pdf.txt"
+    }, 
+    {
+      "index": 97, 
+      "type": "41616", 
+      "name": "09Geophysics_geo6201r01770182.pdf.txt", 
+      "id": "09Geophysics_geo6201r01770182.pdf.txt"
+    }, 
+    {
+      "index": 98, 
+      "type": "41616", 
+      "name": "09Geophysics_tle2707r0896.pdf.txt", 
+      "id": "09Geophysics_tle2707r0896.pdf.txt"
+    }, 
+    {
+      "index": 99, 
+      "type": "41616", 
+      "name": "09Geophysics_geo6502r06870687.pdf.txt", 
+      "id": "09Geophysics_geo6502r06870687.pdf.txt"
+    }, 
+    {
+      "index": 100, 
+      "type": "41616", 
+      "name": "09Geophysics_tle2102r0199.pdf.txt", 
+      "id": "09Geophysics_tle2102r0199.pdf.txt"
+    }, 
+    {
+      "index": 101, 
+      "type": "41616", 
+      "name": "09Geophysics_geo7402b0037.pdf.txt", 
+      "id": "09Geophysics_geo7402b0037.pdf.txt"
+    }, 
+    {
+      "index": 102, 
+      "type": "41616", 
+      "name": "09Geophysics_tle2607r0850.pdf.txt", 
+      "id": "09Geophysics_tle2607r0850.pdf.txt"
+    }, 
+    {
+      "index": 103, 
+      "type": "41616", 
+      "name": "09Geophysics_geo7202e0033.pdf.txt", 
+      "id": "09Geophysics_geo7202e0033.pdf.txt"
+    }, 
+    {
+      "index": 104, 
+      "type": "41616", 
+      "name": "09Geophysics_geo6004r1018.pdf.txt", 
+      "id": "09Geophysics_geo6004r1018.pdf.txt"
+    }, 
+    {
+      "index": 105, 
+      "type": "41616", 
+      "name": "09Geophysics_tle0706r00040004.pdf.txt", 
+      "id": "09Geophysics_tle0706r00040004.pdf.txt"
+    }, 
+    {
+      "index": 106, 
+      "type": "41616", 
+      "name": "09Geophysics_tle2109r0816.pdf.txt", 
+      "id": "09Geophysics_tle2109r0816.pdf.txt"
+    }, 
+    {
+      "index": 107, 
+      "type": "41616", 
+      "name": "09Geophysics_geo7103k0067.pdf.txt", 
+      "id": "09Geophysics_geo7103k0067.pdf.txt"
+    }, 
+    {
+      "index": 108, 
+      "type": "41616", 
+      "name": "09Geophysics_geo5610r16901691.pdf.txt", 
+      "id": "09Geophysics_geo5610r16901691.pdf.txt"
+    }, 
+    {
+      "index": 109, 
+      "type": "41616", 
+      "name": "09Geophysics_geo5112r22552258.pdf.txt", 
+      "id": "09Geophysics_geo5112r22552258.pdf.txt"
+    }, 
+    {
+      "index": 110, 
+      "type": "41616", 
+      "name": "09Geophysics_geo5012r27422751.pdf.txt", 
+      "id": "09Geophysics_geo5012r27422751.pdf.txt"
+    }, 
+    {
+      "index": 111, 
+      "type": "41616", 
+      "name": "09Geophysics_geo5604r05650571.pdf.txt", 
+      "id": "09Geophysics_geo5604r05650571.pdf.txt"
+    }, 
+    {
+      "index": 112, 
+      "type": "41616", 
+      "name": "09Geophysics_geo7106n0047.pdf.txt", 
+      "id": "09Geophysics_geo7106n0047.pdf.txt"
+    }, 
+    {
+      "index": 113, 
+      "type": "41616", 
+      "name": "02JGE_1742-2140_9_2_230.pdf.txt", 
+      "id": "02JGE_1742-2140_9_2_230.pdf.txt"
+    }, 
+    {
+      "index": 114, 
+      "type": "41616", 
+      "name": "09Geophysics_geo5203r02670278.pdf.txt", 
+      "id": "09Geophysics_geo5203r02670278.pdf.txt"
+    }, 
+    {
+      "index": 115, 
+      "type": "41616", 
+      "name": "09Geophysics_geo7504wa0149.pdf.txt", 
+      "id": "09Geophysics_geo7504wa0149.pdf.txt"
+    }, 
+    {
+      "index": 116, 
+      "type": "41616", 
+      "name": "09Geophysics_tle2001r00740079.pdf.txt", 
+      "id": "09Geophysics_tle2001r00740079.pdf.txt"
+    }, 
+    {
+      "index": 117, 
+      "type": "41616", 
+      "name": "09Geophysics_geo7004v0087.pdf.txt", 
+      "id": "09Geophysics_geo7004v0087.pdf.txt"
+    }, 
+    {
+      "index": 118, 
+      "type": "41616", 
+      "name": "09Geophysics_tle2207r0606.pdf.txt", 
+      "id": "09Geophysics_tle2207r0606.pdf.txt"
+    }, 
+    {
+      "index": 119, 
+      "type": "41616", 
+      "name": "09Geophysics_geo2805r07240735.pdf.txt", 
+      "id": "09Geophysics_geo2805r07240735.pdf.txt"
+    }, 
+    {
+      "index": 120, 
+      "type": "41616", 
+      "name": "11Geophysical Prospecting_083193.pdf.txt", 
+      "id": "11Geophysical Prospecting_083193.pdf.txt"
+    }, 
+    {
+      "index": 121, 
+      "type": "41616", 
+      "name": "09Geophysics_geo6804r1267.pdf.txt", 
+      "id": "09Geophysics_geo6804r1267.pdf.txt"
+    }, 
+    {
+      "index": 122, 
+      "type": "41616", 
+      "name": "09Geophysics_geo7203a0041.pdf.txt", 
+      "id": "09Geophysics_geo7203a0041.pdf.txt"
+    }, 
+    {
+      "index": 123, 
+      "type": "41616", 
+      "name": "09Geophysics_geo1804r08200823.pdf.txt", 
+      "id": "09Geophysics_geo1804r08200823.pdf.txt"
+    }, 
+    {
+      "index": 124, 
+      "type": "41616", 
+      "name": "09Geophysics_tle0607r00180037.pdf.txt", 
+      "id": "09Geophysics_tle0607r00180037.pdf.txt"
+    }, 
+    {
+      "index": 125, 
+      "type": "41616", 
+      "name": "09Geophysics_geo6204r13311333.pdf.txt", 
+      "id": "09Geophysics_geo6204r13311333.pdf.txt"
+    }, 
+    {
+      "index": 126, 
+      "type": "41616", 
+      "name": "09Geophysics_geo6806r1952.pdf.txt", 
+      "id": "09Geophysics_geo6806r1952.pdf.txt"
+    }, 
+    {
+      "index": 127, 
+      "type": "41616", 
+      "name": "09Geophysics_geo3006r11381140.pdf.txt", 
+      "id": "09Geophysics_geo3006r11381140.pdf.txt"
+    }, 
+    {
+      "index": 128, 
+      "type": "41616", 
+      "name": "09Geophysics_tle1808r0970.pdf.txt", 
+      "id": "09Geophysics_tle1808r0970.pdf.txt"
+    }, 
+    {
+      "index": 129, 
+      "type": "41616", 
+      "name": "11Geophysical Prospecting_485272.PDF.txt", 
+      "id": "11Geophysical Prospecting_485272.PDF.txt"
+    }, 
+    {
+      "index": 130, 
+      "type": "41616", 
+      "name": "11Geophysical Prospecting_248259.pdf.txt", 
+      "id": "11Geophysical Prospecting_248259.pdf.txt"
+    }, 
+    {
+      "index": 131, 
+      "type": "relationship", 
+      "name": "41617", 
+      "id": "41617"
+    }, 
+    {
+      "index": 132, 
+      "type": "41617", 
+      "name": "09Geophysics_tle1507r0812.pdf.txt", 
+      "id": "09Geophysics_tle1507r0812.pdf.txt"
+    }, 
+    {
+      "index": 133, 
+      "type": "41617", 
+      "name": "09Geophysics_tle2707r0957.pdf.txt", 
+      "id": "09Geophysics_tle2707r0957.pdf.txt"
+    }, 
+    {
+      "index": 134, 
+      "type": "41617", 
+      "name": "11Geophysical Prospecting_746585.pdf.txt", 
+      "id": "11Geophysical Prospecting_746585.pdf.txt"
+    }, 
+    {
+      "index": 135, 
+      "type": "41617", 
+      "name": "09Geophysics_tle0904r00040004.pdf.txt", 
+      "id": "09Geophysics_tle0904r00040004.pdf.txt"
+    }, 
+    {
+      "index": 136, 
+      "type": "41617", 
+      "name": "09Geophysics_geo5108r15851593.pdf.txt", 
+      "id": "09Geophysics_geo5108r15851593.pdf.txt"
+    }, 
+    {
+      "index": 137, 
+      "type": "41617", 
+      "name": "09Geophysics_tle1904r03920399.pdf.txt", 
+      "id": "09Geophysics_tle1904r03920399.pdf.txt"
+    }, 
+    {
+      "index": 138, 
+      "type": "41617", 
+      "name": "09Geophysics_tleboard.pdf.txt", 
+      "id": "09Geophysics_tleboard.pdf.txt"
+    }, 
+    {
+      "index": 139, 
+      "type": "41617", 
+      "name": "11Geophysical Prospecting_292277.pdf.txt", 
+      "id": "11Geophysical Prospecting_292277.pdf.txt"
+    }, 
+    {
+      "index": 140, 
+      "type": "41617", 
+      "name": "11Geophysical Prospecting_151257.pdf.txt", 
+      "id": "11Geophysical Prospecting_151257.pdf.txt"
+    }, 
+    {
+      "index": 141, 
+      "type": "41617", 
+      "name": "11Geophysical Prospecting_637378.pdf.txt", 
+      "id": "11Geophysical Prospecting_637378.pdf.txt"
+    }, 
+    {
+      "index": 142, 
+      "type": "41617", 
+      "name": "09Geophysics_geo7506wb0189.pdf.txt", 
+      "id": "09Geophysics_geo7506wb0189.pdf.txt"
+    }, 
+    {
+      "index": 143, 
+      "type": "41617", 
+      "name": "11Geophysical Prospecting_B67886.pdf.txt", 
+      "id": "11Geophysical Prospecting_B67886.pdf.txt"
+    }, 
+    {
+      "index": 144, 
+      "type": "41617", 
+      "name": "09Geophysics_geo1901r01160123.pdf.txt", 
+      "id": "09Geophysics_geo1901r01160123.pdf.txt"
+    }, 
+    {
+      "index": 145, 
+      "type": "41617", 
+      "name": "11Geophysical Prospecting_197265.pdf.txt", 
+      "id": "11Geophysical Prospecting_197265.pdf.txt"
+    }, 
+    {
+      "index": 146, 
+      "type": "41617", 
+      "name": "11Geophysical Prospecting_084171.PDF.txt", 
+      "id": "11Geophysical Prospecting_084171.PDF.txt"
+    }, 
+    {
+      "index": 147, 
+      "type": "41617", 
+      "name": "11Geophysical Prospecting_805580.pdf.txt", 
+      "id": "11Geophysical Prospecting_805580.pdf.txt"
+    }, 
+    {
+      "index": 148, 
+      "type": "41617", 
+      "name": "11Geophysical Prospecting_153196.pdf.txt", 
+      "id": "11Geophysical Prospecting_153196.pdf.txt"
+    }, 
+    {
+      "index": 149, 
+      "type": "41617", 
+      "name": "11Geophysical Prospecting_A05891.pdf.txt", 
+      "id": "11Geophysical Prospecting_A05891.pdf.txt"
+    }, 
+    {
+      "index": 150, 
+      "type": "41617", 
+      "name": "09Geophysics_geo7101k0009.pdf.txt", 
+      "id": "09Geophysics_geo7101k0009.pdf.txt"
+    }, 
+    {
+      "index": 151, 
+      "type": "41617", 
+      "name": "09Geophysics_tle1711r1584.pdf.txt", 
+      "id": "09Geophysics_tle1711r1584.pdf.txt"
+    }, 
+    {
+      "index": 152, 
+      "type": "41617", 
+      "name": "09Geophysics_geo4105r08950921.pdf.txt", 
+      "id": "09Geophysics_geo4105r08950921.pdf.txt"
+    }, 
+    {
+      "index": 153, 
+      "type": "41617", 
+      "name": "11Geophysical Prospecting_347260.pdf.txt", 
+      "id": "11Geophysical Prospecting_347260.pdf.txt"
+    }, 
+    {
+      "index": 154, 
+      "type": "41617", 
+      "name": "09Geophysics_geo7504sa0071.pdf.txt", 
+      "id": "09Geophysics_geo7504sa0071.pdf.txt"
+    }, 
+    {
+      "index": 155, 
+      "type": "41617", 
+      "name": "09Geophysics_tle1408r0887.pdf.txt", 
+      "id": "09Geophysics_tle1408r0887.pdf.txt"
+    }, 
+    {
+      "index": 156, 
+      "type": "41617", 
+      "name": "11Geophysical Prospecting_614460.pdf.txt", 
+      "id": "11Geophysical Prospecting_614460.pdf.txt"
+    }, 
+    {
+      "index": 157, 
+      "type": "relationship", 
+      "name": "41264", 
+      "id": "41264"
+    }, 
+    {
+      "index": 158, 
+      "type": "41264", 
+      "name": "09Geophysics_geo6305r17081715.pdf.txt", 
+      "id": "09Geophysics_geo6305r17081715.pdf.txt"
+    }, 
+    {
+      "index": 159, 
+      "type": "41264", 
+      "name": "09Geophysics_geo2204r07670778.pdf.txt", 
+      "id": "09Geophysics_geo2204r07670778.pdf.txt"
+    }, 
+    {
+      "index": 160, 
+      "type": "41264", 
+      "name": "09Geophysics_geo3505r09160919.pdf.txt", 
+      "id": "09Geophysics_geo3505r09160919.pdf.txt"
+    }, 
+    {
+      "index": 161, 
+      "type": "41264", 
+      "name": "09Geophysics_geo6006r1765.pdf.txt", 
+      "id": "09Geophysics_geo6006r1765.pdf.txt"
+    }, 
+    {
+      "index": 162, 
+      "type": "41264", 
+      "name": "09Geophysics_geo3704r06940696.pdf.txt", 
+      "id": "09Geophysics_geo3704r06940696.pdf.txt"
+    }, 
+    {
+      "index": 163, 
+      "type": "41264", 
+      "name": "09Geophysics_geo5911r1650.pdf.txt", 
+      "id": "09Geophysics_geo5911r1650.pdf.txt"
+    }, 
+    {
+      "index": 164, 
+      "type": "41264", 
+      "name": "09Geophysics_geo6803r0824.pdf.txt", 
+      "id": "09Geophysics_geo6803r0824.pdf.txt"
+    }, 
+    {
+      "index": 165, 
+      "type": "41264", 
+      "name": "09Geophysics_tle1301r0017.pdf.txt", 
+      "id": "09Geophysics_tle1301r0017.pdf.txt"
+    }, 
+    {
+      "index": 166, 
+      "type": "41264", 
+      "name": "09Geophysics_geo6701r0098.pdf.txt", 
+      "id": "09Geophysics_geo6701r0098.pdf.txt"
+    }, 
+    {
+      "index": 167, 
+      "type": "41264", 
+      "name": "09Geophysics_tle2402r01520152.pdf.txt", 
+      "id": "09Geophysics_tle2402r01520152.pdf.txt"
+    }, 
+    {
+      "index": 168, 
+      "type": "41264", 
+      "name": "09Geophysics_geo3106r11231144.pdf.txt", 
+      "id": "09Geophysics_geo3106r11231144.pdf.txt"
+    }, 
+    {
+      "index": 169, 
+      "type": "41264", 
+      "name": "09Geophysics_geo5101r01370147.pdf.txt", 
+      "id": "09Geophysics_geo5101r01370147.pdf.txt"
+    }, 
+    {
+      "index": 170, 
+      "type": "41264", 
+      "name": "09Geophysics_geo4908r12591266.pdf.txt", 
+      "id": "09Geophysics_geo4908r12591266.pdf.txt"
+    }, 
+    {
+      "index": 171, 
+      "type": "41264", 
+      "name": "09Geophysics_geo6302r04540459.pdf.txt", 
+      "id": "09Geophysics_geo6302r04540459.pdf.txt"
+    }, 
+    {
+      "index": 172, 
+      "type": "41264", 
+      "name": "09Geophysics_geo4904r03440352.pdf.txt", 
+      "id": "09Geophysics_geo4904r03440352.pdf.txt"
+    }, 
+    {
+      "index": 173, 
+      "type": "41264", 
+      "name": "09Geophysics_geo6105r1436.pdf.txt", 
+      "id": "09Geophysics_geo6105r1436.pdf.txt"
+    }, 
+    {
+      "index": 174, 
+      "type": "41264", 
+      "name": "09Geophysics_geo5801r0091.pdf.txt", 
+      "id": "09Geophysics_geo5801r0091.pdf.txt"
+    }, 
+    {
+      "index": 175, 
+      "type": "41264", 
+      "name": "09Geophysics_geo6002r0611.pdf.txt", 
+      "id": "09Geophysics_geo6002r0611.pdf.txt"
+    }, 
+    {
+      "index": 176, 
+      "type": "41264", 
+      "name": "09Geophysics_tle2812r1410.pdf.txt", 
+      "id": "09Geophysics_tle2812r1410.pdf.txt"
+    }, 
+    {
+      "index": 177, 
+      "type": "41264", 
+      "name": "09Geophysics_geo6001r0087.pdf.txt", 
+      "id": "09Geophysics_geo6001r0087.pdf.txt"
+    }, 
+    {
+      "index": 178, 
+      "type": "41264", 
+      "name": "09Geophysics_geo5806r0797.pdf.txt", 
+      "id": "09Geophysics_geo5806r0797.pdf.txt"
+    }, 
+    {
+      "index": 179, 
+      "type": "41264", 
+      "name": "09Geophysics_geo6805r1559.pdf.txt", 
+      "id": "09Geophysics_geo6805r1559.pdf.txt"
+    }, 
+    {
+      "index": 180, 
+      "type": "41264", 
+      "name": "09Geophysics_geo3604r07230738.pdf.txt", 
+      "id": "09Geophysics_geo3604r07230738.pdf.txt"
+    }, 
+    {
+      "index": 181, 
+      "type": "41264", 
+      "name": "09Geophysics_geo6304r11661176.pdf.txt", 
+      "id": "09Geophysics_geo6304r11661176.pdf.txt"
+    }, 
+    {
+      "index": 182, 
+      "type": "41264", 
+      "name": "09Geophysics_geo3701r01420159.pdf.txt", 
+      "id": "09Geophysics_geo3701r01420159.pdf.txt"
+    }, 
+    {
+      "index": 183, 
+      "type": "41264", 
+      "name": "09Geophysics_geo5804r0508.pdf.txt", 
+      "id": "09Geophysics_geo5804r0508.pdf.txt"
+    }, 
+    {
+      "index": 184, 
+      "type": "41264", 
+      "name": "09Geophysics_tle2007r07520760.pdf.txt", 
+      "id": "09Geophysics_tle2007r07520760.pdf.txt"
+    }, 
+    {
+      "index": 185, 
+      "type": "41264", 
+      "name": "09Geophysics_geo5411r13971409.pdf.txt", 
+      "id": "09Geophysics_geo5411r13971409.pdf.txt"
+    }, 
+    {
+      "index": 186, 
+      "type": "41264", 
+      "name": "09Geophysics_geo5004r05820595.pdf.txt", 
+      "id": "09Geophysics_geo5004r05820595.pdf.txt"
+    }, 
+    {
+      "index": 187, 
+      "type": "41264", 
+      "name": "09Geophysics_geo7104si0005.pdf.txt", 
+      "id": "09Geophysics_geo7104si0005.pdf.txt"
+    }, 
+    {
+      "index": 188, 
+      "type": "41264", 
+      "name": "09Geophysics_geo4605r07340750.pdf.txt", 
+      "id": "09Geophysics_geo4605r07340750.pdf.txt"
+    }, 
+    {
+      "index": 189, 
+      "type": "41264", 
+      "name": "09Geophysics_geo5209r12521264.pdf.txt", 
+      "id": "09Geophysics_geo5209r12521264.pdf.txt"
+    }, 
+    {
+      "index": 190, 
+      "type": "41264", 
+      "name": "09Geophysics_geo5707r09520955.pdf.txt", 
+      "id": "09Geophysics_geo5707r09520955.pdf.txt"
+    }, 
+    {
+      "index": 191, 
+      "type": "41264", 
+      "name": "09Geophysics_geo5312r16051609.pdf.txt", 
+      "id": "09Geophysics_geo5312r16051609.pdf.txt"
+    }, 
+    {
+      "index": 192, 
+      "type": "41264", 
+      "name": "09Geophysics_geo5512r15771588.pdf.txt", 
+      "id": "09Geophysics_geo5512r15771588.pdf.txt"
+    }, 
+    {
+      "index": 193, 
+      "type": "41264", 
+      "name": "09Geophysics_geo5910r1542.pdf.txt", 
+      "id": "09Geophysics_geo5910r1542.pdf.txt"
+    }, 
+    {
+      "index": 194, 
+      "type": "41264", 
+      "name": "09Geophysics_geo7101b0001.pdf.txt", 
+      "id": "09Geophysics_geo7101b0001.pdf.txt"
+    }, 
+    {
+      "index": 195, 
+      "type": "41264", 
+      "name": "09Geophysics_geo2905r08680869.pdf.txt", 
+      "id": "09Geophysics_geo2905r08680869.pdf.txt"
+    }, 
+    {
+      "index": 196, 
+      "type": "41264", 
+      "name": "09Geophysics_geo3401r00390053.pdf.txt", 
+      "id": "09Geophysics_geo3401r00390053.pdf.txt"
+    }, 
+    {
+      "index": 197, 
+      "type": "41264", 
+      "name": "09Geophysics_geo3501r01430152.pdf.txt", 
+      "id": "09Geophysics_geo3501r01430152.pdf.txt"
+    }, 
+    {
+      "index": 198, 
+      "type": "41264", 
+      "name": "09Geophysics_geo6104r1150.pdf.txt", 
+      "id": "09Geophysics_geo6104r1150.pdf.txt"
+    }, 
+    {
+      "index": 199, 
+      "type": "41264", 
+      "name": "09Geophysics_geo2802r01610200.pdf.txt", 
+      "id": "09Geophysics_geo2802r01610200.pdf.txt"
+    }, 
+    {
+      "index": 200, 
+      "type": "41264", 
+      "name": "09Geophysics_tle1512r1347.pdf.txt", 
+      "id": "09Geophysics_tle1512r1347.pdf.txt"
+    }, 
+    {
+      "index": 201, 
+      "type": "41264", 
+      "name": "09Geophysics_geo5006r10471047.pdf.txt", 
+      "id": "09Geophysics_geo5006r10471047.pdf.txt"
+    }, 
+    {
+      "index": 202, 
+      "type": "41264", 
+      "name": "09Geophysics_geo5612r19801985.pdf.txt", 
+      "id": "09Geophysics_geo5612r19801985.pdf.txt"
+    }, 
+    {
+      "index": 203, 
+      "type": "41264", 
+      "name": "09Geophysics_geo5201r00260036.pdf.txt", 
+      "id": "09Geophysics_geo5201r00260036.pdf.txt"
+    }, 
+    {
+      "index": 204, 
+      "type": "41264", 
+      "name": "09Geophysics_geo4907r09340948.pdf.txt", 
+      "id": "09Geophysics_geo4907r09340948.pdf.txt"
+    }, 
+    {
+      "index": 205, 
+      "type": "41264", 
+      "name": "09Geophysics_geo0604r03560369.pdf.txt", 
+      "id": "09Geophysics_geo0604r03560369.pdf.txt"
+    }, 
+    {
+      "index": 206, 
+      "type": "41264", 
+      "name": "09Geophysics_geo5305r06250637.pdf.txt", 
+      "id": "09Geophysics_geo5305r06250637.pdf.txt"
+    }, 
+    {
+      "index": 207, 
+      "type": "41264", 
+      "name": "09Geophysics_geo6803r0996.pdf.txt", 
+      "id": "09Geophysics_geo6803r0996.pdf.txt"
+    }, 
+    {
+      "index": 208, 
+      "type": "41264", 
+      "name": "09Geophysics_geo3303r03990411.pdf.txt", 
+      "id": "09Geophysics_geo3303r03990411.pdf.txt"
+    }, 
+    {
+      "index": 209, 
+      "type": "41264", 
+      "name": "09Geophysics_geo4501r00370054.pdf.txt", 
+      "id": "09Geophysics_geo4501r00370054.pdf.txt"
+    }, 
+    {
+      "index": 210, 
+      "type": "41264", 
+      "name": "09Geophysics_tle2401r0049.pdf.txt", 
+      "id": "09Geophysics_tle2401r0049.pdf.txt"
+    }, 
+    {
+      "index": 211, 
+      "type": "relationship", 
+      "name": "41767", 
+      "id": "41767"
+    }, 
+    {
+      "index": 212, 
+      "type": "41767", 
+      "name": "11Geophysical Prospecting_457464.pdf.txt", 
+      "id": "11Geophysical Prospecting_457464.pdf.txt"
+    }, 
+    {
+      "index": 213, 
+      "type": "relationship", 
+      "name": "41556", 
+      "id": "41556"
+    }, 
+    {
+      "index": 214, 
+      "type": "41556", 
+      "name": "11Geophysical Prospecting_343386.pdf.txt", 
+      "id": "11Geophysical Prospecting_343386.pdf.txt"
+    }, 
+    {
+      "index": 215, 
+      "type": "41556", 
+      "name": "11Geophysical Prospecting_089181.pdf.txt", 
+      "id": "11Geophysical Prospecting_089181.pdf.txt"
+    }, 
+    {
+      "index": 216, 
+      "type": "41556", 
+      "name": "09Geophysics_tle1110r0037.pdf.txt", 
+      "id": "09Geophysics_tle1110r0037.pdf.txt"
+    }, 
+    {
+      "index": 217, 
+      "type": "41556", 
+      "name": "11Geophysical Prospecting_021181.pdf.txt", 
+      "id": "11Geophysical Prospecting_021181.pdf.txt"
+    }, 
+    {
+      "index": 218, 
+      "type": "41556", 
+      "name": "09Geophysics_tle2912r1514.pdf.txt", 
+      "id": "09Geophysics_tle2912r1514.pdf.txt"
+    }, 
+    {
+      "index": 219, 
+      "type": "41556", 
+      "name": "11Geophysical Prospecting_330274.PDF.txt", 
+      "id": "11Geophysical Prospecting_330274.PDF.txt"
+    }, 
+    {
+      "index": 220, 
+      "type": "41556", 
+      "name": "11Geophysical Prospecting_633476.pdf.txt", 
+      "id": "11Geophysical Prospecting_633476.pdf.txt"
+    }, 
+    {
+      "index": 221, 
+      "type": "41556", 
+      "name": "09Geophysics_tle1805r0529.pdf.txt", 
+      "id": "09Geophysics_tle1805r0529.pdf.txt"
+    }, 
+    {
+      "index": 222, 
+      "type": "41556", 
+      "name": "11Geophysical Prospecting_533481.pdf.txt", 
+      "id": "11Geophysical Prospecting_533481.pdf.txt"
+    }, 
+    {
+      "index": 223, 
+      "type": "41556", 
+      "name": "11Geophysical Prospecting_253271.pdf.txt", 
+      "id": "11Geophysical Prospecting_253271.pdf.txt"
+    }, 
+    {
+      "index": 224, 
+      "type": "41556", 
+      "name": "11Geophysical Prospecting_549462.pdf.txt", 
+      "id": "11Geophysical Prospecting_549462.pdf.txt"
+    }, 
+    {
+      "index": 225, 
+      "type": "41556", 
+      "name": "09Geophysics_tle0908r00130020.pdf.txt", 
+      "id": "09Geophysics_tle0908r00130020.pdf.txt"
+    }, 
+    {
+      "index": 226, 
+      "type": "41556", 
+      "name": "09Geophysics_tle2712r1622.pdf.txt", 
+      "id": "09Geophysics_tle2712r1622.pdf.txt"
+    }, 
+    {
+      "index": 227, 
+      "type": "41556", 
+      "name": "09Geophysics_tle2207r0654.pdf.txt", 
+      "id": "09Geophysics_tle2207r0654.pdf.txt"
+    }, 
+    {
+      "index": 228, 
+      "type": "41556", 
+      "name": "09Geophysics_tle2611r1395.pdf.txt", 
+      "id": "09Geophysics_tle2611r1395.pdf.txt"
+    }, 
+    {
+      "index": 229, 
+      "type": "41556", 
+      "name": "09Geophysics_tle0903r00170020.pdf.txt", 
+      "id": "09Geophysics_tle0903r00170020.pdf.txt"
+    }, 
+    {
+      "index": 230, 
+      "type": "41556", 
+      "name": "09Geophysics_tle2804r0496.pdf.txt", 
+      "id": "09Geophysics_tle2804r0496.pdf.txt"
+    }, 
+    {
+      "index": 231, 
+      "type": "41556", 
+      "name": "02JGE_-1274270126.pdf.txt", 
+      "id": "02JGE_-1274270126.pdf.txt"
+    }, 
+    {
+      "index": 232, 
+      "type": "41556", 
+      "name": "09Geophysics_tle2408r0818.pdf.txt", 
+      "id": "09Geophysics_tle2408r0818.pdf.txt"
+    }, 
+    {
+      "index": 233, 
+      "type": "41556", 
+      "name": "09Geophysics_geo5409r11341140.pdf.txt", 
+      "id": "09Geophysics_geo5409r11341140.pdf.txt"
+    }, 
+    {
+      "index": 234, 
+      "type": "41556", 
+      "name": "09Geophysics_tle1603r0281.pdf.txt", 
+      "id": "09Geophysics_tle1603r0281.pdf.txt"
+    }, 
+    {
+      "index": 235, 
+      "type": "41556", 
+      "name": "09Geophysics_tle1703r0298.pdf.txt", 
+      "id": "09Geophysics_tle1703r0298.pdf.txt"
+    }, 
+    {
+      "index": 236, 
+      "type": "41556", 
+      "name": "02JGE_1742-2140_8_2_018.pdf.txt", 
+      "id": "02JGE_1742-2140_8_2_018.pdf.txt"
+    }, 
+    {
+      "index": 237, 
+      "type": "41556", 
+      "name": "11Geophysical Prospecting_435359.pdf.txt", 
+      "id": "11Geophysical Prospecting_435359.pdf.txt"
+    }, 
+    {
+      "index": 238, 
+      "type": "41556", 
+      "name": "11Geophysical Prospecting_407391.pdf.txt", 
+      "id": "11Geophysical Prospecting_407391.pdf.txt"
+    }, 
+    {
+      "index": 239, 
+      "type": "41556", 
+      "name": "09Geophysics_tle2406r06580661.pdf.txt", 
+      "id": "09Geophysics_tle2406r06580661.pdf.txt"
+    }, 
+    {
+      "index": 240, 
+      "type": "41556", 
+      "name": "09Geophysics_tle0711r00190021.pdf.txt", 
+      "id": "09Geophysics_tle0711r00190021.pdf.txt"
+    }, 
+    {
+      "index": 241, 
+      "type": "41556", 
+      "name": "09Geophysics_tle2908r0902.pdf.txt", 
+      "id": "09Geophysics_tle2908r0902.pdf.txt"
+    }, 
+    {
+      "index": 242, 
+      "type": "relationship", 
+      "name": "41634", 
+      "id": "41634"
+    }, 
+    {
+      "index": 243, 
+      "type": "41634", 
+      "name": "09Geophysics_tle2804r0431.pdf.txt", 
+      "id": "09Geophysics_tle2804r0431.pdf.txt"
+    }, 
+    {
+      "index": 244, 
+      "type": "41634", 
+      "name": "09Geophysics_tle2801r0123.pdf.txt", 
+      "id": "09Geophysics_tle2801r0123.pdf.txt"
+    }, 
+    {
+      "index": 245, 
+      "type": "41634", 
+      "name": "11Geophysical Prospecting_700687.pdf.txt", 
+      "id": "11Geophysical Prospecting_700687.pdf.txt"
+    }, 
+    {
+      "index": 246, 
+      "type": "41634", 
+      "name": "09Geophysics_tle1908r08200820.pdf.txt", 
+      "id": "09Geophysics_tle1908r08200820.pdf.txt"
+    }, 
+    {
+      "index": 247, 
+      "type": "41634", 
+      "name": "11Geophysical Prospecting_841894.pdf.txt", 
+      "id": "11Geophysical Prospecting_841894.pdf.txt"
+    }, 
+    {
+      "index": 248, 
+      "type": "41634", 
+      "name": "11Geophysical Prospecting_782583.pdf.txt", 
+      "id": "11Geophysical Prospecting_782583.pdf.txt"
+    }, 
+    {
+      "index": 249, 
+      "type": "41634", 
+      "name": "09Geophysics_tle1807r0760.pdf.txt", 
+      "id": "09Geophysics_tle1807r0760.pdf.txt"
+    }, 
+    {
+      "index": 250, 
+      "type": "41634", 
+      "name": "09Geophysics_geo7305ve0361.pdf.txt", 
+      "id": "09Geophysics_geo7305ve0361.pdf.txt"
+    }, 
+    {
+      "index": 251, 
+      "type": "41634", 
+      "name": "11Geophysical Prospecting_198284.pdf.txt", 
+      "id": "11Geophysical Prospecting_198284.pdf.txt"
+    }, 
+    {
+      "index": 252, 
+      "type": "41634", 
+      "name": "09Geophysics_tle2804r0418.pdf.txt", 
+      "id": "09Geophysics_tle2804r0418.pdf.txt"
+    }, 
+    {
+      "index": 253, 
+      "type": "41634", 
+      "name": "11Geophysical Prospecting_433458.pdf.txt", 
+      "id": "11Geophysical Prospecting_433458.pdf.txt"
+    }, 
+    {
+      "index": 254, 
+      "type": "41634", 
+      "name": "09Geophysics_tle2411r1168.pdf.txt", 
+      "id": "09Geophysics_tle2411r1168.pdf.txt"
+    }, 
+    {
+      "index": 255, 
+      "type": "41634", 
+      "name": "09Geophysics_tle2703r0435.pdf.txt", 
+      "id": "09Geophysics_tle2703r0435.pdf.txt"
+    }, 
+    {
+      "index": 256, 
+      "type": "41634", 
+      "name": "11Geophysical Prospecting_710474.PDF.txt", 
+      "id": "11Geophysical Prospecting_710474.PDF.txt"
+    }, 
+    {
+      "index": 257, 
+      "type": "41634", 
+      "name": "02JGE_1742-2140_9_1_005.pdf.txt", 
+      "id": "02JGE_1742-2140_9_1_005.pdf.txt"
+    }, 
+    {
+      "index": 258, 
+      "type": "41634", 
+      "name": "11Geophysical Prospecting_040179.pdf.txt", 
+      "id": "11Geophysical Prospecting_040179.pdf.txt"
+    }, 
+    {
+      "index": 259, 
+      "type": "41634", 
+      "name": "09Geophysics_tle1307r0796.pdf.txt", 
+      "id": "09Geophysics_tle1307r0796.pdf.txt"
+    }, 
+    {
+      "index": 260, 
+      "type": "relationship", 
+      "name": "41734", 
+      "id": "41734"
+    }, 
+    {
+      "index": 261, 
+      "type": "41734", 
+      "name": "09Geophysics_geo5906r0889.pdf.txt", 
+      "id": "09Geophysics_geo5906r0889.pdf.txt"
+    }, 
+    {
+      "index": 262, 
+      "type": "41734", 
+      "name": "09Geophysics_geo2605r06180625.pdf.txt", 
+      "id": "09Geophysics_geo2605r06180625.pdf.txt"
+    }, 
+    {
+      "index": 263, 
+      "type": "41734", 
+      "name": "09Geophysics_geo0802r01570164.pdf.txt", 
+      "id": "09Geophysics_geo0802r01570164.pdf.txt"
+    }, 
+    {
+      "index": 264, 
+      "type": "41734", 
+      "name": "09Geophysics_geo4805r05050514.pdf.txt", 
+      "id": "09Geophysics_geo4805r05050514.pdf.txt"
+    }, 
+    {
+      "index": 265, 
+      "type": "41734", 
+      "name": "09Geophysics_geo5207r09971006.pdf.txt", 
+      "id": "09Geophysics_geo5207r09971006.pdf.txt"
+    }, 
+    {
+      "index": 266, 
+      "type": "relationship", 
+      "name": "41532", 
+      "id": "41532"
+    }, 
+    {
+      "index": 267, 
+      "type": "41532", 
+      "name": "09Geophysics_tle2208r0759.pdf.txt", 
+      "id": "09Geophysics_tle2208r0759.pdf.txt"
+    }, 
+    {
+      "index": 268, 
+      "type": "41532", 
+      "name": "11Geophysical Prospecting_549376.pdf.txt", 
+      "id": "11Geophysical Prospecting_549376.pdf.txt"
+    }, 
+    {
+      "index": 269, 
+      "type": "41532", 
+      "name": "09Geophysics_geo3003r03690388.pdf.txt", 
+      "id": "09Geophysics_geo3003r03690388.pdf.txt"
+    }, 
+    {
+      "index": 270, 
+      "type": "41532", 
+      "name": "09Geophysics_tle1707r0897.pdf.txt", 
+      "id": "09Geophysics_tle1707r0897.pdf.txt"
+    }, 
+    {
+      "index": 271, 
+      "type": "41532", 
+      "name": "11Geophysical Prospecting_480384.pdf.txt", 
+      "id": "11Geophysical Prospecting_480384.pdf.txt"
+    }, 
+    {
+      "index": 272, 
+      "type": "41532", 
+      "name": "09Geophysics_geo5307r09890991.pdf.txt", 
+      "id": "09Geophysics_geo5307r09890991.pdf.txt"
+    }, 
+    {
+      "index": 273, 
+      "type": "41532", 
+      "name": "09Geophysics_geo4803r03310340.pdf.txt", 
+      "id": "09Geophysics_geo4803r03310340.pdf.txt"
+    }, 
+    {
+      "index": 274, 
+      "type": "41532", 
+      "name": "09Geophysics_geo3605r07980809.pdf.txt", 
+      "id": "09Geophysics_geo3605r07980809.pdf.txt"
+    }, 
+    {
+      "index": 275, 
+      "type": "41532", 
+      "name": "09Geophysics_tle1111r00040004.pdf.txt", 
+      "id": "09Geophysics_tle1111r00040004.pdf.txt"
+    }, 
+    {
+      "index": 276, 
+      "type": "41532", 
+      "name": "09Geophysics_geo0201r00210032.pdf.txt", 
+      "id": "09Geophysics_geo0201r00210032.pdf.txt"
+    }, 
+    {
+      "index": 277, 
+      "type": "41532", 
+      "name": "09Geophysics_geo5806r0863.pdf.txt", 
+      "id": "09Geophysics_geo5806r0863.pdf.txt"
+    }, 
+    {
+      "index": 278, 
+      "type": "41532", 
+      "name": "09Geophysics_geo6805r1714.pdf.txt", 
+      "id": "09Geophysics_geo6805r1714.pdf.txt"
+    }, 
+    {
+      "index": 279, 
+      "type": "41532", 
+      "name": "09Geophysics_geo5102r03470352.pdf.txt", 
+      "id": "09Geophysics_geo5102r03470352.pdf.txt"
+    }, 
+    {
+      "index": 280, 
+      "type": "41532", 
+      "name": "09Geophysics_geo4101r00440055.pdf.txt", 
+      "id": "09Geophysics_geo4101r00440055.pdf.txt"
+    }, 
+    {
+      "index": 281, 
+      "type": "41532", 
+      "name": "02JGE_1742-2140_9_6_664.pdf.txt", 
+      "id": "02JGE_1742-2140_9_6_664.pdf.txt"
+    }, 
+    {
+      "index": 282, 
+      "type": "41532", 
+      "name": "11Geophysical Prospecting_510374.PDF.txt", 
+      "id": "11Geophysical Prospecting_510374.PDF.txt"
+    }, 
+    {
+      "index": 283, 
+      "type": "41532", 
+      "name": "09Geophysics_geo1501r00940101.pdf.txt", 
+      "id": "09Geophysics_geo1501r00940101.pdf.txt"
+    }, 
+    {
+      "index": 284, 
+      "type": "41532", 
+      "name": "09Geophysics_tle1408r0871.pdf.txt", 
+      "id": "09Geophysics_tle1408r0871.pdf.txt"
+    }, 
+    {
+      "index": 285, 
+      "type": "41532", 
+      "name": "09Geophysics_tle2009r0950.pdf.txt", 
+      "id": "09Geophysics_tle2009r0950.pdf.txt"
+    }, 
+    {
+      "index": 286, 
+      "type": "41532", 
+      "name": "11Geophysical Prospecting_910472.PDF.txt", 
+      "id": "11Geophysical Prospecting_910472.PDF.txt"
+    }, 
+    {
+      "index": 287, 
+      "type": "41532", 
+      "name": "09Geophysics_geo3502r03580358.pdf.txt", 
+      "id": "09Geophysics_geo3502r03580358.pdf.txt"
+    }, 
+    {
+      "index": 288, 
+      "type": "41532", 
+      "name": "09Geophysics_geo7204y0003.pdf.txt", 
+      "id": "09Geophysics_geo7204y0003.pdf.txt"
+    }, 
+    {
+      "index": 289, 
+      "type": "41532", 
+      "name": "09Geophysics_geo7403r0015.pdf.txt", 
+      "id": "09Geophysics_geo7403r0015.pdf.txt"
+    }, 
+    {
+      "index": 290, 
+      "type": "41532", 
+      "name": "11Geophysical Prospecting_519485.pdf.txt", 
+      "id": "11Geophysical Prospecting_519485.pdf.txt"
+    }, 
+    {
+      "index": 291, 
+      "type": "41532", 
+      "name": "09Geophysics_geo5910r1561.pdf.txt", 
+      "id": "09Geophysics_geo5910r1561.pdf.txt"
+    }, 
+    {
+      "index": 292, 
+      "type": "41532", 
+      "name": "02JGE_1742-2140_9_5_498.pdf.txt", 
+      "id": "02JGE_1742-2140_9_5_498.pdf.txt"
+    }, 
+    {
+      "index": 293, 
+      "type": "41532", 
+      "name": "02JGE_-2011067878.pdf.txt", 
+      "id": "02JGE_-2011067878.pdf.txt"
+    }, 
+    {
+      "index": 294, 
+      "type": "41532", 
+      "name": "09Geophysics_geo5107r15041504.pdf.txt", 
+      "id": "09Geophysics_geo5107r15041504.pdf.txt"
+    }, 
+    {
+      "index": 295, 
+      "type": "41532", 
+      "name": "09Geophysics_geo2906r09150915.pdf.txt", 
+      "id": "09Geophysics_geo2906r09150915.pdf.txt"
+    }, 
+    {
+      "index": 296, 
+      "type": "41532", 
+      "name": "09Geophysics_geo2606r08000805.pdf.txt", 
+      "id": "09Geophysics_geo2606r08000805.pdf.txt"
+    }, 
+    {
+      "index": 297, 
+      "type": "41532", 
+      "name": "09Geophysics_geo6703r0684.pdf.txt", 
+      "id": "09Geophysics_geo6703r0684.pdf.txt"
+    }, 
+    {
+      "index": 298, 
+      "type": "41532", 
+      "name": "09Geophysics_geo4610r13791391.pdf.txt", 
+      "id": "09Geophysics_geo4610r13791391.pdf.txt"
+    }, 
+    {
+      "index": 299, 
+      "type": "41532", 
+      "name": "09Geophysics_tle1310r1052.pdf.txt", 
+      "id": "09Geophysics_tle1310r1052.pdf.txt"
+    }, 
+    {
+      "index": 300, 
+      "type": "41532", 
+      "name": "09Geophysics_geo2701r01620167.pdf.txt", 
+      "id": "09Geophysics_geo2701r01620167.pdf.txt"
+    }, 
+    {
+      "index": 301, 
+      "type": "41532", 
+      "name": "09Geophysics_geo2702r01930197.pdf.txt", 
+      "id": "09Geophysics_geo2702r01930197.pdf.txt"
+    }, 
+    {
+      "index": 302, 
+      "type": "41532", 
+      "name": "09Geophysics_geo4102r02870299.pdf.txt", 
+      "id": "09Geophysics_geo4102r02870299.pdf.txt"
+    }, 
+    {
+      "index": 303, 
+      "type": "41532", 
+      "name": "09Geophysics_geo5110r2013.pdf.txt", 
+      "id": "09Geophysics_geo5110r2013.pdf.txt"
+    }, 
+    {
+      "index": 304, 
+      "type": "41532", 
+      "name": "11Geophysical Prospecting_397395.pdf.txt", 
+      "id": "11Geophysical Prospecting_397395.pdf.txt"
+    }, 
+    {
+      "index": 305, 
+      "type": "41532", 
+      "name": "02JGE_657516653.pdf.txt", 
+      "id": "02JGE_657516653.pdf.txt"
+    }, 
+    {
+      "index": 306, 
+      "type": "41532", 
+      "name": "09Geophysics_geo2002r02540269.pdf.txt", 
+      "id": "09Geophysics_geo2002r02540269.pdf.txt"
+    }, 
+    {
+      "index": 307, 
+      "type": "41532", 
+      "name": "09Geophysics_geo5509r12231234.pdf.txt", 
+      "id": "09Geophysics_geo5509r12231234.pdf.txt"
+    }, 
+    {
+      "index": 308, 
+      "type": "41532", 
+      "name": "09Geophysics_tle2410r10711071.pdf.txt", 
+      "id": "09Geophysics_tle2410r10711071.pdf.txt"
+    }, 
+    {
+      "index": 309, 
+      "type": "41532", 
+      "name": "09Geophysics_tle2604r05320533.pdf.txt", 
+      "id": "09Geophysics_tle2604r05320533.pdf.txt"
+    }, 
+    {
+      "index": 310, 
+      "type": "41532", 
+      "name": "09Geophysics_tle1206r0698.pdf.txt", 
+      "id": "09Geophysics_tle1206r0698.pdf.txt"
+    }, 
+    {
+      "index": 311, 
+      "type": "41532", 
+      "name": "11Geophysical Prospecting_B55684.pdf.txt", 
+      "id": "11Geophysical Prospecting_B55684.pdf.txt"
+    }, 
+    {
+      "index": 312, 
+      "type": "41532", 
+      "name": "09Geophysics_geo4103r04410458.pdf.txt", 
+      "id": "09Geophysics_geo4103r04410458.pdf.txt"
+    }, 
+    {
+      "index": 313, 
+      "type": "41532", 
+      "name": "09Geophysics_geo4305r10111013.pdf.txt", 
+      "id": "09Geophysics_geo4305r10111013.pdf.txt"
+    }, 
+    {
+      "index": 314, 
+      "type": "41532", 
+      "name": "09Geophysics_tle1704r0484.pdf.txt", 
+      "id": "09Geophysics_tle1704r0484.pdf.txt"
+    }, 
+    {
+      "index": 315, 
+      "type": "41532", 
+      "name": "11Geophysical Prospecting_953791.pdf.txt", 
+      "id": "11Geophysical Prospecting_953791.pdf.txt"
+    }, 
+    {
+      "index": 316, 
+      "type": "41532", 
+      "name": "09Geophysics_geo5501r01310131.pdf.txt", 
+      "id": "09Geophysics_geo5501r01310131.pdf.txt"
+    }, 
+    {
+      "index": 317, 
+      "type": "41532", 
+      "name": "09Geophysics_geo4103r04180424.pdf.txt", 
+      "id": "09Geophysics_geo4103r04180424.pdf.txt"
+    }, 
+    {
+      "index": 318, 
+      "type": "41532", 
+      "name": "09Geophysics_tle1707r0872.pdf.txt", 
+      "id": "09Geophysics_tle1707r0872.pdf.txt"
+    }, 
+    {
+      "index": 319, 
+      "type": "41532", 
+      "name": "09Geophysics_geo4907r09810992.pdf.txt", 
+      "id": "09Geophysics_geo4907r09810992.pdf.txt"
+    }, 
+    {
+      "index": 320, 
+      "type": "41532", 
+      "name": "09Geophysics_geo4707r10681077.pdf.txt", 
+      "id": "09Geophysics_geo4707r10681077.pdf.txt"
+    }, 
+    {
+      "index": 321, 
+      "type": "41532", 
+      "name": "09Geophysics_geo1801r01600187.pdf.txt", 
+      "id": "09Geophysics_geo1801r01600187.pdf.txt"
+    }, 
+    {
+      "index": 322, 
+      "type": "41532", 
+      "name": "02JGE_-1526591544.pdf.txt", 
+      "id": "02JGE_-1526591544.pdf.txt"
+    }, 
+    {
+      "index": 323, 
+      "type": "41532", 
+      "name": "09Geophysics_geo4603r03430346.pdf.txt", 
+      "id": "09Geophysics_geo4603r03430346.pdf.txt"
+    }, 
+    {
+      "index": 324, 
+      "type": "41532", 
+      "name": "09Geophysics_geo4006r09810992.pdf.txt", 
+      "id": "09Geophysics_geo4006r09810992.pdf.txt"
+    }, 
+    {
+      "index": 325, 
+      "type": "41532", 
+      "name": "09Geophysics_geo1603r04860493.pdf.txt", 
+      "id": "09Geophysics_geo1603r04860493.pdf.txt"
+    }, 
+    {
+      "index": 326, 
+      "type": "41532", 
+      "name": "11Geophysical Prospecting_790581.PDF.txt", 
+      "id": "11Geophysical Prospecting_790581.PDF.txt"
+    }, 
+    {
+      "index": 327, 
+      "type": "41532", 
+      "name": "09Geophysics_tle1807r0831.pdf.txt", 
+      "id": "09Geophysics_tle1807r0831.pdf.txt"
+    }, 
+    {
+      "index": 328, 
+      "type": "41532", 
+      "name": "09Geophysics_geo1301r00360040.pdf.txt", 
+      "id": "09Geophysics_geo1301r00360040.pdf.txt"
+    }, 
+    {
+      "index": 329, 
+      "type": "41532", 
+      "name": "09Geophysics_geo3302r02640269.pdf.txt", 
+      "id": "09Geophysics_geo3302r02640269.pdf.txt"
+    }, 
+    {
+      "index": 330, 
+      "type": "41532", 
+      "name": "09Geophysics_tle2504r03940395.pdf.txt", 
+      "id": "09Geophysics_tle2504r03940395.pdf.txt"
+    }, 
+    {
+      "index": 331, 
+      "type": "41532", 
+      "name": "09Geophysics_geo5706r07810792.pdf.txt", 
+      "id": "09Geophysics_geo5706r07810792.pdf.txt"
+    }, 
+    {
+      "index": 332, 
+      "type": "41532", 
+      "name": "09Geophysics_geo2403r05980603.pdf.txt", 
+      "id": "09Geophysics_geo2403r05980603.pdf.txt"
+    }, 
+    {
+      "index": 333, 
+      "type": "41532", 
+      "name": "09Geophysics_geo5901r0119.pdf.txt", 
+      "id": "09Geophysics_geo5901r0119.pdf.txt"
+    }, 
+    {
+      "index": 334, 
+      "type": "41532", 
+      "name": "09Geophysics_geo5010r15411547.pdf.txt", 
+      "id": "09Geophysics_geo5010r15411547.pdf.txt"
+    }, 
+    {
+      "index": 335, 
+      "type": "41532", 
+      "name": "09Geophysics_geo7504wa0199.pdf.txt", 
+      "id": "09Geophysics_geo7504wa0199.pdf.txt"
+    }, 
+    {
+      "index": 336, 
+      "type": "41532", 
+      "name": "09Geophysics_geo3606r12041222.pdf.txt", 
+      "id": "09Geophysics_geo3606r12041222.pdf.txt"
+    }, 
+    {
+      "index": 337, 
+      "type": "41532", 
+      "name": "09Geophysics_tle0603r0022.pdf.txt", 
+      "id": "09Geophysics_tle0603r0022.pdf.txt"
+    }, 
+    {
+      "index": 338, 
+      "type": "41532", 
+      "name": "09Geophysics_tle0601r0034.pdf.txt", 
+      "id": "09Geophysics_tle0601r0034.pdf.txt"
+    }, 
+    {
+      "index": 339, 
+      "type": "relationship", 
+      "name": "41748", 
+      "id": "41748"
+    }, 
+    {
+      "index": 340, 
+      "type": "41748", 
+      "name": "09Geophysics_geo7203c0059.pdf.txt", 
+      "id": "09Geophysics_geo7203c0059.pdf.txt"
+    }, 
+    {
+      "index": 341, 
+      "type": "41748", 
+      "name": "09Geophysics_geo5409r10821090.pdf.txt", 
+      "id": "09Geophysics_geo5409r10821090.pdf.txt"
+    }, 
+    {
+      "index": 342, 
+      "type": "41748", 
+      "name": "09Geophysics_tle0410r00920093.pdf.txt", 
+      "id": "09Geophysics_tle0410r00920093.pdf.txt"
+    }, 
+    {
+      "index": 343, 
+      "type": "41748", 
+      "name": "09Geophysics_tle2611r1372.pdf.txt", 
+      "id": "09Geophysics_tle2611r1372.pdf.txt"
+    }, 
+    {
+      "index": 344, 
+      "type": "41748", 
+      "name": "09Geophysics_geo7201f0009.pdf.txt", 
+      "id": "09Geophysics_geo7201f0009.pdf.txt"
+    }, 
+    {
+      "index": 345, 
+      "type": "41748", 
+      "name": "09Geophysics_geo7201v0013.pdf.txt", 
+      "id": "09Geophysics_geo7201v0013.pdf.txt"
+    }, 
+    {
+      "index": 346, 
+      "type": "41748", 
+      "name": "09Geophysics_geo2302r03050317.pdf.txt", 
+      "id": "09Geophysics_geo2302r03050317.pdf.txt"
+    }, 
+    {
+      "index": 347, 
+      "type": "41748", 
+      "name": "09Geophysics_geo7204f0177.pdf.txt", 
+      "id": "09Geophysics_geo7204f0177.pdf.txt"
+    }, 
+    {
+      "index": 348, 
+      "type": "41748", 
+      "name": "09Geophysics_tle2604r0494.pdf.txt", 
+      "id": "09Geophysics_tle2604r0494.pdf.txt"
+    }, 
+    {
+      "index": 349, 
+      "type": "41748", 
+      "name": "09Geophysics_tle0404r00630064.pdf.txt", 
+      "id": "09Geophysics_tle0404r00630064.pdf.txt"
+    }, 
+    {
+      "index": 350, 
+      "type": "41748", 
+      "name": "09Geophysics_tle2905r0508.pdf.txt", 
+      "id": "09Geophysics_tle2905r0508.pdf.txt"
+    }, 
+    {
+      "index": 351, 
+      "type": "41748", 
+      "name": "09Geophysics_tle0703r00260030.pdf.txt", 
+      "id": "09Geophysics_tle0703r00260030.pdf.txt"
+    }, 
+    {
+      "index": 352, 
+      "type": "41748", 
+      "name": "09Geophysics_tle1609r1327.pdf.txt", 
+      "id": "09Geophysics_tle1609r1327.pdf.txt"
+    }, 
+    {
+      "index": 353, 
+      "type": "41748", 
+      "name": "09Geophysics_tle0612r00450046.pdf.txt", 
+      "id": "09Geophysics_tle0612r00450046.pdf.txt"
+    }, 
+    {
+      "index": 354, 
+      "type": "41748", 
+      "name": "09Geophysics_tle1909r09380939.pdf.txt", 
+      "id": "09Geophysics_tle1909r09380939.pdf.txt"
+    }, 
+    {
+      "index": 355, 
+      "type": "41748", 
+      "name": "09Geophysics_tle0908r00320034.pdf.txt", 
+      "id": "09Geophysics_tle0908r00320034.pdf.txt"
+    }, 
+    {
+      "index": 356, 
+      "type": "41748", 
+      "name": "09Geophysics_tle2104r0394.pdf.txt", 
+      "id": "09Geophysics_tle2104r0394.pdf.txt"
+    }, 
+    {
+      "index": 357, 
+      "type": "41748", 
+      "name": "09Geophysics_geo6201r00970105.pdf.txt", 
+      "id": "09Geophysics_geo6201r00970105.pdf.txt"
+    }, 
+    {
+      "index": 358, 
+      "type": "41748", 
+      "name": "09Geophysics_tle1009r00420044.pdf.txt", 
+      "id": "09Geophysics_tle1009r00420044.pdf.txt"
+    }, 
+    {
+      "index": 359, 
+      "type": "41748", 
+      "name": "09Geophysics_tle1803r0408.pdf.txt", 
+      "id": "09Geophysics_tle1803r0408.pdf.txt"
+    }, 
+    {
+      "index": 360, 
+      "type": "41748", 
+      "name": "09Geophysics_geo7202wa0001.pdf.txt", 
+      "id": "09Geophysics_geo7202wa0001.pdf.txt"
+    }, 
+    {
+      "index": 361, 
+      "type": "41748", 
+      "name": "09Geophysics_geo7106a0049.pdf.txt", 
+      "id": "09Geophysics_geo7106a0049.pdf.txt"
+    }, 
+    {
+      "index": 362, 
+      "type": "41748", 
+      "name": "09Geophysics_geo6605r1359.pdf.txt", 
+      "id": "09Geophysics_geo6605r1359.pdf.txt"
+    }, 
+    {
+      "index": 363, 
+      "type": "41748", 
+      "name": "09Geophysics_geo2404r08170822.pdf.txt", 
+      "id": "09Geophysics_geo2404r08170822.pdf.txt"
+    }, 
+    {
+      "index": 364, 
+      "type": "41748", 
+      "name": "09Geophysics_tle2502r0186.pdf.txt", 
+      "id": "09Geophysics_tle2502r0186.pdf.txt"
+    }, 
+    {
+      "index": 365, 
+      "type": "41748", 
+      "name": "09Geophysics_tle2812r1486.pdf.txt", 
+      "id": "09Geophysics_tle2812r1486.pdf.txt"
+    }, 
+    {
+      "index": 366, 
+      "type": "41748", 
+      "name": "09Geophysics_tle2101r0072.pdf.txt", 
+      "id": "09Geophysics_tle2101r0072.pdf.txt"
+    }, 
+    {
+      "index": 367, 
+      "type": "41748", 
+      "name": "09Geophysics_tle1709r1300.pdf.txt", 
+      "id": "09Geophysics_tle1709r1300.pdf.txt"
+    }, 
+    {
+      "index": 368, 
+      "type": "41748", 
+      "name": "09Geophysics_geo2902r02590287.pdf.txt", 
+      "id": "09Geophysics_geo2902r02590287.pdf.txt"
+    }, 
+    {
+      "index": 369, 
+      "type": "41748", 
+      "name": "09Geophysics_geo7504wa0061.pdf.txt", 
+      "id": "09Geophysics_geo7504wa0061.pdf.txt"
+    }, 
+    {
+      "index": 370, 
+      "type": "41748", 
+      "name": "09Geophysics_tle1807r0770.pdf.txt", 
+      "id": "09Geophysics_tle1807r0770.pdf.txt"
+    }, 
+    {
+      "index": 371, 
+      "type": "41748", 
+      "name": "09Geophysics_geo7202g0031.pdf.txt", 
+      "id": "09Geophysics_geo7202g0031.pdf.txt"
+    }, 
+    {
+      "index": 372, 
+      "type": "41748", 
+      "name": "09Geophysics_tle0703r00400040.pdf.txt", 
+      "id": "09Geophysics_tle0703r00400040.pdf.txt"
+    }, 
+    {
+      "index": 373, 
+      "type": "41748", 
+      "name": "11Geophysical Prospecting_121257.pdf.txt", 
+      "id": "11Geophysical Prospecting_121257.pdf.txt"
+    }, 
+    {
+      "index": 374, 
+      "type": "41748", 
+      "name": "09Geophysics_geo5009r13991409.pdf.txt", 
+      "id": "09Geophysics_geo5009r13991409.pdf.txt"
+    }, 
+    {
+      "index": 375, 
+      "type": "41748", 
+      "name": "09Geophysics_geo7406e0233.pdf.txt", 
+      "id": "09Geophysics_geo7406e0233.pdf.txt"
+    }, 
+    {
+      "index": 376, 
+      "type": "41748", 
+      "name": "11Geophysical Prospecting_793474.PDF.txt", 
+      "id": "11Geophysical Prospecting_793474.PDF.txt"
+    }, 
+    {
+      "index": 377, 
+      "type": "41748", 
+      "name": "09Geophysics_tle1904r04450446.pdf.txt", 
+      "id": "09Geophysics_tle1904r04450446.pdf.txt"
+    }, 
+    {
+      "index": 378, 
+      "type": "41748", 
+      "name": "09Geophysics_geo2201r00320047.pdf.txt", 
+      "id": "09Geophysics_geo2201r00320047.pdf.txt"
+    }, 
+    {
+      "index": 379, 
+      "type": "41748", 
+      "name": "09Geophysics_tle0307r00060010.pdf.txt", 
+      "id": "09Geophysics_tle0307r00060010.pdf.txt"
+    }, 
+    {
+      "index": 380, 
+      "type": "41748", 
+      "name": "09Geophysics_geo7506a0053.pdf.txt", 
+      "id": "09Geophysics_geo7506a0053.pdf.txt"
+    }, 
+    {
+      "index": 381, 
+      "type": "41748", 
+      "name": "11Geophysical Prospecting_100186.pdf.txt", 
+      "id": "11Geophysical Prospecting_100186.pdf.txt"
+    }, 
+    {
+      "index": 382, 
+      "type": "41748", 
+      "name": "09Geophysics_tle2801r0086.pdf.txt", 
+      "id": "09Geophysics_tle2801r0086.pdf.txt"
+    }, 
+    {
+      "index": 383, 
+      "type": "41748", 
+      "name": "09Geophysics_pubsvol.pdf.txt", 
+      "id": "09Geophysics_pubsvol.pdf.txt"
+    }, 
+    {
+      "index": 384, 
+      "type": "41748", 
+      "name": "09Geophysics_geo7105h0045.pdf.txt", 
+      "id": "09Geophysics_geo7105h0045.pdf.txt"
+    }, 
+    {
+      "index": 385, 
+      "type": "41748", 
+      "name": "09Geophysics_tle1510r1092a.pdf.txt", 
+      "id": "09Geophysics_tle1510r1092a.pdf.txt"
+    }, 
+    {
+      "index": 386, 
+      "type": "41748", 
+      "name": "09Geophysics_geo7504sa0045.pdf.txt", 
+      "id": "09Geophysics_geo7504sa0045.pdf.txt"
+    }, 
+    {
+      "index": 387, 
+      "type": "41748", 
+      "name": "11Geophysical Prospecting_876479.pdf.txt", 
+      "id": "11Geophysical Prospecting_876479.pdf.txt"
+    }, 
+    {
+      "index": 388, 
+      "type": "41748", 
+      "name": "09Geophysics_geo7502x0010.pdf.txt", 
+      "id": "09Geophysics_geo7502x0010.pdf.txt"
+    }, 
+    {
+      "index": 389, 
+      "type": "41748", 
+      "name": "09Geophysics_geo6601r00380039.pdf.txt", 
+      "id": "09Geophysics_geo6601r00380039.pdf.txt"
+    }, 
+    {
+      "index": 390, 
+      "type": "41748", 
+      "name": "11Geophysical Prospecting_438381.pdf.txt", 
+      "id": "11Geophysical Prospecting_438381.pdf.txt"
+    }, 
+    {
+      "index": 391, 
+      "type": "41748", 
+      "name": "09Geophysics_tle1512r1400.pdf.txt", 
+      "id": "09Geophysics_tle1512r1400.pdf.txt"
+    }, 
+    {
+      "index": 392, 
+      "type": "41748", 
+      "name": "09Geophysics_tle1612r1774.pdf.txt", 
+      "id": "09Geophysics_tle1612r1774.pdf.txt"
+    }, 
+    {
+      "index": 393, 
+      "type": "41748", 
+      "name": "09Geophysics_tle1712r1678.pdf.txt", 
+      "id": "09Geophysics_tle1712r1678.pdf.txt"
+    }, 
+    {
+      "index": 394, 
+      "type": "41748", 
+      "name": "09Geophysics_geoedstaf.pdf.txt", 
+      "id": "09Geophysics_geoedstaf.pdf.txt"
+    }, 
+    {
+      "index": 395, 
+      "type": "41748", 
+      "name": "09Geophysics_geo6401r0078.pdf.txt", 
+      "id": "09Geophysics_geo6401r0078.pdf.txt"
+    }, 
+    {
+      "index": 396, 
+      "type": "41748", 
+      "name": "09Geophysics_tle1504r0273.pdf.txt", 
+      "id": "09Geophysics_tle1504r0273.pdf.txt"
+    }, 
+    {
+      "index": 397, 
+      "type": "41748", 
+      "name": "09Geophysics_geo6204r12141219.pdf.txt", 
+      "id": "09Geophysics_geo6204r12141219.pdf.txt"
+    }, 
+    {
+      "index": 398, 
+      "type": "41748", 
+      "name": "09Geophysics_tle1901r00680071.pdf.txt", 
+      "id": "09Geophysics_tle1901r00680071.pdf.txt"
+    }, 
+    {
+      "index": 399, 
+      "type": "41748", 
+      "name": "11Geophysical Prospecting_513592.pdf.txt", 
+      "id": "11Geophysical Prospecting_513592.pdf.txt"
+    }, 
+    {
+      "index": 400, 
+      "type": "41748", 
+      "name": "09Geophysics_geo7306wa0163.pdf.txt", 
+      "id": "09Geophysics_geo7306wa0163.pdf.txt"
+    }, 
+    {
+      "index": 401, 
+      "type": "41748", 
+      "name": "09Geophysics_geo7506e0205.pdf.txt", 
+      "id": "09Geophysics_geo7506e0205.pdf.txt"
+    }, 
+    {
+      "index": 402, 
+      "type": "41748", 
+      "name": "09Geophysics_geo2402r02200232.pdf.txt", 
+      "id": "09Geophysics_geo2402r02200232.pdf.txt"
+    }, 
+    {
+      "index": 403, 
+      "type": "41748", 
+      "name": "09Geophysics_geo7106e0079.pdf.txt", 
+      "id": "09Geophysics_geo7106e0079.pdf.txt"
+    }, 
+    {
+      "index": 404, 
+      "type": "41748", 
+      "name": "09Geophysics_geo6505r13641371.pdf.txt", 
+      "id": "09Geophysics_geo6505r13641371.pdf.txt"
+    }, 
+    {
+      "index": 405, 
+      "type": "41748", 
+      "name": "09Geophysics_tle2910r1208.pdf.txt", 
+      "id": "09Geophysics_tle2910r1208.pdf.txt"
+    }, 
+    {
+      "index": 406, 
+      "type": "41748", 
+      "name": "09Geophysics_tle1906r06300631.pdf.txt", 
+      "id": "09Geophysics_tle1906r06300631.pdf.txt"
+    }, 
+    {
+      "index": 407, 
+      "type": "41748", 
+      "name": "09Geophysics_tle1909r10161017.pdf.txt", 
+      "id": "09Geophysics_tle1909r10161017.pdf.txt"
+    }, 
+    {
+      "index": 408, 
+      "type": "41748", 
+      "name": "09Geophysics_geo0703r0276.pdf.txt", 
+      "id": "09Geophysics_geo0703r0276.pdf.txt"
+    }, 
+    {
+      "index": 409, 
+      "type": "41748", 
+      "name": "09Geophysics_geo7403j0023.pdf.txt", 
+      "id": "09Geophysics_geo7403j0023.pdf.txt"
+    }, 
+    {
+      "index": 410, 
+      "type": "41748", 
+      "name": "09Geophysics_tle0607r00330035.pdf.txt", 
+      "id": "09Geophysics_tle0607r00330035.pdf.txt"
+    }, 
+    {
+      "index": 411, 
+      "type": "41748", 
+      "name": "09Geophysics_geo7305q0029.pdf.txt", 
+      "id": "09Geophysics_geo7305q0029.pdf.txt"
+    }
+  ], 
+  "links": [
+    {
+      "source": 0, 
+      "target": 1
+    }, 
+    {
+      "source": 0, 
+      "target": 2
+    }, 
+    {
+      "source": 0, 
+      "target": 3
+    }, 
+    {
+      "source": 0, 
+      "target": 4
+    }, 
+    {
+      "source": 0, 
+      "target": 5
+    }, 
+    {
+      "source": 0, 
+      "target": 6
+    }, 
+    {
+      "source": 0, 
+      "target": 7
+    }, 
+    {
+      "source": 0, 
+      "target": 8
+    }, 
+    {
+      "source": 0, 
+      "target": 9
+    }, 
+    {
+      "source": 0, 
+      "target": 10
+    }, 
+    {
+      "source": 0, 
+      "target": 11
+    }, 
+    {
+      "source": 0, 
+      "target": 12
+    }, 
+    {
+      "source": 0, 
+      "target": 13
+    }, 
+    {
+      "source": 0, 
+      "target": 14
+    }, 
+    {
+      "source": 0, 
+      "target": 15
+    }, 
+    {
+      "source": 0, 
+      "target": 16
+    }, 
+    {
+      "source": 0, 
+      "target": 17
+    }, 
+    {
+      "source": 0, 
+      "target": 18
+    }, 
+    {
+      "source": 0, 
+      "target": 19
+    }, 
+    {
+      "source": 0, 
+      "target": 20
+    }, 
+    {
+      "source": 0, 
+      "target": 21
+    }, 
+    {
+      "source": 0, 
+      "target": 22
+    }, 
+    {
+      "source": 0, 
+      "target": 23
+    }, 
+    {
+      "source": 0, 
+      "target": 24
+    }, 
+    {
+      "source": 0, 
+      "target": 25
+    }, 
+    {
+      "source": 0, 
+      "target": 26
+    }, 
+    {
+      "source": 0, 
+      "target": 27
+    }, 
+    {
+      "source": 0, 
+      "target": 28
+    }, 
+    {
+      "source": 0, 
+      "target": 29
+    }, 
+    {
+      "source": 0, 
+      "target": 30
+    }, 
+    {
+      "source": 0, 
+      "target": 31
+    }, 
+    {
+      "source": 0, 
+      "target": 32
+    }, 
+    {
+      "source": 0, 
+      "target": 33
+    }, 
+    {
+      "source": 0, 
+      "target": 34
+    }, 
+    {
+      "source": 0, 
+      "target": 35
+    }, 
+    {
+      "source": 0, 
+      "target": 36
+    }, 
+    {
+      "source": 0, 
+      "target": 37
+    }, 
+    {
+      "source": 0, 
+      "target": 38
+    }, 
+    {
+      "source": 0, 
+      "target": 39
+    }, 
+    {
+      "source": 0, 
+      "target": 40
+    }, 
+    {
+      "source": 0, 
+      "target": 41
+    }, 
+    {
+      "source": 0, 
+      "target": 42
+    }, 
+    {
+      "source": 0, 
+      "target": 43
+    }, 
+    {
+      "source": 0, 
+      "target": 44
+    }, 
+    {
+      "source": 0, 
+      "target": 45
+    }, 
+    {
+      "source": 0, 
+      "target": 46
+    }, 
+    {
+      "source": 0, 
+      "target": 47
+    }, 
+    {
+      "source": 0, 
+      "target": 48
+    }, 
+    {
+      "source": 0, 
+      "target": 49
+    }, 
+    {
+      "source": 0, 
+      "target": 50
+    }, 
+    {
+      "source": 0, 
+      "target": 51
+    }, 
+    {
+      "source": 0, 
+      "target": 52
+    }, 
+    {
+      "source": 0, 
+      "target": 53
+    }, 
+    {
+      "source": 0, 
+      "target": 54
+    }, 
+    {
+      "source": 0, 
+      "target": 55
+    }, 
+    {
+      "source": 0, 
+      "target": 56
+    }, 
+    {
+      "source": 0, 
+      "target": 57
+    }, 
+    {
+      "source": 0, 
+      "target": 58
+    }, 
+    {
+      "source": 0, 
+      "target": 59
+    }, 
+    {
+      "source": 0, 
+      "target": 60
+    }, 
+    {
+      "source": 0, 
+      "target": 61
+    }, 
+    {
+      "source": 0, 
+      "target": 62
+    }, 
+    {
+      "source": 0, 
+      "target": 63
+    }, 
+    {
+      "source": 0, 
+      "target": 64
+    }, 
+    {
+      "source": 0, 
+      "target": 65
+    }, 
+    {
+      "source": 0, 
+      "target": 66
+    }, 
+    {
+      "source": 0, 
+      "target": 67
+    }, 
+    {
+      "source": 0, 
+      "target": 68
+    }, 
+    {
+      "source": 0, 
+      "target": 69
+    }, 
+    {
+      "source": 0, 
+      "target": 70
+    }, 
+    {
+      "source": 0, 
+      "target": 71
+    }, 
+    {
+      "source": 0, 
+      "target": 72
+    }, 
+    {
+      "source": 0, 
+      "target": 73
+    }, 
+    {
+      "source": 0, 
+      "target": 74
+    }, 
+    {
+      "source": 0, 
+      "target": 75
+    }, 
+    {
+      "source": 0, 
+      "target": 76
+    }, 
+    {
+      "source": 0, 
+      "target": 77
+    }, 
+    {
+      "source": 0, 
+      "target": 78
+    }, 
+    {
+      "source": 0, 
+      "target": 79
+    }, 
+    {
+      "source": 0, 
+      "target": 80
+    }, 
+    {
+      "source": 0, 
+      "target": 81
+    }, 
+    {
+      "source": 82, 
+      "target": 83
+    }, 
+    {
+      "source": 82, 
+      "target": 84
+    }, 
+    {
+      "source": 82, 
+      "target": 85
+    }, 
+    {
+      "source": 82, 
+      "target": 86
+    }, 
+    {
+      "source": 82, 
+      "target": 87
+    }, 
+    {
+      "source": 82, 
+      "target": 88
+    }, 
+    {
+      "source": 82, 
+      "target": 89
+    }, 
+    {
+      "source": 82, 
+      "target": 90
+    }, 
+    {
+      "source": 82, 
+      "target": 91
+    }, 
+    {
+      "source": 82, 
+      "target": 92
+    }, 
+    {
+      "source": 82, 
+      "target": 93
+    }, 
+    {
+      "source": 82, 
+      "target": 94
+    }, 
+    {
+      "source": 82, 
+      "target": 95
+    }, 
+    {
+      "source": 82, 
+      "target": 96
+    }, 
+    {
+      "source": 82, 
+      "target": 97
+    }, 
+    {
+      "source": 82, 
+      "target": 98
+    }, 
+    {
+      "source": 82, 
+      "target": 99
+    }, 
+    {
+      "source": 82, 
+      "target": 100
+    }, 
+    {
+      "source": 82, 
+      "target": 101
+    }, 
+    {
+      "source": 82, 
+      "target": 102
+    }, 
+    {
+      "source": 82, 
+      "target": 103
+    }, 
+    {
+      "source": 82, 
+      "target": 104
+    }, 
+    {
+      "source": 82, 
+      "target": 105
+    }, 
+    {
+      "source": 82, 
+      "target": 106
+    }, 
+    {
+      "source": 82, 
+      "target": 107
+    }, 
+    {
+      "source": 82, 
+      "target": 108
+    }, 
+    {
+      "source": 82, 
+      "target": 109
+    }, 
+    {
+      "source": 82, 
+      "target": 110
+    }, 
+    {
+      "source": 82, 
+      "target": 111
+    }, 
+    {
+      "source": 82, 
+      "target": 112
+    }, 
+    {
+      "source": 82, 
+      "target": 113
+    }, 
+    {
+      "source": 82, 
+      "target": 114
+    }, 
+    {
+      "source": 82, 
+      "target": 115
+    }, 
+    {
+      "source": 82, 
+      "target": 116
+    }, 
+    {
+      "source": 82, 
+      "target": 117
+    }, 
+    {
+      "source": 82, 
+      "target": 118
+    }, 
+    {
+      "source": 82, 
+      "target": 119
+    }, 
+    {
+      "source": 82, 
+      "target": 120
+    }, 
+    {
+      "source": 82, 
+      "target": 121
+    }, 
+    {
+      "source": 82, 
+      "target": 122
+    }, 
+    {
+      "source": 82, 
+      "target": 123
+    }, 
+    {
+      "source": 82, 
+      "target": 124
+    }, 
+    {
+      "source": 82, 
+      "target": 125
+    }, 
+    {
+      "source": 82, 
+      "target": 126
+    }, 
+    {
+      "source": 82, 
+      "target": 127
+    }, 
+    {
+      "source": 82, 
+      "target": 128
+    }, 
+    {
+      "source": 82, 
+      "target": 129
+    }, 
+    {
+      "source": 82, 
+      "target": 130
+    }, 
+    {
+      "source": 131, 
+      "target": 132
+    }, 
+    {
+      "source": 131, 
+      "target": 133
+    }, 
+    {
+      "source": 131, 
+      "target": 134
+    }, 
+    {
+      "source": 131, 
+      "target": 135
+    }, 
+    {
+      "source": 131, 
+      "target": 136
+    }, 
+    {
+      "source": 131, 
+      "target": 137
+    }, 
+    {
+      "source": 131, 
+      "target": 138
+    }, 
+    {
+      "source": 131, 
+      "target": 139
+    }, 
+    {
+      "source": 131, 
+      "target": 140
+    }, 
+    {
+      "source": 131, 
+      "target": 141
+    }, 
+    {
+      "source": 131, 
+      "target": 142
+    }, 
+    {
+      "source": 131, 
+      "target": 143
+    }, 
+    {
+      "source": 131, 
+      "target": 144
+    }, 
+    {
+      "source": 131, 
+      "target": 145
+    }, 
+    {
+      "source": 131, 
+      "target": 146
+    }, 
+    {
+      "source": 131, 
+      "target": 147
+    }, 
+    {
+      "source": 131, 
+      "target": 148
+    }, 
+    {
+      "source": 131, 
+      "target": 149
+    }, 
+    {
+      "source": 131, 
+      "target": 150
+    }, 
+    {
+      "source": 131, 
+      "target": 151
+    }, 
+    {
+      "source": 131, 
+      "target": 152
+    }, 
+    {
+      "source": 131, 
+      "target": 153
+    }, 
+    {
+      "source": 131, 
+      "target": 154
+    }, 
+    {
+      "source": 131, 
+      "target": 155
+    }, 
+    {
+      "source": 131, 
+      "target": 156
+    }, 
+    {
+      "source": 157, 
+      "target": 158
+    }, 
+    {
+      "source": 157, 
+      "target": 159
+    }, 
+    {
+      "source": 157, 
+      "target": 160
+    }, 
+    {
+      "source": 157, 
+      "target": 161
+    }, 
+    {
+      "source": 157, 
+      "target": 162
+    }, 
+    {
+      "source": 157, 
+      "target": 163
+    }, 
+    {
+      "source": 157, 
+      "target": 164
+    }, 
+    {
+      "source": 157, 
+      "target": 165
+    }, 
+    {
+      "source": 157, 
+      "target": 166
+    }, 
+    {
+      "source": 157, 
+      "target": 167
+    }, 
+    {
+      "source": 157, 
+      "target": 168
+    }, 
+    {
+      "source": 157, 
+      "target": 169
+    }, 
+    {
+      "source": 157, 
+      "target": 170
+    }, 
+    {
+      "source": 157, 
+      "target": 171
+    }, 
+    {
+      "source": 157, 
+      "target": 172
+    }, 
+    {
+      "source": 157, 
+      "target": 173
+    }, 
+    {
+      "source": 157, 
+      "target": 174
+    }, 
+    {
+      "source": 157, 
+      "target": 175
+    }, 
+    {
+      "source": 157, 
+      "target": 176
+    }, 
+    {
+      "source": 157, 
+      "target": 177
+    }, 
+    {
+      "source": 157, 
+      "target": 178
+    }, 
+    {
+      "source": 157, 
+      "target": 179
+    }, 
+    {
+      "source": 157, 
+      "target": 180
+    }, 
+    {
+      "source": 157, 
+      "target": 181
+    }, 
+    {
+      "source": 157, 
+      "target": 182
+    }, 
+    {
+      "source": 157, 
+      "target": 183
+    }, 
+    {
+      "source": 157, 
+      "target": 184
+    }, 
+    {
+      "source": 157, 
+      "target": 185
+    }, 
+    {
+      "source": 157, 
+      "target": 186
+    }, 
+    {
+      "source": 157, 
+      "target": 187
+    }, 
+    {
+      "source": 157, 
+      "target": 188
+    }, 
+    {
+      "source": 157, 
+      "target": 189
+    }, 
+    {
+      "source": 157, 
+      "target": 190
+    }, 
+    {
+      "source": 157, 
+      "target": 191
+    }, 
+    {
+      "source": 157, 
+      "target": 192
+    }, 
+    {
+      "source": 157, 
+      "target": 193
+    }, 
+    {
+      "source": 157, 
+      "target": 194
+    }, 
+    {
+      "source": 157, 
+      "target": 195
+    }, 
+    {
+      "source": 157, 
+      "target": 196
+    }, 
+    {
+      "source": 157, 
+      "target": 197
+    }, 
+    {
+      "source": 157, 
+      "target": 198
+    }, 
+    {
+      "source": 157, 
+      "target": 199
+    }, 
+    {
+      "source": 157, 
+      "target": 200
+    }, 
+    {
+      "source": 157, 
+      "target": 201
+    }, 
+    {
+      "source": 157, 
+      "target": 202
+    }, 
+    {
+      "source": 157, 
+      "target": 203
+    }, 
+    {
+      "source": 157, 
+      "target": 204
+    }, 
+    {
+      "source": 157, 
+      "target": 205
+    }, 
+    {
+      "source": 157, 
+      "target": 206
+    }, 
+    {
+      "source": 157, 
+      "target": 207
+    }, 
+    {
+      "source": 157, 
+      "target": 208
+    }, 
+    {
+      "source": 157, 
+      "target": 209
+    }, 
+    {
+      "source": 157, 
+      "target": 210
+    }, 
+    {
+      "source": 211, 
+      "target": 212
+    }, 
+    {
+      "source": 213, 
+      "target": 214
+    }, 
+    {
+      "source": 213, 
+      "target": 215
+    }, 
+    {
+      "source": 213, 
+      "target": 216
+    }, 
+    {
+      "source": 213, 
+      "target": 217
+    }, 
+    {
+      "source": 213, 
+      "target": 218
+    }, 
+    {
+      "source": 213, 
+      "target": 219
+    }, 
+    {
+      "source": 213, 
+      "target": 220
+    }, 
+    {
+      "source": 213, 
+      "target": 221
+    }, 
+    {
+      "source": 213, 
+      "target": 222
+    }, 
+    {
+      "source": 213, 
+      "target": 223
+    }, 
+    {
+      "source": 213, 
+      "target": 224
+    }, 
+    {
+      "source": 213, 
+      "target": 225
+    }, 
+    {
+      "source": 213, 
+      "target": 226
+    }, 
+    {
+      "source": 213, 
+      "target": 227
+    }, 
+    {
+      "source": 213, 
+      "target": 228
+    }, 
+    {
+      "source": 213, 
+      "target": 229
+    }, 
+    {
+      "source": 213, 
+      "target": 230
+    }, 
+    {
+      "source": 213, 
+      "target": 231
+    }, 
+    {
+      "source": 213, 
+      "target": 232
+    }, 
+    {
+      "source": 213, 
+      "target": 233
+    }, 
+    {
+      "source": 213, 
+      "target": 234
+    }, 
+    {
+      "source": 213, 
+      "target": 235
+    }, 
+    {
+      "source": 213, 
+      "target": 236
+    }, 
+    {
+      "source": 213, 
+      "target": 237
+    }, 
+    {
+      "source": 213, 
+      "target": 238
+    }, 
+    {
+      "source": 213, 
+      "target": 239
+    }, 
+    {
+      "source": 213, 
+      "target": 240
+    }, 
+    {
+      "source": 213, 
+      "target": 241
+    }, 
+    {
+      "source": 242, 
+      "target": 243
+    }, 
+    {
+      "source": 242, 
+      "target": 244
+    }, 
+    {
+      "source": 242, 
+      "target": 245
+    }, 
+    {
+      "source": 242, 
+      "target": 246
+    }, 
+    {
+      "source": 242, 
+      "target": 247
+    }, 
+    {
+      "source": 242, 
+      "target": 248
+    }, 
+    {
+      "source": 242, 
+      "target": 249
+    }, 
+    {
+      "source": 242, 
+      "target": 250
+    }, 
+    {
+      "source": 242, 
+      "target": 251
+    }, 
+    {
+      "source": 242, 
+      "target": 252
+    }, 
+    {
+      "source": 242, 
+      "target": 253
+    }, 
+    {
+      "source": 242, 
+      "target": 254
+    }, 
+    {
+      "source": 242, 
+      "target": 255
+    }, 
+    {
+      "source": 242, 
+      "target": 256
+    }, 
+    {
+      "source": 242, 
+      "target": 257
+    }, 
+    {
+      "source": 242, 
+      "target": 258
+    }, 
+    {
+      "source": 242, 
+      "target": 259
+    }, 
+    {
+      "source": 260, 
+      "target": 261
+    }, 
+    {
+      "source": 260, 
+      "target": 262
+    }, 
+    {
+      "source": 260, 
+      "target": 263
+    }, 
+    {
+      "source": 260, 
+      "target": 264
+    }, 
+    {
+      "source": 260, 
+      "target": 265
+    }, 
+    {
+      "source": 266, 
+      "target": 267
+    }, 
+    {
+      "source": 266, 
+      "target": 268
+    }, 
+    {
+      "source": 266, 
+      "target": 269
+    }, 
+    {
+      "source": 266, 
+      "target": 270
+    }, 
+    {
+      "source": 266, 
+      "target": 271
+    }, 
+    {
+      "source": 266, 
+      "target": 272
+    }, 
+    {
+      "source": 266, 
+      "target": 273
+    }, 
+    {
+      "source": 266, 
+      "target": 274
+    }, 
+    {
+      "source": 266, 
+      "target": 275
+    }, 
+    {
+      "source": 266, 
+      "target": 276
+    }, 
+    {
+      "source": 266, 
+      "target": 277
+    }, 
+    {
+      "source": 266, 
+      "target": 278
+    }, 
+    {
+      "source": 266, 
+      "target": 279
+    }, 
+    {
+      "source": 266, 
+      "target": 280
+    }, 
+    {
+      "source": 266, 
+      "target": 281
+    }, 
+    {
+      "source": 266, 
+      "target": 282
+    }, 
+    {
+      "source": 266, 
+      "target": 283
+    }, 
+    {
+      "source": 266, 
+      "target": 284
+    }, 
+    {
+      "source": 266, 
+      "target": 285
+    }, 
+    {
+      "source": 266, 
+      "target": 286
+    }, 
+    {
+      "source": 266, 
+      "target": 287
+    }, 
+    {
+      "source": 266, 
+      "target": 288
+    }, 
+    {
+      "source": 266, 
+      "target": 289
+    }, 
+    {
+      "source": 266, 
+      "target": 290
+    }, 
+    {
+      "source": 266, 
+      "target": 291
+    }, 
+    {
+      "source": 266, 
+      "target": 292
+    }, 
+    {
+      "source": 266, 
+      "target": 293
+    }, 
+    {
+      "source": 266, 
+      "target": 294
+    }, 
+    {
+      "source": 266, 
+      "target": 295
+    }, 
+    {
+      "source": 266, 
+      "target": 296
+    }, 
+    {
+      "source": 266, 
+      "target": 297
+    }, 
+    {
+      "source": 266, 
+      "target": 298
+    }, 
+    {
+      "source": 266, 
+      "target": 299
+    }, 
+    {
+      "source": 266, 
+      "target": 300
+    }, 
+    {
+      "source": 266, 
+      "target": 301
+    }, 
+    {
+      "source": 266, 
+      "target": 302
+    }, 
+    {
+      "source": 266, 
+      "target": 303
+    }, 
+    {
+      "source": 266, 
+      "target": 304
+    }, 
+    {
+      "source": 266, 
+      "target": 305
+    }, 
+    {
+      "source": 266, 
+      "target": 306
+    }, 
+    {
+      "source": 266, 
+      "target": 307
+    }, 
+    {
+      "source": 266, 
+      "target": 308
+    }, 
+    {
+      "source": 266, 
+      "target": 309
+    }, 
+    {
+      "source": 266, 
+      "target": 310
+    }, 
+    {
+      "source": 266, 
+      "target": 311
+    }, 
+    {
+      "source": 266, 
+      "target": 312
+    }, 
+    {
+      "source": 266, 
+      "target": 313
+    }, 
+    {
+      "source": 266, 
+      "target": 314
+    }, 
+    {
+      "source": 266, 
+      "target": 315
+    }, 
+    {
+      "source": 266, 
+      "target": 316
+    }, 
+    {
+      "source": 266, 
+      "target": 317
+    }, 
+    {
+      "source": 266, 
+      "target": 318
+    }, 
+    {
+      "source": 266, 
+      "target": 319
+    }, 
+    {
+      "source": 266, 
+      "target": 320
+    }, 
+    {
+      "source": 266, 
+      "target": 321
+    }, 
+    {
+      "source": 266, 
+      "target": 322
+    }, 
+    {
+      "source": 266, 
+      "target": 323
+    }, 
+    {
+      "source": 266, 
+      "target": 324
+    }, 
+    {
+      "source": 266, 
+      "target": 325
+    }, 
+    {
+      "source": 266, 
+      "target": 326
+    }, 
+    {
+      "source": 266, 
+      "target": 327
+    }, 
+    {
+      "source": 266, 
+      "target": 328
+    }, 
+    {
+      "source": 266, 
+      "target": 329
+    }, 
+    {
+      "source": 266, 
+      "target": 330
+    }, 
+    {
+      "source": 266, 
+      "target": 331
+    }, 
+    {
+      "source": 266, 
+      "target": 332
+    }, 
+    {
+      "source": 266, 
+      "target": 333
+    }, 
+    {
+      "source": 266, 
+      "target": 334
+    }, 
+    {
+      "source": 266, 
+      "target": 335
+    }, 
+    {
+      "source": 266, 
+      "target": 336
+    }, 
+    {
+      "source": 266, 
+      "target": 337
+    }, 
+    {
+      "source": 266, 
+      "target": 338
+    }, 
+    {
+      "source": 339, 
+      "target": 340
+    }, 
+    {
+      "source": 339, 
+      "target": 341
+    }, 
+    {
+      "source": 339, 
+      "target": 342
+    }, 
+    {
+      "source": 339, 
+      "target": 343
+    }, 
+    {
+      "source": 339, 
+      "target": 344
+    }, 
+    {
+      "source": 339, 
+      "target": 345
+    }, 
+    {
+      "source": 339, 
+      "target": 346
+    }, 
+    {
+      "source": 339, 
+      "target": 347
+    }, 
+    {
+      "source": 339, 
+      "target": 348
+    }, 
+    {
+      "source": 339, 
+      "target": 349
+    }, 
+    {
+      "source": 339, 
+      "target": 350
+    }, 
+    {
+      "source": 339, 
+      "target": 351
+    }, 
+    {
+      "source": 339, 
+      "target": 352
+    }, 
+    {
+      "source": 339, 
+      "target": 353
+    }, 
+    {
+      "source": 339, 
+      "target": 354
+    }, 
+    {
+      "source": 339, 
+      "target": 355
+    }, 
+    {
+      "source": 339, 
+      "target": 356
+    }, 
+    {
+      "source": 339, 
+      "target": 357
+    }, 
+    {
+      "source": 339, 
+      "target": 358
+    }, 
+    {
+      "source": 339, 
+      "target": 359
+    }, 
+    {
+      "source": 339, 
+      "target": 360
+    }, 
+    {
+      "source": 339, 
+      "target": 361
+    }, 
+    {
+      "source": 339, 
+      "target": 362
+    }, 
+    {
+      "source": 339, 
+      "target": 363
+    }, 
+    {
+      "source": 339, 
+      "target": 364
+    }, 
+    {
+      "source": 339, 
+      "target": 365
+    }, 
+    {
+      "source": 339, 
+      "target": 366
+    }, 
+    {
+      "source": 339, 
+      "target": 367
+    }, 
+    {
+      "source": 339, 
+      "target": 368
+    }, 
+    {
+      "source": 339, 
+      "target": 369
+    }, 
+    {
+      "source": 339, 
+      "target": 370
+    }, 
+    {
+      "source": 339, 
+      "target": 371
+    }, 
+    {
+      "source": 339, 
+      "target": 372
+    }, 
+    {
+      "source": 339, 
+      "target": 373
+    }, 
+    {
+      "source": 339, 
+      "target": 374
+    }, 
+    {
+      "source": 339, 
+      "target": 375
+    }, 
+    {
+      "source": 339, 
+      "target": 376
+    }, 
+    {
+      "source": 339, 
+      "target": 377
+    }, 
+    {
+      "source": 339, 
+      "target": 378
+    }, 
+    {
+      "source": 339, 
+      "target": 379
+    }, 
+    {
+      "source": 339, 
+      "target": 380
+    }, 
+    {
+      "source": 339, 
+      "target": 381
+    }, 
+    {
+      "source": 339, 
+      "target": 382
+    }, 
+    {
+      "source": 339, 
+      "target": 383
+    }, 
+    {
+      "source": 339, 
+      "target": 384
+    }, 
+    {
+      "source": 339, 
+      "target": 385
+    }, 
+    {
+      "source": 339, 
+      "target": 386
+    }, 
+    {
+      "source": 339, 
+      "target": 387
+    }, 
+    {
+      "source": 339, 
+      "target": 388
+    }, 
+    {
+      "source": 339, 
+      "target": 389
+    }, 
+    {
+      "source": 339, 
+      "target": 390
+    }, 
+    {
+      "source": 339, 
+      "target": 391
+    }, 
+    {
+      "source": 339, 
+      "target": 392
+    }, 
+    {
+      "source": 339, 
+      "target": 393
+    }, 
+    {
+      "source": 339, 
+      "target": 394
+    }, 
+    {
+      "source": 339, 
+      "target": 395
+    }, 
+    {
+      "source": 339, 
+      "target": 396
+    }, 
+    {
+      "source": 339, 
+      "target": 397
+    }, 
+    {
+      "source": 339, 
+      "target": 398
+    }, 
+    {
+      "source": 339, 
+      "target": 399
+    }, 
+    {
+      "source": 339, 
+      "target": 400
+    }, 
+    {
+      "source": 339, 
+      "target": 401
+    }, 
+    {
+      "source": 339, 
+      "target": 402
+    }, 
+    {
+      "source": 339, 
+      "target": 403
+    }, 
+    {
+      "source": 339, 
+      "target": 404
+    }, 
+    {
+      "source": 339, 
+      "target": 405
+    }, 
+    {
+      "source": 339, 
+      "target": 406
+    }, 
+    {
+      "source": 339, 
+      "target": 407
+    }, 
+    {
+      "source": 339, 
+      "target": 408
+    }, 
+    {
+      "source": 339, 
+      "target": 409
+    }, 
+    {
+      "source": 339, 
+      "target": 410
+    }, 
+    {
+      "source": 339, 
+      "target": 411
+    }
+  ]
+}

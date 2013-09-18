@@ -89,6 +89,7 @@ class search:
 		print type(key)
 		key=key.encode('gbk')
 		res=xiami_api.api_get("Search.summary",{"key":key})
+		print res
 		self.result["nodes"]=[]
 		self.result['links']=[]
 		for t in "song album artist collect".split():

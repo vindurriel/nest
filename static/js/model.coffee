@@ -51,11 +51,16 @@ $(document).ready ->
   $(".btn-toggle-nest").click ->
     ui= $(options.container)
     toggle= ui.height()<=210
-    toH = if toggle then $(window).height()*.8 else 200
-    ui.animate({"height":toH},200);
-    setTimeout ->
-      $("#list-container").masonry()
-    , 200
+    if toggle
+      ui.attr('style','')
+      ui.removeClass('list-item').addClass('fullscreen')
+    else
+      ui.removeClass('fullscreen').addClass('list-item')
+    # toH = if toggle then $(window).height()*.8 else 200
+    # ui.animate({"height":toH},200);
+    # setTimeout ->
+    #   $("#list-container").masonry()
+    # , 200
     $(this).val(if toggle then "收起" else "展开")
   $("#btn_tip").click ->
     $("#tip").slideToggle 200

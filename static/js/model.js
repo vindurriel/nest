@@ -40,16 +40,15 @@ $(document).ready(function() {
   $(document).keydown(cacheIt);
   $(document).keyup(cacheIt);
   $(".btn-toggle-nest").click(function() {
-    var toH, toggle, ui;
+    var toggle, ui;
     ui = $(options.container);
     toggle = ui.height() <= 210;
-    toH = toggle ? $(window).height() * .8 : 200;
-    ui.animate({
-      "height": toH
-    }, 200);
-    setTimeout(function() {
-      return $("#list-container").masonry();
-    }, 200);
+    if (toggle) {
+      ui.attr('style', '');
+      ui.removeClass('list-item').addClass('fullscreen');
+    } else {
+      ui.removeClass('fullscreen').addClass('list-item');
+    }
     return $(this).val(toggle ? "收起" : "展开");
   });
   $("#btn_tip").click(function() {
