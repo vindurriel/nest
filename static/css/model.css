@@ -110,6 +110,7 @@
   border-radius: 4px;
   background: white;
   border: #ddd solid 1px;
+  overflow-x: hidden;
 }
 .list-item table {
   width: 100%;
@@ -117,20 +118,21 @@
 }
 .list-item .item-headline {
   margin: 0 0 1em 0;
+  max-width: 400px;
+  text-overflow: ellipsis;
 }
 .list-item .item-headline a {
   text-decoration: none;
+  max-width: 400px;
 }
 .list-item .item-headline a:hover {
   text-decoration: underline;
 }
 .list-item .item-image {
-  width: 80px;
-  height: 80px;
   background-color: #eee;
+  max-width: 400px;
 }
 .list-item .item-prop {
-  margin-left: 1em;
   font-weight: bold;
 }
 .list-item .item-prop a {
@@ -139,20 +141,19 @@
 }
 .list-item .item-detail {
   word-wrap: break-word;
-  margin-left: 1em;
   margin-top: 0;
 }
 .hide {
   display: none;
 }
-.actions ul {
+.services {
   list-style: none;
   padding: 0;
 }
-.actions li {
+.services li {
   margin: 1em 0;
 }
-.actions input[type="checkbox"] {
+.services input[type="checkbox"] {
   width: 1.5em;
   height: 1.5em;
   margin: 0;

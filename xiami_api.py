@@ -2,8 +2,16 @@
 '''usage: xiami_api.exe method_name file_input_args'''
 import requests as r
 import sys,os
-client_id="55ee94348aeba2635326059e60d20a49"
-client_secret="ec253979c7f51e10010a30241c2ca2de"
+AGOO_APPKEY="21465214"
+client_id="b71cb423efae3395372e2b29788baf31"
+# client_id="55ee94348aeba2635326059e60d20a49"
+client_secret="b5e2fbb9ed9c24dc7f035715f8ab4a6c"
+timestamp=""
+def new_time():
+	global timestamp
+	import time
+	timestamp=str(int(time.time()))
+	return timestamp
 def cwd(*args):
 	d=os.path.dirname(sys.argv[0])
 	for x in args:
@@ -11,7 +19,7 @@ def cwd(*args):
 	return d
 def md5(raw):
 	import hashlib
-	return hashlib.md5(raw).hexdigest() 
+	return hashlib.md5(raw).hexdigest()
 def get_new_token(username,password):
 	url_new_token="http://api.xiami.com/api/oauth2/token"
 	if len(password)!=32:
@@ -33,15 +41,15 @@ def get_api_signature(dic,secret):
 	res=""
 	for k in sorted(dic.iterkeys()):
 		res+=k+str(dic[k])
-	res+=secret
-	return md5(res)
+	res="data="+res
+	return md5(secret+res+secret)
 def api_get(method,params={}):
 	url_api="http://api.xiami.com/api"
 	dic={
 		"method":method,
 		"api_key":client_id,
-		"call_id":"1231223",
-		'av':"XMusic_1.1.1.3956",
+		"call_id":new_time(),
+		'av':"android_40",
 	}
 	for k,v in params.iteritems():
 		dic[k]=v
@@ -51,9 +59,10 @@ def api_get(method,params={}):
 	if os.path.isfile(f):
 		access_token=file(f,'r').read()
 	dic['access_token']=access_token
+	# print dic
 	resp=r.post(url_api,data=dic)
 	json=resp.json()
-	if "err" in json and json["err"]:
+	if "err" in json and json["err"]: 
 		die(json['err'])
 	if 'error' in json and json["error"]:
 		die(json['error'])

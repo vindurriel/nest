@@ -16,6 +16,9 @@ redraw = function() {
 
 draw = function(json) {
   var n;
+  if ((json.nodes == null) || json.nodes.length === 0) {
+    return;
+  }
   if (json.blacklist != null) {
     r.blacklist = json.blacklist;
   }
@@ -161,12 +164,16 @@ color = function(d) {
   if (i >= 0) {
     return r.palette(i + 1);
   }
-  return r.palette(0);
+  return r.palette(d.type);
 };
 
 dblclick = function(d) {
   var id, t, url;
   if (d.type === "referData") {
+    window.open(d.url != null ? d.url : d.name);
+    return;
+  }
+  if (d.type === "doc") {
     window.open(d.url != null ? d.url : d.name);
     return;
   }

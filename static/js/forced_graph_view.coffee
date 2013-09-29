@@ -8,6 +8,8 @@ redraw = ->
   r.vis.attr "transform", "translate(" + d3.event.translate + ")" + " scale(" + r.scale + ")"
   d3.selectAll("text").style("font-size", (1 / r.scale) + "em");
 draw = (json) ->
+  if not json.nodes? or json.nodes.length==0
+    return
   if json.blacklist?
     r.blacklist=json.blacklist
   r.legend= d3.select("#tip")
@@ -163,9 +165,12 @@ color = (d) ->
   i=r.colors.indexOf(d.type)
   if i>=0
     return r.palette(i+1)
-  return r.palette(0)
+  return r.palette(d.type)
 dblclick = (d)->
   if d.type=="referData"
+    window.open if d.url? then d.url else d.name
+    return
+  if d.type=="doc"
     window.open if d.url? then d.url else d.name
     return
   if d.isSearching? and d.isSearching==true

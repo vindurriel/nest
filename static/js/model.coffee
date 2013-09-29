@@ -1,32 +1,25 @@
 window.list= (d)->
-  lorem= """Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-  consequat."""
-  $("#list-container").masonry "destroy"
+  try
+    $("#list-container").masonry "destroy"
   $(".list-item.normal").remove()
   t_list_item= (d)->
-    details= ""
-    for x of d
-      details+= "#{x}:#{d[x]};  "
-    details+="<br>"+lorem
+    details= if d.content? then d.content else ""
     i= Math.floor(Math.random() * (10 - 0 + 1))
     color= window.palette(d.type)
+    imgurl= "http://lorempixel.com/80/80/technics/#{i}"
+    if d.img?
+      imgurl= d.img
     return """
     <div class="list-item normal">
       <h2 class="item-headline">
         <span style="border-left:#{color} solid 5px;">&nbsp;</span>
         <a href="#{d.url}">#{d.name}</a>
       </h2>
-      <table>
-        <tr>
-          <td width="80" valign="top"> <img class="item-image" src="http://lorempixel.com/80/80/technics/#{i}"/> </td>
-          <td style="margin-left:1em;">  
-            <span class="item-prop">#{d.type} </span> 
-            <p class="item-detail">#{details}...</p>
-          </td>
-        </tr>
-      </table>
+      <span class="item-prop">#{d.type} </span>
+      <div>
+        <img class="item-image" src="#{imgurl}"/>
+      </div>
+      <p class="item-detail">#{details}</p>
     </div>
     """
   t_item_action= (d)->
@@ -39,13 +32,32 @@ window.list= (d)->
     $("#list-container").append(s)
   $(".item-prop").append t_item_action x
   $("#list-container").masonry {
-    itemSelector: '.list-item',
-  }
+      'itemSelector': '.list-item',
+    }
+  $("#list-container").imagesLoaded().done ->
+    $("#list-container").masonry {
+      'itemSelector': '.list-item',
+    }
+    return
   return
+
+get_selected_services = ->
+  service_ids= []
+  $('.check-service').each ->
+    if not this.checked then return
+    if $(this).data('serviceId')?
+      service_ids.push $(this).data('serviceId')
+  return service_ids.join "###"
 $(document).ready ->
   options=
     "container":"#nest-container",
   window.nest(options)
+  window.relationships.doc= [
+    {
+      "id": (d)-> "abstract_of_#{d.id}",
+      'name': (d)->"Document's abstract",
+    }
+  ]
   $(document).keydown cacheIt
   $(document).keyup cacheIt
   $(".btn-toggle-nest").click ->
@@ -66,12 +78,19 @@ $(document).ready ->
     $("#tip").slideToggle 200
   $("#btn_search").click ->
     key=$('#q').val()
-    $('html, body').animate({"scrollTop":0})
-    $.getJSON "/search/#{key}", (d)->
-      if not d or d.error?
+    data= {
+      'keys':key,
+      'services':get_selected_services(),
+    }
+    $.post "/search/", JSON.stringify(data), (d)->
+        if not d or d.error?
+          return
+        draw d
+        list d
         return
-      draw d
-      list d
+      ,'json'
+    $('html, body').animate({"scrollTop":0})
+    return
   $(window).scroll ->
     toggle= $(this).scrollTop()>100
     if toggle
@@ -101,4 +120,19 @@ $(document).ready ->
     else 
       draw d
       list d
+  #fillServices
+  $.getJSON "/services/",(d)->
+    if not d or d.error?
+      log('error get services')
+      return
+    for s in d.services
+      checked = ""
+      if s.select? and s.select==true
+        checked= "checked"
+      $('.services').append """
+      <li>
+        <input type="checkbox"   data-service-id="#{s.id}" #{checked} class="check-service" id="#{s.id}"> <span>使用 #{s.name} 搜索</span>
+      </li>
+      """
+    return
   return

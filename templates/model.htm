@@ -8,6 +8,7 @@
 	<script src="/js/jquery-2.0.2.min.js" charset="utf-8"></script>
 	<script src="/js/masonry.js" charset="utf-8"></script>
 	<script src="/js/d3.v3.js" charset="utf-8"></script>
+	<script src="/js/imageloaded.js" charset="utf-8"></script>
 </head>
 <body 
 $if theme=="dark": class="dark"
@@ -21,25 +22,8 @@ $if theme=="dark": class="dark"
 		<a href="/?theme=$theme" class="button">样例</a>
 		<div style="display:inline">
 			<div id="tip">
-				<div class="actions">
-					<ul>
-						<li>
-							<input type="checkbox"> <span>使用 wolfram alpha 搜索</span>
-						</li>
-						<li>
-							<input type="checkbox"> <span>使用 smartref #123搜索</span>
-						</li>
-						<li>
-							<input type="checkbox"> <span>使用 Mosaic a 搜索</span>
-						</li>	
-						<li>
-							<input type="checkbox"> <span>使用 Mosaic b 搜索</span>
-						</li>
-						<li>
-							<input type="checkbox"> <span>使用 Mosaic c 搜索</span>
-						</li>					
-					</ul>
-				</div>
+				<ul class="services">
+				</ul>
 				<p>点击       = 选中节点和相邻节点</p>
 				<p>ctrl+点击  = 扩展节点（大圈）/访问知识链接（小圈）</p>
 				<p>shift+点击 = 删除节点和知识</p>
