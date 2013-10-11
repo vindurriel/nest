@@ -97,10 +97,10 @@ update = ->
   .attr("cy",0)
   .attr("r", getR)
   .style("fill", color)
-  nodeEnter.append("text")
-  .attr("class","notclickable desc")
-  .text (d) ->
-    d.name
+  # nodeEnter.append("text")
+  # .attr("class","notclickable desc")
+  # .text (d) ->
+  #   d.name
 
   r.node.exit().remove()
 
@@ -111,6 +111,12 @@ update = ->
   .attr("r", getR)
   .style("fill", color)
   
+  d3.selectAll(".node text").remove()
+  r.node.filter((d)->d.isHigh)
+  .append('text')
+  .attr("class","notclickable desc")
+  .text (d)->d.name
+
   d3.selectAll(".node text")
   .attr("dx", (d)->getR(d)+5)
   .classed("show", (d)->d==r.theFocus)
@@ -209,8 +215,10 @@ click = (d) ->
     update()
   else
     highlight d
-    history.pushState {},d.name,"/model/#{d.id}"
+    # history.pushState {},d.name,"/model/#{d.id}"
     update()
+    if r.click_handler?
+      r.click_handler(d)
 expand = (data)->
   for id of data
     source=r.hNode[id]

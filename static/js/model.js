@@ -2,13 +2,18 @@ var get_selected_services,
   __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
 window.list = function(d) {
-  var s, t_item_action, t_list_item, x, _i, _len, _ref;
+  var color, s, t_item_action, t_list_item, x, _i, _len, _ref;
   try {
     $("#list-container").masonry("destroy");
   } catch (_error) {}
   $(".list-item.normal").remove();
+  color = window.palette(d.type);
+  $("#list-container").append("<div class=\"list-item normal selected_info\">\n   <h2 class=\"item-headline\">\n      <span style=\"border-left:" + color + " solid 5px;\">&nbsp;</span>\n      <a href=\"\"></a>\n    </h2>\n    <p class=\"item-detail\"></p>\n</div>");
+  if (d.nodes.length > 100) {
+    return;
+  }
   t_list_item = function(d) {
-    var color, details, i, imgurl;
+    var details, i, imgurl;
     details = d.content != null ? d.content : "";
     i = Math.floor(Math.random() * (10 - 0 + 1));
     color = window.palette(d.type);
@@ -38,6 +43,17 @@ window.list = function(d) {
   });
 };
 
+window.click_handler = function(d) {
+  $(".selected_info .item-headline a").text(d.name);
+  if (d.type === "doc") {
+    $.get(d.url, function(res) {
+      return $(".selected_info .item-detail").text(res);
+    });
+  } else {
+    $(".selected_info .item-detail").text("");
+  }
+};
+
 get_selected_services = function() {
   var service_ids;
   service_ids = [];
@@ -58,16 +74,6 @@ $(document).ready(function() {
     "container": "#nest-container"
   };
   window.nest(options);
-  window.relationships.doc = [
-    {
-      "id": function(d) {
-        return "abstract_of_" + d.id;
-      },
-      'name': function(d) {
-        return "Document's abstract";
-      }
-    }
-  ];
   $(document).keydown(cacheIt);
   $(document).keyup(cacheIt);
   $(".btn-toggle-nest").click(function() {

@@ -28,7 +28,7 @@
   cursor: pointer;
   stroke: black;
   stroke-width: .5px;
-  opacity: .2;
+  opacity: 1;
 }
 .node.highlight {
   opacity: 1;
@@ -110,7 +110,8 @@
   border-radius: 4px;
   background: white;
   border: #ddd solid 1px;
-  overflow-x: hidden;
+  overflow: hidden;
+  max-height: 600px;
 }
 .list-item table {
   width: 100%;

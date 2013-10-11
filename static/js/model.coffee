@@ -2,6 +2,18 @@ window.list= (d)->
   try
     $("#list-container").masonry "destroy"
   $(".list-item.normal").remove()
+  color= window.palette(d.type)
+  $("#list-container").append """
+  <div class="list-item normal selected_info">
+     <h2 class="item-headline">
+        <span style="border-left:#{color} solid 5px;">&nbsp;</span>
+        <a href=""></a>
+      </h2>
+      <p class="item-detail"></p>
+  </div>
+  """
+  if d.nodes.length>100
+    return
   t_list_item= (d)->
     details= if d.content? then d.content else ""
     i= Math.floor(Math.random() * (10 - 0 + 1))
@@ -41,6 +53,14 @@ window.list= (d)->
     return
   return
 
+window.click_handler= (d)->
+  $(".selected_info .item-headline a").text d.name
+  if d.type=="doc"
+    $.get d.url, (res)-> 
+      $(".selected_info .item-detail").text res
+  else
+    $(".selected_info .item-detail").text ""
+  return
 get_selected_services = ->
   service_ids= []
   $('.check-service').each ->
@@ -52,12 +72,6 @@ $(document).ready ->
   options=
     "container":"#nest-container",
   window.nest(options)
-  window.relationships.doc= [
-    {
-      "id": (d)-> "abstract_of_#{d.id}",
-      'name': (d)->"Document's abstract",
-    }
-  ]
   $(document).keydown cacheIt
   $(document).keyup cacheIt
   $(".btn-toggle-nest").click ->

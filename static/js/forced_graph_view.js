@@ -86,9 +86,6 @@ update = function() {
     return "translate(" + d.x + "," + d.y + ")";
   }).call(r.force.drag);
   nodeEnter.append("circle").attr("cx", 0).attr("cy", 0).attr("r", getR).style("fill", color);
-  nodeEnter.append("text").attr("class", "notclickable desc").text(function(d) {
-    return d.name;
-  });
   r.node.exit().remove();
   r.node.classed("highlight", function(d) {
     return d.isHigh === true;
@@ -97,6 +94,12 @@ update = function() {
     return d.isHigh === true;
   });
   d3.selectAll(".node circle").attr("r", getR).style("fill", color);
+  d3.selectAll(".node text").remove();
+  r.node.filter(function(d) {
+    return d.isHigh;
+  }).append('text').attr("class", "notclickable desc").text(function(d) {
+    return d.name;
+  });
   d3.selectAll(".node text").attr("dx", function(d) {
     return getR(d) + 5;
   }).classed("show", function(d) {
@@ -225,8 +228,10 @@ click = function(d) {
     return update();
   } else {
     highlight(d);
-    history.pushState({}, d.name, "/model/" + d.id);
-    return update();
+    update();
+    if (r.click_handler != null) {
+      return r.click_handler(d);
+    }
   }
 };
 
