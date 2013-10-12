@@ -58,7 +58,8 @@ window.click_handler= (d)->
   if d.type=="doc"
     $(".selected_info .item-headline a").attr('href',d.url)
     container= ".selected_info .item-detail"
-    $(container).empty()
+    value= window.degree[d.index][0].value
+    $(container).empty().append """<p>到聚类中心的距离：#{value}</p>"""
     $.getJSON "/keyword/#{d.name}", (res)->
       $.get d.url, (res)->
         if res.length>1000

@@ -11,10 +11,13 @@ draw = (json) ->
   r.root.y = r.h / 2 - 80
   r.force = d3.layout.force().on("tick", tick).charge((d) ->
     (if d._children then -d.size / 50 else -120)
+  ).linkStrength((d)->
+    d.value
   ).linkDistance((d) ->
-    (if d.target._children then 100 else 50)
+    if d.target._children then 100 else 50
   ).size([r.w, r.h - 160])
   update()
+  return
 update = ->
   r.vis.selectAll(".node").remove()
   nodes = flatten(r.root)

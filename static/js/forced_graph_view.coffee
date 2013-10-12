@@ -50,7 +50,7 @@ draw = (json) ->
   .charge (d)->
     if d.type=="referData" then -20 else -200
   .linkDistance(20)
-  .linkStrength(.1)
+  .linkStrength((d)->if d.value? then 1.0-d.value else 0.1)
   .size([r.w, r.h])
   .nodes(r.nodes)
   .links(r.links)
@@ -169,9 +169,13 @@ tick = ->
   )    
 color = (d) ->
   i=r.colors.indexOf(d.type)
+  res= "black"
   if i>=0
-    return r.palette(i+1)
-  return r.palette(d.type)
+    res= r.palette(i+1)
+  else res= r.palette(d.type)
+  if d.distance_rank?
+    res= d3.hsl(res).brighter(d.distance_rank).toString()
+  return res
 dblclick = (d)->
   if d.type=="referData"
     window.open if d.url? then d.url else d.name

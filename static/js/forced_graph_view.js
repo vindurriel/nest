@@ -51,7 +51,13 @@ draw = function(json) {
     } else {
       return -200;
     }
-  }).linkDistance(20).linkStrength(.1).size([r.w, r.h]).nodes(r.nodes).links(r.links);
+  }).linkDistance(20).linkStrength(function(d) {
+    if (d.value != null) {
+      return 1.0 - d.value;
+    } else {
+      return 0.1;
+    }
+  }).size([r.w, r.h]).nodes(r.nodes).links(r.links);
   n = r.nodes.length;
   r.nodes.forEach(function(d, i) {
     if (d.id == null) {
@@ -162,12 +168,18 @@ tick = function() {
 };
 
 color = function(d) {
-  var i;
+  var i, res;
   i = r.colors.indexOf(d.type);
+  res = "black";
   if (i >= 0) {
-    return r.palette(i + 1);
+    res = r.palette(i + 1);
+  } else {
+    res = r.palette(d.type);
   }
-  return r.palette(d.type);
+  if (d.distance_rank != null) {
+    res = d3.hsl(res).brighter(d.distance_rank).toString();
+  }
+  return res;
 };
 
 dblclick = function(d) {
