@@ -6,7 +6,7 @@ cacheIt = (e) ->
 redraw = ->
   r.scale=d3.event.scale
   r.vis.attr "transform", "translate(" + d3.event.translate + ")" + " scale(" + r.scale + ")"
-  d3.selectAll("text").style("font-size", (1 / r.scale) + "em");
+  r.vis.selectAll("text").style("font-size", (1 / r.scale) + "em");
 draw = (json) ->
   if not json.nodes? or json.nodes.length==0
     return

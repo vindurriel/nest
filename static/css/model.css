@@ -111,7 +111,6 @@
   background: white;
   border: #ddd solid 1px;
   overflow: hidden;
-  max-height: 600px;
 }
 .list-item table {
   width: 100%;

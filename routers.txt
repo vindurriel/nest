@@ -8,3 +8,4 @@
 /(js|css|files|images)/(.+) static
 /search/ model.search
 /services/ model.service
+/keyword/(.+) model.keyword

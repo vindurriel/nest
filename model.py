@@ -30,6 +30,32 @@ class list:
 		static=cwd("static")
 		render=web.template.render(cwd('templates'),globals=locals())
 		return render.list()
+class keyword:
+	def GET(self,key="机器学习"):
+		fname=cwd("static","files", "cluster",key)
+		res={}
+
+		import os,json
+		if not os.path.isfile(fname):
+			return json.dumps({"error":"json file not found"})
+		# web.header('Content-Type', 'application/json')
+		sentence=file(fname,'r').read()
+		import jieba,jieba.analyse
+		tags=jieba.analyse.extract_tags(sentence,10)
+		words = jieba.cut(sentence)
+		freq = {}
+		total=0.0
+		stop_words= set([
+		"where","the","of","is","and","to","in","that","we","for","an","are","by","be","as","on","with","can","if","from","which","you","it","this","then","at","have","all","not","one","has","or","that"
+		])
+		for w in words:
+		    if len(w.strip())<2: continue
+		    if w.lower() in stop_words: continue
+		    freq[w]=freq.get(w,0.0)+1.0
+		    total+=freq[w]
+		tags=dict([(x,freq[x])  for x in tags])
+		print tags
+		return json.dumps({"keyword":tags})
 class load:
 	def GET(self,key="机器学习"):
 		web.header('Content-Type', 'application/json')
@@ -138,5 +164,7 @@ class search:
 				res['nodes'].append(y)
 		return json.dumps(res)
 if __name__ == '__main__':
+	import os
 	# print search().do_search(u'a','MDOSVC###REGSVC')
-	print search().search(u'中国','baiduBaikeCrawler')
+	# print search().search(u'中国','baiduBaikeCrawler')
+	keyword().GET(u'03地球物理学进展_二维各向同性介质P波和S波分离方法研究.pdf.txt')

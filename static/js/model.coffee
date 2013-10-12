@@ -7,7 +7,7 @@ window.list= (d)->
   <div class="list-item normal selected_info">
      <h2 class="item-headline">
         <span style="border-left:#{color} solid 5px;">&nbsp;</span>
-        <a href=""></a>
+        <a href="" target="_blank"></a>
       </h2>
       <p class="item-detail"></p>
   </div>
@@ -54,10 +54,25 @@ window.list= (d)->
   return
 
 window.click_handler= (d)->
-  $(".selected_info .item-headline a").text d.name
+  $(".selected_info .item-headline a").text(d.name)
   if d.type=="doc"
-    $.get d.url, (res)-> 
-      $(".selected_info .item-detail").text res
+    $(".selected_info .item-headline a").attr('href',d.url)
+    container= ".selected_info .item-detail"
+    $(container).empty()
+    $.getJSON "/keyword/#{d.name}", (res)->
+      $.get d.url, (res)->
+        if res.length>1000
+          res= res[0..1000]+"..."
+        $(container).append """<p>#{res}</p>"""
+      if res.error?
+        return
+      data= []
+      for x of res.keyword
+        data.push {'k':x,'v':res.keyword[x]}
+      renderBarChart data, {
+        "container":container,
+      }
+      return
   else
     $(".selected_info .item-detail").text ""
   return

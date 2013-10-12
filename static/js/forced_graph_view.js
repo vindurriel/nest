@@ -11,7 +11,7 @@ cacheIt = function(e) {
 redraw = function() {
   r.scale = d3.event.scale;
   r.vis.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + r.scale + ")");
-  return d3.selectAll("text").style("font-size", (1 / r.scale) + "em");
+  return r.vis.selectAll("text").style("font-size", (1 / r.scale) + "em");
 };
 
 draw = function(json) {

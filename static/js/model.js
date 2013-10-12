@@ -8,7 +8,7 @@ window.list = function(d) {
   } catch (_error) {}
   $(".list-item.normal").remove();
   color = window.palette(d.type);
-  $("#list-container").append("<div class=\"list-item normal selected_info\">\n   <h2 class=\"item-headline\">\n      <span style=\"border-left:" + color + " solid 5px;\">&nbsp;</span>\n      <a href=\"\"></a>\n    </h2>\n    <p class=\"item-detail\"></p>\n</div>");
+  $("#list-container").append("<div class=\"list-item normal selected_info\">\n   <h2 class=\"item-headline\">\n      <span style=\"border-left:" + color + " solid 5px;\">&nbsp;</span>\n      <a href=\"\" target=\"_blank\"></a>\n    </h2>\n    <p class=\"item-detail\"></p>\n</div>");
   if (d.nodes.length > 100) {
     return;
   }
@@ -44,10 +44,33 @@ window.list = function(d) {
 };
 
 window.click_handler = function(d) {
+  var container;
   $(".selected_info .item-headline a").text(d.name);
   if (d.type === "doc") {
-    $.get(d.url, function(res) {
-      return $(".selected_info .item-detail").text(res);
+    $(".selected_info .item-headline a").attr('href', d.url);
+    container = ".selected_info .item-detail";
+    $(container).empty();
+    $.getJSON("/keyword/" + d.name, function(res) {
+      var data, x;
+      $.get(d.url, function(res) {
+        if (res.length > 1000) {
+          res = res.slice(0, 1001) + "...";
+        }
+        return $(container).append("<p>" + res + "</p>");
+      });
+      if (res.error != null) {
+        return;
+      }
+      data = [];
+      for (x in res.keyword) {
+        data.push({
+          'k': x,
+          'v': res.keyword[x]
+        });
+      }
+      renderBarChart(data, {
+        "container": container
+      });
     });
   } else {
     $(".selected_info .item-detail").text("");
