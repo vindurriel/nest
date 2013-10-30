@@ -41,8 +41,8 @@ def get_api_signature(dic,secret):
 	res=""
 	for k in sorted(dic.iterkeys()):
 		res+=k+str(dic[k])
-	res="data="+res
-	return md5(secret+res+secret)
+	res="data"+res
+	return md5(secret+res)
 def api_get(method,params={}):
 	url_api="http://api.xiami.com/api"
 	dic={

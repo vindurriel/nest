@@ -16,8 +16,8 @@ class baike_crawler(search_provider_base):
 			'serviceType':serviceType,
 			'keyVaueInfo':{'key':'keywords','value':key},
 		}
-		logging.basicConfig(filename="a.log",level=logging.INFO)
-		logging.getLogger('suds.client').setLevel(logging.DEBUG)
+		# logging.basicConfig(filename="a.log",level=logging.INFO)
+		# logging.getLogger('suds.client').setLevel(logging.DEBUG)
 		n=client.service.getEntityList(pageInfo,info)
 		code=str(n.operationInfo.code)
 		if code!="200":
@@ -37,6 +37,7 @@ class baike_crawler(search_provider_base):
 				for y in x.properties:
 					y.key=unicode(y.key)
 					children[x.name].append(y)
+		print children
 		if "Category" in children:
 			for x in children["Category"]:
 				self.result[x.key]={"name":x.key,"size":1,"type": serviceType}

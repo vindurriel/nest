@@ -1,5 +1,5 @@
 *.py[cod]
-
+static/files/
 # C extensions
 *.so
 

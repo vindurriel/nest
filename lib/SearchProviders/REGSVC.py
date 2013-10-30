@@ -9,8 +9,7 @@ class REGSVC(search_provider_base):
 			key=key.decode('utf-8','ignore')
 		self.id="REGSVC"
 		import suds,logging
-		# url='http://192.168.4.228:8080/MosaicService/MosaicSearchSvc?wsdl'
-		url="http://192.168.4.110:9999/service/MosaicSearchSvc?wsdl"
+		url='http://192.168.4.228:8080/MosaicService/MosaicSearchSvc?wsdl'
 		client = suds.client.Client(url)
 		pageInfo={
 			'pageNum':1,

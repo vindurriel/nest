@@ -340,7 +340,7 @@ r.nest= (options)->
     .attr("viewBox","0 0 #{r.w} #{r.h}")  
     .attr("pointer-events", "all")
     # .attr("preserveAspectRatio","XMidYMid")
-    .call(d3.behavior.zoom().scaleExtent([0.1,10]).on("zoom", redraw)).on('dblclick.zoom',null)
+    .call(d3.behavior.zoom().scaleExtent([0.01,10]).on("zoom", redraw)).on('dblclick.zoom',null)
     .append("svg:g")
   r.link = r.vis.selectAll(".link")
   r.node = r.vis.selectAll(".node")
