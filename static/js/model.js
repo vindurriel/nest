@@ -116,15 +116,34 @@ $(document).ready(function() {
     return $("#tip").slideToggle(200);
   });
   $("#btn_search").click(function() {
-    var data, key;
+    var data, key, keynode;
     key = $('#q').val();
     data = {
       'keys': key,
       'services': get_selected_services()
     };
+    keynode = {
+      'type': "baike",
+      'name': key
+    };
     $.post("/search/", JSON.stringify(data), function(d) {
+      var i, x, _i, _len, _ref;
       if (!d || (d.error != null)) {
         return;
+      }
+      d.nodes.splice(0, 0, keynode);
+      i = 0;
+      _ref = d.nodes;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        x = _ref[_i];
+        x.index = i;
+        if (i > 0) {
+          d.links.push({
+            source: 0,
+            target: i
+          });
+        }
+        i += 1;
       }
       draw(d);
       list(d);

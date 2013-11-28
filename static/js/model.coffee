@@ -112,9 +112,23 @@ $(document).ready ->
       'keys':key,
       'services':get_selected_services(),
     }
+    keynode = {
+      'type':"baike",
+      'name':key,
+    }
     $.post "/search/", JSON.stringify(data), (d)->
         if not d or d.error?
           return
+        d.nodes.splice 0,0,keynode
+        i=0
+        for x in d.nodes
+          x.index=i
+          if i>0
+            d.links.push {
+              source:0,
+              target:i,
+            }
+          i+=1
         draw d
         list d
         return

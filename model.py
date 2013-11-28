@@ -77,7 +77,7 @@ class service:
 			'services':[
 				{'id':'REGSVC','name':"线性回归",'select':False,},
 				{'id':'MDOSVC','name':"多目标优化",'select':False,},
-				{'id':'baike_crawler','name':"百科",'select':True,},
+				{'id':'baike','name':"百科",'select':True,},
 				{'id':'wolfram_alpha','name':"wolfram alpha",'select':False,},
 			]
 		}
