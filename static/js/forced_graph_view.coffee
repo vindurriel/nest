@@ -29,7 +29,7 @@ draw = (json) ->
   
   r.legend.append("circle")
   .style("fill",color)
-  .attr("r","10px")
+  .style("r","10px")
   .attr('cx','0')
   .attr('cy','0')
   .attr('stroke-width','1px')
@@ -86,17 +86,26 @@ update = ->
   .append("g")
   .attr("class", "node")
   .on("click", click)
+  .on('mouseover',(d)->
+    d3.select(this).select('circle').attr("r",'13px')
+    return
+  )
+  .on('mouseout',(d)->
+    d3.select(this).select('circle').attr("r",getR(d))
+    return
+  )
   .on('dblclick',dblclick)
   .classed("highlight",(d)->d.isHigh==true)
   .attr "transform", (d) ->
       "translate(" + d.x + "," + d.y + ")"
   .call(r.force.drag)
-  
+
   nodeEnter.append("circle")
   .attr("cx",0)
   .attr("cy",0)
   .attr("r", getR)
   .style("fill", color)
+
   # nodeEnter.append("text")
   # .attr("class","notclickable desc")
   # .text (d) ->
@@ -189,9 +198,10 @@ dblclick = (d)->
     d.isSearching = true
   if not d.isSearching
     return
-  t=d.type
   id=d.id
   url= "/roaming/#{id}"
+  if d.url.indexOf("/subview/")>=0
+    url+="?url="+encodeURIComponent(d.url)
   d3.json url , expand
   update()
 click = (d) ->
@@ -237,7 +247,7 @@ expand = (data)->
         continue
       target=r.hNode[x.id]
       if not target?
-        if i==5 then continue
+        if i==5 and x.type!="referData" then continue
         r.nodes.push x
         x.x=source.x+Math.random()*100-50
         x.y=source.y+Math.random()*100-50
@@ -355,6 +365,8 @@ r.nest= (options)->
     "hudongBaikeCrawler",
     "referData",
   ]
+  r.highlighted= -> 
+    r.node.filter((d)->d.isHigh)
   r.relationships={
     'artist':[{
         "id": (d)-> "hitsongs_of_#{d.id}",

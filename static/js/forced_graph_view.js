@@ -35,7 +35,7 @@ draw = function(json) {
   ]).enter().append('g').attr("transform", function(d, i) {
     return "translate(" + 10 + "," + (30 + i * 30) + ")";
   }).classed('leg', true);
-  r.legend.append("circle").style("fill", color).attr("r", "10px").attr('cx', '0').attr('cy', '0').attr('stroke-width', '1px');
+  r.legend.append("circle").style("fill", color).style("r", "10px").attr('cx', '0').attr('cy', '0').attr('stroke-width', '1px');
   r.legend.append("text").text(function(d) {
     return d.type;
   }).attr("dx", '15').attr("dy", '3');
@@ -86,7 +86,11 @@ update = function() {
   }).classed("highlight", function(d) {
     return d.isHigh === true;
   });
-  nodeEnter = r.node.enter().append("g").attr("class", "node").on("click", click).on('dblclick', dblclick).classed("highlight", function(d) {
+  nodeEnter = r.node.enter().append("g").attr("class", "node").on("click", click).on('mouseover', function(d) {
+    d3.select(this).select('circle').attr("r", '13px');
+  }).on('mouseout', function(d) {
+    d3.select(this).select('circle').attr("r", getR(d));
+  }).on('dblclick', dblclick).classed("highlight", function(d) {
     return d.isHigh === true;
   }).attr("transform", function(d) {
     return "translate(" + d.x + "," + d.y + ")";
@@ -183,7 +187,7 @@ color = function(d) {
 };
 
 dblclick = function(d) {
-  var id, t, url;
+  var id, url;
   if (d.type === "referData") {
     window.open(d.url != null ? d.url : d.name);
     return;
@@ -200,9 +204,11 @@ dblclick = function(d) {
   if (!d.isSearching) {
     return;
   }
-  t = d.type;
   id = d.id;
   url = "/roaming/" + id;
+  if (d.url.indexOf("/subview/") >= 0) {
+    url += "?url=" + encodeURIComponent(d.url);
+  }
   d3.json(url, expand);
   return update();
 };
@@ -267,7 +273,7 @@ expand = function(data) {
       }
       target = r.hNode[x.id];
       if (target == null) {
-        if (i === 5) {
+        if (i === 5 && x.type !== "referData") {
           continue;
         }
         r.nodes.push(x);
@@ -419,6 +425,11 @@ r.nest = function(options) {
   r.node = r.vis.selectAll(".node");
   r.palette = d3.scale.category10();
   r.colors = ["song", "artist", "user", "album", 'relationship', "baiduBaikeCrawler", "hudongBaikeCrawler", "referData"];
+  r.highlighted = function() {
+    return r.node.filter(function(d) {
+      return d.isHigh;
+    });
+  };
   return r.relationships = {
     'artist': [
       {

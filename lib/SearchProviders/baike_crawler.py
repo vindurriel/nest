@@ -7,7 +7,12 @@ class baike_crawler(search_provider_base):
 		serviceType=dic.get('serviceType','baiduBaikeCrawler')
 		node_prefix=u"知识点:"
 		url='http://192.168.4.228:8080/ContentService/CrawledIndex?wsdl'
-		client = suds.client.Client(url)
+		try:
+			client = suds.client.Client(url)
+		except Exception, e:
+			import traceback
+			traceback.print_exc()
+			return []
 		pageInfo={
 			'pageNum':1,
 			'pageSize':10,
@@ -16,11 +21,10 @@ class baike_crawler(search_provider_base):
 			'serviceType':serviceType,
 			'keyVaueInfo':{'key':'keywords','value':key},
 		}
-		# logging.basicConfig(filename="a.log",level=logging.INFO)
-		# logging.getLogger('suds.client').setLevel(logging.DEBUG)
 		n=client.service.getEntityList(pageInfo,info)
 		code=str(n.operationInfo.code)
 		if code!="200":
+			print n.operationInfo.desc
 			return []
 		props=dict([(x.key,x.value) for x in n.components[0].properties])
 		name=unicode(props["title"])
@@ -37,7 +41,8 @@ class baike_crawler(search_provider_base):
 				for y in x.properties:
 					y.key=unicode(y.key)
 					children[x.name].append(y)
-		print children
+		file("a.log",'w').write(str(n))
+		# print children
 		if "Category" in children:
 			for x in children["Category"]:
 				self.result[x.key]={"name":x.key,"size":1,"type": serviceType}
@@ -49,5 +54,5 @@ class baike_crawler(search_provider_base):
 				self.result[node_prefix+x.key]={"name":node_prefix+x.key,"size":1,"type": "referData","url":x.value}
 		res=self.result.values()
 		if len(res)>6:
-			res=res[0:6]
+			res=res[:6]
 		return res

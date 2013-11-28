@@ -89,13 +89,13 @@ class search:
 		for service in services:
 			if service=="": continue
 			try:
-				self.search(key,service)
+				self.search(key,service,dic)
 			except Exception, e:
 				pass
-	def search(self,key,serviceType):
+	def search(self,key,serviceType,dic={}):
 		print "searching",serviceType
 		s=self.search_factory(serviceType)
-		self.result[serviceType]= s.search(key,{})
+		self.result[serviceType]= s.search(key,dic)
 	def __init__(self):
 		import sys
 		sys.path.append(cwd('lib'))
@@ -120,5 +120,8 @@ class search:
 if __name__ == '__main__':
 	import os
 	# print search().do_search(u'a','MDOSVC###REGSVC')
+	s=search()
+	s.search(u'中国','baike')
+	print s.result
 	# print search().search(u'中国','baiduBaikeCrawler')
-	keyword().GET(u'03地球物理学进展_二维各向同性介质P波和S波分离方法研究.pdf.txt')
+	# keyword().GET(u'03地球物理学进展_二维各向同性介质P波和S波分离方法研究.pdf.txt')

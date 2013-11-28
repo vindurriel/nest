@@ -26,12 +26,19 @@ class roaming:
 			return json.dumps({tid:res})
 		i=tid.rindex('_')
 		t,id=tid[:i],tid[i+1:]
-		if "baike" in t.lower():
-			res = self.baike(tid)
 		func_name=t.replace('.','_')
 		if hasattr(self,func_name):
 			res = getattr(self,func_name)(id)
-		# print json.dumps(res,indent=2)
+		else:
+			dic={}
+			is_subview=False
+			if "subview" in t:
+				is_subview=True
+				dic={
+					'is_subview':True,
+					'url':web.input().url
+				}
+			res = self.baike(id,dic)
 		return json.dumps({tid:res})
 	def artist_of_song(self,id):
 		return self._artist_of('song',id)
@@ -86,17 +93,14 @@ class roaming:
 				"type":"song"
 			})
 		return res		
-	def baike(self,tid):
+	def baike(self,id,dic={}):
 		import model
 		res=[]
 		proxy=model.search()
-		i=tid.index('_')
-		t,id=tid[:i],tid[i+1:]
 		try:
-			proxy.do_search({
-					'keys':id,
-					'services':"baike_crawler",
-				})
+			dic['keys']=id
+			dic['services']='baike'
+			proxy.do_search(dic)
 			res=proxy.result.values()[0]
 		except Exception,e:
 			traceback.print_exc()
