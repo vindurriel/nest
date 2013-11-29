@@ -198,16 +198,16 @@ dblclick = (d)->
     return
   if d.isSearching? and d.isSearching==true
     d.isSearching= false
-  else 
-    d.isSearching = true
-  if not d.isSearching
     return
-  id=d.id
-  url= "/roaming/#{id}"
+  d.isSearching = true
+  data={
+    keys:d.id,
+  }
   if d.url? and d.url.indexOf("/subview/")>=0
-    url+="?url="+encodeURIComponent(d.url)
-  d3.json url , expand
-  update()
+    data.url= d.url
+    data.is_subview= true
+  $.post "/explore/", JSON.stringify(data), expand, 'json'
+  return
 click = (d) ->
   d.fixed= false
   if r.shiftPressed
@@ -238,6 +238,7 @@ click = (d) ->
     update()
     if r.click_handler?
       r.click_handler(d)
+  return
 expand = (data)->
   for id of data
     source=r.hNode[id]
@@ -262,6 +263,7 @@ expand = (data)->
         r.links.push {"source":source,"target":target }
     source.isSearching= false
   update()
+  return
 highlight = (d)->
   for x in r.links
     x.isHigh= false

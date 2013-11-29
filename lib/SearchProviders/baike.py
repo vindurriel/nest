@@ -17,7 +17,6 @@ def get_related_term(term,dic={},limit=10):
 		url_search_word="http://baike.baidu.com"+dic['url']
 	else:
 		url_search_word="http://baike.baidu.com/search/word"
-	print url_search_word
 	res=r.get(url_search_word,params={
 			'word':term.encode('gbk'),
 			'pic':1,
@@ -70,7 +69,6 @@ def get_related_term(term,dic={},limit=10):
 				'type':'referData',
 				"id":text,
 			})
-	print len(urls)
 	return urls
 def json_print(dic):
 	import json

@@ -3,26 +3,27 @@ var get_selected_services,
 
 window.list = function(d) {
   var color, s, t_item_action, t_list_item, x, _i, _len, _ref;
-  try {
-    $("#list-container").masonry("destroy");
-  } catch (_error) {}
-  $(".list-item.normal").remove();
-  color = window.palette(d.type);
-  $("#list-container").append("<div class=\"list-item normal selected_info\">\n   <h2 class=\"item-headline\">\n      <span style=\"border-left:" + color + " solid 5px;\">&nbsp;</span>\n      <a href=\"\" target=\"_blank\"></a>\n    </h2>\n    <p class=\"item-detail\"></p>\n</div>");
-  if (d.nodes.length > 100) {
-    return;
-  }
   t_list_item = function(d) {
-    var details, i, imgurl;
+    var color, details, i, imgurl;
     details = d.content != null ? d.content : "";
     i = Math.floor(Math.random() * (10 - 0 + 1));
     color = window.palette(d.type);
-    imgurl = "http://lorempixel.com/80/80/technics/" + i;
+    imgurl = "";
     if (d.img != null) {
       imgurl = d.img;
     }
     return "<div class=\"list-item normal\">\n  <h2 class=\"item-headline\">\n    <span style=\"border-left:" + color + " solid 5px;\">&nbsp;</span>\n    <a href=\"" + d.url + "\">" + d.name + "</a>\n  </h2>\n  <span class=\"item-prop\">" + d.type + " </span>\n  <div>\n    <img class=\"item-image\" src=\"" + imgurl + "\"/>\n  </div>\n  <p class=\"item-detail\">" + details + "</p>\n</div>";
   };
+  try {
+    $("#list-container").masonry("destroy");
+  } catch (_error) {}
+  $(".list-item.normal").remove();
+  color = window.palette(d.type);
+  $("#list-container").append(t_list_item(d));
+  $("#list-container div:last-child").addClass('selected_info');
+  if (d.nodes.length > 100) {
+    return;
+  }
   t_item_action = function(d) {
     return "<a class=\"button\" href=\"#\">收藏</a>\n<a class=\"button\" href=\"#\">分享</a>";
   };
@@ -46,6 +47,7 @@ window.list = function(d) {
 window.click_handler = function(d) {
   var container, value;
   $(".selected_info .item-headline a").text(d.name);
+  $(".selected_info .item-prop").text(d.type);
   if (d.type === "doc") {
     $(".selected_info .item-headline a").attr('href', d.url);
     container = ".selected_info .item-detail";
@@ -89,7 +91,7 @@ get_selected_services = function() {
       return service_ids.push($(this).data('serviceId'));
     }
   });
-  return service_ids.join("###");
+  return service_ids;
 };
 
 $(document).ready(function() {

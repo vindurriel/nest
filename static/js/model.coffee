@@ -1,24 +1,10 @@
 window.list= (d)->
-  try
-    $("#list-container").masonry "destroy"
-  $(".list-item.normal").remove()
-  color= window.palette(d.type)
-  $("#list-container").append """
-  <div class="list-item normal selected_info">
-     <h2 class="item-headline">
-        <span style="border-left:#{color} solid 5px;">&nbsp;</span>
-        <a href="" target="_blank"></a>
-      </h2>
-      <p class="item-detail"></p>
-  </div>
-  """
-  if d.nodes.length>100
-    return
   t_list_item= (d)->
     details= if d.content? then d.content else ""
     i= Math.floor(Math.random() * (10 - 0 + 1))
     color= window.palette(d.type)
-    imgurl= "http://lorempixel.com/80/80/technics/#{i}"
+    # imgurl= "http://lorempixel.com/80/80/technics/#{i}"
+    imgurl= ""
     if d.img?
       imgurl= d.img
     return """
@@ -34,6 +20,14 @@ window.list= (d)->
       <p class="item-detail">#{details}</p>
     </div>
     """
+  try
+    $("#list-container").masonry "destroy"
+  $(".list-item.normal").remove()
+  color= window.palette(d.type)
+  $("#list-container").append t_list_item(d)
+  $("#list-container div:last-child").addClass('selected_info')
+  if d.nodes.length>100
+    return
   t_item_action= (d)->
     """
       <a class="button" href="#">收藏</a>
@@ -55,6 +49,7 @@ window.list= (d)->
 
 window.click_handler= (d)->
   $(".selected_info .item-headline a").text(d.name)
+  $(".selected_info .item-prop").text(d.type)
   if d.type=="doc"
     $(".selected_info .item-headline a").attr('href',d.url)
     container= ".selected_info .item-detail"
@@ -83,7 +78,7 @@ get_selected_services = ->
     if not this.checked then return
     if $(this).data('serviceId')?
       service_ids.push $(this).data('serviceId')
-  return service_ids.join "###"
+  return service_ids
 $(document).ready ->
   options=
     "container":"#nest-container",

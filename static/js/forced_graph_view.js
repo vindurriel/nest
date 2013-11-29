@@ -192,7 +192,7 @@ color = function(d) {
 };
 
 dblclick = function(d) {
-  var id, url;
+  var data;
   if (d.type === "referData") {
     window.open(d.url != null ? d.url : d.name);
     return;
@@ -203,19 +203,17 @@ dblclick = function(d) {
   }
   if ((d.isSearching != null) && d.isSearching === true) {
     d.isSearching = false;
-  } else {
-    d.isSearching = true;
-  }
-  if (!d.isSearching) {
     return;
   }
-  id = d.id;
-  url = "/roaming/" + id;
+  d.isSearching = true;
+  data = {
+    keys: d.id
+  };
   if ((d.url != null) && d.url.indexOf("/subview/") >= 0) {
-    url += "?url=" + encodeURIComponent(d.url);
+    data.url = d.url;
+    data.is_subview = true;
   }
-  d3.json(url, expand);
-  return update();
+  $.post("/explore/", JSON.stringify(data), expand, 'json');
 };
 
 click = function(d) {
@@ -242,19 +240,19 @@ click = function(d) {
     }
     r.nodes.remove(d);
     r.blacklist.push(d.id);
-    return update();
+    update();
   } else if (r.altPressed) {
-    return save().done(function() {
+    save().done(function() {
       return window.location.href = "/model/" + d.id;
     });
   } else if (r.ctrlPressed) {
     dblclick(d);
-    return update();
+    update();
   } else {
     highlight(d);
     update();
     if (r.click_handler != null) {
-      return r.click_handler(d);
+      r.click_handler(d);
     }
   }
 };
@@ -297,7 +295,7 @@ expand = function(data) {
     }
     source.isSearching = false;
   }
-  return update();
+  update();
 };
 
 highlight = function(d) {
