@@ -94,7 +94,7 @@ $(document).ready ->
     else
       ui.removeClass('fullscreen').addClass('list-item')
     # toH = if toggle then $(window).height()*.8 else 200
-    # ui.animate({"height":toH},200);
+    # ui.animate({"height":toH},200)
     # setTimeout ->
     #   $("#list-container").masonry()
     # , 200

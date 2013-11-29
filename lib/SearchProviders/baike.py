@@ -9,9 +9,10 @@ def decode(s):
 		except Exception, e:
 			pass
 	raise Exception("cannot decode")
-def get_related_term(term,dic={},limit=10):
+def get_docs(term,dic={},limit=10):
 	import re
 	import requests as r
+	from BeautifulSoup import BeautifulSoup as bs
 	term=decode(term).strip().replace('&nbsp;','')
 	if dic.get('is_subview',False):
 		url_search_word="http://baike.baidu.com"+dic['url']
@@ -26,35 +27,9 @@ def get_related_term(term,dic={},limit=10):
 	if u"您所进入的词条不存在" in content:
 		print "term not found:",term
 		return []
-	from BeautifulSoup import BeautifulSoup as bs
 	soup=bs(content)
 	links=soup.findAll('a',href=re.compile(r'/(?:sub)?view/\d+(?:/\d+)?.htm'))
-	urls={}
-	for x in links:
-		text=x.text.strip().replace('&nbsp;','')
-		if x['href'] in urls:
-			continue
-		if text==term:
-			continue
-		if text.strip()==u"":
-			continue
-		if len(text)==1:
-			continue
-		t="baike"
-		if "/subview/" in x['href']:
-			t+="_subview"
-		urls[x['href']]={
-			"url":x['href'],
-			"name":text,
-			'type':t,
-			"id":text,
-		}
-	for x in urls.itervalues():
-		x['count']=len(re.findall(x['name'],content))
-	urls=sorted(urls.values(),key=lambda x:x["count"],reverse=True)
-	# for x in urls[:limit]:
-	# 	print x['name'],x['url'],x["count"]
-	urls=urls[:limit]	
+	urls=[]
 	refs=soup.find(attrs={'class':re.compile(r'\breference\b')})
 	if refs!=None:
 		refs=refs.findAll('a')
@@ -77,6 +52,6 @@ def json_print(dic):
 from search_provider_base import search_provider_base
 class baike(search_provider_base):
 	def search(self,key,dic={}):
-		return get_related_term(key,dic)
+		return get_docs(key,dic)
 if __name__ == '__main__':
 	json_print(baike().search('联合国'))

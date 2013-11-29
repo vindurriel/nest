@@ -71,7 +71,7 @@ draw = function(json) {
     d.x = r.w * (i % 10) / 10;
     return d.y = i * r.h / n;
   });
-  return update();
+  update();
 };
 
 getLinkName = function(source, target) {

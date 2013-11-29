@@ -64,6 +64,7 @@ draw = (json) ->
     d.x=r.w*(i%10)/10
     d.y=i*r.h/n
   update()
+  return
 getLinkName= (source,target)->
   return "#{source.name}->#{target.name}"
 update = ->
