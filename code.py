@@ -1,21 +1,40 @@
 #encoding=utf-8
-import os,sys,json,requests,traceback
-from utils import cwd
-urls=[]
-import web
+import os,sys,json,requests,traceback,web
+from utils import *
 web.config.debug=False
 config=web.storage(static=cwd('static'))
 web.template.Template.globals['config']=config
-for x in [x.split() for x in file(cwd('routers.txt'),'r').readlines()]:
-    if not x or len(x)!=2:continue;
-    urls.append(x[0])
-    urls.append(x[1])
-    cmd='from {0} import {0}'.format(x[1])
+### router
+router="""
+/ model.list
+/model/  model.list
+/model/load/(.+) model.load
+/model/(.+)  model
+/explore/ explore
+/search/ model.search
+/favicon.ico favicon
+/(js|css|files|images)/(.+) static
+/services/ model.service
+/keyword/(.+) model.keyword
+"""
+###router
+urls=[]
+to_imports=set()
+for line in router.split("\n"):
+    if line=="": continue
+    (u,m)=line.split()
+    urls.append(u)
+    urls.append(m)
+    if '.' in m:
+        m=m.split('.')[0]
+    if not hasattr(sys.modules[__name__],m):
+        to_imports.add(m)
+for x in to_imports:
+    cmd='from {0} import *'.format(x)
     try:
         exec(cmd)
     except Exception, e:
         pass
-web.webapi.internalerror = web.debugerror
 app = web.application(urls, globals(), autoreload=True)
 class static:
     def GET(self,media, filename):

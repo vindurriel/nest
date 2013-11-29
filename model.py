@@ -83,17 +83,8 @@ class service:
 		}
 		return json.dumps(res,indent=2)
 class search:
-	def do_search(self,dic):
-		key=dic['keys']
-		services=dic['services'].split('###')
-		for service in services:
-			if service=="": continue
-			try:
-				self.search(key,service,dic)
-			except Exception, e:
-				pass
 	def search(self,key,serviceType,dic={}):
-		print "searching",serviceType
+		print "###searching",serviceType
 		s=self.search_factory(serviceType)
 		self.result[serviceType]= s.search(key,dic)
 	def __init__(self):
@@ -106,9 +97,14 @@ class search:
 		import json
 		web.header('Content-Type', 'application/json')
 		dic=json.loads(web.data())
-		self.do_search(dic)
-		# print self.do_search(key,"baiduBaikeCrawler")
-		# print self.do_search(key,"hudongBaikeCrawler")
+		key=dic['keys']
+		services=dic.get('services',[])
+		for service in services:
+			if service=="": continue
+			try:
+				self.search(key,service,dic)
+			except Exception, e:
+				traceback.print_exc()
 		res={
 			'nodes':[],
 			'links':[],
@@ -119,9 +115,11 @@ class search:
 		return json.dumps(res)
 if __name__ == '__main__':
 	import os
-	# print search().do_search(u'a','MDOSVC###REGSVC')
+	# print search().search(u'a','MDOSVC###REGSVC')
 	s=search()
-	s.search(u'中国','baike')
+	web.data()
+	s.POST()
+	# s.search(u'中国','baike')
 	print s.result
 	# print search().search(u'中国','baiduBaikeCrawler')
 	# keyword().GET(u'03地球物理学进展_二维各向同性介质P波和S波分离方法研究.pdf.txt')
