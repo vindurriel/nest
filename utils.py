@@ -1,5 +1,15 @@
 #encoding=utf-8
 import web
+def decode(s):
+	if type(s)==type(u""):
+		return s
+	codings=['utf-8','gbk']
+	for cod in codings:
+		try:
+			return s.decode(cod)
+		except Exception, e:
+			pass
+	raise Exception("cannot decode")
 def render_t(tname,globals={}):
 	r=web.template.render('.\\templates',globals=globals)
 	return getattr(r,tname)()

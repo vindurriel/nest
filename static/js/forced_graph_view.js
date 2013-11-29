@@ -45,7 +45,9 @@ draw = function(json) {
   r.theFocus = r.root;
   r.root.fixed = false;
   r.root.isHigh = true;
-  r.force = d3.layout.force().on("tick", tick).charge(function(d) {
+  r.force = d3.layout.force().on("end", function(d) {
+    return r.root.fixed = true;
+  }).on("tick", tick).charge(function(d) {
     if (d.type === "referData") {
       return -20;
     } else {
@@ -77,7 +79,7 @@ getLinkName = function(source, target) {
 };
 
 update = function() {
-  var i, j, n, nodeEnter, x, _i, _j, _k, _len, _ref, _ref1, _ref2, _results;
+  var drag, i, j, n, nodeEnter, x, _i, _j, _k, _len, _ref, _ref1, _ref2, _results;
   r.link = r.link.data(r.links);
   r.link.enter().insert("line", ".node").classed("link", true);
   r.link.exit().remove();
@@ -85,6 +87,9 @@ update = function() {
     return d.id;
   }).classed("highlight", function(d) {
     return d.isHigh === true;
+  });
+  drag = r.force.drag().on('dragstart', function(d) {
+    d.fixed = true;
   });
   nodeEnter = r.node.enter().append("g").attr("class", "node").on("click", click).on('mouseover', function(d) {
     d3.select(this).select('circle').attr("r", '13px');
@@ -94,7 +99,7 @@ update = function() {
     return d.isHigh === true;
   }).attr("transform", function(d) {
     return "translate(" + d.x + "," + d.y + ")";
-  }).call(r.force.drag);
+  }).call(drag);
   nodeEnter.append("circle").attr("cx", 0).attr("cy", 0).attr("r", getR).style("fill", color);
   r.node.exit().remove();
   r.node.classed("highlight", function(d) {
@@ -206,7 +211,7 @@ dblclick = function(d) {
   }
   id = d.id;
   url = "/roaming/" + id;
-  if (d.url.indexOf("/subview/") >= 0) {
+  if ((d.url != null) && d.url.indexOf("/subview/") >= 0) {
     url += "?url=" + encodeURIComponent(d.url);
   }
   d3.json(url, expand);
@@ -215,6 +220,7 @@ dblclick = function(d) {
 
 click = function(d) {
   var i, link, n, _i, _len, _ref;
+  d.fixed = false;
   if (r.shiftPressed) {
     if (d === r.root) {
       alert("不能删除根节点");

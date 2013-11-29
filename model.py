@@ -26,7 +26,7 @@ class list:
 		import os
 		l=os.listdir(cwd('static','files'))
 		l= filter(lambda x:x.endswith(".json"),l)
-		l= map(lambda x:x[:-5],l)
+		l= map(lambda x:decode(x)[:-5],l)
 		static=cwd("static")
 		render=web.template.render(cwd('templates'),globals=locals())
 		return render.list()

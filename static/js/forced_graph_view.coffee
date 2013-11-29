@@ -46,6 +46,7 @@ draw = (json) ->
   r.root.fixed = false
   r.root.isHigh= true
   r.force = d3.layout.force()
+  .on("end",(d)->r.root.fixed=true)
   .on("tick", tick)
   .charge (d)->
     if d.type=="referData" then -20 else -200
@@ -76,10 +77,13 @@ update = ->
   # Exit any old links.
   r.link.exit().remove()
 
-  #update nodes
-  # r.node.remove()
   r.node = r.vis.selectAll(".node").data(r.nodes,(d)->d.id)
   .classed("highlight",(d)->d.isHigh==true)
+
+  drag= r.force.drag().on('dragstart', (d)->
+    d.fixed= true
+    return
+  )
 
   #enter new nodes
   nodeEnter=r.node.enter()
@@ -98,7 +102,7 @@ update = ->
   .classed("highlight",(d)->d.isHigh==true)
   .attr "transform", (d) ->
       "translate(" + d.x + "," + d.y + ")"
-  .call(r.force.drag)
+  .call(drag)
 
   nodeEnter.append("circle")
   .attr("cx",0)
@@ -200,11 +204,12 @@ dblclick = (d)->
     return
   id=d.id
   url= "/roaming/#{id}"
-  if d.url.indexOf("/subview/")>=0
+  if d.url? and d.url.indexOf("/subview/")>=0
     url+="?url="+encodeURIComponent(d.url)
   d3.json url , expand
   update()
 click = (d) ->
+  d.fixed= false
   if r.shiftPressed
     if d==r.root
       alert "不能删除根节点"
