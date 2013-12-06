@@ -79,14 +79,12 @@ getLinkName = function(source, target) {
 };
 
 update = function() {
-  var drag, i, j, n, nodeEnter, x, _i, _j, _k, _len, _ref, _ref1, _ref2, _results;
+  var drag, i, j, n, nodeEnter, x, _i, _j, _k, _len, _ref, _ref1, _ref2;
   r.link = r.link.data(r.links);
   r.link.enter().insert("line", ".node").classed("link", true);
   r.link.exit().remove();
   r.node = r.vis.selectAll(".node").data(r.nodes, function(d) {
     return d.id;
-  }).classed("highlight", function(d) {
-    return d.isHigh === true;
   });
   drag = r.force.drag().on('dragstart', function(d) {
     d.fixed = true;
@@ -102,12 +100,6 @@ update = function() {
   }).call(drag);
   nodeEnter.append("circle").attr("cx", 0).attr("cy", 0).attr("r", getR).style("fill", color);
   r.node.exit().remove();
-  r.node.classed("highlight", function(d) {
-    return d.isHigh === true;
-  });
-  r.link.classed("highlight", function(d) {
-    return d.isHigh === true;
-  });
   d3.selectAll(".node circle").attr("r", getR).style("fill", color);
   d3.selectAll(".node text").remove();
   r.node.filter(function(d) {
@@ -138,14 +130,24 @@ update = function() {
     }
   }
   _ref2 = r.links;
-  _results = [];
   for (_k = 0, _len = _ref2.length; _k < _len; _k++) {
     x = _ref2[_k];
     r.degree[x.source.index].push(x);
     r.degree[x.target.index].push(x);
-    _results.push(r.matrix[x.source.index][x.target.index] = x);
+    r.matrix[x.source.index][x.target.index] = x;
   }
-  return _results;
+  r.node.classed("highlight", function(d) {
+    return d.isHigh === true;
+  });
+  r.link.classed("highlight", function(d) {
+    return d.isHigh === true;
+  });
+  r.node.classed('hidden', function(d) {
+    return d.type === "referData";
+  });
+  r.link.classed('hidden', function(d) {
+    return d.target.type === "referData";
+  });
 };
 
 getR = function(d) {

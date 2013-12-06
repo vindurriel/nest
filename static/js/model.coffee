@@ -1,3 +1,8 @@
+window.t_item_action= (d)->
+    """
+      <a class="button small" href="#">收藏</a>
+      <a class="button small" href="#">分享</a>
+    """
 window.list= (d)->
   t_list_item= (d)->
     details= if d.content? then d.content else ""
@@ -22,21 +27,19 @@ window.list= (d)->
     """
   try
     $("#list-container").masonry "destroy"
+  catch err
+    a= err
+
   $(".list-item.normal").remove()
   color= window.palette(d.type)
   $("#list-container").append t_list_item(d)
   $("#list-container div:last-child").addClass('selected_info')
-  if d.nodes.length>100
+  if d.nodes.length>1
     return
-  t_item_action= (d)->
-    """
-      <a class="button" href="#">收藏</a>
-      <a class="button" href="#">分享</a>
-    """
+
   for x in d.nodes
     s=t_list_item(x)
     $("#list-container").append(s)
-  $(".item-prop").append t_item_action x
   $("#list-container").masonry {
       'itemSelector': '.list-item',
     }
@@ -56,21 +59,23 @@ window.click_handler= (d)->
     value= window.degree[d.index][0].value
     $(container).empty().append """<p>到聚类中心的距离：#{value}</p>"""
     $.getJSON "/keyword/#{d.name}", (res)->
-      $.get d.url, (res)->
-        if res.length>1000
-          res= res[0..1000]+"..."
-        $(container).append """<p>#{res}</p>"""
-      if res.error?
-        return
       data= []
       for x of res.keyword
         data.push {'k':x,'v':res.keyword[x]}
       renderBarChart data, {
         "container":container,
       }
+      $(container).append """<p>#{res.summary}</p>"""
       return
   else
-    $(".selected_info .item-detail").text ""
+    detail=$(".selected_info .item-detail")
+    detail.empty()
+    for link in r.degree[d.index]
+      if d==link.target then continue
+      n=link.target
+      if n.type!="referData" then continue
+      detail.append("<div><a href=#{n.url} target='_blank' >#{n.name}</a> #{t_item_action(n)} </div>")
+  $("#list-container").masonry()
   return
 get_selected_services = ->
   service_ids= []
@@ -93,11 +98,6 @@ $(document).ready ->
       ui.removeClass('list-item').addClass('fullscreen')
     else
       ui.removeClass('fullscreen').addClass('list-item')
-    # toH = if toggle then $(window).height()*.8 else 200
-    # ui.animate({"height":toH},200)
-    # setTimeout ->
-    #   $("#list-container").masonry()
-    # , 200
     $(this).val(if toggle then "收起" else "展开")
   $("#btn_tip").click ->
     $("#tip").slideToggle 200
@@ -159,6 +159,7 @@ $(document).ready ->
     else 
       draw d
       list d
+    click_handler(r.root)
   #fillServices
   $.getJSON "/services/",(d)->
     if not d or d.error?

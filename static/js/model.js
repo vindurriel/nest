@@ -1,8 +1,12 @@
 var get_selected_services,
   __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
+window.t_item_action = function(d) {
+  return "<a class=\"button small\" href=\"#\">收藏</a>\n<a class=\"button small\" href=\"#\">分享</a>";
+};
+
 window.list = function(d) {
-  var color, s, t_item_action, t_list_item, x, _i, _len, _ref;
+  var a, color, err, s, t_list_item, x, _i, _len, _ref;
   t_list_item = function(d) {
     var color, details, i, imgurl;
     details = d.content != null ? d.content : "";
@@ -16,24 +20,23 @@ window.list = function(d) {
   };
   try {
     $("#list-container").masonry("destroy");
-  } catch (_error) {}
+  } catch (_error) {
+    err = _error;
+    a = err;
+  }
   $(".list-item.normal").remove();
   color = window.palette(d.type);
   $("#list-container").append(t_list_item(d));
   $("#list-container div:last-child").addClass('selected_info');
-  if (d.nodes.length > 100) {
+  if (d.nodes.length > 1) {
     return;
   }
-  t_item_action = function(d) {
-    return "<a class=\"button\" href=\"#\">收藏</a>\n<a class=\"button\" href=\"#\">分享</a>";
-  };
   _ref = d.nodes;
   for (_i = 0, _len = _ref.length; _i < _len; _i++) {
     x = _ref[_i];
     s = t_list_item(x);
     $("#list-container").append(s);
   }
-  $(".item-prop").append(t_item_action(x));
   $("#list-container").masonry({
     'itemSelector': '.list-item'
   });
@@ -45,7 +48,7 @@ window.list = function(d) {
 };
 
 window.click_handler = function(d) {
-  var container, value;
+  var container, detail, link, n, value, _i, _len, _ref;
   $(".selected_info .item-headline a").text(d.name);
   $(".selected_info .item-prop").text(d.type);
   if (d.type === "doc") {
@@ -55,15 +58,6 @@ window.click_handler = function(d) {
     $(container).empty().append("<p>到聚类中心的距离：" + value + "</p>");
     $.getJSON("/keyword/" + d.name, function(res) {
       var data, x;
-      $.get(d.url, function(res) {
-        if (res.length > 1000) {
-          res = res.slice(0, 1001) + "...";
-        }
-        return $(container).append("<p>" + res + "</p>");
-      });
-      if (res.error != null) {
-        return;
-      }
       data = [];
       for (x in res.keyword) {
         data.push({
@@ -74,10 +68,25 @@ window.click_handler = function(d) {
       renderBarChart(data, {
         "container": container
       });
+      $(container).append("<p>" + res.summary + "</p>");
     });
   } else {
-    $(".selected_info .item-detail").text("");
+    detail = $(".selected_info .item-detail");
+    detail.empty();
+    _ref = r.degree[d.index];
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      link = _ref[_i];
+      if (d === link.target) {
+        continue;
+      }
+      n = link.target;
+      if (n.type !== "referData") {
+        continue;
+      }
+      detail.append("<div><a href=" + n.url + " target='_blank' >" + n.name + "</a> " + (t_item_action(n)) + " </div>");
+    }
   }
+  $("#list-container").masonry();
 };
 
 get_selected_services = function() {
@@ -182,7 +191,7 @@ $(document).ready(function() {
   }
   $.getJSON("/model/load/" + id, function(d) {
     if (!d || (d.error != null)) {
-      return $.getJSON("/info/" + id, function(d) {
+      $.getJSON("/info/" + id, function(d) {
         if (!d || (d.error != null)) {
           return;
         }
@@ -191,8 +200,9 @@ $(document).ready(function() {
       });
     } else {
       draw(d);
-      return list(d);
+      list(d);
     }
+    return click_handler(r.root);
   });
   $.getJSON("/services/", function(d) {
     var checked, s, _i, _len, _ref;

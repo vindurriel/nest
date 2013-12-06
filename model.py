@@ -54,8 +54,9 @@ class keyword:
 		    freq[w]=freq.get(w,0.0)+1.0
 		    total+=freq[w]
 		tags=dict([(x,freq[x])  for x in tags])
-		print tags
-		return json.dumps({"keyword":tags})
+		import summarize
+		summary=summarize.summarize(sentence)
+		return json.dumps({"keyword":tags,"summary":summary})
 class load:
 	def GET(self,key="机器学习"):
 		web.header('Content-Type', 'application/json')

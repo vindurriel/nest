@@ -31,11 +31,7 @@
   opacity: 1;
 }
 .node.highlight {
-  opacity: 1;
   stroke-width: 2px;
-}
-.node:hover {
-  opacity: 1;
 }
 .node text {
   opacity: 0;
@@ -53,8 +49,10 @@
   opacity: 0.2;
 }
 .link.highlight {
-  opacity: 1.0;
   stroke-width: 2px;
+}
+.hidden {
+  display: none;
 }
 #tip {
   display: none;

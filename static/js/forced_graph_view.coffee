@@ -42,7 +42,7 @@ draw = (json) ->
   r.nodes= json.nodes
   r.links= json.links
   r.root = json.nodes[0]
-  r.theFocus=r.root
+  r.theFocus= r.root
   r.root.fixed = false
   r.root.isHigh= true
   r.force = d3.layout.force()
@@ -69,7 +69,8 @@ getLinkName= (source,target)->
   return "#{source.name}->#{target.name}"
 update = ->
   # Update the links…
-  r.link = r.link.data(r.links)  
+  r.link = r.link.data(r.links)
+
   # Enter any new links.
   r.link.enter()
   .insert("line", ".node")
@@ -79,7 +80,6 @@ update = ->
   r.link.exit().remove()
 
   r.node = r.vis.selectAll(".node").data(r.nodes,(d)->d.id)
-  .classed("highlight",(d)->d.isHigh==true)
 
   drag= r.force.drag().on('dragstart', (d)->
     d.fixed= true
@@ -118,8 +118,7 @@ update = ->
 
   r.node.exit().remove()
 
-  r.node.classed "highlight", (d)->d.isHigh==true
-  r.link.classed "highlight", (d)->d.isHigh==true
+
 
   d3.selectAll(".node circle")
   .attr("r", getR)
@@ -147,7 +146,6 @@ update = ->
   .attr("fill",'remove')
   .attr("repeatCount",'indefinite')
   .classed("search-img",true)
-
   r.force.start()
   # calculate graph info
   r.matrix=[]
@@ -164,6 +162,12 @@ update = ->
     r.degree[x.source.index].push x
     r.degree[x.target.index].push x
     r.matrix[x.source.index][x.target.index]=x
+  r.node.classed "highlight", (d)->d.isHigh==true
+  r.link.classed "highlight", (d)->d.isHigh==true
+  r.node.classed('hidden',(d)->d.type=="referData")
+  r.link.classed('hidden',(d)->d.target.type=="referData")
+  return
+
 getR = (d) ->
   if d == r.theFocus
     return 15
