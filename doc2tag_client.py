@@ -19,31 +19,62 @@ def hdfs_upload(fname):
 	url=rootdir+"/"+str(uuid.uuid1())
 	hdfs.put(fname,url)
 	return url
+def post(url,data):
+	import requests as r
+	import json
+	d=json.dumps(data)
+	print d
+	return r.post(url,
+		data=d,
+		headers={
+		 'Content-Type':'application/json',
+		})
+def api_call(url,data):
+	print url
+	res=post(url,data)
+	res.raise_for_status()
+	return res.json()
 def request_get_tags(doc_ids):
 	"""
 	invoke analyzer with hdfs path,
 	"""
-	service_url="{}/topic/add/{}/10".format(HOST,doc_ids)
-	res=r.get(service_url,data={
-		"docs":doc_ids
+	return api_call(
+	 	"{}/topic/add".format(HOST),{
+			"urls":doc_ids,
+			'topicNum':20
 	})
-	res.raise_for_status()
-	print res.json()
-	return
 def get_tags(doc_ids):
-	service_url="{}/topic/get/{}/10".format(HOST,doc_ids)
-	print service_url
-	res=r.get(service_url,data={
-		"docs":doc_ids
+	return api_call(
+	 	"{}/topic/get".format(HOST),{
+			"urls":doc_ids,
+			'topicNum':20
 	})
-	res.raise_for_status()
-	print res.json()
-	return res.json()
+def index_add(key,values):
+	return api_call(
+		"{}/index/add".format(HOST),
+		{
+			"key":key,
+			'value':values
+		}
+	)
+
+def index_get(key):
+	return api_call(
+		"{}/index/get".format(HOST),
+		{
+			"keyword":key
+		}
+	)
 if __name__ == '__main__':
-	fname=""
+	fname="/home/hadoop/a.txt"
+	doc_id="/temp_docs/d22a4652-6165-11e3-a6a4-001c23dababf"
+	doc_id2="/temp_docs/8a041ed8-616b-11e3-87af-001c23dababf"
 	# doc_id=hdfs_upload(fname)
-	doc_id="1234567"
-	request_get_tags(doc_id)
+	# print doc_id
+	# doc_id="1234567"
+	# request_get_tags([doc_id])
 	# import thread
 	# thread.sleep(1000)
-	get_tags([doc_id])
+	res=index_get(u"聚类")
+	for x in res['value']:
+		print x['url'].encode('gbk')

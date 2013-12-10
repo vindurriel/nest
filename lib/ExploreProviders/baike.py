@@ -10,8 +10,9 @@ class baike(explore_provider_base):
 		url_explore="http://baike.baidu.com/search/word"
 		if dic.get('is_subview',False):
 			url_explore="http://baike.baidu.com"+dic['url']
+		print "###key is:",key
 		res=r.get(url_explore,params={
-				'word':term.encode('gbk'),
+				'word':term,
 				'pic':1,
 		})
 		res.raise_for_status()
