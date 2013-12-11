@@ -42,13 +42,18 @@ class SearchResult(object):
 			res.append(unicode(x))
 		return u"\n".join(res)
 class LogLine(object):
-	def __init__(self,event,info):
+	def __init__(self,event,nodes,links):
 		import time
 		self.event=event
-		self.info=info
+		self.nodes=nodes
+		self.links=links
 		self.timestamp=time.time()
 	def __unicode__(self):
-		return sep_item.join([str(int(self.timestamp)),self.event,self.info])
+		return sep_item.join([
+			str(int(self.timestamp)),
+			self.event,
+			print_json(self.nodes),
+			print_json(self.links)])
 class LogStory:
 	def __init__(self):
 		self.lines=[]
@@ -101,7 +106,7 @@ max_total_node_num=30
 max_single_node_num=4
 max_depth=5
 from collections import OrderedDict,defaultdict
-h_nodes=OrderedDict()
+h_nodes={}
 explored=set()
 h_nodes[u"baike_"+seed]= Node({
 	"id":u"baike_"+seed,
@@ -120,7 +125,6 @@ def automate():
 		## select node to explore
 		node=None
 		for x in h_nodes:
-			print x.encode('gbk')
 			if x in explored: continue
 			node=h_nodes[x]
 			if node.type==u"referData":continue
@@ -131,27 +135,31 @@ def automate():
 			print "##no node to explore; terminated"
 			break
 		## explore this node
-		old_count=len(h_nodes)
+		node_index=node.index
 		res=explore(node)
 		items=res.items[:min(max_single_node_num,max_total_node_num-len(h_nodes))]
+		step={
+			"event":'explore'
+			"nodes":[],
+			"links":[],
+		}
 		for n in items:
 			if n.id not in h_nodes:
 				h_nodes[n.id]=n
 				n.distance_rank=node.distance_rank+1
-				source=h_nodes.values().index(node)
-				target=h_nodes.values().index(n)
-				if (source,target) not in links:
-					links.add((source,target))
-				n.index=target
+				n.index=len(h_nodes)-1
+				step['nodes'].append(n.dictify())
+				if (node_index,n.index) not in links:
+					links.add((node_index,n.index))
+					step['links'].append(Link(node_index,n.index).dictify())
 		explored.add(node.id)
-		res=print_json({
-			"nodes":map(lambda x:x.dictify(), h_nodes.values()),
-			"links":map(lambda x:Link(x[0],x[1]).dictify(), links)
-		})
-		new_count=len(h_nodes)
-		if old_count!=new_count:
-			logger.add(LogLine("explore",res))
-		print "##loop end with num",new_count
+		if len(step['nodes']):
+			logger.add(LogLine("explore",step['nodes'],step['links']))
+		print "##loop end with num",len(h_nodes)
+	res=print_json({
+		"nodes":map(lambda x:x.dictify(), h_nodes.values()),
+		"links":map(lambda x:Link(x[0],x[1]).dictify(), links)
+	})
 	file(r'..\..\static\files\auto1.json','w').write(res)
 	file(r'..\..\static\files\auto1.txt','w').write(logger.tell())
 def play():
