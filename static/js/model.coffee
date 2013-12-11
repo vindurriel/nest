@@ -107,12 +107,19 @@ $(document).ready ->
     $.get "/play/#{scr}", (d)->
       story= []
       for line in d.split(sep_line)
-        info= line.split(sep_item)[2]
-        story.splice 0,0, JSON.parse(info)
+        x= line.split(sep_item)
+        obj=
+          "event":x[1],
+          'nodes':JSON.parse(x[2])
+          'links':JSON.parse(x[3])
+        story.splice 0,0, obj
       play= ()->
         s= story.pop()
         if not s? then return
-        draw s
+        func= explore
+        if s.event=="draw"
+          func= draw
+        func s
         setTimeout(play, 1000)
       play()
 

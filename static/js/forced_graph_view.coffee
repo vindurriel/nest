@@ -266,6 +266,21 @@ click = (d) ->
 		if r.click_handler?
 			r.click_handler(d)
 	return
+explore = (data)->
+	for x in data.nodes
+		if not x.id?
+				x.id= x.name
+		if x.id.indexOf('_')<0
+			x.id= "#{x.type}_#{x.id}"
+		r.nodes.push x
+	for l in data.links
+		r.links.push l
+		source= r.nodes[l.source]
+		target= r.nodes[l.target]
+		target.x= source.x+Math.random()*100-50
+		target.y= source.y+Math.random()*100-50
+	update()
+	return
 expand = (data)->
 	for id of data
 		source=r.hNode[id]
@@ -273,8 +288,8 @@ expand = (data)->
 			continue
 		i=0
 		for x in data[id]
-			if not d.id?
-				d.id= x.name
+			if not x.id?
+				x.id= x.name
 			x.id= "#{x.type}_#{x.id}"
 			if r.blacklist.indexOf(x.id)>=0
 				continue

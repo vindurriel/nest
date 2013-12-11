@@ -1,4 +1,4 @@
-var cacheIt, click, color, dblclick, draw, expand, getLinkName, getR, highlight, r, redraw, save, tick, update,
+var cacheIt, click, color, dblclick, draw, expand, explore, getLinkName, getR, highlight, r, redraw, save, tick, update,
   __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
 cacheIt = function(e) {
@@ -284,6 +284,31 @@ click = function(d) {
   }
 };
 
+explore = function(data) {
+  var l, source, target, x, _i, _j, _len, _len1, _ref, _ref1;
+  _ref = data.nodes;
+  for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+    x = _ref[_i];
+    if (x.id == null) {
+      x.id = x.name;
+    }
+    if (x.id.indexOf('_') < 0) {
+      x.id = "" + x.type + "_" + x.id;
+    }
+    r.nodes.push(x);
+  }
+  _ref1 = data.links;
+  for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+    l = _ref1[_j];
+    r.links.push(l);
+    source = r.nodes[l.source];
+    target = r.nodes[l.target];
+    target.x = source.x + Math.random() * 100 - 50;
+    target.y = source.y + Math.random() * 100 - 50;
+  }
+  update();
+};
+
 expand = function(data) {
   var i, id, source, target, x, _i, _len, _ref;
   for (id in data) {
@@ -295,8 +320,8 @@ expand = function(data) {
     _ref = data[id];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       x = _ref[_i];
-      if (d.id == null) {
-        d.id = x.name;
+      if (x.id == null) {
+        x.id = x.name;
       }
       x.id = "" + x.type + "_" + x.id;
       if (r.blacklist.indexOf(x.id) >= 0) {

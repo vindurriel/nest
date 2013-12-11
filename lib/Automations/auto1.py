@@ -3,6 +3,10 @@ import os,sys,json,traceback,web
 host="http://localhost:8888"
 sep_line=u"\n##########\n"
 sep_item=u"\t"
+seed=u"机器学习"
+max_total_node_num=30
+max_single_node_num=5
+max_depth=5
 class Node(object):
 	"""docstring for Node"""
 	def __init__(self,dic):
@@ -18,6 +22,7 @@ class Node(object):
 			"id":self.id,
 			"name":self.name,
 			"type":self.type,
+			"index":self.index,
 			"distance_rank":self.distance_rank
 		}
 class Link(object):
@@ -101,21 +106,22 @@ def explore(node):
 	res=res[res.keys()[0]]
 	res= SearchResult(map(Node,res))
 	return res
-seed=u"机器学习"
-max_total_node_num=30
-max_single_node_num=4
-max_depth=5
+
 from collections import OrderedDict,defaultdict
 h_nodes={}
 explored=set()
-h_nodes[u"baike_"+seed]= Node({
+logger=LogStory()
+root=Node({
 	"id":u"baike_"+seed,
 	"name":seed,
 	"type":u"baike",
 	"index":0,
 })
+h_nodes[u"baike_"+seed]= root
+
+logger.add(LogLine("draw",[root.dictify()],[]))
+
 links=set()
-logger=LogStory()
 def automate():
 	while 1:
 		##stop condition
@@ -139,7 +145,7 @@ def automate():
 		res=explore(node)
 		items=res.items[:min(max_single_node_num,max_total_node_num-len(h_nodes))]
 		step={
-			"event":'explore'
+			"event":'explore',
 			"nodes":[],
 			"links":[],
 		}

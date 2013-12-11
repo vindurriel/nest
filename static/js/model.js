@@ -129,21 +129,30 @@ $(document).ready(function() {
     sep_item = "\t";
     scr = "auto1";
     return $.get("/play/" + scr, function(d) {
-      var info, line, play, story, _i, _len, _ref;
+      var line, obj, play, story, x, _i, _len, _ref;
       story = [];
       _ref = d.split(sep_line);
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         line = _ref[_i];
-        info = line.split(sep_item)[2];
-        story.splice(0, 0, JSON.parse(info));
+        x = line.split(sep_item);
+        obj = {
+          "event": x[1],
+          'nodes': JSON.parse(x[2]),
+          'links': JSON.parse(x[3])
+        };
+        story.splice(0, 0, obj);
       }
       play = function() {
-        var s;
+        var func, s;
         s = story.pop();
         if (s == null) {
           return;
         }
-        draw(s);
+        func = explore;
+        if (s.event === "draw") {
+          func = draw;
+        }
+        func(s);
         return setTimeout(play, 1000);
       };
       return play();
