@@ -2,65 +2,476 @@
   "name": "The Script", 
   "links": [
     {
-      "source": 0, 
-      "target": 1
+      "source": {
+        "index": 0, 
+        "name": "The Script", 
+        "weight": 5, 
+        "isHigh": true, 
+        "py": 154.17852379417542, 
+        "y": 154.17852379417542, 
+        "x": 133.71932874629516, 
+        "fixed": 1, 
+        "type": "artist", 
+        "id": "artist_48658", 
+        "px": 133.71932874629516
+      }, 
+      "target": {
+        "index": 1, 
+        "name": "The Fray", 
+        "weight": 1, 
+        "px": 80.89206672794674, 
+        "py": 135.5620355847898, 
+        "y": 135.66110287744795, 
+        "x": 80.23042520551722, 
+        "type": "artist", 
+        "id": "artist_26094", 
+        "isHigh": false
+      }
     }, 
     {
-      "source": 0, 
-      "target": 2
+      "source": {
+        "index": 0, 
+        "name": "The Script", 
+        "weight": 5, 
+        "isHigh": true, 
+        "py": 154.17852379417542, 
+        "y": 154.17852379417542, 
+        "x": 133.71932874629516, 
+        "fixed": 1, 
+        "type": "artist", 
+        "id": "artist_48658", 
+        "px": 133.71932874629516
+      }, 
+      "target": {
+        "index": 2, 
+        "name": "Keane", 
+        "weight": 2, 
+        "px": 119.57739735859849, 
+        "py": 78.18270941449137, 
+        "y": 78.18270941449137, 
+        "x": 119.57739735859849, 
+        "fixed": 1, 
+        "type": "artist", 
+        "id": "artist_23283", 
+        "isHigh": false
+      }
     }, 
     {
-      "source": 0, 
-      "target": 3
+      "source": {
+        "index": 0, 
+        "name": "The Script", 
+        "weight": 5, 
+        "isHigh": true, 
+        "py": 154.17852379417542, 
+        "y": 154.17852379417542, 
+        "x": 133.71932874629516, 
+        "fixed": 1, 
+        "type": "artist", 
+        "id": "artist_48658", 
+        "px": 133.71932874629516
+      }, 
+      "target": {
+        "index": 3, 
+        "name": "Stereophonics", 
+        "weight": 10, 
+        "isSearching": false, 
+        "px": 201.63894604718246, 
+        "py": 109.12687671333343, 
+        "y": 109.12687671333343, 
+        "x": 201.63894604718246, 
+        "fixed": 1, 
+        "type": "artist", 
+        "id": "artist_13879", 
+        "isHigh": true
+      }
     }, 
     {
-      "source": 0, 
-      "target": 4
+      "source": {
+        "index": 0, 
+        "name": "The Script", 
+        "weight": 5, 
+        "isHigh": true, 
+        "py": 154.17852379417542, 
+        "y": 154.17852379417542, 
+        "x": 133.71932874629516, 
+        "fixed": 1, 
+        "type": "artist", 
+        "id": "artist_48658", 
+        "px": 133.71932874629516
+      }, 
+      "target": {
+        "index": 4, 
+        "name": "The Wanted", 
+        "weight": 1, 
+        "px": 139.80102182835384, 
+        "py": 211.62727297858356, 
+        "y": 212.26091093309395, 
+        "x": 139.52068634867103, 
+        "type": "artist", 
+        "id": "artist_77535", 
+        "isHigh": false
+      }
     }, 
     {
-      "source": 0, 
-      "target": 5
+      "source": {
+        "index": 0, 
+        "name": "The Script", 
+        "weight": 5, 
+        "isHigh": true, 
+        "py": 154.17852379417542, 
+        "y": 154.17852379417542, 
+        "x": 133.71932874629516, 
+        "fixed": 1, 
+        "type": "artist", 
+        "id": "artist_48658", 
+        "px": 133.71932874629516
+      }, 
+      "target": {
+        "index": 5, 
+        "name": "Travis", 
+        "weight": 2, 
+        "px": 181.91745738979657, 
+        "py": 155.82910941183738, 
+        "y": 156.1946564834277, 
+        "x": 181.87562058811164, 
+        "type": "artist", 
+        "id": "artist_13246", 
+        "isHigh": false
+      }
+    }, 
+    {
+      "source": {
+        "index": 3, 
+        "name": "Stereophonics", 
+        "weight": 10, 
+        "isSearching": false, 
+        "px": 201.63894604718246, 
+        "py": 109.12687671333343, 
+        "y": 109.12687671333343, 
+        "x": 201.63894604718246, 
+        "fixed": 1, 
+        "type": "artist", 
+        "id": "artist_13879", 
+        "isHigh": true
+      }, 
+      "target": {
+        "index": 6, 
+        "name": "Artist's best songs", 
+        "weight": 1, 
+        "isHigh": true, 
+        "py": 91.47137044190804, 
+        "y": 91.40514455249271, 
+        "x": 292.6630941465619, 
+        "px": 291.96379892578966, 
+        "type": "relationship", 
+        "id": "hitsongs_of_artist_13879"
+      }
+    }, 
+    {
+      "source": {
+        "index": 3, 
+        "name": "Stereophonics", 
+        "weight": 10, 
+        "isSearching": false, 
+        "px": 201.63894604718246, 
+        "py": 109.12687671333343, 
+        "y": 109.12687671333343, 
+        "x": 201.63894604718246, 
+        "fixed": 1, 
+        "type": "artist", 
+        "id": "artist_13879", 
+        "isHigh": true
+      }, 
+      "target": {
+        "index": 7, 
+        "name": "Artist's album(s)", 
+        "weight": 1, 
+        "isHigh": true, 
+        "py": 28.497292886782887, 
+        "y": 27.93805480508506, 
+        "x": 257.29724194951325, 
+        "px": 256.83663119857425, 
+        "type": "relationship", 
+        "id": "albums_of_artist_13879"
+      }
+    }, 
+    {
+      "source": {
+        "index": 3, 
+        "name": "Stereophonics", 
+        "weight": 10, 
+        "isSearching": false, 
+        "px": 201.63894604718246, 
+        "py": 109.12687671333343, 
+        "y": 109.12687671333343, 
+        "x": 201.63894604718246, 
+        "fixed": 1, 
+        "type": "artist", 
+        "id": "artist_13879", 
+        "isHigh": true
+      }, 
+      "target": {
+        "index": 8, 
+        "name": "Snow Patrol", 
+        "weight": 1, 
+        "px": 235.83684834039445, 
+        "py": 181.26151179567952, 
+        "y": 181.83167833117824, 
+        "x": 236.0822993134267, 
+        "type": "artist", 
+        "id": "artist_25481"
+      }
+    }, 
+    {
+      "source": {
+        "index": 3, 
+        "name": "Stereophonics", 
+        "weight": 10, 
+        "isSearching": false, 
+        "px": 201.63894604718246, 
+        "py": 109.12687671333343, 
+        "y": 109.12687671333343, 
+        "x": 201.63894604718246, 
+        "fixed": 1, 
+        "type": "artist", 
+        "id": "artist_13879", 
+        "isHigh": true
+      }, 
+      "target": {
+        "index": 5, 
+        "name": "Travis", 
+        "weight": 2, 
+        "px": 181.91745738979657, 
+        "py": 155.82910941183738, 
+        "y": 156.1946564834277, 
+        "x": 181.87562058811164, 
+        "type": "artist", 
+        "id": "artist_13246", 
+        "isHigh": false
+      }
+    }, 
+    {
+      "source": {
+        "index": 3, 
+        "name": "Stereophonics", 
+        "weight": 10, 
+        "isSearching": false, 
+        "px": 201.63894604718246, 
+        "py": 109.12687671333343, 
+        "y": 109.12687671333343, 
+        "x": 201.63894604718246, 
+        "fixed": 1, 
+        "type": "artist", 
+        "id": "artist_13879", 
+        "isHigh": true
+      }, 
+      "target": {
+        "index": 9, 
+        "name": "Franz Ferdinand", 
+        "weight": 1, 
+        "px": 200.93371022451961, 
+        "py": 22.26433965447362, 
+        "y": 21.61905741559845, 
+        "x": 200.95304907302295, 
+        "type": "artist", 
+        "id": "artist_14447"
+      }
+    }, 
+    {
+      "source": {
+        "index": 3, 
+        "name": "Stereophonics", 
+        "weight": 10, 
+        "isSearching": false, 
+        "px": 201.63894604718246, 
+        "py": 109.12687671333343, 
+        "y": 109.12687671333343, 
+        "x": 201.63894604718246, 
+        "fixed": 1, 
+        "type": "artist", 
+        "id": "artist_13879", 
+        "isHigh": true
+      }, 
+      "target": {
+        "index": 10, 
+        "name": "Manic Street Preachers", 
+        "weight": 1, 
+        "px": 156.012103738972, 
+        "py": 38.29310508495682, 
+        "y": 37.79570656858964, 
+        "x": 155.68846191071975, 
+        "type": "artist", 
+        "id": "artist_10334"
+      }
+    }, 
+    {
+      "source": {
+        "index": 3, 
+        "name": "Stereophonics", 
+        "weight": 10, 
+        "isSearching": false, 
+        "px": 201.63894604718246, 
+        "py": 109.12687671333343, 
+        "y": 109.12687671333343, 
+        "x": 201.63894604718246, 
+        "fixed": 1, 
+        "type": "artist", 
+        "id": "artist_13879", 
+        "isHigh": true
+      }, 
+      "target": {
+        "index": 11, 
+        "name": "The Killers", 
+        "weight": 1, 
+        "px": 273.9606787434641, 
+        "py": 144.7137235978763, 
+        "y": 145.04440957067544, 
+        "x": 274.50567894144416, 
+        "type": "artist", 
+        "id": "artist_14454"
+      }
+    }, 
+    {
+      "source": {
+        "index": 3, 
+        "name": "Stereophonics", 
+        "weight": 10, 
+        "isSearching": false, 
+        "px": 201.63894604718246, 
+        "py": 109.12687671333343, 
+        "y": 109.12687671333343, 
+        "x": 201.63894604718246, 
+        "fixed": 1, 
+        "type": "artist", 
+        "id": "artist_13879", 
+        "isHigh": true
+      }, 
+      "target": {
+        "index": 2, 
+        "name": "Keane", 
+        "weight": 2, 
+        "px": 119.57739735859849, 
+        "py": 78.18270941449137, 
+        "y": 78.18270941449137, 
+        "x": 119.57739735859849, 
+        "fixed": 1, 
+        "type": "artist", 
+        "id": "artist_23283", 
+        "isHigh": false
+      }
+    }, 
+    {
+      "source": {
+        "index": 3, 
+        "name": "Stereophonics", 
+        "weight": 10, 
+        "isSearching": false, 
+        "px": 201.63894604718246, 
+        "py": 109.12687671333343, 
+        "y": 109.12687671333343, 
+        "x": 201.63894604718246, 
+        "fixed": 1, 
+        "type": "artist", 
+        "id": "artist_13879", 
+        "isHigh": true
+      }, 
+      "target": {
+        "index": 12, 
+        "name": "Pulp", 
+        "weight": 1, 
+        "px": 241.23278099532905, 
+        "py": 77.15257065011738, 
+        "y": 76.97448725653528, 
+        "x": 241.5157042407326, 
+        "type": "artist", 
+        "id": "artist_10446"
+      }
     }
   ], 
   "blacklist": [], 
   "nodes": [
     {
       "index": 0, 
+      "fixed": 1, 
       "type": "artist", 
-      "id": "48658", 
+      "id": "artist_48658", 
       "name": "The Script"
     }, 
     {
       "index": 1, 
       "type": "artist", 
-      "id": "26094", 
+      "id": "artist_26094", 
       "name": "The Fray"
     }, 
     {
       "index": 2, 
+      "fixed": 1, 
       "type": "artist", 
-      "id": "23283", 
+      "id": "artist_23283", 
       "name": "Keane"
     }, 
     {
       "index": 3, 
+      "fixed": 1, 
       "type": "artist", 
-      "id": "13879", 
+      "id": "artist_13879", 
       "name": "Stereophonics"
     }, 
     {
       "index": 4, 
       "type": "artist", 
-      "id": "77535", 
+      "id": "artist_77535", 
       "name": "The Wanted"
     }, 
     {
       "index": 5, 
       "type": "artist", 
-      "id": "13246", 
+      "id": "artist_13246", 
       "name": "Travis"
+    }, 
+    {
+      "index": 6, 
+      "type": "relationship", 
+      "id": "hitsongs_of_artist_13879", 
+      "name": "Artist's best songs"
+    }, 
+    {
+      "index": 7, 
+      "type": "relationship", 
+      "id": "albums_of_artist_13879", 
+      "name": "Artist's album(s)"
+    }, 
+    {
+      "index": 8, 
+      "type": "artist", 
+      "id": "artist_25481", 
+      "name": "Snow Patrol"
+    }, 
+    {
+      "index": 9, 
+      "type": "artist", 
+      "id": "artist_14447", 
+      "name": "Franz Ferdinand"
+    }, 
+    {
+      "index": 10, 
+      "type": "artist", 
+      "id": "artist_10334", 
+      "name": "Manic Street Preachers"
+    }, 
+    {
+      "index": 11, 
+      "type": "artist", 
+      "id": "artist_14454", 
+      "name": "The Killers"
+    }, 
+    {
+      "index": 12, 
+      "type": "artist", 
+      "id": "artist_10446", 
+      "name": "Pulp"
     }
   ], 
   "type": "artist", 
-  "id": "48658"
+  "id": "artist_48658"
 }

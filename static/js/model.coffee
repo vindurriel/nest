@@ -100,7 +100,22 @@ $(document).ready ->
       ui.removeClass('fullscreen').addClass('list-item')
     $(this).val(if toggle then "收起" else "展开")
   $("#btn_tip").click ->
-    $("#tip").slideToggle 200
+    #$("#tip").slideToggle 200
+    sep_line = "\n##########\n"
+    sep_item = "\t"
+    scr= "auto1"
+    $.get "/play/#{scr}", (d)->
+      story= []
+      for line in d.split(sep_line)
+        info= line.split(sep_item)[2]
+        story.splice 0,0, JSON.parse(info)
+      play= ()->
+        s= story.pop()
+        if not s? then return
+        draw s
+        setTimeout(play, 1000)
+      play()
+
   $("#btn_search").click ->
     key=$('#q').val()
     data= {

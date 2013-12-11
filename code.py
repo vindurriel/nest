@@ -7,15 +7,15 @@ web.template.Template.globals['config']=config
 ### router
 router="""
 / model.list
-/model/  model.list
 /model/load/(.+) model.load
 /model/(.+)  model
-/explore/ explore
-/search/ model.search
+/explore(?:/)?  explore
+/search(?:/)?  search.search
 /favicon.ico favicon
 /(js|css|files|images)/(.+) static
-/services/ model.service
+/services(?:/)?  model.service
 /keyword/(.+) model.keyword
+/play/(.+) model.play
 """
 ###router
 urls=[]

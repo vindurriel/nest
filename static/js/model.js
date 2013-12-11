@@ -124,7 +124,30 @@ $(document).ready(function() {
     return $(this).val(toggle ? "收起" : "展开");
   });
   $("#btn_tip").click(function() {
-    return $("#tip").slideToggle(200);
+    var scr, sep_item, sep_line;
+    sep_line = "\n##########\n";
+    sep_item = "\t";
+    scr = "auto1";
+    return $.get("/play/" + scr, function(d) {
+      var info, line, play, story, _i, _len, _ref;
+      story = [];
+      _ref = d.split(sep_line);
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        line = _ref[_i];
+        info = line.split(sep_item)[2];
+        story.splice(0, 0, JSON.parse(info));
+      }
+      play = function() {
+        var s;
+        s = story.pop();
+        if (s == null) {
+          return;
+        }
+        draw(s);
+        return setTimeout(play, 1000);
+      };
+      return play();
+    });
   });
   $("#btn_search").click(function() {
     var data, key, keynode;

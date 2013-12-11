@@ -11,12 +11,15 @@ def hdfs_upload(fname):
 	upload file to hdfs using pydoop,
 	used only on server which has hadoop environment.
 	"""
+	ext=""
+	if '.' in fname:
+		ext=fname[fname.rindex('.'):]
 	import pydoop.hdfs as hdfs
 	import uuid
 	rootdir="/temp_docs"
 	if not hdfs.path.isdir(rootdir):
 		hdfs.mkdir(rootdir)
-	url=rootdir+"/"+str(uuid.uuid1())
+	url="{}/{}{}".format(rootdir,str(uuid.uuid1(),ext)
 	hdfs.put(fname,url)
 	return url
 def post(url,data):

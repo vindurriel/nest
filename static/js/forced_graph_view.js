@@ -43,10 +43,13 @@ draw = function(json) {
   r.links = json.links;
   r.root = json.nodes[0];
   r.theFocus = r.root;
-  r.root.fixed = false;
   r.root.isHigh = true;
   r.force = d3.layout.force().on("end", function(d) {
-    return r.root.fixed = true;
+    r.nodes.forEach(function(n) {
+      if (n._fixed != null) {
+        n.fixed = true;
+      }
+    });
   }).on("tick", tick).charge(function(d) {
     if (d.type === "referData") {
       return -20;
@@ -61,16 +64,32 @@ draw = function(json) {
     }
   }).size([r.w, r.h]).nodes(r.nodes).links(r.links);
   n = r.nodes.length;
-  r.nodes.forEach(function(d, i) {
-    if (d.id == null) {
-      d.id = d.name;
-    }
-    if (__indexOf.call(d.id, '_') < 0) {
-      d.id = "" + d.type + "_" + d.id;
-    }
-    d.x = r.w * (i % 10) / 10;
-    return d.y = i * r.h / n;
-  });
+  if (json.no_position_init == null) {
+    r.nodes.forEach(function(d, i) {
+      var pos;
+      if (d.id == null) {
+        d.id = d.name;
+      }
+      if (__indexOf.call(d.id, '_') < 0) {
+        d.id = "" + d.type + "_" + d.id;
+      }
+      if (d.fixed != null) {
+        d.fixed = void 0;
+        d._fixed = true;
+      }
+      if (position_cache[d.id] != null) {
+        pos = position_cache[d.id];
+        d.x = pos.x;
+        d.y = pos.y;
+      } else {
+        d.x = r.w * (i % 10) / 10;
+        d.y = i * r.h / n;
+      }
+    });
+    r.root.x = r.w / 2;
+    r.root.y = r.h / 2;
+    r.root.fixed = true;
+  }
   update();
 };
 
@@ -79,14 +98,14 @@ getLinkName = function(source, target) {
 };
 
 update = function() {
-  var drag, i, j, n, nodeEnter, x, _i, _j, _k, _len, _ref, _ref1, _ref2;
+  var drag, i, j, n, nod, nodeEnter, x, _i, _j, _k, _len, _ref, _ref1, _ref2;
   r.link = r.link.data(r.links);
   r.link.enter().insert("line", ".node").classed("link", true);
   r.link.exit().remove();
   r.node = r.vis.selectAll(".node").data(r.nodes, function(d) {
     return d.id;
   });
-  drag = r.force.drag().on('dragstart', function(d) {
+  drag = r.force.drag().on('dragend', function(d) {
     d.fixed = true;
   });
   nodeEnter = r.node.enter().append("g").attr("class", "node").on("click", click).on('mouseover', function(d) {
@@ -148,6 +167,12 @@ update = function() {
   r.link.classed('hidden', function(d) {
     return d.target.type === "referData";
   });
+  for (nod in r.hNode) {
+    position_cache[nod] = {
+      'x': r.hNode[nod].x,
+      'y': r.hNode[nod].y
+    };
+  }
 };
 
 getR = function(d) {
@@ -270,10 +295,10 @@ expand = function(data) {
     _ref = data[id];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       x = _ref[_i];
-      x.id = "" + x.type + "_" + x.id;
-      if (x.id == null) {
-        x.id = x.name;
+      if (d.id == null) {
+        d.id = x.name;
       }
+      x.id = "" + x.type + "_" + x.id;
       if (r.blacklist.indexOf(x.id) >= 0) {
         continue;
       }
@@ -365,7 +390,7 @@ highlight = function(d) {
 };
 
 save = function() {
-  var res, x, _i, _j, _len, _len1, _ref, _ref1;
+  var l, n, p, prop_node, res, x, _i, _j, _k, _len, _len1, _len2, _ref, _ref1;
   res = {
     "id": r.root.id,
     "name": r.root.name,
@@ -374,26 +399,25 @@ save = function() {
     "links": [],
     "blacklist": r.blacklist
   };
+  prop_node = "id name value index type url fixed".split(" ");
   _ref = r.nodes;
   for (_i = 0, _len = _ref.length; _i < _len; _i++) {
     x = _ref[_i];
-    res.nodes.push({
-      "id": x.id,
-      "name": x.name,
-      "value": x.value,
-      "index": x.index,
-      "type": x.type,
-      "url": x.url
-    });
+    n = {};
+    for (_j = 0, _len1 = prop_node.length; _j < _len1; _j++) {
+      p = prop_node[_j];
+      n[p] = x[p];
+    }
+    res.nodes.push(n);
   }
   _ref1 = r.links;
-  for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-    x = _ref1[_j];
-    res.links.push({
-      "name": x.name,
+  for (_k = 0, _len2 = _ref1.length; _k < _len2; _k++) {
+    x = _ref1[_k];
+    l = {
       "source": x.source.index,
       "target": x.target.index
-    });
+    };
+    res.links.push(l);
   }
   res = JSON.stringify(res);
   return $.ajax({
@@ -431,6 +455,7 @@ r.nest = function(options) {
   r.node = r.vis.selectAll(".node");
   r.palette = d3.scale.category10();
   r.colors = ["song", "artist", "user", "album", 'relationship', "baiduBaikeCrawler", "hudongBaikeCrawler", "referData"];
+  r.position_cache = {};
   r.highlighted = function() {
     return r.node.filter(function(d) {
       return d.isHigh;
