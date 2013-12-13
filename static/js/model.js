@@ -136,7 +136,7 @@ $(document).ready(function() {
     }
     info = r.story[r.current_step];
     $("#story-indicator,.btn-next,.btn-prev,.btn-automate").show();
-    $("#story-indicator").text("第" + (r.current_step + 1) + "步，共" + r.story.length + "步，节点数：" + info.nodes.length);
+    $("#story-indicator").text("第" + (r.current_step + 1) + "步，共" + r.story.length + "步， 节点数：" + info.nodes.length);
     draw(s);
   };
   $("#btn_tip").click(function() {
