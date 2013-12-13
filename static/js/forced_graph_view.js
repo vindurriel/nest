@@ -482,9 +482,12 @@ r.nest = function(options) {
   r.colors = ["song", "artist", "user", "album", 'relationship', "baiduBaikeCrawler", "hudongBaikeCrawler", "referData"];
   r.position_cache = {};
   r.highlighted = function() {
-    return r.node.filter(function(d) {
+    console.log(r.node.filter(function(d) {
       return d.isHigh;
-    });
+    }));
+    console.log(r.link.filter(function(d) {
+      return d.isHigh;
+    }));
   };
   return r.relationships = {
     'artist': [

@@ -88,6 +88,7 @@ $(document).ready ->
   options=
     "container":"#nest-container",
   window.nest(options)
+
   $(document).keydown cacheIt
   $(document).keyup cacheIt
   $(".btn-toggle-nest").click ->
@@ -98,30 +99,67 @@ $(document).ready ->
       ui.removeClass('list-item').addClass('fullscreen')
     else
       ui.removeClass('fullscreen').addClass('list-item')
+      $("#list-container").masonry()
     $(this).val(if toggle then "收起" else "展开")
+  play_step= ->
+    if r.current_step>=r.story.length or r.current_step<0 then return
+    s= r.story[current_step]
+    func= explore
+    if s.event=="draw"
+          func= draw
+    info= r.story[r.current_step]
+    $("#story-indicator,.btn-next,.btn-prev,.btn-automate").show()
+    $("#story-indicator").text("第#{r.current_step+1}步，共#{r.story.length}步，节点数：#{info.nodes.length}")
+    draw s
+    return
   $("#btn_tip").click ->
     #$("#tip").slideToggle 200
-    sep_line = "\n##########\n"
-    sep_item = "\t"
-    scr= "auto1"
-    $.get "/play/#{scr}", (d)->
-      story= []
-      for line in d.split(sep_line)
-        x= line.split(sep_item)
-        obj=
-          "event":x[1],
-          'nodes':JSON.parse(x[2])
-          'links':JSON.parse(x[3])
-        story.splice 0,0, obj
-      play= ()->
-        s= story.pop()
-        if not s? then return
-        func= explore
+    scr= prompt "要打开的文件名","default"
+    $.getJSON "/play/#{scr}", (d)->
+      r.story= []
+      r.current_step=0
+      graph=
+        nodes:[],
+        links:[]
+      for s in d
         if s.event=="draw"
-          func= draw
-        func s
-        setTimeout(play, 1000)
-      play()
+          graph.nodes= s.nodes
+          graph.links= s.links
+        else
+          graph.nodes= graph.nodes.concat(s.nodes)
+          graph.links= graph.links.concat(s.links)
+        cur= {}
+        $.extend(cur,graph)
+        r.story.push cur
+      play_step()
+  $(".btn-next").click ->
+    if r.current_step==r.story.length-1 then return
+    r.current_step+=1
+    play_step()
+    return
+  $(".btn-prev").click ->
+    if r.current_step==0 then return
+    r.current_step-=1
+    play_step()
+    return
+  $(".btn-automate-yes").click ->
+    dic=
+      "nodes":r.nodes
+      "links":r.links.map (d)->{"source":d.source.index,"target":d.target.index}
+    console.log dic
+    for p in "max_total_node_num max_single_node_num timeout_seconds max_depth".split(" ")
+      dic[p]=$("#"+p).val()
+    $.post "/automate",  JSON.stringify(dic), (d)->
+        if d.error?
+          console.log d.error
+        $("#automate-form").slideToggle()
+    return
+  $(".btn-automate-no").click ->
+    $("#automate-form").slideToggle()
+    return
+  $(".btn-automate").click ->
+    $("#automate-form").slideToggle()
+    return
 
   $("#btn_search").click ->
     key=$('#q').val()
@@ -133,7 +171,7 @@ $(document).ready ->
       'type':"baike",
       'name':key,
     }
-    $.post "/search/", JSON.stringify(data), (d)->
+    $.post "/search", JSON.stringify(data), (d)->
         if not d or d.error?
           return
         d.nodes.splice 0,0,keynode

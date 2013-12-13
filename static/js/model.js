@@ -104,7 +104,7 @@ get_selected_services = function() {
 };
 
 $(document).ready(function() {
-  var id, options, query, type;
+  var id, options, play_step, query, type;
   options = {
     "container": "#nest-container"
   };
@@ -120,43 +120,95 @@ $(document).ready(function() {
       ui.removeClass('list-item').addClass('fullscreen');
     } else {
       ui.removeClass('fullscreen').addClass('list-item');
+      $("#list-container").masonry();
     }
     return $(this).val(toggle ? "收起" : "展开");
   });
+  play_step = function() {
+    var func, info, s;
+    if (r.current_step >= r.story.length || r.current_step < 0) {
+      return;
+    }
+    s = r.story[current_step];
+    func = explore;
+    if (s.event === "draw") {
+      func = draw;
+    }
+    info = r.story[r.current_step];
+    $("#story-indicator,.btn-next,.btn-prev,.btn-automate").show();
+    $("#story-indicator").text("第" + (r.current_step + 1) + "步，共" + r.story.length + "步，节点数：" + info.nodes.length);
+    draw(s);
+  };
   $("#btn_tip").click(function() {
-    var scr, sep_item, sep_line;
-    sep_line = "\n##########\n";
-    sep_item = "\t";
-    scr = "auto1";
-    return $.get("/play/" + scr, function(d) {
-      var line, obj, play, story, x, _i, _len, _ref;
-      story = [];
-      _ref = d.split(sep_line);
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        line = _ref[_i];
-        x = line.split(sep_item);
-        obj = {
-          "event": x[1],
-          'nodes': JSON.parse(x[2]),
-          'links': JSON.parse(x[3])
-        };
-        story.splice(0, 0, obj);
-      }
-      play = function() {
-        var func, s;
-        s = story.pop();
-        if (s == null) {
-          return;
-        }
-        func = explore;
-        if (s.event === "draw") {
-          func = draw;
-        }
-        func(s);
-        return setTimeout(play, 1000);
+    var scr;
+    scr = prompt("要打开的文件名", "default");
+    return $.getJSON("/play/" + scr, function(d) {
+      var cur, graph, s, _i, _len;
+      r.story = [];
+      r.current_step = 0;
+      graph = {
+        nodes: [],
+        links: []
       };
-      return play();
+      for (_i = 0, _len = d.length; _i < _len; _i++) {
+        s = d[_i];
+        if (s.event === "draw") {
+          graph.nodes = s.nodes;
+          graph.links = s.links;
+        } else {
+          graph.nodes = graph.nodes.concat(s.nodes);
+          graph.links = graph.links.concat(s.links);
+        }
+        cur = {};
+        $.extend(cur, graph);
+        r.story.push(cur);
+      }
+      return play_step();
     });
+  });
+  $(".btn-next").click(function() {
+    if (r.current_step === r.story.length - 1) {
+      return;
+    }
+    r.current_step += 1;
+    play_step();
+  });
+  $(".btn-prev").click(function() {
+    if (r.current_step === 0) {
+      return;
+    }
+    r.current_step -= 1;
+    play_step();
+  });
+  $(".btn-automate-yes").click(function() {
+    var dic, p, _i, _len, _ref;
+    dic = {
+      "nodes": r.nodes,
+      "links": r.links.map(function(d) {
+        return {
+          "source": d.source.index,
+          "target": d.target.index
+        };
+      })
+    };
+    console.log(dic);
+    _ref = "max_total_node_num max_single_node_num timeout_seconds max_depth".split(" ");
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      p = _ref[_i];
+      dic[p] = $("#" + p).val();
+    }
+    $.post("/automate", JSON.stringify(dic), function(d) {
+      if (d.error != null) {
+        console.log(d.error);
+      }
+      return $("#automate-form").slideToggle();
+    });
+  });
+  $(".btn-automate-no").click(function() {
+    $("#automate-form").slideToggle();
+  });
+  $(".btn-automate").click(function() {
+    $("#automate-form").slideToggle();
   });
   $("#btn_search").click(function() {
     var data, key, keynode;
@@ -169,7 +221,7 @@ $(document).ready(function() {
       'type': "baike",
       'name': key
     };
-    $.post("/search/", JSON.stringify(data), function(d) {
+    $.post("/search", JSON.stringify(data), function(d) {
       var i, x, _i, _len, _ref;
       if (!d || (d.error != null)) {
         return;

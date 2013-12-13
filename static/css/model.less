@@ -10,17 +10,66 @@
   height: 200px;
   padding: 0 2em 0 0;
   overflow: hidden;
+  position: absolute;
   z-index: 1;
 }
+
 .btn-toggle-nest{
     position: absolute;
+    z-index: 12;
     background: #0088ee;
     color: white;
     width: 50;
     height: 50;
+    outline: none;
     border: none;
+}
+.btn-automate{
+    position: absolute;
+    right:0;
+    z-index: 12;
+    background: #0088ee;
+    color: white;
+    width: 50;
+    height: 50;
+    outline: none;
+    border: none;
+}
+#story-indicator{
+  display: none;
+  position: absolute;
+  bottom: 0;
+  height: 1.5em;
+  width: 100%;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 10;
+  color: white;
+}
+.btn-play-control () {
+  position: absolute;
+  display: none;
+  z-index: 11;
+  height: 100%;
+  opacity: .3;
+  color: #0088ee;
+  background: none;
+  width: 20;
+  border: none;
+  font-size: 2em;
+  outline: none;
+  &:hover{
+    opacity: 1;
   }
-
+}
+.btn-next {
+  .btn-play-control;
+  right:0;
+}
+.btn-prev {
+  .btn-play-control;
+  left:0;
+}
 #list-container{
   position: relative;
   width: 100%;
@@ -207,4 +256,21 @@ body.dark {
   left: 0;right: 0;top: 0;bottom: 0;margin: 0;padding: 0;
   background: white;
   height: auto;
+}
+body.dark #nest-container.fullscreen{
+    background: #222;
+}
+#simplemodal-overlay {background-color:#000;}
+body *{
+    outline: none;
+}
+#automate-form {
+  background: rgba(255, 255, 255, 0.8);
+  padding: 1em;
+  position: absolute;
+  z-index: 13;
+  width: 100%;
+  height: 100%;
+  display: none;
+  outline: none;
 }

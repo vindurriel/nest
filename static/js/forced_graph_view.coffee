@@ -413,7 +413,9 @@ r.nest= (options)->
 	]
 	r.position_cache= {}
 	r.highlighted= -> 
-		r.node.filter((d)->d.isHigh)
+		console.log r.node.filter((d)->d.isHigh)
+		console.log r.link.filter((d)->d.isHigh)
+		return
 	r.relationships={
 		'artist':[{
 				"id": (d)-> "hitsongs_of_#{d.id}",

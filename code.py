@@ -10,12 +10,13 @@ router="""
 /model/load/(.+) model.load
 /model/(.+)  model
 /explore(?:/)?  explore
-/search(?:/)?  search.search
+/search(?:/)?  search
 /favicon.ico favicon
 /(js|css|files|images)/(.+) static
 /services(?:/)?  model.service
 /keyword/(.+) model.keyword
 /play/(.+) model.play
+/automate(?:/)? automate
 """
 ###router
 urls=[]

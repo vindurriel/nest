@@ -1,23 +1,27 @@
 #encoding=utf-8
+__all__=['do_automate','Node']
 import os,sys,json,traceback,web
 host="http://localhost:8888"
 sep_line=u"\n##########\n"
 sep_item=u"\t"
-seed=u"机器学习"
-max_total_node_num=30
-max_single_node_num=5
-max_depth=5
+seed=u"中国"
+def cwd(*args):
+    import sys,os
+    res=os.path.realpath(os.path.dirname(__file__))
+    for x in args:
+        res=os.path.join(res,x)
+    return res
 class Node(object):
 	"""docstring for Node"""
 	def __init__(self,dic):
-		self.id=dic.get('id',u"")
-		self.name=dic.get('name',u"")
-		self.type=dic.get('type',u"")
-		self.index=dic.get('index',-1)
-		self.distance_rank=dic.get('distance_rank',0)
+		self.id=unicode(dic.get('id',""))
+		self.name=unicode(dic.get('name',""))
+		self.type=unicode(dic.get('type',""))
+		self.index=int(dic.get('index',-1))
+		self.distance_rank=int(dic.get('distance_rank',0))
 	def __str__(self):
 		return self.name
-	def dictify(self):
+	def __dictify__(self):
 		return {
 			"id":self.id,
 			"name":self.name,
@@ -27,12 +31,12 @@ class Node(object):
 		}
 class Link(object):
 	"""docstring for Link"""
-	def __init__(self, source,target):
-		assert isinstance(source,int)
-		assert isinstance(target,int)
-		self.source=source
-		self.target=target
-	def dictify(self):
+	def __init__(self, dic):
+		self.source=dic['source']
+		self.target=dic['target']
+		assert isinstance(self.source,int)
+		assert isinstance(self.target,int)
+	def __dictify__(self):
 		return {
 			"source":self.source,
 			"target":self.target,
@@ -59,6 +63,13 @@ class LogLine(object):
 			self.event,
 			print_json(self.nodes),
 			print_json(self.links)])
+	def __dictify__(self):
+		return {
+			"event":self.event,
+			"nodes": self.nodes,
+			"links": self.links,
+			"timestamp":str(int(self.timestamp)),
+		}
 class LogStory:
 	def __init__(self):
 		self.lines=[]
@@ -69,11 +80,7 @@ class LogStory:
 		line.timestamp-=self.start_time
 		self.lines.append(line)
 	def tell(self):
-		res=[]
-		for x in self.lines:
-			res.append(unicode(x))
-		return sep_line.join(res)
-
+		return print_json(map(dictify, self.lines))
 def print_json(d):
 	import json
 	res=json.dumps(d,indent=2)
@@ -108,25 +115,31 @@ def explore(node):
 	return res
 
 from collections import OrderedDict,defaultdict
-h_nodes={}
-explored=set()
-logger=LogStory()
-root=Node({
-	"id":u"baike_"+seed,
-	"name":seed,
-	"type":u"baike",
-	"index":0,
-})
-h_nodes[u"baike_"+seed]= root
-
-logger.add(LogLine("draw",[root.dictify()],[]))
-
-links=set()
-def automate():
+def dictify(o):
+	return o.__dictify__()
+def do_automate(nodes,links,dic):
+	out_fname=dic.get('out_fname',"default")
+	max_total_node_num=int(dic.get('max_total_node_num',20))
+	max_single_node_num=int(dic.get('max_single_node_num',10))
+	timeout_seconds=int(dic.get('timeout_seconds',60))
+	max_depth=int(dic.get('max_depth',6))
+	assert hasattr(nodes,"__iter__")
+	assert hasattr(links,"__iter__")
+	nodes=map(Node,nodes)
+	links=map(Link,links)
+	logger=LogStory()
+	logger.add(LogLine("draw",map(dictify,nodes),map(dictify,links)))
+	h_nodes=dict(map(lambda x:(x.id,x), nodes))
+	links=set(map(lambda x:(x.source,x.target),links))
+	explored=set()
 	while 1:
 		##stop condition
+		import time
+		if (time.time()-logger.start_time)>timeout_seconds:
+			print "##timeout; terminated"
+			break
 		if len(h_nodes)>=max_total_node_num:
-			print "max node num reached; terminated"
+			print "##max node num reached; terminated"
 			break
 		## select node to explore
 		node=None
@@ -150,29 +163,29 @@ def automate():
 			"links":[],
 		}
 		for n in items:
+			if "_" not in n.id:
+				n.id=u"{}_{}".format(n.type,n.name)
 			if n.id not in h_nodes:
 				h_nodes[n.id]=n
 				n.distance_rank=node.distance_rank+1
 				n.index=len(h_nodes)-1
-				step['nodes'].append(n.dictify())
+				step['nodes'].append(dictify(n))
 				if (node_index,n.index) not in links:
 					links.add((node_index,n.index))
-					step['links'].append(Link(node_index,n.index).dictify())
+					step['links'].append({"source":node_index,"target":n.index})
 		explored.add(node.id)
 		if len(step['nodes']):
 			logger.add(LogLine("explore",step['nodes'],step['links']))
 		print "##loop end with num",len(h_nodes)
-	res=print_json({
-		"nodes":map(lambda x:x.dictify(), h_nodes.values()),
-		"links":map(lambda x:Link(x[0],x[1]).dictify(), links)
-	})
-	file(r'..\..\static\files\auto1.json','w').write(res)
-	file(r'..\..\static\files\auto1.txt','w').write(logger.tell())
-def play():
-	import json
-	lines=file(r'auto1.txt','r').read().decode('utf-8').split(sep_line)
-	for line in lines:
-		timestamp,event,info=line.split(sep_item)
-		graph=json.loads(info)
-		print graph
-automate()
+	outfile=cwd("..","..","static","files","{}.txt".format(out_fname))
+	print "##writing files to",outfile
+	file(outfile,'w').write(logger.tell())
+	return logger
+if __name__ == '__main__':
+	nodes=[{
+		"id":u"baike_曼德拉",
+		"name":u"曼德拉",
+		"type":u"baike",
+	}]
+	links=[]
+	do_automate(nodes,links,{"timeout_seconds":5})

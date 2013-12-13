@@ -9,6 +9,7 @@
 	<script src="/js/masonry.js" charset="utf-8"></script>
 	<script src="/js/d3.v3.js" charset="utf-8"></script>
 	<script src="/js/imageloaded.js" charset="utf-8"></script>
+	<script src="/js/jquery.simplemodal.js" charset="utf-8"></script>
 </head>
 <body 
 $if theme=="dark": class="dark"
@@ -39,9 +40,34 @@ $if theme=="dark": class="dark"
 	<div id="list-container">
 		<div id="nest-container" class="list-item">
 			<input type="button"  class="btn-toggle-nest"   value="展开">
+			<input type="button"  class="btn-automate"   value="运行">
+			<input type="button"  class="btn-next"   value="›">
+			<input type="button"  class="btn-prev"   value="‹">
+			<span id="story-indicator"></span>
+			<div id="automate-form" >
+				<label for="out_fname">请输入脚本名称:</label>
+				<input type="text" id="out_fname"  name="out_fname"   value="default">
+				<br>				
+				<label for="max_total_node_num">节点总数上限:</label>
+				<input type="number" id="max_total_node_num"  name="max_total_node_num"   value="20">
+				<br>
+				<label for="max_single_node_num">单个节点联结数上限:</label>
+				<input type="number" id="max_single_node_num"  name="max_single_node_num"   value="5">
+				<br>
+				<label for="timeout_seconds">计算时间上限（秒）:</label>
+				<input type="number" id="timeout_seconds"  name="timeout_seconds"   value="5">
+				<br>
+				<label for="max_depth">最大深度:</label>
+				<input type="number" id="max_depth"  name="max_depth"   value="5">
+				<br>
+				<br>
+				<input type="button"  class="button main btn-automate-yes"   value="确定">
+				<input type="button"  class="button btn-automate-no"   value="取消">
+			</div>
 		</div>	
 	</div>
 </div>
+
 <script src="/js/forced_graph_view.js"></script>
 <script src="/js/barchart.js"></script>
 <script src="/js/model.js"></script>
