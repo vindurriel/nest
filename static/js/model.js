@@ -141,6 +141,8 @@ $(document).ready(function() {
   };
   $("#btn_tip").click(function() {
     var scr;
+    $("#tip").slideToggle(200);
+    return;
     scr = prompt("要打开的文件名", "default");
     return $.getJSON("/play/" + scr, function(d) {
       var cur, graph, s, _i, _len;
@@ -189,14 +191,15 @@ $(document).ready(function() {
           "source": d.source.index,
           "target": d.target.index
         };
-      })
+      }),
+      "blacklist": r.blacklist
     };
-    console.log(dic);
-    _ref = "max_total_node_num max_single_node_num timeout_seconds max_depth".split(" ");
+    _ref = "max_total_node_num max_single_node_num timeout_seconds max_depth out_fname".split(" ");
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       p = _ref[_i];
       dic[p] = $("#" + p).val();
     }
+    console.log(dic);
     $.post("/automate", JSON.stringify(dic), function(d) {
       if (d.error != null) {
         console.log(d.error);

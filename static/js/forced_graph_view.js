@@ -22,6 +22,9 @@ draw = function(json) {
   if (json.blacklist != null) {
     r.blacklist = json.blacklist;
   }
+  if (json.explored != null) {
+    r.explored = json.explored;
+  }
   r.legend = d3.select("#tip").insert("svg").selectAll("rect.leg").data([
     {
       "type": "artist"
@@ -475,6 +478,7 @@ r.nest = function(options) {
   r.altPressed = false;
   r.shiftPressed = false;
   r.blacklist = [];
+  r.explored = [];
   r.vis = d3.select(container).append("svg:svg").attr("viewBox", "0 0 " + r.w + " " + r.h).attr("pointer-events", "all").call(d3.behavior.zoom().scaleExtent([0.01, 10]).on("zoom", redraw)).on('dblclick.zoom', null).append("svg:g");
   r.link = r.vis.selectAll(".link");
   r.node = r.vis.selectAll(".node");

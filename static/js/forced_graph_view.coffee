@@ -11,7 +11,9 @@ draw = (json) ->
 	if not json.nodes? or json.nodes.length==0
 		return
 	if json.blacklist?
-		r.blacklist=json.blacklist
+		r.blacklist= json.blacklist
+	if json.explored?
+		r.explored= json.explored
 	r.legend= d3.select("#tip")
 	.insert("svg")
 	.selectAll("rect.leg")
@@ -391,6 +393,7 @@ r.nest= (options)->
 	r.altPressed = false
 	r.shiftPressed = false
 	r.blacklist= []
+	r.explored= []
 	r.vis = d3.select(container)
 		.append("svg:svg")
 		.attr("viewBox","0 0 #{r.w} #{r.h}")	

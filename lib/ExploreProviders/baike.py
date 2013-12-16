@@ -8,9 +8,11 @@ class baike(explore_provider_base):
 		limit=10
 		term=normalize_text(key)
 		url_explore="http://baike.baidu.com/search/word"
-		if dic.get('is_subview',False):
+		if "url" in dic and dic['url']!="":
 			url_explore="http://baike.baidu.com"+dic['url']
-		print "###key is:",key
+			print "###url is:",url_explore
+		else:
+			print "###key is:",key
 		res=r.get(url_explore,params={
 				'word':term,
 				'pic':1,

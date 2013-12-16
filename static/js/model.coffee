@@ -113,13 +113,14 @@ $(document).ready ->
     draw s
     return
   $("#btn_tip").click ->
-    #$("#tip").slideToggle 200
+    $("#tip").slideToggle 200
+    return
     scr= prompt "要打开的文件名","default"
     $.getJSON "/play/#{scr}", (d)->
       r.story= []
       r.current_step=0
       graph=
-        nodes:[],
+        nodes:[], 
         links:[]
       for s in d
         if s.event=="draw"
@@ -144,11 +145,12 @@ $(document).ready ->
     return
   $(".btn-automate-yes").click ->
     dic=
-      "nodes":r.nodes
-      "links":r.links.map (d)->{"source":d.source.index,"target":d.target.index}
-    console.log dic
-    for p in "max_total_node_num max_single_node_num timeout_seconds max_depth".split(" ")
+      "nodes":r.nodes,
+      "links":r.links.map((d)->{"source":d.source.index,"target":d.target.index}),
+      "blacklist":r.blacklist,
+    for p in "max_total_node_num max_single_node_num timeout_seconds max_depth out_fname".split(" ")
       dic[p]=$("#"+p).val()
+    console.log dic
     $.post "/automate",  JSON.stringify(dic), (d)->
         if d.error?
           console.log d.error

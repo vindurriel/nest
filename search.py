@@ -1,6 +1,7 @@
 #encoding=utf-8
 import web
 from utils import *
+import traceback
 class search:
 	def search(self,key,serviceType,dic={}):
 		print "###searching",serviceType

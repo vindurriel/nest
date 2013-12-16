@@ -84,9 +84,10 @@ class service:
 		web.header('Content-Type', 'application/json')
 		res={
 			'services':[
+				{'id':'tag2doc','name':"tag2doc",'select':True,},
 				{'id':'REGSVC','name':"线性回归",'select':False,},
 				{'id':'MDOSVC','name':"多目标优化",'select':False,},
-				{'id':'baike','name':"百科",'select':True,},
+				{'id':'baike','name':"百科",'select':False,},
 				{'id':'wolfram_alpha','name':"wolfram alpha",'select':False,},
 			]
 		}
