@@ -216,7 +216,7 @@ color = function(d) {
     res = r.palette(d.type);
   }
   if (d.distance_rank != null) {
-    res = d3.hsl(res).brighter(d.distance_rank).toString();
+    res = d3.hsl(res).brighter(d.distance_rank * .8).toString();
   }
   return res;
 };
@@ -418,16 +418,14 @@ highlight = function(d) {
 };
 
 save = function() {
-  var l, n, p, prop_node, res, x, _i, _j, _k, _len, _len1, _len2, _ref, _ref1;
+  var fname, l, n, p, prop_node, res, x, _i, _j, _k, _len, _len1, _len2, _ref, _ref1;
   res = {
-    "id": r.root.id,
-    "name": r.root.name,
-    "type": r.root.type,
     "nodes": [],
     "links": [],
     "blacklist": r.blacklist
   };
-  prop_node = "id name value index type url fixed".split(" ");
+  fname = prompt("请输入要保存的名字", r.root.id);
+  prop_node = "id name value index type url fixed distance_rank".split(" ");
   _ref = r.nodes;
   for (_i = 0, _len = _ref.length; _i < _len; _i++) {
     x = _ref[_i];
@@ -449,7 +447,7 @@ save = function() {
   }
   res = JSON.stringify(res);
   return $.ajax({
-    "url": "/model/" + r.root.id,
+    "url": "/model/" + fname,
     "type": "POST",
     "contentType": "json",
     "data": res
@@ -479,10 +477,10 @@ r.nest = function(options) {
   r.shiftPressed = false;
   r.blacklist = [];
   r.explored = [];
-  r.vis = d3.select(container).append("svg:svg").attr("viewBox", "0 0 " + r.w + " " + r.h).attr("pointer-events", "all").call(d3.behavior.zoom().scaleExtent([0.01, 10]).on("zoom", redraw)).on('dblclick.zoom', null).append("svg:g");
+  r.vis = d3.select(container).append("svg:svg").attr("viewBox", "0 0 " + r.w + " " + r.h).attr("pointer-events", "all").attr("preserveAspectRatio", "XMidYMid").call(d3.behavior.zoom().scaleExtent([0.01, 10]).on("zoom", redraw)).on('dblclick.zoom', null).append("svg:g");
   r.link = r.vis.selectAll(".link");
   r.node = r.vis.selectAll(".node");
-  r.palette = d3.scale.category10();
+  r.palette = d3.scale.category20();
   r.colors = ["song", "artist", "user", "album", 'relationship', "baiduBaikeCrawler", "hudongBaikeCrawler", "referData"];
   r.position_cache = {};
   r.highlighted = function() {

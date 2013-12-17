@@ -9,36 +9,12 @@ import requests as r
 import sys
 sys.path.append(cwd(".."))
 HOST="http://192.168.4.23:8085"
-class transfer_client(object):
-	def __init__(self):
-		from thrift.protocol import TBinaryProtocol
-		from thrift.transport import TTransport
-		from thrift.transport import TSocket
-		from FileTransfer import FileTransfer,ttypes
-		host="192.168.4.23"
-		port=9090
-		socket = TSocket.TSocket(host, port)
-		self.transport = TTransport.TBufferedTransport(socket)
-		protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
-		self.hdfs=FileTransfer.Client(protocol)
-	def __getattr__(self,attr):
-		if hasattr(self.hdfs,attr):
-			return getattr(self.hdfs,attr)
-		print "sdfasfasdf"
-		raise AttributeError()
-	def __enter__(self):
-		self.transport.open()
-		return self
-	def __exit__(self,type,value,traceback):
-		self.transport.close()
 def upload_str(string,url,ext=""):
-	from thrift.protocol import TBinaryProtocol
-	from thrift.transport import TTransport
-	from thrift.transport import TSocket
-	from FileTransfer import FileTransfer,ttypes
-	url=u"{}{}".format(url,ext)
-	with transfer_client() as hdfs:
-		hdfs.store(ttypes.File(url,string))
+	from FileTransfer.ttypes import *
+	from FileTransfer import FileTransferClient
+	url+=ext
+	with FileTransferClient() as hdfs:
+		hdfs.store(File(url,string))
 	return url	
 def upload_file(fname):
 	s=file(fname,'r').read()

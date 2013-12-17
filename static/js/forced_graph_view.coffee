@@ -216,7 +216,7 @@ color = (d) ->
 		res= r.palette(i+1)
 	else res= r.palette(d.type)
 	if d.distance_rank?
-		res= d3.hsl(res).brighter(d.distance_rank).toString()
+		res= d3.hsl(res).brighter(d.distance_rank*.8).toString()
 	return res
 dblclick = (d)->
 	if d.type=="referData"
@@ -351,15 +351,13 @@ highlight = (d)->
 			r.nodes.remove link.target
 	return
 save = ->
-	res={
-		"id":r.root.id,
-		"name":r.root.name,
-		"type":r.root.type,
+	res= {
 		"nodes":[],
 		"links":[],
 		"blacklist":r.blacklist,
 	}
-	prop_node= "id name value index type url fixed".split(" ")
+	fname= prompt "请输入要保存的名字",r.root.id
+	prop_node= "id name value index type url fixed distance_rank".split(" ")
 	for x in r.nodes
 		n= {}
 		for p in prop_node
@@ -372,7 +370,7 @@ save = ->
 		res.links.push l
 	res= JSON.stringify res
 	return $.ajax
-		"url":"/model/#{r.root.id}",
+		"url":"/model/#{fname}",
 		"type": "POST",
 		"contentType": "json", 
 		"data": res
@@ -398,12 +396,12 @@ r.nest= (options)->
 		.append("svg:svg")
 		.attr("viewBox","0 0 #{r.w} #{r.h}")	
 		.attr("pointer-events", "all")
-		# .attr("preserveAspectRatio","XMidYMid")
+		.attr("preserveAspectRatio","XMidYMid")
 		.call(d3.behavior.zoom().scaleExtent([0.01,10]).on("zoom", redraw)).on('dblclick.zoom',null)
 		.append("svg:g")
 	r.link = r.vis.selectAll(".link")
 	r.node = r.vis.selectAll(".node")
-	r.palette= d3.scale.category10()
+	r.palette= d3.scale.category20()
 	r.colors =[
 		"song",
 		"artist",

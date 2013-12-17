@@ -6,7 +6,7 @@ window.t_item_action = function(d) {
 };
 
 window.list = function(d) {
-  var a, color, err, s, t_list_item, x, _i, _len, _ref;
+  var $item, color, s, t_list_item, x, _i, _len, _ref;
   t_list_item = function(d) {
     var color, details, i, imgurl;
     details = d.content != null ? d.content : "";
@@ -16,17 +16,17 @@ window.list = function(d) {
     if (d.img != null) {
       imgurl = d.img;
     }
-    return "<div class=\"list-item normal\">\n  <h2 class=\"item-headline\">\n    <span style=\"border-left:" + color + " solid 5px;\">&nbsp;</span>\n    <a href=\"" + d.url + "\">" + d.name + "</a>\n  </h2>\n  <span class=\"item-prop\">" + d.type + " </span>\n  <div>\n    <img class=\"item-image\" src=\"" + imgurl + "\"/>\n  </div>\n  <p class=\"item-detail\">" + details + "</p>\n</div>";
+    return "<div class=\"list-item normal\">\n	<h2 class=\"item-headline\">\n		<span>" + d.name + "</span>\n	</h2>\n	<span class=\"item-prop\">" + d.type + " </span>\n	<div>\n		<img class=\"item-image\" src=\"" + imgurl + "\"/>\n	</div>\n	<p class=\"item-detail\">" + details + "</p>\n</div>";
   };
-  try {
-    $("#list-container").masonry("destroy");
-  } catch (_error) {
-    err = _error;
-    a = err;
+  if (window.masonry == null) {
+    window.masonry = $("#list-container").data('masonry');
   }
-  $(".list-item.normal").remove();
+  window.masonry.remove($(".list-item.normal").get());
+  window.masonry.layout();
   color = window.palette(d.type);
-  $("#list-container").append(t_list_item(d));
+  $item = $(t_list_item(d));
+  $("#list-container").append($item);
+  window.masonry.appended($item.get());
   $("#list-container div:last-child").addClass('selected_info');
   if (d.nodes.length > 1) {
     return;
@@ -34,22 +34,18 @@ window.list = function(d) {
   _ref = d.nodes;
   for (_i = 0, _len = _ref.length; _i < _len; _i++) {
     x = _ref[_i];
-    s = t_list_item(x);
+    s = $(t_list_item(x));
     $("#list-container").append(s);
+    window.masonry.appended(s.get());
   }
-  $("#list-container").masonry({
-    'itemSelector': '.list-item'
-  });
   $("#list-container").imagesLoaded().done(function() {
-    $("#list-container").masonry({
-      'itemSelector': '.list-item'
-    });
+    window.masonry.layout();
   });
 };
 
 window.click_handler = function(d) {
-  var container, detail, link, n, value, _i, _len, _ref;
-  $(".selected_info .item-headline a").text(d.name);
+  var container, detail, docs, link, n, value, _i, _j, _len, _len1, _ref;
+  $(".selected_info .item-headline span").text(d.name);
   $(".selected_info .item-prop").text(d.type);
   if (d.type === "doc") {
     $(".selected_info .item-headline a").attr('href', d.url);
@@ -73,6 +69,7 @@ window.click_handler = function(d) {
   } else {
     detail = $(".selected_info .item-detail");
     detail.empty();
+    docs = [];
     _ref = r.degree[d.index];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       link = _ref[_i];
@@ -83,10 +80,17 @@ window.click_handler = function(d) {
       if (n.type !== "referData") {
         continue;
       }
-      detail.append("<div><a href=" + n.url + " target='_blank' >" + n.name + "</a> " + (t_item_action(n)) + " </div>");
+      docs.push(n);
+    }
+    if (docs.length > 0) {
+      detail.append("<h3>相关文档</h3>");
+      for (_j = 0, _len1 = docs.length; _j < _len1; _j++) {
+        n = docs[_j];
+        detail.append("<a href=" + n.url + "  class='doc_url' target='_blank'>" + n.name + "</a>");
+      }
     }
   }
-  $("#list-container").masonry();
+  window.masonry.layout();
 };
 
 get_selected_services = function() {
@@ -106,21 +110,23 @@ get_selected_services = function() {
 $(document).ready(function() {
   var id, options, play_step, query, type;
   options = {
-    "container": "#nest-container"
+    "container": "#nest-container",
+    "width": "400",
+    "height": "200"
   };
   window.nest(options);
   $(document).keydown(cacheIt);
   $(document).keyup(cacheIt);
-  $(".btn-toggle-nest").click(function() {
+  $(document).on("click", ".btn-toggle-fullscreen", function() {
     var toggle, ui;
-    ui = $(options.container);
-    toggle = ui.height() <= 210;
+    ui = $(this).closest('div');
+    toggle = ui.hasClass('list-item');
     if (toggle) {
-      ui.attr('style', '');
+      ui.attr('style', "");
       ui.removeClass('list-item').addClass('fullscreen');
     } else {
       ui.removeClass('fullscreen').addClass('list-item');
-      $("#list-container").masonry();
+      window.masonry.layout();
     }
     return $(this).val(toggle ? "收起" : "展开");
   });
@@ -139,10 +145,8 @@ $(document).ready(function() {
     $("#story-indicator").text("第" + (r.current_step + 1) + "步，共" + r.story.length + "步， 节点数：" + info.nodes.length);
     draw(s);
   };
-  $("#btn_tip").click(function() {
+  $("#btn_load").click(function() {
     var scr;
-    $("#tip").slideToggle(200);
-    return;
     scr = prompt("要打开的文件名", "default");
     return $.getJSON("/play/" + scr, function(d) {
       var cur, graph, s, _i, _len;
@@ -167,6 +171,9 @@ $(document).ready(function() {
       }
       return play_step();
     });
+  });
+  $("#btn_tip").click(function() {
+    $("#tip").slideToggle(200);
   });
   $(".btn-next").click(function() {
     if (r.current_step === r.story.length - 1) {
@@ -271,6 +278,19 @@ $(document).ready(function() {
       return alert(e);
     });
   });
+  $('body').on("click", ".doc_url", function(e) {
+    var $item, text, url;
+    e.preventDefault();
+    if ($(".doc_info").length === 0) {
+      $item = $("<div class='doc_info list-item normal'>\n	<input type=\"button\"  class=\"btn-toggle-fullscreen\"   value=\"展开\">\n	<input type=\"button\" class=\"btn-small fav\" style=\"left:5em;\"  value=\"收藏\">\n	<input type=\"button\" class=\"btn-small share\" style=\"left:9em;\"  value=\"分享\">\n	<h2 class=\"item-headline\">\n		<span></span>\n	</h2>\n	<iframe></iframe>\n</div>");
+      $("#list-container").append($item);
+      window.masonry.appended($item.get());
+    }
+    url = $(this).attr('href');
+    text = $(this).text();
+    $(".doc_info iframe").attr('src', url);
+    return $(".doc_info .item-headline span").text(text);
+  });
   id = document.title;
   type = "unknown";
   if (__indexOf.call(id, ":") >= 0) {
@@ -304,7 +324,7 @@ $(document).ready(function() {
       if ((s.select != null) && s.select === true) {
         checked = "checked";
       }
-      $('.services').append("<li>\n  <input type=\"checkbox\"   data-service-id=\"" + s.id + "\" " + checked + " class=\"check-service\" id=\"" + s.id + "\"> <span>使用 " + s.name + " 搜索</span>\n</li>");
+      $('.services').append("<li>\n	<input type=\"checkbox\"	 data-service-id=\"" + s.id + "\" " + checked + " class=\"check-service\" id=\"" + s.id + "\"> <span>使用 " + s.name + " 搜索</span>\n</li>");
     }
   });
 });

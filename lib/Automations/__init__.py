@@ -96,7 +96,6 @@ def search(key):
 	res= SearchResult(map(Node,res['nodes']))
 	from multiprocessing import Process
 	Process(target=upload,args=([x.url for x in res.items])).start()
-	
 	return res
 def explore(node):
 	res=_post_json("{}/explore".format(host),{
@@ -161,8 +160,8 @@ def do_automate(nodes,links,dic):
 		if node==None:
 			print "##no node to explore; terminated"
 			break
-		print "##exploring node",node.id.encode("gbk")
 		## explore this node
+		print "##exploring node",node.id.encode("gbk")
 		source=node.index
 		res=explore(node)
 		items=res.items[:min(max_single_node_num,max_total_node_num-len(h_nodes))]
@@ -181,11 +180,13 @@ def do_automate(nodes,links,dic):
 				n.index=len(h_nodes)-1
 				step['nodes'].append(dictify(n))
 				target=n.index
-				if (source,target) not in links:
-					links.add((source,target))
-					h_nodes.values()[source].degree+=1
-					h_nodes.values()[target].degree+=1
-					step['links'].append({"source":source,"target":target})
+			else:
+				target=h_nodes[n.id].index
+			if (source,target) not in links and (target,source) not in links:
+				links.add((source,target))
+				h_nodes.values()[source].degree+=1
+				h_nodes.values()[target].degree+=1
+				step['links'].append({"source":source,"target":target})
 		explored.add(node.id)
 		if len(step['nodes']):
 			logger.add({

@@ -1,4 +1,5 @@
 @width: 80%;
+@item-width: 400px;
 #wrapper{
   width: @width;
   margin: 0 auto;
@@ -6,38 +7,36 @@
   position: relative;
   top:5em;
 }
-#nest-container{
-  height: 200px;
-  padding: 0 2em 0 0;
-  overflow: hidden;
-  position: absolute;
-  z-index: 1;
+.doc_url{
+	display: block;
+	margin-bottom: 1em;
 }
-
-.btn-toggle-nest{
+.btn-small{
     position: absolute;
-    z-index: 12;
+	z-index: 12;
+	padding: 0 .5em;
     background: #0088ee;
     color: white;
-    width: 50;
-    height: 50;
-    outline: none;
+    width: auto;
+    height: 1.5em;
     border: none;
+    text-align: center;
+}
+.btn-toggle-fullscreen{
+	.btn-small;
+    position: absolute;
+    left:auto;
 }
 .btn-automate{
+	.btn-small;
     position: absolute;
-    right:0;
-    z-index: 12;
-    background: #0088ee;
-    color: white;
-    width: 50;
-    height: 50;
-    outline: none;
-    border: none;
+    left:auto;
+    right:1em;
 }
 #story-indicator{
   display: none;
   position: absolute;
+  left:0;
   bottom: 0;
   height: 1.5em;
   width: 100%;
@@ -172,11 +171,13 @@
   }  
 }
 
-@item-width: 400px;
 .list-item{
-  padding: 1em;
   width: @item-width;
-  margin: 0 1em 1em 0;
+  position: absolute;
+  padding: 1em;
+  margin: 0;
+  margin-bottom: 1em;
+  margin-right: 1em;
   .rounded-corners;
   background: white;
   border:#ddd solid 1px;
@@ -185,18 +186,7 @@
     width: 100%;
     table-layout: fixed;
   }
-  .item-headline{
-    margin: 0 0 1em 0;
-    max-width: @item-width;
-    text-overflow: ellipsis;
-    a{
-      text-decoration: none;
-      max-width: @item-width;
-      &:hover{
-        text-decoration:underline;
-      }
-    }
-  }
+
   .item-image{
     background-color: #eee;
     max-width: @item-width;
@@ -213,6 +203,18 @@
     margin-top:0;
   }
 }
+
+.item-headline{
+	max-width: @item-width;
+	text-overflow: ellipsis;
+	span{
+		width: 100%;
+		margin-right: .5em;
+		padding-left: .5em;
+		border-left: #0088ee 5px solid;
+	}
+}
+
 
 .hide{
   display: none;
@@ -249,17 +251,28 @@ body.dark {
     background: #222;
     border-color: #444;
   }
+  .fullscreen{
+    background: #222;
+  }
+  #automate-form{
+  	background: rgba(0, 0, 0, 0.8);
+  }
 }
-#nest-container.fullscreen{
+.fullscreen{
   position: fixed;
   z-index: 200;
   left: 0;right: 0;top: 0;bottom: 0;margin: 0;padding: 0;
   background: white;
   height: auto;
+  .btn-toggle-fullscreen,.btn-automate{
+  	margin-top: 0;
+  	margin-left: 0;
+  }
+  svg{
+	height: auto;
+  }
 }
-body.dark #nest-container.fullscreen{
-    background: #222;
-}
+body.dark 
 #simplemodal-overlay {background-color:#000;}
 body *{
     outline: none;
@@ -267,10 +280,20 @@ body *{
 #automate-form {
   background: rgba(255, 255, 255, 0.8);
   padding: 1em;
+  margin:-1em 0 0 -1em;
   position: absolute;
   z-index: 13;
   width: 100%;
   height: 100%;
   display: none;
   outline: none;
+}
+
+svg {
+	height: 200px;
+}
+iframe {
+	border: none;
+	width: 100%;
+	height: 100%;
 }
