@@ -153,10 +153,13 @@ $(document).ready ->
 		for p in "max_total_node_num max_single_node_num timeout_seconds max_depth out_fname".split(" ")
 			dic[p]=$("#"+p).val()
 		console.log dic
+		$("#automate-form").slideToggle()
+		$.growlUI "", "宏 #{dic.out_fname} 已开始运行"
 		$.post "/automate",	JSON.stringify(dic), (d)->
-				if d.error?
-					console.log d.error
-				$("#automate-form").slideToggle()
+			if d.error?
+				$.growlUI "错误","宏 #{dic.out_fname} 运行出现如下错误：\n#{d.error}"
+			else
+				$.growlUI "","宏 #{dic.out_fname} 已完成运行"
 		return
 	$(".btn-automate-no").click ->
 		$("#automate-form").slideToggle()

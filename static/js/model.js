@@ -207,11 +207,14 @@ $(document).ready(function() {
       dic[p] = $("#" + p).val();
     }
     console.log(dic);
+    $("#automate-form").slideToggle();
+    $.growlUI("", "宏 " + dic.out_fname + " 已开始运行");
     $.post("/automate", JSON.stringify(dic), function(d) {
       if (d.error != null) {
-        console.log(d.error);
+        return $.growlUI("错误", "宏 " + dic.out_fname + " 运行出现如下错误：\n" + d.error);
+      } else {
+        return $.growlUI("", "宏 " + dic.out_fname + " 已完成运行");
       }
-      return $("#automate-form").slideToggle();
     });
   });
   $(".btn-automate-no").click(function() {

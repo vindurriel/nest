@@ -17,6 +17,7 @@ class automate(object):
 		p = Process(target=do_automate, args=(nodes,links,dic))
 		try:
 			p.start()
+			p.join()
 		except Exception, e:
 			traceback.print_exc()
 			return json.dumps({'error':str(e)})

@@ -4,7 +4,7 @@ cacheIt = (e) ->
 	r.shiftPressed = e.shiftKey
 	return true
 redraw = ->
-	r.scale=d3.event.scale
+	r.scale= d3.event.scale
 	r.vis.attr "transform", "translate(" + d3.event.translate + ")" + " scale(" + r.scale + ")"
 	r.vis.selectAll("text").style("font-size", (1 / r.scale) + "em");
 draw = (json) ->
