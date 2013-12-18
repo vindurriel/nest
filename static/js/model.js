@@ -2,6 +2,10 @@ var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; 
 
 require(['jquery', 'd3', 'forced_graph_view', 'masonry'], function($, d3, fgv, Masonry) {
   var get_selected_services;
+  requirejs.onError = function(err) {
+    console.log(err);
+    throw err;
+  };
   window.t_item_action = function(d) {
     return "<a class=\"button small\" href=\"#\">收藏</a>\n<a class=\"button small\" href=\"#\">分享</a>";
   };
@@ -31,18 +35,25 @@ require(['jquery', 'd3', 'forced_graph_view', 'masonry'], function($, d3, fgv, M
     $("#list-container").append($item);
     window.masonry.appended($item.get());
     $("#list-container div:last-child").addClass('selected_info');
-    if (d.nodes.length > 1) {
+    if (d.nodes.length > 1000) {
       return;
     }
     _ref = d.nodes;
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       x = _ref[_i];
+      if (x.type === "referData") {
+        continue;
+      }
       s = $(t_list_item(x));
       $("#list-container").append(s);
       window.masonry.appended(s.get());
     }
-    $("#list-container").imagesLoaded().done(function() {
-      window.masonry.layout();
+    require(['imageloaded'], function(imagesLoaded) {
+      var imgLoad;
+      imgLoad = new imagesLoaded("#list-container");
+      imgLoad.on("progress", function() {
+        window.masonry.layout();
+      });
     });
   };
   window.click_handler = function(d) {
@@ -292,8 +303,9 @@ require(['jquery', 'd3', 'forced_graph_view', 'masonry'], function($, d3, fgv, M
       e.preventDefault();
       if ($(".doc_info").length === 0) {
         $item = $("<div class='doc_info list-item normal'>\n	<input type=\"button\"  class=\"btn-toggle-fullscreen\"   value=\"展开\">\n	<input type=\"button\" class=\"btn-small fav\" style=\"left:5em;\"  value=\"收藏\">\n	<input type=\"button\" class=\"btn-small share\" style=\"left:9em;\"  value=\"分享\">\n	<h2 class=\"item-headline\">\n		<span></span>\n	</h2>\n	<iframe></iframe>\n</div>");
-        $("#list-container").append($item);
-        window.masonry.appended($item.get());
+        $(".selected_info").after($item);
+        window.masonry.reloadItems();
+        window.masonry.layout();
       }
       url = $(this).attr('href');
       text = $(this).text();

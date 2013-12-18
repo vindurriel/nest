@@ -357,11 +357,12 @@ save = ->
 		"blacklist":r.blacklist,
 	}
 	fname= prompt "请输入要保存的名字",r.root.id
-	prop_node= "id name value index type url fixed distance_rank".split(" ")
+	prop_node= "id name value index type url fixed distance_rank img".split(" ")
 	for x in r.nodes
 		n= {}
 		for p in prop_node
-			n[p]=x[p]
+			if x[p]?
+				n[p]=x[p]
 		res.nodes.push n
 	for x in r.links
 		l=

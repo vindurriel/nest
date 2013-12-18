@@ -1,4 +1,8 @@
+
 require ['jquery','d3','forced_graph_view','masonry'] , ($,d3,fgv,Masonry)->
+	requirejs.onError= (err)->
+		console.log err
+		throw err
 	window.t_item_action= (d)->
 			"""
 				<a class="button small" href="#">收藏</a>
@@ -35,14 +39,18 @@ require ['jquery','d3','forced_graph_view','masonry'] , ($,d3,fgv,Masonry)->
 		$("#list-container").append($item)
 		window.masonry.appended($item.get())
 		$("#list-container div:last-child").addClass('selected_info')
-		if d.nodes.length>1
+		if d.nodes.length > 1000
 			return
 		for x in d.nodes
+			if x.type=="referData" then continue
 			s=$(t_list_item(x))
 			$("#list-container").append(s)
 			window.masonry.appended(s.get())
-		$("#list-container").imagesLoaded().done ->
-			window.masonry.layout()
+		require ['imageloaded'],(imagesLoaded)->
+			imgLoad= new imagesLoaded("#list-container")
+			imgLoad.on "progress", () ->
+				window.masonry.layout()
+				return
 			return
 		return
 	window.click_handler= (d)->
@@ -232,8 +240,10 @@ require ['jquery','d3','forced_graph_view','masonry'] , ($,d3,fgv,Masonry)->
 					<iframe></iframe>
 				</div>
 				""")
-				$("#list-container").append $item
-				window.masonry.appended $item.get()
+				$(".selected_info").after $item
+				window.masonry.reloadItems()
+				window.masonry.layout()
+				# window.masonry.prepended $item.get()
 			url=$(this).attr('href')
 			text= $(this).text()
 			$(".doc_info iframe").attr('src',url)

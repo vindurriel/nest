@@ -425,14 +425,16 @@ save = function() {
     "blacklist": r.blacklist
   };
   fname = prompt("请输入要保存的名字", r.root.id);
-  prop_node = "id name value index type url fixed distance_rank".split(" ");
+  prop_node = "id name value index type url fixed distance_rank img".split(" ");
   _ref = r.nodes;
   for (_i = 0, _len = _ref.length; _i < _len; _i++) {
     x = _ref[_i];
     n = {};
     for (_j = 0, _len1 = prop_node.length; _j < _len1; _j++) {
       p = prop_node[_j];
-      n[p] = x[p];
+      if (x[p] != null) {
+        n[p] = x[p];
+      }
     }
     res.nodes.push(n);
   }
