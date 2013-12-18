@@ -1,6 +1,6 @@
-var renderBarChart;
+var render;
 
-renderBarChart = function(data, user_options) {
+render = function(data, user_options) {
   var barHeight, barLabel, barLabelPadding, barLabelWidth, barValue, barsContainer, chart, gridChartOffset, gridContainer, gridLabelHeight, labelsContainer, maxBarWidth, options, sortedData, valueLabelWidth, x, y, yScale, yText;
   options = $.extend({}, {
     "kName": "k",
@@ -48,3 +48,9 @@ renderBarChart = function(data, user_options) {
   });
   barsContainer.append("line").attr("y1", -gridChartOffset).attr("y2", yScale.rangeExtent()[1] + gridChartOffset).style("stroke", "#000");
 };
+
+define(['d3'], function(d3) {
+  return {
+    'render': render
+  };
+});

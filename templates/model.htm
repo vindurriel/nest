@@ -5,12 +5,7 @@
 	<title>$key</title>
 	<link rel="stylesheet" href="/css/main.css">
 	<link rel="stylesheet" href="/css/model.css">
-	<script src="/js/jquery-2.0.2.min.js" charset="utf-8"></script>
-	<script src="/js/masonry.js" charset="utf-8"></script>
-	<script src="/js/d3.v3.js" charset="utf-8"></script>
-	<script src="/js/imageloaded.js" charset="utf-8"></script>
-	<script src="/js/jquery.simplemodal.js" charset="utf-8"></script>
-	<script src="/js/jquery.blockUI.js" charset="utf-8"></script>
+	<script src="/js/require.js" data-main="/js/model.js"></script>
 </head>
 <body 
 $if theme=="dark": class="dark"
@@ -39,7 +34,7 @@ $if theme=="dark": class="dark"
 	</div>
 </div>
 <div id="wrapper">
-	<div id="list-container"  class="js-masonry" data-masonry-options='{"transitionDuration":"0.2s","itemSelector":".list-item"}'>
+	<div id="list-container" >
 		<div id="nest-container" class="list-item">
 			<input type="button"  class="btn-toggle-fullscreen"   value="展开">
 			<input type="button"  class="btn-automate"   value="运行">
@@ -69,9 +64,8 @@ $if theme=="dark": class="dark"
 		</div>	
 	</div>
 </div>
-
-<script src="/js/forced_graph_view.js"></script>
+<!-- <script src="/js/forced_graph_view.js"></script>
 <script src="/js/barchart.js"></script>
-<script src="/js/model.js"></script>
+<script src="/js/model.js"></script> -->
 </body>
 </html>
