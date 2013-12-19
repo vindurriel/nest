@@ -1,0 +1,306 @@
+{
+  "name": "Placebo", 
+  "links": [
+    {
+      "source": 0, 
+      "target": 1
+    }, 
+    {
+      "source": 0, 
+      "target": 2
+    }, 
+    {
+      "source": 0, 
+      "target": 3
+    }, 
+    {
+      "source": 0, 
+      "target": 4
+    }, 
+    {
+      "source": 0, 
+      "target": 5
+    }, 
+    {
+      "source": 0, 
+      "target": 6
+    }, 
+    {
+      "source": 0, 
+      "target": 7
+    }, 
+    {
+      "source": 0, 
+      "target": 8
+    }, 
+    {
+      "source": 0, 
+      "target": 9
+    }, 
+    {
+      "source": 0, 
+      "target": 10
+    }, 
+    {
+      "source": 4, 
+      "target": 2
+    }, 
+    {
+      "source": 4, 
+      "target": 11
+    }, 
+    {
+      "source": 4, 
+      "target": 12
+    }, 
+    {
+      "source": 4, 
+      "target": 10
+    }, 
+    {
+      "source": 4, 
+      "target": 6
+    }, 
+    {
+      "source": 4, 
+      "target": 1
+    }, 
+    {
+      "source": 4, 
+      "target": 0
+    }, 
+    {
+      "source": 4, 
+      "target": 13
+    }, 
+    {
+      "source": 4, 
+      "target": 14
+    }, 
+    {
+      "source": 4, 
+      "target": 15
+    }, 
+    {
+      "source": 13, 
+      "target": 14
+    }, 
+    {
+      "source": 13, 
+      "target": 4
+    }, 
+    {
+      "source": 13, 
+      "target": 15
+    }, 
+    {
+      "source": 13, 
+      "target": 12
+    }, 
+    {
+      "source": 13, 
+      "target": 6
+    }, 
+    {
+      "source": 13, 
+      "target": 2
+    }, 
+    {
+      "source": 13, 
+      "target": 16
+    }, 
+    {
+      "source": 13, 
+      "target": 17
+    }, 
+    {
+      "source": 13, 
+      "target": 10
+    }, 
+    {
+      "source": 13, 
+      "target": 18
+    }, 
+    {
+      "source": 8, 
+      "target": 19
+    }, 
+    {
+      "source": 8, 
+      "target": 20
+    }, 
+    {
+      "source": 8, 
+      "target": 21
+    }, 
+    {
+      "source": 8, 
+      "target": 1
+    }, 
+    {
+      "source": 8, 
+      "target": 22
+    }, 
+    {
+      "source": 8, 
+      "target": 23
+    }, 
+    {
+      "source": 8, 
+      "target": 2
+    }, 
+    {
+      "source": 8, 
+      "target": 6
+    }
+  ], 
+  "blacklist": [], 
+  "nodes": [
+    {
+      "index": 0, 
+      "type": "artist", 
+      "id": "13232", 
+      "name": "Placebo"
+    }, 
+    {
+      "index": 1, 
+      "type": "artist", 
+      "id": "24159", 
+      "name": "Arctic Monkeys"
+    }, 
+    {
+      "index": 2, 
+      "type": "artist", 
+      "id": "14447", 
+      "name": "Franz Ferdinand"
+    }, 
+    {
+      "index": 3, 
+      "type": "artist", 
+      "id": "25481", 
+      "name": "Snow Patrol"
+    }, 
+    {
+      "index": 4, 
+      "type": "artist", 
+      "id": "10446", 
+      "name": "Pulp"
+    }, 
+    {
+      "index": 5, 
+      "type": "artist", 
+      "id": "10646", 
+      "name": "Suede"
+    }, 
+    {
+      "index": 6, 
+      "type": "artist", 
+      "id": "14470", 
+      "name": "The Strokes"
+    }, 
+    {
+      "index": 7, 
+      "type": "artist", 
+      "id": "85497", 
+      "name": "The Vaccines"
+    }, 
+    {
+      "index": 8, 
+      "type": "artist", 
+      "id": "24212", 
+      "name": "The Libertines"
+    }, 
+    {
+      "index": 9, 
+      "type": "artist", 
+      "id": "10704", 
+      "name": "The Verve"
+    }, 
+    {
+      "index": 10, 
+      "type": "artist", 
+      "id": "10638", 
+      "name": "The Stone Roses"
+    }, 
+    {
+      "index": 11, 
+      "type": "artist", 
+      "id": "10334", 
+      "name": "Manic Street Preachers"
+    }, 
+    {
+      "index": 12, 
+      "type": "artist", 
+      "id": "10599", 
+      "name": "The Smiths"
+    }, 
+    {
+      "index": 13, 
+      "type": "artist", 
+      "id": "10290", 
+      "name": "Joy Division"
+    }, 
+    {
+      "index": 14, 
+      "type": "artist", 
+      "id": "10132", 
+      "name": "The Cure"
+    }, 
+    {
+      "index": 15, 
+      "type": "artist", 
+      "id": "10428", 
+      "name": "Pixies"
+    }, 
+    {
+      "index": 16, 
+      "type": "artist", 
+      "id": "10280", 
+      "name": "The Jesus and Mary Chain"
+    }, 
+    {
+      "index": 17, 
+      "type": "artist", 
+      "id": "10605", 
+      "name": "Sonic Youth"
+    }, 
+    {
+      "index": 18, 
+      "type": "artist", 
+      "id": "10244", 
+      "name": "PJ Harvey"
+    }, 
+    {
+      "index": 19, 
+      "type": "artist", 
+      "id": "25956", 
+      "name": "Kasabian"
+    }, 
+    {
+      "index": 20, 
+      "type": "artist", 
+      "id": "25744", 
+      "name": "The Kooks"
+    }, 
+    {
+      "index": 21, 
+      "type": "artist", 
+      "id": "13879", 
+      "name": "Stereophonics"
+    }, 
+    {
+      "index": 22, 
+      "type": "artist", 
+      "id": "13246", 
+      "name": "Travis"
+    }, 
+    {
+      "index": 23, 
+      "type": "artist", 
+      "id": "55198", 
+      "name": "Peter Doherty"
+    }
+  ], 
+  "type": "artist", 
+  "id": "13232"
+}

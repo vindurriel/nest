@@ -1,0 +1,335 @@
+{
+  "name": "Yael Naim", 
+  "links": [
+    {
+      "source": 0, 
+      "target": 1
+    }, 
+    {
+      "source": 0, 
+      "target": 2
+    }, 
+    {
+      "source": 0, 
+      "target": 3
+    }, 
+    {
+      "source": 2, 
+      "target": 4
+    }, 
+    {
+      "source": 2, 
+      "target": 5
+    }, 
+    {
+      "source": 2, 
+      "target": 0
+    }, 
+    {
+      "source": 2, 
+      "target": 6
+    }, 
+    {
+      "source": 2, 
+      "target": 7
+    }, 
+    {
+      "source": 2, 
+      "target": 8
+    }, 
+    {
+      "source": 7, 
+      "target": 6
+    }, 
+    {
+      "source": 7, 
+      "target": 5
+    }, 
+    {
+      "source": 7, 
+      "target": 2
+    }, 
+    {
+      "source": 7, 
+      "target": 8
+    }, 
+    {
+      "source": 7, 
+      "target": 0
+    }, 
+    {
+      "source": 7, 
+      "target": 9
+    }, 
+    {
+      "source": 7, 
+      "target": 10
+    }, 
+    {
+      "source": 7, 
+      "target": 11
+    }, 
+    {
+      "source": 7, 
+      "target": 12
+    }, 
+    {
+      "source": 0, 
+      "target": 13
+    }, 
+    {
+      "source": 0, 
+      "target": 14
+    }, 
+    {
+      "source": 0, 
+      "target": 15
+    }, 
+    {
+      "source": 0, 
+      "target": 16
+    }, 
+    {
+      "source": 0, 
+      "target": 17
+    }, 
+    {
+      "source": 12, 
+      "target": 18
+    }, 
+    {
+      "source": 12, 
+      "target": 2
+    }, 
+    {
+      "source": 12, 
+      "target": 5
+    }, 
+    {
+      "source": 12, 
+      "target": 19
+    }, 
+    {
+      "source": 12, 
+      "target": 20
+    }, 
+    {
+      "source": 12, 
+      "target": 21
+    }, 
+    {
+      "source": 12, 
+      "target": 22
+    }, 
+    {
+      "source": 12, 
+      "target": 7
+    }, 
+    {
+      "source": 17, 
+      "target": 3
+    }, 
+    {
+      "source": 17, 
+      "target": 14
+    }, 
+    {
+      "source": 17, 
+      "target": 23
+    }, 
+    {
+      "source": 17, 
+      "target": 13
+    }, 
+    {
+      "source": 17, 
+      "target": 24
+    }, 
+    {
+      "source": 17, 
+      "target": 25
+    }, 
+    {
+      "source": 17, 
+      "target": 9
+    }, 
+    {
+      "source": 17, 
+      "target": 26
+    }, 
+    {
+      "source": 17, 
+      "target": 11
+    }
+  ], 
+  "blacklist": [
+    "31840", 
+    "23303"
+  ], 
+  "nodes": [
+    {
+      "index": 0, 
+      "type": "artist", 
+      "id": "23526", 
+      "name": "Yael Naim"
+    }, 
+    {
+      "index": 1, 
+      "type": "artist", 
+      "id": "62012", 
+      "name": "Aimee Allen"
+    }, 
+    {
+      "index": 2, 
+      "type": "artist", 
+      "id": "23691", 
+      "name": "Colbie Caillat"
+    }, 
+    {
+      "index": 3, 
+      "type": "artist", 
+      "id": "29349", 
+      "name": "Rachael Yamagata"
+    }, 
+    {
+      "index": 4, 
+      "type": "artist", 
+      "id": "24120", 
+      "name": "Michelle Branch"
+    }, 
+    {
+      "index": 5, 
+      "type": "artist", 
+      "id": "13738", 
+      "name": "Jewel"
+    }, 
+    {
+      "index": 6, 
+      "type": "artist", 
+      "id": "23844", 
+      "name": "Daniel Powter"
+    }, 
+    {
+      "index": 7, 
+      "type": "artist", 
+      "id": "13715", 
+      "name": "Dido"
+    }, 
+    {
+      "index": 8, 
+      "type": "artist", 
+      "id": "25456", 
+      "name": "Lily Allen"
+    }, 
+    {
+      "index": 9, 
+      "type": "artist", 
+      "id": "23251", 
+      "name": "Maximilian Hecker"
+    }, 
+    {
+      "index": 10, 
+      "type": "artist", 
+      "id": "23631", 
+      "name": "OneRepublic"
+    }, 
+    {
+      "index": 11, 
+      "type": "artist", 
+      "id": "23424", 
+      "name": "Jack Johnson"
+    }, 
+    {
+      "index": 12, 
+      "type": "artist", 
+      "id": "23507", 
+      "name": "Lene Marlin"
+    }, 
+    {
+      "index": 13, 
+      "type": "artist", 
+      "id": "23845", 
+      "name": "Priscilla Ahn"
+    }, 
+    {
+      "index": 14, 
+      "type": "artist", 
+      "id": "23673", 
+      "name": "Azure Ray"
+    }, 
+    {
+      "index": 15, 
+      "type": "artist", 
+      "id": "60808", 
+      "name": "Zee Avi"
+    }, 
+    {
+      "index": 16, 
+      "type": "artist", 
+      "id": "33959", 
+      "name": "Ingrid Michaelson"
+    }, 
+    {
+      "index": 17, 
+      "type": "artist", 
+      "id": "23557", 
+      "name": "Chris Garneau"
+    }, 
+    {
+      "index": 18, 
+      "type": "artist", 
+      "id": "23646", 
+      "name": "Maria Arredondo"
+    }, 
+    {
+      "index": 19, 
+      "type": "artist", 
+      "id": "56739", 
+      "name": "Amy Diamond"
+    }, 
+    {
+      "index": 20, 
+      "type": "artist", 
+      "id": "23463", 
+      "name": "Shayne Ward"
+    }, 
+    {
+      "index": 21, 
+      "type": "artist", 
+      "id": "23489", 
+      "name": "Hilary Duff"
+    }, 
+    {
+      "index": 22, 
+      "type": "artist", 
+      "id": "23314", 
+      "name": "The Weepies"
+    }, 
+    {
+      "index": 23, 
+      "type": "artist", 
+      "id": "23699", 
+      "name": "Rosie Thomas"
+    }, 
+    {
+      "index": 24, 
+      "type": "artist", 
+      "id": "57979", 
+      "name": "Sara Lov"
+    }, 
+    {
+      "index": 25, 
+      "type": "artist", 
+      "id": "24031", 
+      "name": "Joshua Radin"
+    }, 
+    {
+      "index": 26, 
+      "type": "artist", 
+      "id": "23900", 
+      "name": "Agnes Kain"
+    }
+  ], 
+  "type": "artist", 
+  "id": "23526"
+}
