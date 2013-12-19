@@ -8,7 +8,7 @@ web.template.Template.globals['config']=config
 router="""
 / model.list
 /model/load/(.+) model.load
-/model/(.+)  model
+/model(?:/)?  model
 /explore(?:/)?  explore
 /search(?:/)?  search
 /favicon.ico favicon

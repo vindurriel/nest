@@ -1,5 +1,11 @@
 
-require ['jquery','d3','forced_graph_view','masonry'] , ($,d3,fgv,Masonry)->
+require ['jquery','d3','forced_graph_view','masonry','jquery_blockUI'] , ($,d3,fgv,Masonry,blockUI)->
+	url_params= ()->
+		res={} 
+		for x in window.location.search.substring(1).split('&')
+			pair= x.split('=')
+			res[pair[0]]= decodeURIComponent(pair[1])
+		return res
 	requirejs.onError= (err)->
 		console.log err
 		throw err
@@ -46,12 +52,13 @@ require ['jquery','d3','forced_graph_view','masonry'] , ($,d3,fgv,Masonry)->
 			s=$(t_list_item(x))
 			$("#list-container").append(s)
 			window.masonry.appended(s.get())
-		require ['imageloaded'],(imagesLoaded)->
-			imgLoad= new imagesLoaded("#list-container")
-			imgLoad.on "progress", () ->
-				window.masonry.layout()
+		if not window.imagesLoaded?
+			require ['imageloaded'],(imagesLoaded)->
+				window.imagesLoaded= new imagesLoaded("#list-container")
+				.on "progress", () ->
+					window.masonry.layout()
+					return
 				return
-			return
 		return
 	window.click_handler= (d)->
 		$(".selected_info .item-headline span").text(d.name)
@@ -95,7 +102,72 @@ require ['jquery','d3','forced_graph_view','masonry'] , ($,d3,fgv,Masonry)->
 			if $(this).data('serviceId')?
 				service_ids.push $(this).data('serviceId')
 		return service_ids
+	play_step= ->
+		if r.current_step>=r.story.length or r.current_step<0 then return
+		s= r.story[current_step]
+		func= explore
+		if s.event=="draw"
+					func= draw
+		info= r.story[r.current_step]
+		$("#story-indicator,.btn-next,.btn-prev,.btn-automate").show()
+		$("#story-indicator").text("第#{r.current_step+1}步，共#{r.story.length}步， 节点数：#{info.nodes.length}")
+		draw s
+		return
+	search= (key, services)->
+		data= {
+			'keys':key,
+			'services':services,
+		}
+		keynode = {
+			'type':"baike",
+			'name':key,
+		}
+		$.blockUI({message:"正在搜索"})
+		$.post "/search", JSON.stringify(data), (d)->
+				if not d or d.error?
+					return
+				d.nodes.splice 0,0,keynode
+				i=0
+				for x in d.nodes
+					x.index=i
+					if i>0
+						d.links.push {
+							source:0,
+							target:i,
+						}
+					i+=1
+				draw d
+				list d
+				click_handler(r.root)
+				$.unblockUI()
+				return
+			,'json'
+		return
 	$(document).ready ->
+		params= url_params()
+		if params.theme?
+			$('body').addClass(params.theme)
+		if params.no_nav?
+			$('body').addClass("no-nav")
+		if params.q?
+			key= params.q
+			services=  ['baike']
+			if params.services?
+				services= params.services.split('|')
+			search(key,services)
+		else if params.id?
+			$.getJSON "/model/load/#{params.id}", (d)->
+				if not d or d.error?
+					$.getJSON "/info/#{params.id}", (d)->
+						if not d or d.error?
+							return
+						draw d
+						list d
+				else 
+					draw d
+					list d
+				click_handler(r.root)
+				return
 		options=
 			"container":"#nest-container",
 			"width":"400",
@@ -113,17 +185,7 @@ require ['jquery','d3','forced_graph_view','masonry'] , ($,d3,fgv,Masonry)->
 				ui.removeClass('fullscreen').addClass('list-item')
 				window.masonry.layout()
 			$(this).val(if toggle then "收起" else "展开")
-		play_step= ->
-			if r.current_step>=r.story.length or r.current_step<0 then return
-			s= r.story[current_step]
-			func= explore
-			if s.event=="draw"
-						func= draw
-			info= r.story[r.current_step]
-			$("#story-indicator,.btn-next,.btn-prev,.btn-automate").show()
-			$("#story-indicator").text("第#{r.current_step+1}步，共#{r.story.length}步， 节点数：#{info.nodes.length}")
-			draw s
-			return
+
 		$("#btn_load").click ->
 			scr= prompt "要打开的文件名","default"
 			$.getJSON "/play/#{scr}", (d)->
@@ -166,13 +228,12 @@ require ['jquery','d3','forced_graph_view','masonry'] , ($,d3,fgv,Masonry)->
 				dic[p]=$("#"+p).val()
 			console.log dic
 			$("#automate-form").slideToggle()
-			require ['jquery_blockUI'], (m)->
-				$.growlUI "", "宏 #{dic.out_fname} 已开始运行"
-				$.post "/automate",	JSON.stringify(dic), (d)->
-					if d.error?
-						$.growlUI "错误","宏 #{dic.out_fname} 运行出现如下错误：\n#{d.error}"
-					else
-						$.growlUI "","宏 #{dic.out_fname} 已完成运行"
+			$.growlUI "", "宏 #{dic.out_fname} 已开始运行"
+			$.post "/automate",	JSON.stringify(dic), (d)->
+				if d.error?
+					$.growlUI "错误","宏 #{dic.out_fname} 运行出现如下错误：\n#{d.error}"
+				else
+					$.growlUI "","宏 #{dic.out_fname} 已完成运行"
 				return
 			return
 		$(".btn-automate-no").click ->
@@ -181,34 +242,10 @@ require ['jquery','d3','forced_graph_view','masonry'] , ($,d3,fgv,Masonry)->
 		$(".btn-automate").click ->
 			$("#automate-form").slideToggle()
 			return
-
 		$("#btn_search").click ->
 			key=$('#q').val()
-			data= {
-				'keys':key,
-				'services':get_selected_services(),
-			}
-			keynode = {
-				'type':"baike",
-				'name':key,
-			}
-			$.post "/search", JSON.stringify(data), (d)->
-					if not d or d.error?
-						return
-					d.nodes.splice 0,0,keynode
-					i=0
-					for x in d.nodes
-						x.index=i
-						if i>0
-							d.links.push {
-								source:0,
-								target:i,
-							}
-						i+=1
-					draw d
-					list d
-					return
-				,'json'
+			services= get_selected_services()
+			search(key,services)
 			$('html, body').animate({"scrollTop":0})
 			return
 		$(window).scroll ->
@@ -217,15 +254,18 @@ require ['jquery','d3','forced_graph_view','masonry'] , ($,d3,fgv,Masonry)->
 				$("#nav").addClass("fade")
 			else
 				$("#nav").removeClass("fade")
+			return
 		$('#q').keypress (e) ->
 				if e.keyCode==13
 					$('#btn_search').click()
+			return
 		$("#btn_save").click ->
 			save()
 			.done ->
 				alert "保存完成"
 			.fail (d,e)->
 				alert e
+			return
 		$('body').on "click",".doc_url", (e)->
 			e.preventDefault()
 			if $(".doc_info").length==0
@@ -248,21 +288,7 @@ require ['jquery','d3','forced_graph_view','masonry'] , ($,d3,fgv,Masonry)->
 			text= $(this).text()
 			$(".doc_info iframe").attr('src',url)
 			$(".doc_info .item-headline span").text(text)
-		id= document.title
-		type= "unknown"
-		if ":" in id
-			query = query.replace ":","_"
-		$.getJSON "/model/load/#{id}", (d)->
-			if not d or d.error?
-				$.getJSON "/info/#{id}", (d)->
-						if not d or d.error?
-							return
-						draw d
-						list d
-			else 
-				draw d
-				list d
-			click_handler(r.root)
+			return
 		#fillServices
 		$.getJSON "/services/",(d)->
 			if not d or d.error?

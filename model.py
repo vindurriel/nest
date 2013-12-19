@@ -4,10 +4,13 @@ from utils import *
 def get_file_name(name,ext=".json"):
 	return cwd("static","files",u"{}{}".format(name,ext))
 class model:
-	def GET(self,key="1769077491"):
-		print "###model.get##",key
-		theme="light"
-		if "theme" in web.input(): theme=web.input().theme
+	def GET(self):
+		params=web.input()
+		theme=params.get("theme","light")
+		if "id" in params:
+			print "###model.get##",unicode(params.id).encode('gbk')
+		elif "q" in params:
+			print "###model.search##",unicode(params.q).encode('gbk')
 		render=web.template.render(cwd('templates'),globals=locals())
 		return render.model()
 	def POST(self,key):
@@ -21,8 +24,7 @@ class model:
 		return "ok"
 class list:
 	def GET(self):
-		theme="light"
-		if "theme" in web.input(): theme=web.input().theme
+		theme=web.input().get("theme","light")
 		import os
 		l=os.listdir(cwd('static','files'))
 		l= filter(lambda x:x.endswith(".json"),l)

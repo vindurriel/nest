@@ -1,7 +1,16 @@
-var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
-
-require(['jquery', 'd3', 'forced_graph_view', 'masonry'], function($, d3, fgv, Masonry) {
-  var get_selected_services;
+require(['jquery', 'd3', 'forced_graph_view', 'masonry', 'jquery_blockUI'], function($, d3, fgv, Masonry, blockUI) {
+  var get_selected_services, play_step, search, url_params;
+  url_params = function() {
+    var pair, res, x, _i, _len, _ref;
+    res = {};
+    _ref = window.location.search.substring(1).split('&');
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      x = _ref[_i];
+      pair = x.split('=');
+      res[pair[0]] = decodeURIComponent(pair[1]);
+    }
+    return res;
+  };
   requirejs.onError = function(err) {
     console.log(err);
     throw err;
@@ -48,13 +57,13 @@ require(['jquery', 'd3', 'forced_graph_view', 'masonry'], function($, d3, fgv, M
       $("#list-container").append(s);
       window.masonry.appended(s.get());
     }
-    require(['imageloaded'], function(imagesLoaded) {
-      var imgLoad;
-      imgLoad = new imagesLoaded("#list-container");
-      imgLoad.on("progress", function() {
-        window.masonry.layout();
+    if (window.imagesLoaded == null) {
+      require(['imageloaded'], function(imagesLoaded) {
+        window.imagesLoaded = new imagesLoaded("#list-container").on("progress", function() {
+          window.masonry.layout();
+        });
       });
-    });
+    }
   };
   window.click_handler = function(d) {
     var container, detail, docs, link, n, value, _i, _j, _len, _len1, _ref;
@@ -122,8 +131,92 @@ require(['jquery', 'd3', 'forced_graph_view', 'masonry'], function($, d3, fgv, M
     });
     return service_ids;
   };
+  play_step = function() {
+    var func, info, s;
+    if (r.current_step >= r.story.length || r.current_step < 0) {
+      return;
+    }
+    s = r.story[current_step];
+    func = explore;
+    if (s.event === "draw") {
+      func = draw;
+    }
+    info = r.story[r.current_step];
+    $("#story-indicator,.btn-next,.btn-prev,.btn-automate").show();
+    $("#story-indicator").text("第" + (r.current_step + 1) + "步，共" + r.story.length + "步， 节点数：" + info.nodes.length);
+    draw(s);
+  };
+  search = function(key, services) {
+    var data, keynode;
+    data = {
+      'keys': key,
+      'services': services
+    };
+    keynode = {
+      'type': "baike",
+      'name': key
+    };
+    $.blockUI({
+      message: "正在搜索"
+    });
+    $.post("/search", JSON.stringify(data), function(d) {
+      var i, x, _i, _len, _ref;
+      if (!d || (d.error != null)) {
+        return;
+      }
+      d.nodes.splice(0, 0, keynode);
+      i = 0;
+      _ref = d.nodes;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        x = _ref[_i];
+        x.index = i;
+        if (i > 0) {
+          d.links.push({
+            source: 0,
+            target: i
+          });
+        }
+        i += 1;
+      }
+      draw(d);
+      list(d);
+      click_handler(r.root);
+      $.unblockUI();
+    }, 'json');
+  };
   $(document).ready(function() {
-    var id, options, play_step, query, type;
+    var key, options, params, services;
+    params = url_params();
+    if (params.theme != null) {
+      $('body').addClass(params.theme);
+    }
+    if (params.no_nav != null) {
+      $('body').addClass("no-nav");
+    }
+    if (params.q != null) {
+      key = params.q;
+      services = ['baike'];
+      if (params.services != null) {
+        services = params.services.split('|');
+      }
+      search(key, services);
+    } else if (params.id != null) {
+      $.getJSON("/model/load/" + params.id, function(d) {
+        if (!d || (d.error != null)) {
+          $.getJSON("/info/" + params.id, function(d) {
+            if (!d || (d.error != null)) {
+              return;
+            }
+            draw(d);
+            return list(d);
+          });
+        } else {
+          draw(d);
+          list(d);
+        }
+        click_handler(r.root);
+      });
+    }
     options = {
       "container": "#nest-container",
       "width": "400",
@@ -145,21 +238,6 @@ require(['jquery', 'd3', 'forced_graph_view', 'masonry'], function($, d3, fgv, M
       }
       return $(this).val(toggle ? "收起" : "展开");
     });
-    play_step = function() {
-      var func, info, s;
-      if (r.current_step >= r.story.length || r.current_step < 0) {
-        return;
-      }
-      s = r.story[current_step];
-      func = explore;
-      if (s.event === "draw") {
-        func = draw;
-      }
-      info = r.story[r.current_step];
-      $("#story-indicator,.btn-next,.btn-prev,.btn-automate").show();
-      $("#story-indicator").text("第" + (r.current_step + 1) + "步，共" + r.story.length + "步， 节点数：" + info.nodes.length);
-      draw(s);
-    };
     $("#btn_load").click(function() {
       var scr;
       scr = prompt("要打开的文件名", "default");
@@ -223,15 +301,13 @@ require(['jquery', 'd3', 'forced_graph_view', 'masonry'], function($, d3, fgv, M
       }
       console.log(dic);
       $("#automate-form").slideToggle();
-      require(['jquery_blockUI'], function(m) {
-        $.growlUI("", "宏 " + dic.out_fname + " 已开始运行");
-        $.post("/automate", JSON.stringify(dic), function(d) {
-          if (d.error != null) {
-            return $.growlUI("错误", "宏 " + dic.out_fname + " 运行出现如下错误：\n" + d.error);
-          } else {
-            return $.growlUI("", "宏 " + dic.out_fname + " 已完成运行");
-          }
-        });
+      $.growlUI("", "宏 " + dic.out_fname + " 已开始运行");
+      $.post("/automate", JSON.stringify(dic), function(d) {
+        if (d.error != null) {
+          $.growlUI("错误", "宏 " + dic.out_fname + " 运行出现如下错误：\n" + d.error);
+        } else {
+          $.growlUI("", "宏 " + dic.out_fname + " 已完成运行");
+        }
       });
     });
     $(".btn-automate-no").click(function() {
@@ -241,38 +317,9 @@ require(['jquery', 'd3', 'forced_graph_view', 'masonry'], function($, d3, fgv, M
       $("#automate-form").slideToggle();
     });
     $("#btn_search").click(function() {
-      var data, key, keynode;
       key = $('#q').val();
-      data = {
-        'keys': key,
-        'services': get_selected_services()
-      };
-      keynode = {
-        'type': "baike",
-        'name': key
-      };
-      $.post("/search", JSON.stringify(data), function(d) {
-        var i, x, _i, _len, _ref;
-        if (!d || (d.error != null)) {
-          return;
-        }
-        d.nodes.splice(0, 0, keynode);
-        i = 0;
-        _ref = d.nodes;
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          x = _ref[_i];
-          x.index = i;
-          if (i > 0) {
-            d.links.push({
-              source: 0,
-              target: i
-            });
-          }
-          i += 1;
-        }
-        draw(d);
-        list(d);
-      }, 'json');
+      services = get_selected_services();
+      search(key, services);
       $('html, body').animate({
         "scrollTop": 0
       });
@@ -281,9 +328,9 @@ require(['jquery', 'd3', 'forced_graph_view', 'masonry'], function($, d3, fgv, M
       var toggle;
       toggle = $(this).scrollTop() > 100;
       if (toggle) {
-        return $("#nav").addClass("fade");
+        $("#nav").addClass("fade");
       } else {
-        return $("#nav").removeClass("fade");
+        $("#nav").removeClass("fade");
       }
     });
     $('#q').keypress(function(e) {
@@ -291,8 +338,9 @@ require(['jquery', 'd3', 'forced_graph_view', 'masonry'], function($, d3, fgv, M
         return $('#btn_search').click();
       }
     });
+    return;
     $("#btn_save").click(function() {
-      return save().done(function() {
+      save().done(function() {
         return alert("保存完成");
       }).fail(function(d, e) {
         return alert(e);
@@ -310,27 +358,7 @@ require(['jquery', 'd3', 'forced_graph_view', 'masonry'], function($, d3, fgv, M
       url = $(this).attr('href');
       text = $(this).text();
       $(".doc_info iframe").attr('src', url);
-      return $(".doc_info .item-headline span").text(text);
-    });
-    id = document.title;
-    type = "unknown";
-    if (__indexOf.call(id, ":") >= 0) {
-      query = query.replace(":", "_");
-    }
-    $.getJSON("/model/load/" + id, function(d) {
-      if (!d || (d.error != null)) {
-        $.getJSON("/info/" + id, function(d) {
-          if (!d || (d.error != null)) {
-            return;
-          }
-          draw(d);
-          return list(d);
-        });
-      } else {
-        draw(d);
-        list(d);
-      }
-      return click_handler(r.root);
+      $(".doc_info .item-headline span").text(text);
     });
     $.getJSON("/services/", function(d) {
       var checked, s, _i, _len, _ref;
