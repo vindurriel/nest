@@ -13,8 +13,8 @@ $if theme=="dark":
 	class="dark"
 >
 	<ul>
-		$for x in l:
-			<li><a href="/model?id=$x&theme=$theme">$x</a></li> 
+		$for (x,quoted) in l:
+			<li><a href="/model?id=$quoted&theme=$theme">$x</a></li> 
 	</ul>
 </body>
 </html>

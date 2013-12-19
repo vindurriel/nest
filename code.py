@@ -6,7 +6,7 @@ config=web.storage(static=cwd('static'))
 web.template.Template.globals['config']=config
 ### router
 router="""
-/ model.list
+/ model
 /model/load/(.+) model.load
 /model(?:/)?  model
 /explore(?:/)?  explore

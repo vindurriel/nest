@@ -2,7 +2,8 @@
 import web
 from utils import *
 def get_file_name(name,ext=".json"):
-	return cwd("static","files",u"{}{}".format(name,ext))
+	import base64
+	return cwd(u"static",u"files",u"{}{}".format(base64.b64encode(decode(name).encode('utf-8')),ext))
 class model:
 	def GET(self):
 		params=web.input()
@@ -13,22 +14,35 @@ class model:
 			print "###model.search##",unicode(params.q).encode('gbk')
 		render=web.template.render(cwd('templates'),globals=locals())
 		return render.model()
-	def POST(self,key):
+	def POST(self):
 		'''
 		save
 		'''
 		import json
-		data=json.loads(web.data())
+		web.header('Content-Type', 'application/json')
 		print "###model.post##"
-		file(get_file_name(key),"w").write(json.dumps(data,indent=2))
-		return "ok"
+		params=web.input()
+		if "id" not in params:
+			return json.dumps({"error":u"未在url参数中指定保存id"})
+		key=params.id
+		try:
+			data=json.loads(web.data())
+			file(get_file_name(key),"w").write(json.dumps(data,indent=2))
+			return json.dumps({"message":"ok"})
+		except Exception, e:
+			import traceback
+			traceback.print_exc()
+			return json.dumps({"error":unicode(e)})
+		
 class list:
 	def GET(self):
 		theme=web.input().get("theme","light")
 		import os
 		l=os.listdir(cwd('static','files'))
 		l= filter(lambda x:x.endswith(".json"),l)
-		l= map(lambda x:decode(x)[:-5],l)
+		import base64,urllib2
+		l= map(lambda x: decode(base64.b64decode(x[:-5])),l)
+		l= map(lambda x: (x,urllib2.quote(x.encode("utf-8"))),l)
 		static=cwd("static")
 		render=web.template.render(cwd('templates'),globals=locals())
 		return render.list()
@@ -36,7 +50,6 @@ class keyword:
 	def GET(self,key="机器学习"):
 		fname=cwd("static","files", "cluster",key)
 		res={}
-
 		import os,json
 		if not os.path.isfile(fname):
 			return json.dumps({"error":"json file not found"})
@@ -66,7 +79,7 @@ class load:
 		web.header('Expires', 'Thu, 01 Jan 1970 00:00:00')
 		import os,json
 		fname=get_file_name(key)
-		print fname
+		print "###"+key+"###",fname
 		res={}
 		if not os.path.isfile(fname):
 			return json.dumps({"error":"json file not found"})

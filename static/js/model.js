@@ -1,5 +1,5 @@
 require(['jquery', 'd3', 'forced_graph_view', 'masonry', 'jquery_blockUI'], function($, d3, fgv, Masonry, blockUI) {
-  var get_selected_services, play_step, search, url_params;
+  var get_selected_services, play_step, save, search, url_params;
   url_params = function() {
     var pair, res, x, _i, _len, _ref;
     res = {};
@@ -67,6 +67,9 @@ require(['jquery', 'd3', 'forced_graph_view', 'masonry', 'jquery_blockUI'], func
   };
   window.click_handler = function(d) {
     var container, detail, docs, link, n, value, _i, _j, _len, _len1, _ref;
+    if (d == null) {
+      return;
+    }
     $(".selected_info .item-headline span").text(d.name);
     $(".selected_info .item-prop").text(d.type);
     if (d.type === "doc") {
@@ -131,6 +134,48 @@ require(['jquery', 'd3', 'forced_graph_view', 'masonry', 'jquery_blockUI'], func
     });
     return service_ids;
   };
+  save = function() {
+    var fname, l, n, p, prop_node, res, x, _i, _j, _k, _len, _len1, _len2, _ref, _ref1;
+    res = {
+      "nodes": [],
+      "links": [],
+      "blacklist": r.blacklist
+    };
+    fname = prompt("请输入要保存的名字", r.root.id);
+    if (fname == null) {
+      return;
+    }
+    prop_node = "id name value index type url fixed distance_rank img".split(" ");
+    _ref = r.nodes;
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      x = _ref[_i];
+      n = {};
+      for (_j = 0, _len1 = prop_node.length; _j < _len1; _j++) {
+        p = prop_node[_j];
+        if (x[p] != null) {
+          n[p] = x[p];
+        }
+      }
+      res.nodes.push(n);
+    }
+    _ref1 = r.links;
+    for (_k = 0, _len2 = _ref1.length; _k < _len2; _k++) {
+      x = _ref1[_k];
+      l = {
+        "source": x.source.index,
+        "target": x.target.index
+      };
+      res.links.push(l);
+    }
+    res = JSON.stringify(res);
+    $.post("/model?id=" + fname, res, function(d) {
+      if (d.error != null) {
+        $.growlUI("保存出现如下错误:", d.error);
+        return;
+      }
+      return $.growlUI("", "已保存");
+    });
+  };
   play_step = function() {
     var func, info, s;
     if (r.current_step >= r.story.length || r.current_step < 0) {
@@ -185,7 +230,7 @@ require(['jquery', 'd3', 'forced_graph_view', 'masonry', 'jquery_blockUI'], func
     }, 'json');
   };
   $(document).ready(function() {
-    var key, options, params, services;
+    var id, key, options, params, services;
     params = url_params();
     if (params.theme != null) {
       $('body').addClass(params.theme);
@@ -201,15 +246,10 @@ require(['jquery', 'd3', 'forced_graph_view', 'masonry', 'jquery_blockUI'], func
       }
       search(key, services);
     } else if (params.id != null) {
-      $.getJSON("/model/load/" + params.id, function(d) {
+      id = encodeURIComponent(params.id);
+      $.getJSON("/model/load/" + id, function(d) {
         if (!d || (d.error != null)) {
-          $.getJSON("/info/" + params.id, function(d) {
-            if (!d || (d.error != null)) {
-              return;
-            }
-            draw(d);
-            return list(d);
-          });
+          return;
         } else {
           draw(d);
           list(d);
@@ -217,6 +257,22 @@ require(['jquery', 'd3', 'forced_graph_view', 'masonry', 'jquery_blockUI'], func
         click_handler(r.root);
       });
     }
+    $.getJSON("/services/", function(d) {
+      var checked, s, _i, _len, _ref;
+      if (!d || (d.error != null)) {
+        console.log('error get services');
+        return;
+      }
+      _ref = d.services;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        s = _ref[_i];
+        checked = "";
+        if ((s.select != null) && s.select === true) {
+          checked = "checked";
+        }
+        $('.services').append("<li>\n	<input type=\"checkbox\"	 data-service-id=\"" + s.id + "\" " + checked + " class=\"check-service\" id=\"" + s.id + "\"> <span>使用 " + s.name + " 搜索</span>\n</li>");
+      }
+    });
     options = {
       "container": "#nest-container",
       "width": "400",
@@ -304,7 +360,7 @@ require(['jquery', 'd3', 'forced_graph_view', 'masonry', 'jquery_blockUI'], func
       $.growlUI("", "宏 " + dic.out_fname + " 已开始运行");
       $.post("/automate", JSON.stringify(dic), function(d) {
         if (d.error != null) {
-          $.growlUI("错误", "宏 " + dic.out_fname + " 运行出现如下错误：\n" + d.error);
+          $.growlUI("宏 " + dic.out_fname + " 运行出现如下错误", d.error);
         } else {
           $.growlUI("", "宏 " + dic.out_fname + " 已完成运行");
         }
@@ -335,17 +391,10 @@ require(['jquery', 'd3', 'forced_graph_view', 'masonry', 'jquery_blockUI'], func
     });
     $('#q').keypress(function(e) {
       if (e.keyCode === 13) {
-        return $('#btn_search').click();
+        $('#btn_search').click();
       }
     });
-    return;
-    $("#btn_save").click(function() {
-      save().done(function() {
-        return alert("保存完成");
-      }).fail(function(d, e) {
-        return alert(e);
-      });
-    });
+    $("#btn_save").on("click", save);
     $('body').on("click", ".doc_url", function(e) {
       var $item, text, url;
       e.preventDefault();
@@ -359,22 +408,6 @@ require(['jquery', 'd3', 'forced_graph_view', 'masonry', 'jquery_blockUI'], func
       text = $(this).text();
       $(".doc_info iframe").attr('src', url);
       $(".doc_info .item-headline span").text(text);
-    });
-    $.getJSON("/services/", function(d) {
-      var checked, s, _i, _len, _ref;
-      if (!d || (d.error != null)) {
-        log('error get services');
-        return;
-      }
-      _ref = d.services;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        s = _ref[_i];
-        checked = "";
-        if ((s.select != null) && s.select === true) {
-          checked = "checked";
-        }
-        $('.services').append("<li>\n	<input type=\"checkbox\"	 data-service-id=\"" + s.id + "\" " + checked + " class=\"check-service\" id=\"" + s.id + "\"> <span>使用 " + s.name + " 搜索</span>\n</li>");
-      }
     });
   });
 });

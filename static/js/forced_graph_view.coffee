@@ -357,6 +357,7 @@ save = ->
 		"blacklist":r.blacklist,
 	}
 	fname= prompt "请输入要保存的名字",r.root.id
+	if not fname? then return
 	prop_node= "id name value index type url fixed distance_rank img".split(" ")
 	for x in r.nodes
 		n= {}

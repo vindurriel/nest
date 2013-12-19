@@ -425,6 +425,9 @@ save = function() {
     "blacklist": r.blacklist
   };
   fname = prompt("请输入要保存的名字", r.root.id);
+  if (fname == null) {
+    return;
+  }
   prop_node = "id name value index type url fixed distance_rank img".split(" ");
   _ref = r.nodes;
   for (_i = 0, _len = _ref.length; _i < _len; _i++) {

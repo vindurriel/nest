@@ -61,6 +61,7 @@ require ['jquery','d3','forced_graph_view','masonry','jquery_blockUI'] , ($,d3,f
 				return
 		return
 	window.click_handler= (d)->
+		if not d? then return
 		$(".selected_info .item-headline span").text(d.name)
 		$(".selected_info .item-prop").text(d.type)
 		if d.type=="doc"
@@ -102,6 +103,33 @@ require ['jquery','d3','forced_graph_view','masonry','jquery_blockUI'] , ($,d3,f
 			if $(this).data('serviceId')?
 				service_ids.push $(this).data('serviceId')
 		return service_ids
+	save = ->
+		res= {
+			"nodes":[],
+			"links":[],
+			"blacklist":r.blacklist,
+		}
+		fname= prompt "请输入要保存的名字",r.root.id
+		if not fname? then return
+		prop_node= "id name value index type url fixed distance_rank img".split(" ")
+		for x in r.nodes
+			n= {}
+			for p in prop_node
+				if x[p]?
+					n[p]=x[p]
+			res.nodes.push n
+		for x in r.links
+			l=
+				"source":x.source.index
+				"target":x.target.index
+			res.links.push l
+		res= JSON.stringify res
+		$.post "/model?id=#{fname}", res, (d)->
+			if d.error?
+				$.growlUI "保存出现如下错误:", d.error
+				return
+			$.growlUI "","已保存"
+		return
 	play_step= ->
 		if r.current_step>=r.story.length or r.current_step<0 then return
 		s= r.story[current_step]
@@ -156,18 +184,29 @@ require ['jquery','d3','forced_graph_view','masonry','jquery_blockUI'] , ($,d3,f
 				services= params.services.split('|')
 			search(key,services)
 		else if params.id?
-			$.getJSON "/model/load/#{params.id}", (d)->
+			id= encodeURIComponent params.id
+			$.getJSON "/model/load/#{id}", (d)->
 				if not d or d.error?
-					$.getJSON "/info/#{params.id}", (d)->
-						if not d or d.error?
-							return
-						draw d
-						list d
+					return
 				else 
 					draw d
 					list d
 				click_handler(r.root)
 				return
+		$.getJSON "/services/",(d)->
+			if not d or d.error?
+				console.log('error get services')
+				return
+			for s in d.services
+				checked = ""
+				if s.select? and s.select==true
+					checked= "checked"
+				$('.services').append """
+				<li>
+					<input type="checkbox"	 data-service-id="#{s.id}" #{checked} class="check-service" id="#{s.id}"> <span>使用 #{s.name} 搜索</span>
+				</li>
+				"""
+			return
 		options=
 			"container":"#nest-container",
 			"width":"400",
@@ -231,7 +270,7 @@ require ['jquery','d3','forced_graph_view','masonry','jquery_blockUI'] , ($,d3,f
 			$.growlUI "", "宏 #{dic.out_fname} 已开始运行"
 			$.post "/automate",	JSON.stringify(dic), (d)->
 				if d.error?
-					$.growlUI "错误","宏 #{dic.out_fname} 运行出现如下错误：\n#{d.error}"
+					$.growlUI "宏 #{dic.out_fname} 运行出现如下错误",d.error
 				else
 					$.growlUI "","宏 #{dic.out_fname} 已完成运行"
 				return
@@ -256,16 +295,10 @@ require ['jquery','d3','forced_graph_view','masonry','jquery_blockUI'] , ($,d3,f
 				$("#nav").removeClass("fade")
 			return
 		$('#q').keypress (e) ->
-				if e.keyCode==13
-					$('#btn_search').click()
+			if e.keyCode==13
+				$('#btn_search').click()
 			return
-		$("#btn_save").click ->
-			save()
-			.done ->
-				alert "保存完成"
-			.fail (d,e)->
-				alert e
-			return
+		$("#btn_save").on "click",save
 		$('body').on "click",".doc_url", (e)->
 			e.preventDefault()
 			if $(".doc_info").length==0
@@ -288,21 +321,6 @@ require ['jquery','d3','forced_graph_view','masonry','jquery_blockUI'] , ($,d3,f
 			text= $(this).text()
 			$(".doc_info iframe").attr('src',url)
 			$(".doc_info .item-headline span").text(text)
-			return
-		#fillServices
-		$.getJSON "/services/",(d)->
-			if not d or d.error?
-				log('error get services')
-				return
-			for s in d.services
-				checked = ""
-				if s.select? and s.select==true
-					checked= "checked"
-				$('.services').append """
-				<li>
-					<input type="checkbox"	 data-service-id="#{s.id}" #{checked} class="check-service" id="#{s.id}"> <span>使用 #{s.name} 搜索</span>
-				</li>
-				"""
 			return
 		return
 	return
