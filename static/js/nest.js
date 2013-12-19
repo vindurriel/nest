@@ -22,19 +22,18 @@ nest = (function() {
     this.zoom = __bind(this.zoom, this);
     this.cacheIt = __bind(this.cacheIt, this);
     this.highlighted = __bind(this.highlighted, this);
-    var container,
-      _this = this;
+    var _this = this;
     this.hNode = {};
     this.position_cache = {};
-    container = options.container || "#container";
-    this.w = options.width || $(container).width();
-    this.h = options.height || $(container).height();
+    this.container = options.container || "#container";
+    this.w = options.width || 400;
+    this.h = options.height || 200;
     this.ctrlPressed = false;
     this.altPressed = false;
     this.shiftPressed = false;
     this.blacklist = [];
     this.explored = [];
-    this.vis = d3.select(container).append("svg:svg").attr("viewBox", "0 0 " + this.w + " " + this.h).attr("pointer-events", "all").attr("preserveAspectRatio", "XMidYMid").call(d3.behavior.zoom().scaleExtent([0.01, 10]).on("zoom", this.zoom)).on('dblclick.zoom', null).append("svg:g");
+    this.vis = d3.select(this.container).append("svg:svg").attr("viewBox", "0 0 " + this.w + " " + this.h).attr("pointer-events", "all").attr("preserveAspectRatio", "XMidYMid").call(d3.behavior.zoom().scaleExtent([0.01, 10]).on("zoom", this.zoom)).on('dblclick.zoom', null).append("svg:g");
     this.link = this.vis.selectAll(".link");
     this.node = this.vis.selectAll(".node");
     this.force = d3.layout.force().on("end", function(d) {
@@ -122,6 +121,9 @@ nest = (function() {
         }
       ]
     };
+    $(document).keydown(this.cacheIt);
+    $(document).keyup(this.cacheIt);
+    return;
   }
 
   nest.prototype.highlighted = function() {
@@ -160,6 +162,7 @@ nest = (function() {
     if (json.explored != null) {
       this.explored = json.explored;
     }
+    $(this.container).show();
     this.nodes = json.nodes;
     this.links = json.links;
     this.root = json.nodes[0];
@@ -531,7 +534,7 @@ Array.prototype.remove = function(b) {
 };
 
 if (typeof define === "function" && (define.amd != null)) {
-  define("nest", ['d3'], function(d3) {
+  define("nest", ['jquery', 'd3'], function($, d3) {
     return {
       "nest": nest
     };

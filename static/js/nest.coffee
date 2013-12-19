@@ -13,15 +13,15 @@ class nest
 	constructor: (options)->
 		@hNode= {}
 		@position_cache={}
-		container= options.container or "#container"
-		@w = options.width or $(container).width()
-		@h = options.height or $(container).height()
+		@container= options.container or "#container"
+		@w = options.width or 400
+		@h = options.height or 200
 		@ctrlPressed = false
 		@altPressed = false
 		@shiftPressed = false
 		@blacklist= []
 		@explored= []
-		@vis = d3.select(container)
+		@vis = d3.select(@container)
 			.append("svg:svg")
 			.attr("viewBox","0 0 #{@w} #{@h}")	
 			.attr("pointer-events", "all")
@@ -76,6 +76,9 @@ class nest
 				}
 			],
 		}
+		$(document).keydown @cacheIt
+		$(document).keyup @cacheIt
+		return
 	highlighted: () => 
 		console.log @node.filter((d)->d.isHigh)
 		console.log @link.filter((d)->d.isHigh)
@@ -96,6 +99,7 @@ class nest
 			@blacklist= json.blacklist
 		if json.explored?
 			@explored= json.explored
+		$(@container).show()
 		@nodes= json.nodes
 		@links= json.links
 		@root = json.nodes[0]
@@ -396,6 +400,6 @@ Array::remove = (b) ->
 		return true
 	false
 if typeof(define)=="function" and define.amd?
-	define "nest", ['d3'], (d3)-> {
+	define "nest", ['jquery','d3'], ($,d3)-> {
 		"nest":nest,
 	}

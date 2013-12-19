@@ -161,12 +161,34 @@ require ['jquery','d3','nest','masonry','jquery_blockUI','imageloaded'] , ($,d3,
 				return
 			,'json'
 		return
+	load_automate= (scr)->
+		scr= encodeURIComponent(scr)
+		$.getJSON "/play/#{scr}", (d)->
+			window.story= []
+			window.current_step=0
+			graph=
+				nodes:[], 
+				links:[]
+			for s in d
+				if s.event=="draw"
+					graph.nodes= s.nodes
+					graph.links= s.links
+				else
+					graph.nodes= graph.nodes.concat(s.nodes)
+					graph.links= graph.links.concat(s.links)
+				cur= {}
+				$.extend(cur,graph)
+				window.story.push cur
+			play_step()
+			list window.story[0]
+			click_handler (window.nest.root)
 	$ ->
 		params= url_params()
 		if params.theme?
 			$('body').addClass(params.theme)
 		if params.no_nav?
 			$('body').addClass("no-nav")
+		needs_nest= false			
 		if params.q?
 			key= params.q
 			services=  ['baike']
@@ -178,11 +200,12 @@ require ['jquery','d3','nest','masonry','jquery_blockUI','imageloaded'] , ($,d3,
 			$.getJSON "/model/load/#{id}", (d)->
 				if not d or d.error?
 					return
-				else 
-					window.nest.draw d
-					list d
+				window.nest.draw d
+				list d
 				click_handler(window.nest.root)
 				return
+		else if params.automate?
+			load_automate params.automate
 		$.getJSON "/services/",(d)->
 			if not d or d.error?
 				console.log('error get services')
@@ -197,13 +220,11 @@ require ['jquery','d3','nest','masonry','jquery_blockUI','imageloaded'] , ($,d3,
 				</li>
 				"""
 			return
-		options=
+		window.nest= new Nest.nest ({
 			"container":"#nest-container",
 			"width":"400",
 			"height":"200",
-		window.nest= new Nest.nest (options)
-		$(document).keydown window.nest.cacheIt
-		$(document).keyup window.nest.cacheIt
+		})
 		$(document).on "click", ".btn-toggle-fullscreen" , ()->
 			ui= $(this).closest('div')
 			toggle= ui.hasClass('list-item')
@@ -214,29 +235,11 @@ require ['jquery','d3','nest','masonry','jquery_blockUI','imageloaded'] , ($,d3,
 				ui.removeClass('fullscreen').addClass('list-item')
 				window.masonry.layout()
 			$(this).val(if toggle then "收起" else "展开")
-
 		$("#btn_load").click ->
 			scr= prompt "要打开的文件名","default"
-			scr= encodeURIComponent(scr)
-			$.getJSON "/play/#{scr}", (d)->
-				window.story= []
-				window.current_step=0
-				graph=
-					nodes:[], 
-					links:[]
-				for s in d
-					if s.event=="draw"
-						graph.nodes= s.nodes
-						graph.links= s.links
-					else
-						graph.nodes= graph.nodes.concat(s.nodes)
-						graph.links= graph.links.concat(s.links)
-					cur= {}
-					$.extend(cur,graph)
-					window.story.push cur
-				play_step()
-				list window.story[0]
-				click_handler (window.nest.root)
+			if not scr?
+				return
+			load_automate scr
 		$("#btn_tip").click ->
 			$("#tip").slideToggle 200
 			return

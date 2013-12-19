@@ -1,5 +1,5 @@
 require(['jquery', 'd3', 'nest', 'masonry', 'jquery_blockUI', 'imageloaded'], function($, d3, Nest, Masonry, blockUI, imagesLoaded) {
-  var get_selected_services, list, play_step, save, search, t_item_action, url_params;
+  var get_selected_services, list, load_automate, play_step, save, search, t_item_action, url_params;
   url_params = function() {
     var pair, res, x, _i, _len, _ref;
     res = {};
@@ -219,8 +219,36 @@ require(['jquery', 'd3', 'nest', 'masonry', 'jquery_blockUI', 'imageloaded'], fu
       $.unblockUI();
     }, 'json');
   };
+  load_automate = function(scr) {
+    scr = encodeURIComponent(scr);
+    return $.getJSON("/play/" + scr, function(d) {
+      var cur, graph, s, _i, _len;
+      window.story = [];
+      window.current_step = 0;
+      graph = {
+        nodes: [],
+        links: []
+      };
+      for (_i = 0, _len = d.length; _i < _len; _i++) {
+        s = d[_i];
+        if (s.event === "draw") {
+          graph.nodes = s.nodes;
+          graph.links = s.links;
+        } else {
+          graph.nodes = graph.nodes.concat(s.nodes);
+          graph.links = graph.links.concat(s.links);
+        }
+        cur = {};
+        $.extend(cur, graph);
+        window.story.push(cur);
+      }
+      play_step();
+      list(window.story[0]);
+      return click_handler(window.nest.root);
+    });
+  };
   $(function() {
-    var id, key, options, params, services;
+    var id, key, needs_nest, params, services;
     params = url_params();
     if (params.theme != null) {
       $('body').addClass(params.theme);
@@ -228,6 +256,7 @@ require(['jquery', 'd3', 'nest', 'masonry', 'jquery_blockUI', 'imageloaded'], fu
     if (params.no_nav != null) {
       $('body').addClass("no-nav");
     }
+    needs_nest = false;
     if (params.q != null) {
       key = params.q;
       services = ['baike'];
@@ -240,12 +269,13 @@ require(['jquery', 'd3', 'nest', 'masonry', 'jquery_blockUI', 'imageloaded'], fu
       $.getJSON("/model/load/" + id, function(d) {
         if (!d || (d.error != null)) {
           return;
-        } else {
-          window.nest.draw(d);
-          list(d);
         }
+        window.nest.draw(d);
+        list(d);
         click_handler(window.nest.root);
       });
+    } else if (params.automate != null) {
+      load_automate(params.automate);
     }
     $.getJSON("/services/", function(d) {
       var checked, s, _i, _len, _ref;
@@ -263,14 +293,11 @@ require(['jquery', 'd3', 'nest', 'masonry', 'jquery_blockUI', 'imageloaded'], fu
         $('.services').append("<li>\n	<input type=\"checkbox\"	 data-service-id=\"" + s.id + "\" " + checked + " class=\"check-service\" id=\"" + s.id + "\"> <span>使用 " + s.name + " 搜索</span>\n</li>");
       }
     });
-    options = {
+    window.nest = new Nest.nest({
       "container": "#nest-container",
       "width": "400",
       "height": "200"
-    };
-    window.nest = new Nest.nest(options);
-    $(document).keydown(window.nest.cacheIt);
-    $(document).keyup(window.nest.cacheIt);
+    });
     $(document).on("click", ".btn-toggle-fullscreen", function() {
       var toggle, ui;
       ui = $(this).closest('div');
@@ -287,32 +314,10 @@ require(['jquery', 'd3', 'nest', 'masonry', 'jquery_blockUI', 'imageloaded'], fu
     $("#btn_load").click(function() {
       var scr;
       scr = prompt("要打开的文件名", "default");
-      scr = encodeURIComponent(scr);
-      return $.getJSON("/play/" + scr, function(d) {
-        var cur, graph, s, _i, _len;
-        window.story = [];
-        window.current_step = 0;
-        graph = {
-          nodes: [],
-          links: []
-        };
-        for (_i = 0, _len = d.length; _i < _len; _i++) {
-          s = d[_i];
-          if (s.event === "draw") {
-            graph.nodes = s.nodes;
-            graph.links = s.links;
-          } else {
-            graph.nodes = graph.nodes.concat(s.nodes);
-            graph.links = graph.links.concat(s.links);
-          }
-          cur = {};
-          $.extend(cur, graph);
-          window.story.push(cur);
-        }
-        play_step();
-        list(window.story[0]);
-        return click_handler(window.nest.root);
-      });
+      if (scr == null) {
+        return;
+      }
+      return load_automate(scr);
     });
     $("#btn_tip").click(function() {
       $("#tip").slideToggle(200);
