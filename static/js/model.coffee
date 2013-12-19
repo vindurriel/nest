@@ -1,5 +1,4 @@
-
-require ['jquery','d3','forced_graph_view','masonry','jquery_blockUI'] , ($,d3,fgv,Masonry,blockUI)->
+require ['jquery','d3','nest','masonry','jquery_blockUI','imageloaded'] , ($,d3,Nest,Masonry,blockUI,imagesLoaded)->
 	url_params= ()->
 		res={} 
 		for x in window.location.search.substring(1).split('&')
@@ -9,16 +8,15 @@ require ['jquery','d3','forced_graph_view','masonry','jquery_blockUI'] , ($,d3,f
 	requirejs.onError= (err)->
 		console.log err
 		throw err
-	window.t_item_action= (d)->
+	t_item_action= (d)->
 			"""
 				<a class="button small" href="#">收藏</a>
 				<a class="button small" href="#">分享</a>
 			"""
-	window.list= (d)->
+	list= (d)->
 		t_list_item= (d)->
 			details= if d.content? then d.content else ""
 			i= Math.floor(Math.random() * (10 - 0 + 1))
-			color= window.palette(d.type)
 			# imgurl= "http://lorempixel.com/80/80/technics/#{i}"
 			imgurl= ""
 			if d.img?
@@ -40,7 +38,6 @@ require ['jquery','d3','forced_graph_view','masonry','jquery_blockUI'] , ($,d3,f
 			window.masonry = new Masonry('#list-container',{"transitionDuration":"0.2s","itemSelector":".list-item"})
 		window.masonry.remove($(".list-item.normal").get())
 		window.masonry.layout()
-		color= window.palette(d.type)
 		$item= $(t_list_item(d))
 		$("#list-container").append($item)
 		window.masonry.appended($item.get())
@@ -52,15 +49,11 @@ require ['jquery','d3','forced_graph_view','masonry','jquery_blockUI'] , ($,d3,f
 			s=$(t_list_item(x))
 			$("#list-container").append(s)
 			window.masonry.appended(s.get())
-		if not window.imagesLoaded?
-			require ['imageloaded'],(imagesLoaded)->
-				window.imagesLoaded= new imagesLoaded("#list-container")
-				.on "progress", () ->
-					window.masonry.layout()
-					return
-				return
+		imagesLoaded document.querySelector("#list-container"),  ->
+			window.masonry.layout()
+			return
 		return
-	window.click_handler= (d)->
+	click_handler= (d)->
 		if not d? then return
 		$(".selected_info .item-headline span").text(d.name)
 		$(".selected_info .item-prop").text(d.type)
@@ -84,7 +77,7 @@ require ['jquery','d3','forced_graph_view','masonry','jquery_blockUI'] , ($,d3,f
 			detail=$(".selected_info .item-detail")
 			detail.empty()
 			docs= []
-			for link in r.degree[d.index]
+			for link in window.nest.degree[d.index]
 				if d==link.target then continue
 				n= link.target
 				if n.type!="referData" then continue
@@ -107,18 +100,18 @@ require ['jquery','d3','forced_graph_view','masonry','jquery_blockUI'] , ($,d3,f
 		res= {
 			"nodes":[],
 			"links":[],
-			"blacklist":r.blacklist,
+			"blacklist":window.nest.blacklist,
 		}
-		fname= prompt "请输入要保存的名字",r.root.id
+		fname= prompt "请输入要保存的名字",window.nest.root.id
 		if not fname? then return
 		prop_node= "id name value index type url fixed distance_rank img".split(" ")
-		for x in r.nodes
+		for x in window.nest.nodes
 			n= {}
 			for p in prop_node
 				if x[p]?
 					n[p]=x[p]
 			res.nodes.push n
-		for x in r.links
+		for x in window.nest.links
 			l=
 				"source":x.source.index
 				"target":x.target.index
@@ -131,15 +124,12 @@ require ['jquery','d3','forced_graph_view','masonry','jquery_blockUI'] , ($,d3,f
 			$.growlUI "","已保存"
 		return
 	play_step= ->
-		if r.current_step>=r.story.length or r.current_step<0 then return
-		s= r.story[current_step]
-		func= explore
-		if s.event=="draw"
-					func= draw
-		info= r.story[r.current_step]
+		if window.current_step>=window.story.length or window.current_step<0 then return
+		s= window.story[window.current_step]
+		info= window.story[window.current_step]
 		$("#story-indicator,.btn-next,.btn-prev,.btn-automate").show()
-		$("#story-indicator").text("第#{r.current_step+1}步，共#{r.story.length}步， 节点数：#{info.nodes.length}")
-		draw s
+		$("#story-indicator").text("第#{window.current_step+1}步，共#{window.story.length}步， 节点数：#{info.nodes.length}")
+		window.nest.draw s
 		return
 	search= (key, services)->
 		data= {
@@ -147,7 +137,7 @@ require ['jquery','d3','forced_graph_view','masonry','jquery_blockUI'] , ($,d3,f
 			'services':services,
 		}
 		keynode = {
-			'type':"baike",
+			'type':"query",
 			'name':key,
 		}
 		$.blockUI({message:"正在搜索"})
@@ -164,14 +154,14 @@ require ['jquery','d3','forced_graph_view','masonry','jquery_blockUI'] , ($,d3,f
 							target:i,
 						}
 					i+=1
-				draw d
+				window.nest.draw d
 				list d
-				click_handler(r.root)
+				click_handler(window.nest.root)
 				$.unblockUI()
 				return
 			,'json'
 		return
-	$(document).ready ->
+	$ ->
 		params= url_params()
 		if params.theme?
 			$('body').addClass(params.theme)
@@ -189,9 +179,9 @@ require ['jquery','d3','forced_graph_view','masonry','jquery_blockUI'] , ($,d3,f
 				if not d or d.error?
 					return
 				else 
-					draw d
+					window.nest.draw d
 					list d
-				click_handler(r.root)
+				click_handler(window.nest.root)
 				return
 		$.getJSON "/services/",(d)->
 			if not d or d.error?
@@ -211,9 +201,9 @@ require ['jquery','d3','forced_graph_view','masonry','jquery_blockUI'] , ($,d3,f
 			"container":"#nest-container",
 			"width":"400",
 			"height":"200",
-		window.nest(options)
-		$(document).keydown cacheIt
-		$(document).keyup cacheIt
+		window.nest= new Nest.nest (options)
+		$(document).keydown window.nest.cacheIt
+		$(document).keyup window.nest.cacheIt
 		$(document).on "click", ".btn-toggle-fullscreen" , ()->
 			ui= $(this).closest('div')
 			toggle= ui.hasClass('list-item')
@@ -227,9 +217,10 @@ require ['jquery','d3','forced_graph_view','masonry','jquery_blockUI'] , ($,d3,f
 
 		$("#btn_load").click ->
 			scr= prompt "要打开的文件名","default"
+			scr= encodeURIComponent(scr)
 			$.getJSON "/play/#{scr}", (d)->
-				r.story= []
-				r.current_step=0
+				window.story= []
+				window.current_step=0
 				graph=
 					nodes:[], 
 					links:[]
@@ -242,27 +233,27 @@ require ['jquery','d3','forced_graph_view','masonry','jquery_blockUI'] , ($,d3,f
 						graph.links= graph.links.concat(s.links)
 					cur= {}
 					$.extend(cur,graph)
-					r.story.push cur
+					window.story.push cur
 				play_step()
 		$("#btn_tip").click ->
 			$("#tip").slideToggle 200
 			return
 			
 		$(".btn-next").click ->
-			if r.current_step==r.story.length-1 then return
-			r.current_step+=1
+			if window.current_step==window.story.length-1 then return
+			window.current_step+=1
 			play_step()
 			return
 		$(".btn-prev").click ->
-			if r.current_step==0 then return
-			r.current_step-=1
+			if window.current_step==0 then return
+			window.current_step-=1
 			play_step()
 			return
 		$(".btn-automate-yes").click ->
 			dic=
-				"nodes":r.nodes,
-				"links":r.links.map((d)->{"source":d.source.index,"target":d.target.index}),
-				"blacklist":r.blacklist,
+				"nodes":window.nest.nodes,
+				"links":window.nest.links.map((d)->{"source":d.source.index,"target":d.target.index}),
+				"blacklist":window.nest.blacklist,
 			for p in "max_total_node_num max_single_node_num timeout_seconds max_depth out_fname".split(" ")
 				dic[p]=$("#"+p).val()
 			console.log dic
@@ -316,7 +307,6 @@ require ['jquery','d3','forced_graph_view','masonry','jquery_blockUI'] , ($,d3,f
 				$(".selected_info").after $item
 				window.masonry.reloadItems()
 				window.masonry.layout()
-				# window.masonry.prepended $item.get()
 			url=$(this).attr('href')
 			text= $(this).text()
 			$(".doc_info iframe").attr('src',url)

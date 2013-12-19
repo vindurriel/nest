@@ -79,6 +79,7 @@ render = (data,user_options) ->
 		.attr("y2", yScale.rangeExtent()[1] + gridChartOffset)
 		.style("stroke", "#000")
 	return
+if not define? then return
 define ['d3'], (d3)-> {
 	'render':render,
 }

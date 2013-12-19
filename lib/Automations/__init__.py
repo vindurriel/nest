@@ -195,6 +195,8 @@ def do_automate(nodes,links,dic):
 				"links":step['links'],
 			})
 		print "##loop end with num",len(h_nodes)
+	import base64
+	out_fname=base64.b64encode(decode(out_fname).encode('utf-8'))
 	outfile=cwd("..","..","static","files","{}.txt".format(out_fname))
 	print "##writing files to",outfile
 	file(outfile,'w').write(logger.tell())

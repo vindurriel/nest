@@ -7,6 +7,7 @@ web.template.Template.globals['config']=config
 ### router
 router="""
 / model
+/list model.list
 /model/load/(.+) model.load
 /model(?:/)?  model
 /explore(?:/)?  explore

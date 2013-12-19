@@ -1,5 +1,5 @@
-require(['jquery', 'd3', 'forced_graph_view', 'masonry', 'jquery_blockUI'], function($, d3, fgv, Masonry, blockUI) {
-  var get_selected_services, play_step, save, search, url_params;
+require(['jquery', 'd3', 'nest', 'masonry', 'jquery_blockUI', 'imageloaded'], function($, d3, Nest, Masonry, blockUI, imagesLoaded) {
+  var click_handler, get_selected_services, list, play_step, save, search, t_item_action, url_params;
   url_params = function() {
     var pair, res, x, _i, _len, _ref;
     res = {};
@@ -15,16 +15,15 @@ require(['jquery', 'd3', 'forced_graph_view', 'masonry', 'jquery_blockUI'], func
     console.log(err);
     throw err;
   };
-  window.t_item_action = function(d) {
+  t_item_action = function(d) {
     return "<a class=\"button small\" href=\"#\">收藏</a>\n<a class=\"button small\" href=\"#\">分享</a>";
   };
-  window.list = function(d) {
-    var $item, color, s, t_list_item, x, _i, _len, _ref;
+  list = function(d) {
+    var $item, s, t_list_item, x, _i, _len, _ref;
     t_list_item = function(d) {
-      var color, details, i, imgurl;
+      var details, i, imgurl;
       details = d.content != null ? d.content : "";
       i = Math.floor(Math.random() * (10 - 0 + 1));
-      color = window.palette(d.type);
       imgurl = "";
       if (d.img != null) {
         imgurl = d.img;
@@ -39,7 +38,6 @@ require(['jquery', 'd3', 'forced_graph_view', 'masonry', 'jquery_blockUI'], func
     }
     window.masonry.remove($(".list-item.normal").get());
     window.masonry.layout();
-    color = window.palette(d.type);
     $item = $(t_list_item(d));
     $("#list-container").append($item);
     window.masonry.appended($item.get());
@@ -57,15 +55,11 @@ require(['jquery', 'd3', 'forced_graph_view', 'masonry', 'jquery_blockUI'], func
       $("#list-container").append(s);
       window.masonry.appended(s.get());
     }
-    if (window.imagesLoaded == null) {
-      require(['imageloaded'], function(imagesLoaded) {
-        window.imagesLoaded = new imagesLoaded("#list-container").on("progress", function() {
-          window.masonry.layout();
-        });
-      });
-    }
+    imagesLoaded(document.querySelector("#list-container"), function() {
+      window.masonry.layout();
+    });
   };
-  window.click_handler = function(d) {
+  click_handler = function(d) {
     var container, detail, docs, link, n, value, _i, _j, _len, _len1, _ref;
     if (d == null) {
       return;
@@ -97,7 +91,7 @@ require(['jquery', 'd3', 'forced_graph_view', 'masonry', 'jquery_blockUI'], func
       detail = $(".selected_info .item-detail");
       detail.empty();
       docs = [];
-      _ref = r.degree[d.index];
+      _ref = window.nest.degree[d.index];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         link = _ref[_i];
         if (d === link.target) {
@@ -139,14 +133,14 @@ require(['jquery', 'd3', 'forced_graph_view', 'masonry', 'jquery_blockUI'], func
     res = {
       "nodes": [],
       "links": [],
-      "blacklist": r.blacklist
+      "blacklist": window.nest.blacklist
     };
-    fname = prompt("请输入要保存的名字", r.root.id);
+    fname = prompt("请输入要保存的名字", window.nest.root.id);
     if (fname == null) {
       return;
     }
     prop_node = "id name value index type url fixed distance_rank img".split(" ");
-    _ref = r.nodes;
+    _ref = window.nest.nodes;
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       x = _ref[_i];
       n = {};
@@ -158,7 +152,7 @@ require(['jquery', 'd3', 'forced_graph_view', 'masonry', 'jquery_blockUI'], func
       }
       res.nodes.push(n);
     }
-    _ref1 = r.links;
+    _ref1 = window.nest.links;
     for (_k = 0, _len2 = _ref1.length; _k < _len2; _k++) {
       x = _ref1[_k];
       l = {
@@ -177,19 +171,15 @@ require(['jquery', 'd3', 'forced_graph_view', 'masonry', 'jquery_blockUI'], func
     });
   };
   play_step = function() {
-    var func, info, s;
-    if (r.current_step >= r.story.length || r.current_step < 0) {
+    var info, s;
+    if (window.current_step >= window.story.length || window.current_step < 0) {
       return;
     }
-    s = r.story[current_step];
-    func = explore;
-    if (s.event === "draw") {
-      func = draw;
-    }
-    info = r.story[r.current_step];
+    s = window.story[window.current_step];
+    info = window.story[window.current_step];
     $("#story-indicator,.btn-next,.btn-prev,.btn-automate").show();
-    $("#story-indicator").text("第" + (r.current_step + 1) + "步，共" + r.story.length + "步， 节点数：" + info.nodes.length);
-    draw(s);
+    $("#story-indicator").text("第" + (window.current_step + 1) + "步，共" + window.story.length + "步， 节点数：" + info.nodes.length);
+    window.nest.draw(s);
   };
   search = function(key, services) {
     var data, keynode;
@@ -198,7 +188,7 @@ require(['jquery', 'd3', 'forced_graph_view', 'masonry', 'jquery_blockUI'], func
       'services': services
     };
     keynode = {
-      'type': "baike",
+      'type': "query",
       'name': key
     };
     $.blockUI({
@@ -223,13 +213,13 @@ require(['jquery', 'd3', 'forced_graph_view', 'masonry', 'jquery_blockUI'], func
         }
         i += 1;
       }
-      draw(d);
+      window.nest.draw(d);
       list(d);
-      click_handler(r.root);
+      click_handler(window.nest.root);
       $.unblockUI();
     }, 'json');
   };
-  $(document).ready(function() {
+  $(function() {
     var id, key, options, params, services;
     params = url_params();
     if (params.theme != null) {
@@ -251,10 +241,10 @@ require(['jquery', 'd3', 'forced_graph_view', 'masonry', 'jquery_blockUI'], func
         if (!d || (d.error != null)) {
           return;
         } else {
-          draw(d);
+          window.nest.draw(d);
           list(d);
         }
-        click_handler(r.root);
+        click_handler(window.nest.root);
       });
     }
     $.getJSON("/services/", function(d) {
@@ -278,9 +268,9 @@ require(['jquery', 'd3', 'forced_graph_view', 'masonry', 'jquery_blockUI'], func
       "width": "400",
       "height": "200"
     };
-    window.nest(options);
-    $(document).keydown(cacheIt);
-    $(document).keyup(cacheIt);
+    window.nest = new Nest.nest(options);
+    $(document).keydown(window.nest.cacheIt);
+    $(document).keyup(window.nest.cacheIt);
     $(document).on("click", ".btn-toggle-fullscreen", function() {
       var toggle, ui;
       ui = $(this).closest('div');
@@ -297,10 +287,11 @@ require(['jquery', 'd3', 'forced_graph_view', 'masonry', 'jquery_blockUI'], func
     $("#btn_load").click(function() {
       var scr;
       scr = prompt("要打开的文件名", "default");
+      scr = encodeURIComponent(scr);
       return $.getJSON("/play/" + scr, function(d) {
         var cur, graph, s, _i, _len;
-        r.story = [];
-        r.current_step = 0;
+        window.story = [];
+        window.current_step = 0;
         graph = {
           nodes: [],
           links: []
@@ -316,7 +307,7 @@ require(['jquery', 'd3', 'forced_graph_view', 'masonry', 'jquery_blockUI'], func
           }
           cur = {};
           $.extend(cur, graph);
-          r.story.push(cur);
+          window.story.push(cur);
         }
         return play_step();
       });
@@ -325,30 +316,30 @@ require(['jquery', 'd3', 'forced_graph_view', 'masonry', 'jquery_blockUI'], func
       $("#tip").slideToggle(200);
     });
     $(".btn-next").click(function() {
-      if (r.current_step === r.story.length - 1) {
+      if (window.current_step === window.story.length - 1) {
         return;
       }
-      r.current_step += 1;
+      window.current_step += 1;
       play_step();
     });
     $(".btn-prev").click(function() {
-      if (r.current_step === 0) {
+      if (window.current_step === 0) {
         return;
       }
-      r.current_step -= 1;
+      window.current_step -= 1;
       play_step();
     });
     $(".btn-automate-yes").click(function() {
       var dic, p, _i, _len, _ref;
       dic = {
-        "nodes": r.nodes,
-        "links": r.links.map(function(d) {
+        "nodes": window.nest.nodes,
+        "links": window.nest.links.map(function(d) {
           return {
             "source": d.source.index,
             "target": d.target.index
           };
         }),
-        "blacklist": r.blacklist
+        "blacklist": window.nest.blacklist
       };
       _ref = "max_total_node_num max_single_node_num timeout_seconds max_depth out_fname".split(" ");
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {

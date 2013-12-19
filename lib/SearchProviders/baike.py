@@ -15,10 +15,10 @@ def get_docs(term,dic={},limit=10):
 	from BeautifulSoup import BeautifulSoup as bs
 	term=decode(term).strip().replace('&nbsp;','')
 	if dic.get('is_subview',False):
-		url_search_word="http://baike.baidu.com"+dic['url']
+		url="http://baike.baidu.com"+dic['url']
 	else:
-		url_search_word="http://baike.baidu.com/search/word"
-	res=r.get(url_search_word,params={
+		url="http://baike.baidu.com/search/word"
+	res=r.get(url,params={
 			'word':term.encode('gbk'),
 			'pic':1,
 		})
@@ -54,4 +54,4 @@ class baike(search_provider_base):
 	def search(self,key,dic={}):
 		return get_docs(key,dic)
 if __name__ == '__main__':
-	json_print(baike().search('联合国'))
+	print json_print(baike().search('联合国'))
