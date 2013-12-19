@@ -2,6 +2,7 @@
   "nodes": [
     {
       "index": 0, 
+      "type": "baike", 
       "name": "string"
     }, 
     {
@@ -39,32 +40,32 @@
   "name": "string", 
   "links": [
     {
-      "source": 0, 
+      "source": "baike_string", 
       "name": "string->\u77e5\u8bc6\u70b9:string", 
       "target": 1
     }, 
     {
-      "source": 0, 
+      "source": "baike_string", 
       "name": "string->\u8bed\u8a00", 
       "target": 2
     }, 
     {
-      "source": 0, 
+      "source": "baike_string", 
       "name": "string->\u6570\u636e", 
       "target": 3
     }, 
     {
-      "source": 0, 
+      "source": "baike_string", 
       "name": "string->\u7a0b\u5e8f", 
       "target": 4
     }, 
     {
-      "source": 0, 
+      "source": "baike_string", 
       "name": "string->S\u5f00\u5934\u5355\u8bcd", 
       "target": 5
     }, 
     {
-      "source": 0, 
+      "source": "baike_string", 
       "name": "string->\u82f1\u6587\u5355\u8bcd", 
       "target": 6
     }

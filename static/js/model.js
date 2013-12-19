@@ -1,5 +1,5 @@
 require(['jquery', 'd3', 'nest', 'masonry', 'jquery_blockUI', 'imageloaded'], function($, d3, Nest, Masonry, blockUI, imagesLoaded) {
-  var click_handler, get_selected_services, list, play_step, save, search, t_item_action, url_params;
+  var get_selected_services, list, play_step, save, search, t_item_action, url_params;
   url_params = function() {
     var pair, res, x, _i, _len, _ref;
     res = {};
@@ -42,7 +42,7 @@ require(['jquery', 'd3', 'nest', 'masonry', 'jquery_blockUI', 'imageloaded'], fu
     $("#list-container").append($item);
     window.masonry.appended($item.get());
     $("#list-container div:last-child").addClass('selected_info');
-    if (d.nodes.length > 1000) {
+    if (d.nodes.length > 10) {
       return;
     }
     _ref = d.nodes;
@@ -59,7 +59,7 @@ require(['jquery', 'd3', 'nest', 'masonry', 'jquery_blockUI', 'imageloaded'], fu
       window.masonry.layout();
     });
   };
-  click_handler = function(d) {
+  window.click_handler = function(d) {
     var container, detail, docs, link, n, value, _i, _j, _len, _len1, _ref;
     if (d == null) {
       return;
@@ -156,8 +156,8 @@ require(['jquery', 'd3', 'nest', 'masonry', 'jquery_blockUI', 'imageloaded'], fu
     for (_k = 0, _len2 = _ref1.length; _k < _len2; _k++) {
       x = _ref1[_k];
       l = {
-        "source": x.source.index,
-        "target": x.target.index
+        "source": x.source.id,
+        "target": x.target.id
       };
       res.links.push(l);
     }
@@ -309,7 +309,9 @@ require(['jquery', 'd3', 'nest', 'masonry', 'jquery_blockUI', 'imageloaded'], fu
           $.extend(cur, graph);
           window.story.push(cur);
         }
-        return play_step();
+        play_step();
+        list(window.story[0]);
+        return click_handler(window.nest.root);
       });
     });
     $("#btn_tip").click(function() {

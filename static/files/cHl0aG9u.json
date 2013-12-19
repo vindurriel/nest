@@ -1,315 +1,578 @@
 {
+  "blacklist": [], 
   "nodes": [
     {
       "index": 0, 
+      "fixed": false, 
+      "id": "undefined_python", 
       "name": "python"
     }, 
     {
       "url": "http://www.pythontab.com", 
       "index": 1, 
       "type": "referData", 
+      "id": "referData_\u77e5\u8bc6\u70b9:python\u4e2d\u6587\u5f00\u53d1\u8005\u793e\u533a\u95e8\u6237\uff1aPythonTab\u4e2d\u6587\u7f51 ", 
       "name": "\u77e5\u8bc6\u70b9:python\u4e2d\u6587\u5f00\u53d1\u8005\u793e\u533a\u95e8\u6237\uff1aPythonTab\u4e2d\u6587\u7f51 "
     }, 
     {
       "index": 2, 
+      "fixed": false, 
       "type": "hudongBaikeCrawler", 
+      "id": "hudongBaikeCrawler_P\u5f00\u5934\u5355\u8bcd", 
       "name": "P\u5f00\u5934\u5355\u8bcd"
     }, 
     {
       "url": "http://www.csvt.net/resource/python", 
       "index": 3, 
       "type": "referData", 
+      "id": "referData_\u77e5\u8bc6\u70b9:Python\u5728\u7ebf\u8d44\u6e90\u5927\u5168", 
       "name": "\u77e5\u8bc6\u70b9:Python\u5728\u7ebf\u8d44\u6e90\u5927\u5168"
     }, 
     {
       "index": 4, 
+      "fixed": false, 
       "type": "baiduBaikeCrawler", 
+      "id": "baiduBaikeCrawler_\u8ba1\u7b97\u673a", 
       "name": "\u8ba1\u7b97\u673a"
     }, 
     {
       "index": 5, 
+      "fixed": false, 
       "type": "hudongBaikeCrawler", 
+      "id": "hudongBaikeCrawler_\u7f16\u7a0b\u8bed\u8a00", 
       "name": "\u7f16\u7a0b\u8bed\u8a00"
     }, 
     {
       "index": 6, 
+      "fixed": false, 
       "type": "baiduBaikeCrawler", 
+      "id": "baiduBaikeCrawler_Python", 
       "name": "Python"
     }, 
     {
       "url": "http://www.pythonpub.com/article/1479", 
       "index": 7, 
       "type": "referData", 
+      "id": "referData_\u77e5\u8bc6\u70b9:python\u6d41\u884c\u6307\u6570", 
       "name": "\u77e5\u8bc6\u70b9:python\u6d41\u884c\u6307\u6570"
     }, 
     {
       "url": "http://www.csvt.net/resource/videos", 
       "index": 8, 
       "type": "referData", 
+      "id": "referData_\u77e5\u8bc6\u70b9:Python\u89c6\u9891", 
       "name": "\u77e5\u8bc6\u70b9:Python\u89c6\u9891"
     }, 
     {
       "url": "http://www.python.org/getit/", 
       "index": 9, 
       "type": "referData", 
+      "id": "referData_\u77e5\u8bc6\u70b9:python\u6700\u65b0\u7248\u672c3.3.1", 
       "name": "\u77e5\u8bc6\u70b9:python\u6700\u65b0\u7248\u672c3.3.1"
     }, 
     {
       "url": "http://www.pythonfan.org", 
       "index": 10, 
       "type": "referData", 
+      "id": "referData_\u77e5\u8bc6\u70b9:Python\u7231\u597d\u8005", 
       "name": "\u77e5\u8bc6\u70b9:Python\u7231\u597d\u8005"
     }, 
     {
       "url": "http://www.pythoner.cn/", 
       "index": 11, 
       "type": "referData", 
+      "id": "referData_\u77e5\u8bc6\u70b9:Python\u5b66\u4e60\u89c6\u9891\u4e92\u52a8\u95ee\u7b54", 
       "name": "\u77e5\u8bc6\u70b9:Python\u5b66\u4e60\u89c6\u9891\u4e92\u52a8\u95ee\u7b54"
     }, 
     {
       "url": "http://www.pythontab.com", 
       "index": 12, 
       "type": "referData", 
+      "id": "referData_\u77e5\u8bc6\u70b9:http://www.pythontab.com", 
       "name": "\u77e5\u8bc6\u70b9:http://www.pythontab.com"
     }, 
     {
       "url": "http://www.pythondoc.com", 
       "index": 13, 
       "type": "referData", 
+      "id": "referData_\u77e5\u8bc6\u70b9:python tutorial\u4e2d\u6587", 
       "name": "\u77e5\u8bc6\u70b9:python tutorial\u4e2d\u6587"
     }, 
     {
       "url": "http://www.baike.com/wiki/python&prd=resoukuang", 
       "index": 14, 
       "type": "referData", 
+      "id": "referData_\u77e5\u8bc6\u70b9:Python", 
       "name": "\u77e5\u8bc6\u70b9:Python"
     }, 
     {
       "url": "http://www.cnpythoner.com", 
       "index": 15, 
       "type": "referData", 
+      "id": "referData_\u77e5\u8bc6\u70b9:Python\u6559\u7a0b\u5728\u7ebf\u5b66\u4e60", 
       "name": "\u77e5\u8bc6\u70b9:Python\u6559\u7a0b\u5728\u7ebf\u5b66\u4e60"
     }, 
     {
       "url": "http://www.pythontab.com", 
       "index": 16, 
       "type": "referData", 
+      "id": "referData_\u77e5\u8bc6\u70b9:PythonTab\u4e2d\u6587\u7f51", 
       "name": "\u77e5\u8bc6\u70b9:PythonTab\u4e2d\u6587\u7f51"
     }, 
     {
       "index": 17, 
+      "fixed": false, 
       "type": "baiduBaikeCrawler", 
+      "id": "baiduBaikeCrawler_\u8bed\u8a00", 
       "name": "\u8bed\u8a00"
     }, 
     {
       "index": 18, 
+      "fixed": false, 
       "type": "baiduBaikeCrawler", 
+      "id": "baiduBaikeCrawler_\u6c47\u7f16", 
       "name": "\u6c47\u7f16"
     }, 
     {
       "index": 19, 
+      "fixed": false, 
       "type": "hudongBaikeCrawler", 
+      "id": "hudongBaikeCrawler_\u8ba1\u7b97\u673a\u79d1\u5b66\u6280\u672f\u540d\u8bcd", 
       "name": "\u8ba1\u7b97\u673a\u79d1\u5b66\u6280\u672f\u540d\u8bcd"
     }, 
     {
       "index": 20, 
+      "fixed": false, 
       "type": "hudongBaikeCrawler", 
+      "id": "hudongBaikeCrawler_\u5e94\u7528\u79d1\u5b66", 
       "name": "\u5e94\u7528\u79d1\u5b66"
     }, 
     {
       "url": "http://baike.baidu.com/view/3379326.htm", 
       "index": 21, 
       "type": "referData", 
+      "id": "referData_\u77e5\u8bc6\u70b9:AAuto\u8bed\u8a00", 
       "name": "\u77e5\u8bc6\u70b9:AAuto\u8bed\u8a00"
     }, 
     {
       "index": 22, 
+      "fixed": false, 
       "type": "baiduBaikeCrawler", 
+      "id": "baiduBaikeCrawler_\u7f16\u7a0b", 
       "name": "\u7f16\u7a0b"
     }, 
     {
       "url": "http://www.wfkjxy.com.cn/jpkc/wjyl/wj-jiaoan/dzjci/%B5%DA4%D5%C2%20%BB%E3%B1%E0%D3%EF%D1%D4%B3%CC%D0%F2%C9%E8%BC%C6.htm", 
       "index": 23, 
       "type": "referData", 
+      "id": "referData_\u77e5\u8bc6\u70b9:\u7b2c4 \u7ae0 \u6c47\u7f16\u8bed\u8a00\u7a0b\u5e8f\u8bbe\u8ba1 ", 
       "name": "\u77e5\u8bc6\u70b9:\u7b2c4 \u7ae0 \u6c47\u7f16\u8bed\u8a00\u7a0b\u5e8f\u8bbe\u8ba1 "
     }, 
     {
       "url": "http://www.elecfans.com/instrument/271648.html", 
       "index": 24, 
       "type": "referData", 
+      "id": "referData_\u77e5\u8bc6\u70b9:\u811a\u672c\u8bed\u8a00\u5728\u6570\u636e\u91c7\u96c6\u7cfb\u7edf\u4e2d\u7684\u5e94\u7528\u7814\u7a76", 
       "name": "\u77e5\u8bc6\u70b9:\u811a\u672c\u8bed\u8a00\u5728\u6570\u636e\u91c7\u96c6\u7cfb\u7edf\u4e2d\u7684\u5e94\u7528\u7814\u7a76"
     }, 
     {
       "url": "http://c.spacebuilder.cn/News/T-1135", 
       "index": 25, 
       "type": "referData", 
+      "id": "referData_\u77e5\u8bc6\u70b9:\u6280\u672f\u540d\u8bcd\u672f\u8bed", 
       "name": "\u77e5\u8bc6\u70b9:\u6280\u672f\u540d\u8bcd\u672f\u8bed"
     }, 
     {
       "url": "http://www.baike.com/wiki/\u7f16\u7a0b\u8bed\u8a00&prd=resoukuang", 
       "index": 26, 
       "type": "referData", 
+      "id": "referData_\u77e5\u8bc6\u70b9:\u7f16\u7a0b\u8bed\u8a00", 
       "name": "\u77e5\u8bc6\u70b9:\u7f16\u7a0b\u8bed\u8a00"
     }, 
     {
       "url": "http://doc.studyget.com/showdoc-19317.html", 
       "index": 27, 
       "type": "referData", 
+      "id": "referData_\u77e5\u8bc6\u70b9:\u8ba1 \u7b97 \u673a \u8bed \u8a00", 
       "name": "\u77e5\u8bc6\u70b9:\u8ba1 \u7b97 \u673a \u8bed \u8a00"
     }, 
     {
       "url": "http://baike.baidu.com/view/14521.htm", 
       "index": 28, 
       "type": "referData", 
+      "id": "referData_\u77e5\u8bc6\u70b9:\u6613\u8bed\u8a00\u767e\u5ea6\u767e\u79d1", 
       "name": "\u77e5\u8bc6\u70b9:\u6613\u8bed\u8a00\u767e\u5ea6\u767e\u79d1"
+    }, 
+    {
+      "url": "/view/48840.htm", 
+      "index": 29, 
+      "type": "baike", 
+      "id": "baike_\u5de5\u7a0b", 
+      "name": "\u5de5\u7a0b"
+    }, 
+    {
+      "url": "/view/2507.htm", 
+      "index": 30, 
+      "type": "baike", 
+      "id": "baike_\u5316\u5b66", 
+      "name": "\u5316\u5b66"
+    }, 
+    {
+      "url": "/view/15707.htm", 
+      "index": 31, 
+      "type": "baike", 
+      "id": "baike_\u7269\u7406\u5b66", 
+      "name": "\u7269\u7406\u5b66"
+    }, 
+    {
+      "url": "/view/7868.htm#sub5065412", 
+      "index": 32, 
+      "type": "baike", 
+      "id": "baike_\u751f\u7269\u5b66", 
+      "name": "\u751f\u7269\u5b66"
+    }, 
+    {
+      "url": "/view/10445.htm", 
+      "index": 33, 
+      "type": "baike", 
+      "id": "baike_\u81ea\u7136\u79d1\u5b66", 
+      "name": "\u81ea\u7136\u79d1\u5b66"
+    }, 
+    {
+      "url": "http://zh.wikipedia.org/wiki/%E6%87%89%E7%94%A8%E7%A7%91%E5%AD%B8", 
+      "index": 34, 
+      "type": "referData", 
+      "id": "referData_\u5e94\u7528\u79d1\u5b66", 
+      "name": "\u5e94\u7528\u79d1\u5b66"
+    }, 
+    {
+      "url": "http://www.scirp.org/journal/ojapps/", 
+      "index": 35, 
+      "type": "referData", 
+      "id": "referData_\u5e94\u7528\u79d1\u5b66Applied Sciences", 
+      "name": "\u5e94\u7528\u79d1\u5b66Applied Sciences"
+    }, 
+    {
+      "url": "http://book.douban.com/subject/1669745/", 
+      "index": 36, 
+      "type": "referData", 
+      "id": "referData_\u8ba1\u7b97\u673a\u79d1\u5b66\u6280\u672f\u540d\u8bcd", 
+      "name": "\u8ba1\u7b97\u673a\u79d1\u5b66\u6280\u672f\u540d\u8bcd"
+    }, 
+    {
+      "url": "/view/178461.htm", 
+      "index": 37, 
+      "type": "baike", 
+      "id": "baike_\u6307\u4ee4", 
+      "name": "\u6307\u4ee4"
+    }, 
+    {
+      "url": "/view/49.htm", 
+      "index": 38, 
+      "type": "baike", 
+      "id": "baike_\u6c47\u7f16\u8bed\u8a00", 
+      "name": "\u6c47\u7f16\u8bed\u8a00"
+    }, 
+    {
+      "url": "/view/6159.htm", 
+      "index": 39, 
+      "type": "baike", 
+      "id": "baike_\u5bc4\u5b58\u5668", 
+      "name": "\u5bc4\u5b58\u5668"
+    }, 
+    {
+      "url": "/view/1377016.htm", 
+      "index": 40, 
+      "type": "baike", 
+      "id": "baike_\u6c47\u7f16\u8bed\u8a00\u7a0b\u5e8f\u8bbe\u8ba1", 
+      "name": "\u6c47\u7f16\u8bed\u8a00\u7a0b\u5e8f\u8bbe\u8ba1"
+    }, 
+    {
+      "url": "/view/399895.htm", 
+      "index": 41, 
+      "type": "baike", 
+      "id": "baike_\u590d\u6742", 
+      "name": "\u590d\u6742"
+    }, 
+    {
+      "url": "http://liyanblog.cn/articles/2012/09/19/1348046135898.html ", 
+      "index": 42, 
+      "type": "referData", 
+      "id": "referData_\u6c47\u7f16", 
+      "name": "\u6c47\u7f16"
+    }, 
+    {
+      "url": "/view/280138.htm", 
+      "index": 43, 
+      "type": "baike", 
+      "id": "baike_\u8ba1\u7b97", 
+      "name": "\u8ba1\u7b97"
+    }, 
+    {
+      "url": "/view/38752.htm", 
+      "index": 44, 
+      "type": "baike", 
+      "id": "baike_\u6570\u636e", 
+      "name": "\u6570\u636e"
+    }, 
+    {
+      "url": "/view/87682.htm", 
+      "index": 45, 
+      "type": "baike", 
+      "id": "baike_\u5b58\u50a8", 
+      "name": "\u5b58\u50a8"
+    }, 
+    {
+      "url": "/view/3487.htm", 
+      "index": 46, 
+      "type": "baike", 
+      "id": "baike_\u7f51\u7edc", 
+      "name": "\u7f51\u7edc"
+    }, 
+    {
+      "url": "/view/37.htm", 
+      "index": 47, 
+      "type": "baike", 
+      "id": "baike_\u8f6f\u4ef6", 
+      "name": "\u8f6f\u4ef6"
+    }, 
+    {
+      "url": "http://www.xjedu.gov.cn/whxx/lscl/2012/48949.htm", 
+      "index": 48, 
+      "type": "referData", 
+      "id": "referData_\u8ba1\u7b97\u673a\u53d1\u5c55\u53f2", 
+      "name": "\u8ba1\u7b97\u673a\u53d1\u5c55\u53f2"
+    }, 
+    {
+      "url": "http://news.hexun.com/2013-11-01/159285342.html", 
+      "index": 49, 
+      "type": "referData", 
+      "id": "referData_\u4e2d\u56fd\u4ee5\u6539\u9769\u521b\u65b0\u63a8\u8fdb\u79d1\u6280\u9769\u547d\u548c\u4ea7\u4e1a\u53d8\u9769", 
+      "name": "\u4e2d\u56fd\u4ee5\u6539\u9769\u521b\u65b0\u63a8\u8fdb\u79d1\u6280\u9769\u547d\u548c\u4ea7\u4e1a\u53d8\u9769"
+    }, 
+    {
+      "url": "http://tech.hexun.com/2013-11-13/159629588.html", 
+      "index": 50, 
+      "type": "referData", 
+      "id": "referData_\u90a3\u4e9b\u6539\u53d8\u751f\u6d3b\u7684\u6570\u7801\u4ea7\u54c1\u4e4b\u8ba1\u7b97\u673a", 
+      "name": "\u90a3\u4e9b\u6539\u53d8\u751f\u6d3b\u7684\u6570\u7801\u4ea7\u54c1\u4e4b\u8ba1\u7b97\u673a"
+    }, 
+    {
+      "url": "http://web.gxmu.edu.cn/zz/Article/ShowArticle.asp?ArticleID=72", 
+      "index": 51, 
+      "type": "referData", 
+      "id": "referData_\u8ba1\u7b97\u673a\u7684\u53d1\u5c55\u5386\u7a0b", 
+      "name": "\u8ba1\u7b97\u673a\u7684\u53d1\u5c55\u5386\u7a0b"
     }
   ], 
-  "name": "python", 
   "links": [
     {
       "source": 0, 
-      "name": "python->\u77e5\u8bc6\u70b9:python\u4e2d\u6587\u5f00\u53d1\u8005\u793e\u533a\u95e8\u6237\uff1aPythonTab\u4e2d\u6587\u7f51 ", 
       "target": 1
     }, 
     {
       "source": 0, 
-      "name": "python->P\u5f00\u5934\u5355\u8bcd", 
       "target": 2
     }, 
     {
       "source": 0, 
-      "name": "python->\u77e5\u8bc6\u70b9:Python\u5728\u7ebf\u8d44\u6e90\u5927\u5168", 
       "target": 3
     }, 
     {
       "source": 0, 
-      "name": "python->\u8ba1\u7b97\u673a", 
       "target": 4
     }, 
     {
       "source": 0, 
-      "name": "python->\u7f16\u7a0b\u8bed\u8a00", 
       "target": 5
     }, 
     {
       "source": 0, 
-      "name": "python->Python", 
       "target": 6
     }, 
     {
       "source": 0, 
-      "name": "python->\u77e5\u8bc6\u70b9:python\u6d41\u884c\u6307\u6570", 
       "target": 7
     }, 
     {
       "source": 0, 
-      "name": "python->\u77e5\u8bc6\u70b9:Python\u89c6\u9891", 
       "target": 8
     }, 
     {
       "source": 0, 
-      "name": "python->\u77e5\u8bc6\u70b9:python\u6700\u65b0\u7248\u672c3.3.1", 
       "target": 9
     }, 
     {
       "source": 0, 
-      "name": "python->\u77e5\u8bc6\u70b9:Python\u7231\u597d\u8005", 
       "target": 10
     }, 
     {
       "source": 0, 
-      "name": "python->\u77e5\u8bc6\u70b9:Python\u5b66\u4e60\u89c6\u9891\u4e92\u52a8\u95ee\u7b54", 
       "target": 11
     }, 
     {
       "source": 0, 
-      "name": "python->\u77e5\u8bc6\u70b9:http://www.pythontab.com", 
       "target": 12
     }, 
     {
       "source": 0, 
-      "name": "python->\u77e5\u8bc6\u70b9:python tutorial\u4e2d\u6587", 
       "target": 13
     }, 
     {
       "source": 0, 
-      "name": "python->\u77e5\u8bc6\u70b9:Python", 
       "target": 14
     }, 
     {
       "source": 0, 
-      "name": "python->\u77e5\u8bc6\u70b9:Python\u6559\u7a0b\u5728\u7ebf\u5b66\u4e60", 
       "target": 15
     }, 
     {
       "source": 0, 
-      "name": "python->\u77e5\u8bc6\u70b9:PythonTab\u4e2d\u6587\u7f51", 
       "target": 16
     }, 
     {
       "source": 5, 
-      "name": "\u7f16\u7a0b\u8bed\u8a00->\u8bed\u8a00", 
       "target": 17
     }, 
     {
       "source": 5, 
-      "name": "\u7f16\u7a0b\u8bed\u8a00->\u6c47\u7f16", 
       "target": 18
     }, 
     {
       "source": 5, 
-      "name": "\u7f16\u7a0b\u8bed\u8a00->\u8ba1\u7b97\u673a\u79d1\u5b66\u6280\u672f\u540d\u8bcd", 
       "target": 19
     }, 
     {
       "source": 5, 
-      "name": "\u7f16\u7a0b\u8bed\u8a00->\u5e94\u7528\u79d1\u5b66", 
       "target": 20
     }, 
     {
       "source": 5, 
-      "name": "\u7f16\u7a0b\u8bed\u8a00->\u77e5\u8bc6\u70b9:AAuto\u8bed\u8a00", 
       "target": 21
     }, 
     {
       "source": 5, 
-      "name": "\u7f16\u7a0b\u8bed\u8a00->\u7f16\u7a0b", 
       "target": 22
     }, 
     {
       "source": 5, 
-      "name": "\u7f16\u7a0b\u8bed\u8a00->\u77e5\u8bc6\u70b9:\u7b2c4 \u7ae0 \u6c47\u7f16\u8bed\u8a00\u7a0b\u5e8f\u8bbe\u8ba1 ", 
       "target": 23
     }, 
     {
       "source": 5, 
-      "name": "\u7f16\u7a0b\u8bed\u8a00->\u77e5\u8bc6\u70b9:\u811a\u672c\u8bed\u8a00\u5728\u6570\u636e\u91c7\u96c6\u7cfb\u7edf\u4e2d\u7684\u5e94\u7528\u7814\u7a76", 
       "target": 24
     }, 
     {
       "source": 5, 
-      "name": "\u7f16\u7a0b\u8bed\u8a00->\u77e5\u8bc6\u70b9:\u6280\u672f\u540d\u8bcd\u672f\u8bed", 
       "target": 25
     }, 
     {
       "source": 5, 
-      "name": "\u7f16\u7a0b\u8bed\u8a00->\u77e5\u8bc6\u70b9:\u7f16\u7a0b\u8bed\u8a00", 
       "target": 26
     }, 
     {
       "source": 5, 
-      "name": "\u7f16\u7a0b\u8bed\u8a00->\u77e5\u8bc6\u70b9:\u8ba1 \u7b97 \u673a \u8bed \u8a00", 
       "target": 27
     }, 
     {
       "source": 5, 
-      "name": "\u7f16\u7a0b\u8bed\u8a00->\u77e5\u8bc6\u70b9:\u6613\u8bed\u8a00\u767e\u5ea6\u767e\u79d1", 
       "target": 28
     }, 
     {
       "source": 5, 
-      "name": "\u7f16\u7a0b\u8bed\u8a00->\u8ba1\u7b97\u673a", 
       "target": 4
+    }, 
+    {
+      "source": 20, 
+      "target": 29
+    }, 
+    {
+      "source": 20, 
+      "target": 30
+    }, 
+    {
+      "source": 20, 
+      "target": 31
+    }, 
+    {
+      "source": 20, 
+      "target": 32
+    }, 
+    {
+      "source": 20, 
+      "target": 33
+    }, 
+    {
+      "source": 20, 
+      "target": 34
+    }, 
+    {
+      "source": 20, 
+      "target": 35
+    }, 
+    {
+      "source": 19, 
+      "target": 36
+    }, 
+    {
+      "source": 18, 
+      "target": 37
+    }, 
+    {
+      "source": 18, 
+      "target": 38
+    }, 
+    {
+      "source": 18, 
+      "target": 39
+    }, 
+    {
+      "source": 18, 
+      "target": 40
+    }, 
+    {
+      "source": 18, 
+      "target": 41
+    }, 
+    {
+      "source": 18, 
+      "target": 42
+    }, 
+    {
+      "source": 4, 
+      "target": 43
+    }, 
+    {
+      "source": 4, 
+      "target": 44
+    }, 
+    {
+      "source": 4, 
+      "target": 45
+    }, 
+    {
+      "source": 4, 
+      "target": 46
+    }, 
+    {
+      "source": 4, 
+      "target": 47
+    }, 
+    {
+      "source": 4, 
+      "target": 48
+    }, 
+    {
+      "source": 4, 
+      "target": 49
+    }, 
+    {
+      "source": 4, 
+      "target": 50
+    }, 
+    {
+      "source": 4, 
+      "target": 51
     }
   ]
 }

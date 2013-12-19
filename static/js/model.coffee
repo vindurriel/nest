@@ -42,7 +42,7 @@ require ['jquery','d3','nest','masonry','jquery_blockUI','imageloaded'] , ($,d3,
 		$("#list-container").append($item)
 		window.masonry.appended($item.get())
 		$("#list-container div:last-child").addClass('selected_info')
-		if d.nodes.length > 1000
+		if d.nodes.length > 10
 			return
 		for x in d.nodes
 			if x.type=="referData" then continue
@@ -53,7 +53,7 @@ require ['jquery','d3','nest','masonry','jquery_blockUI','imageloaded'] , ($,d3,
 			window.masonry.layout()
 			return
 		return
-	click_handler= (d)->
+	window.click_handler= (d)->
 		if not d? then return
 		$(".selected_info .item-headline span").text(d.name)
 		$(".selected_info .item-prop").text(d.type)
@@ -113,8 +113,8 @@ require ['jquery','d3','nest','masonry','jquery_blockUI','imageloaded'] , ($,d3,
 			res.nodes.push n
 		for x in window.nest.links
 			l=
-				"source":x.source.index
-				"target":x.target.index
+				"source":x.source.id
+				"target":x.target.id
 			res.links.push l
 		res= JSON.stringify res
 		$.post "/model?id=#{fname}", res, (d)->
@@ -156,7 +156,7 @@ require ['jquery','d3','nest','masonry','jquery_blockUI','imageloaded'] , ($,d3,
 					i+=1
 				window.nest.draw d
 				list d
-				click_handler(window.nest.root)
+				click_handler (window.nest.root)
 				$.unblockUI()
 				return
 			,'json'
@@ -235,6 +235,8 @@ require ['jquery','d3','nest','masonry','jquery_blockUI','imageloaded'] , ($,d3,
 					$.extend(cur,graph)
 					window.story.push cur
 				play_step()
+				list window.story[0]
+				click_handler (window.nest.root)
 		$("#btn_tip").click ->
 			$("#tip").slideToggle 200
 			return

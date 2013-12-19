@@ -1,6 +1,5 @@
 var nest,
-  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
 nest = (function() {
   nest.colors = ["song", "artist", "user", "album", 'relationship', "baiduBaikeCrawler", "hudongBaikeCrawler", "referData"];
@@ -17,11 +16,14 @@ nest = (function() {
     this.tick = __bind(this.tick, this);
     this.getR = __bind(this.getR, this);
     this.update = __bind(this.update, this);
+    this.normalize_link = __bind(this.normalize_link, this);
+    this.normalize = __bind(this.normalize, this);
     this.draw = __bind(this.draw, this);
-    this.redraw = __bind(this.redraw, this);
+    this.zoom = __bind(this.zoom, this);
     this.cacheIt = __bind(this.cacheIt, this);
     this.highlighted = __bind(this.highlighted, this);
-    var container;
+    var container,
+      _this = this;
     this.hNode = {};
     this.position_cache = {};
     container = options.container || "#container";
@@ -32,9 +34,31 @@ nest = (function() {
     this.shiftPressed = false;
     this.blacklist = [];
     this.explored = [];
-    this.vis = d3.select(container).append("svg:svg").attr("viewBox", "0 0 " + this.w + " " + this.h).attr("pointer-events", "all").attr("preserveAspectRatio", "XMidYMid").call(d3.behavior.zoom().scaleExtent([0.01, 10]).on("zoom", this.redraw)).on('dblclick.zoom', null).append("svg:g");
+    this.vis = d3.select(container).append("svg:svg").attr("viewBox", "0 0 " + this.w + " " + this.h).attr("pointer-events", "all").attr("preserveAspectRatio", "XMidYMid").call(d3.behavior.zoom().scaleExtent([0.01, 10]).on("zoom", this.zoom)).on('dblclick.zoom', null).append("svg:g");
     this.link = this.vis.selectAll(".link");
     this.node = this.vis.selectAll(".node");
+    this.force = d3.layout.force().on("end", function(d) {
+      _this.nodes.forEach(function(n) {
+        if (n._fixed != null) {
+          n.fixed = true;
+        }
+      });
+    }).on("tick", this.tick).charge(function(d) {
+      if (d.type === "referData") {
+        return -20;
+      } else {
+        return -200;
+      }
+    }).linkDistance(20).linkStrength(function(d) {
+      if (d.value != null) {
+        return 1.0 - d.value;
+      } else {
+        return 0.1;
+      }
+    }).size([this.w, this.h]);
+    this.drag = this.force.drag().on('dragend', function(d) {
+      d.fixed = true;
+    });
     this.relationships = {
       'artist': [
         {
@@ -116,7 +140,7 @@ nest = (function() {
     return true;
   };
 
-  nest.prototype.redraw = function() {
+  nest.prototype.zoom = function() {
     this.scale = d3.event.scale;
     this.vis.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + this.scale + ")");
     return this.vis.selectAll("text").style("font-size", (1 / this.scale) + "em");
@@ -141,58 +165,62 @@ nest = (function() {
     this.root = json.nodes[0];
     this.theFocus = this.root;
     this.root.isHigh = true;
-    this.force = d3.layout.force().on("end", function(d) {
-      _this.nodes.forEach(function(n) {
-        if (n._fixed != null) {
-          n.fixed = true;
-        }
-      });
-    }).on("tick", this.tick).charge(function(d) {
-      if (d.type === "referData") {
-        return -20;
-      } else {
-        return -200;
-      }
-    }).linkDistance(20).linkStrength(function(d) {
-      if (d.value != null) {
-        return 1.0 - d.value;
-      } else {
-        return 0.1;
-      }
-    }).size([this.w, this.h]).nodes(this.nodes).links(this.links);
+    this.force.nodes(this.nodes).links(this.links);
     n = this.nodes.length;
     this.nodes.forEach(function(d, i) {
-      if (d.id == null) {
-        d.id = d.name;
-      }
-      if (__indexOf.call(d.id, '_') < 0) {
-        d.id = "" + d.type + "_" + d.id;
-      }
+      _this.normalize_id(d);
       if (d.fixed != null) {
         d.fixed = void 0;
         d._fixed = true;
       } else {
-        d.x = this.w * (i % 10) / 10;
-        d.y = i * this.h / n;
+        d.x = _this.w * (i % 10) / 10;
+        d.y = i * _this.h / n;
       }
     });
     this.root.x = this.w / 2;
     this.root.y = this.h / 2;
     this.root.fixed = true;
+    this.force.nodes(this.nodes).links(this.links);
     this.update();
   };
 
+  nest.prototype.normalize = function(x) {
+    if (typeof x === "string" && (this.hNode[x] != null)) {
+      return this.hNode[x];
+    }
+    return x;
+  };
+
+  nest.prototype.normalize_link = function(l) {
+    l.source = this.normalize(l.source);
+    l.target = this.normalize(l.target);
+  };
+
   nest.prototype.update = function() {
-    var drag, i, j, n, nod, nodeEnter, x, _i, _j, _k, _len, _ref, _ref1, _ref2,
+    var i, j, l, n, nod, nodeEnter, x, _i, _j, _k, _l, _len, _len1, _ref, _ref1, _ref2, _ref3,
       _this = this;
+    this.matrix = [];
+    this.degree = [];
+    this.hNode = {};
+    n = this.nodes.length;
+    for (i = _i = 0, _ref = n - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
+      this.hNode[this.nodes[i].id] = this.nodes[i];
+      this.degree.push([]);
+      this.matrix.push([]);
+      for (j = _j = 0, _ref1 = n - 1; 0 <= _ref1 ? _j <= _ref1 : _j >= _ref1; j = 0 <= _ref1 ? ++_j : --_j) {
+        this.matrix[i].push(null);
+      }
+    }
+    _ref2 = this.links;
+    for (_k = 0, _len = _ref2.length; _k < _len; _k++) {
+      l = _ref2[_k];
+      this.normalize_link(l);
+    }
     this.link = this.link.data(this.links);
     this.link.enter().insert("line", ".node").classed("link", true);
     this.link.exit().remove();
     this.node = this.vis.selectAll(".node").data(this.nodes, function(d) {
       return d.id;
-    });
-    drag = this.force.drag().on('dragend', function(d) {
-      d.fixed = true;
     });
     _this = this;
     nodeEnter = this.node.enter().append("g").attr("class", "node").on("click", this.click).on('mouseover', function(d) {
@@ -203,7 +231,7 @@ nest = (function() {
       return d.isHigh === true;
     }).attr("transform", function(d) {
       return "translate(" + d.x + "," + d.y + ")";
-    }).call(drag);
+    }).call(this.drag);
     nodeEnter.append("circle").attr("cx", 0).attr("cy", 0).attr("r", this.getR).style("fill", this.color);
     this.node.exit().remove();
     d3.selectAll(".node circle").attr("r", this.getR).style("fill", this.color);
@@ -223,21 +251,9 @@ nest = (function() {
       return d.isSearching;
     }).append("animate").attr("attributeName", 'cx').attr("begin", '0s').attr("dur", '0.1s').attr("from", '-5').attr("to", '5').attr("fill", 'remove').attr("repeatCount", 'indefinite').classed("search-img", true);
     this.force.start();
-    this.matrix = [];
-    this.degree = [];
-    this.hNode = {};
-    n = this.nodes.length;
-    for (i = _i = 0, _ref = n - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
-      this.hNode[this.nodes[i].id] = this.nodes[i];
-      this.degree.push([]);
-      this.matrix.push([]);
-      for (j = _j = 0, _ref1 = n - 1; 0 <= _ref1 ? _j <= _ref1 : _j >= _ref1; j = 0 <= _ref1 ? ++_j : --_j) {
-        this.matrix[i].push(null);
-      }
-    }
-    _ref2 = this.links;
-    for (_k = 0, _len = _ref2.length; _k < _len; _k++) {
-      x = _ref2[_k];
+    _ref3 = this.links;
+    for (_l = 0, _len1 = _ref3.length; _l < _len1; _l++) {
+      x = _ref3[_l];
       this.degree[x.source.index].push(x);
       this.degree[x.target.index].push(x);
       this.matrix[x.source.index][x.target.index] = x;
@@ -301,7 +317,7 @@ nest = (function() {
       res = this.palette(d.type);
     }
     if (d.distance_rank != null) {
-      res = d3.hsl(res).brighter(d.distance_rank * .8).toString();
+      res = d3.hsl(res).brighter(d.distance_rank).toString();
     }
     return res;
   };
@@ -362,10 +378,20 @@ nest = (function() {
     } else {
       this.highlight(d);
       this.update();
-      if (typeof click_handler !== "undefined" && click_handler !== null) {
-        click_handler(d);
+      if (window.click_handler != null) {
+        window.click_handler(d);
       }
     }
+  };
+
+  nest.prototype.normalize_id = function(x) {
+    if (x.id == null) {
+      x.id = x.name;
+    }
+    if (x.id.indexOf('_') < 0) {
+      x.id = "" + x.type + "_" + x.id;
+    }
+    return x;
   };
 
   nest.prototype.explore = function(data) {
@@ -373,12 +399,7 @@ nest = (function() {
     _ref = data.nodes;
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       x = _ref[_i];
-      if (x.id == null) {
-        x.id = x.name;
-      }
-      if (x.id.indexOf('_') < 0) {
-        x.id = "" + x.type + "_" + x.id;
-      }
+      this.normalize_id(x);
       this.nodes.push(x);
     }
     _ref1 = data.links;
@@ -404,10 +425,7 @@ nest = (function() {
       _ref = data[id];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         x = _ref[_i];
-        if (x.id == null) {
-          x.id = x.name;
-        }
-        x.id = "" + x.type + "_" + x.id;
+        this.normalize_id(x);
         if (this.blacklist.indexOf(x.id) >= 0) {
           continue;
         }

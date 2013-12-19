@@ -11,6 +11,7 @@ class explore:
 	def explore(self,key,serviceType,dic={}):
 		print "###exploring",serviceType
 		self.result[serviceType]= self.factory(serviceType).explore(key,dic)
+		print "###done exploring",serviceType
 	def POST(self):
 		import json
 		web.header('Content-Type', 'application/json')

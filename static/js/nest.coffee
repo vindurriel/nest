@@ -26,12 +26,25 @@ class nest
 			.attr("viewBox","0 0 #{@w} #{@h}")	
 			.attr("pointer-events", "all")
 			.attr("preserveAspectRatio","XMidYMid")
-			.call(d3.behavior.zoom().scaleExtent([0.01,10]).on("zoom", @redraw)).on('dblclick.zoom',null)
+			.call(d3.behavior.zoom().scaleExtent([0.01,10]).on("zoom", @zoom)).on('dblclick.zoom',null)
 			.append("svg:g")
 		@link = @vis.selectAll(".link")
 		@node = @vis.selectAll(".node")
-		
-
+		@force = d3.layout.force()
+		.on("end",(d)=>
+			@nodes.forEach (n)->
+				if n._fixed? then n.fixed= true
+				return
+			return
+		).on("tick", @tick)
+		.charge (d)->
+			if d.type=="referData" then -20 else -200
+		.linkDistance(20)
+		.linkStrength((d)->if d.value? then 1.0-d.value else 0.1)
+		.size([@w, @h])
+		@drag= @force.drag().on 'dragend', (d)->
+			d.fixed= true
+			return
 		@relationships={
 			'artist':[{
 					"id": (d)-> "hitsongs_of_#{d.id}",
@@ -72,7 +85,7 @@ class nest
 		@altPressed = e.altKey
 		@shiftPressed = e.shiftKey
 		return true
-	redraw : () =>
+	zoom : () =>
 		@scale= d3.event.scale
 		@vis.attr "transform", "translate(" + d3.event.translate + ")" + " scale(" + @scale + ")"
 		@vis.selectAll("text").style("font-size", (1 / @scale) + "em");
@@ -83,33 +96,16 @@ class nest
 			@blacklist= json.blacklist
 		if json.explored?
 			@explored= json.explored
-
 		@nodes= json.nodes
 		@links= json.links
 		@root = json.nodes[0]
 		@theFocus= @root
 		@root.isHigh= true
-		@force = d3.layout.force()
-		.on("end",(d)=>
-			@nodes.forEach (n)->
-				if n._fixed? then n.fixed= true
-				return
-			return
-		).on("tick", @tick)
-		.charge (d)->
-			if d.type=="referData" then -20 else -200
-		.linkDistance(20)
-		.linkStrength((d)->if d.value? then 1.0-d.value else 0.1)
-		.size([@w, @h])
-		.nodes(@nodes)
-		.links(@links)
+		@force.nodes(@nodes).links(@links)
 		n=@nodes.length
 		#init node position for faster stablization
-		@nodes.forEach (d,i)->
-			if not d.id?
-				d.id= d.name
-			if '_' not in d.id
-				d.id= "#{d.type}_#{d.id}"
+		@nodes.forEach (d,i)=>
+			@normalize_id d
 			if d.fixed?
 				d.fixed= undefined
 				d._fixed= true
@@ -120,9 +116,32 @@ class nest
 		@root.x =@w /2
 		@root.y =@h /2
 		@root.fixed= true
+		@force.nodes(@nodes).links(@links)
 		@update() 
 		return
+	normalize:  (x)=>
+		## x is string
+		if typeof(x)=="string" and @hNode[x]?
+			return @hNode[x]
+		return x
+	normalize_link: (l)=>
+		l.source = @normalize(l.source)
+		l.target = @normalize(l.target)
+		return
 	update : ()=>
+		#init graph info
+		@matrix=[]
+		@degree=[]
+		@hNode={}
+		n= @nodes.length
+		for i in [0..n-1]
+			@hNode[@nodes[i].id]=@nodes[i]
+			@degree.push []
+			@matrix.push []
+			for j in [0..n-1]
+				@matrix[i].push null
+		for l in @links
+			@normalize_link l 
 		# Update the links…
 		@link = @link.data(@links)
 
@@ -136,10 +155,6 @@ class nest
 
 		@node = @vis.selectAll(".node").data(@nodes,(d)->d.id)
 
-		drag= @force.drag().on('dragend', (d)->
-			d.fixed= true
-			return
-		)
 		_this=@
 		#enter new nodes
 		nodeEnter=@node.enter()
@@ -156,9 +171,9 @@ class nest
 		)
 		.on('dblclick',@dblclick)
 		.classed("highlight",(d)->d.isHigh==true)
-		.attr "transform", (d) ->
-				"translate(" + d.x + "," + d.y + ")"
-		.call(drag)
+		.attr("transform", (d) ->
+			"translate(" + d.x + "," + d.y + ")"
+		).call(@drag)
 
 		nodeEnter.append("circle")
 		.attr("cx",0)
@@ -199,18 +214,10 @@ class nest
 		.attr("fill",'remove')
 		.attr("repeatCount",'indefinite')
 		.classed("search-img",true)
+
 		@force.start()
+
 		# calculate graph info
-		@matrix=[]
-		@degree=[]
-		@hNode={}
-		n=@nodes.length
-		for i in [0..n-1]
-			@hNode[@nodes[i].id]=@nodes[i]
-			@degree.push []
-			@matrix.push []
-			for j in [0..n-1]
-				@matrix[i].push null
 		for x in @links
 			@degree[x.source.index].push x
 			@degree[x.target.index].push x
@@ -230,7 +237,7 @@ class nest
 		if d == @theFocus
 			return 15
 		if d.isHigh then 10 else 5
-	tick : =>
+	tick : ()=>
 		@node.attr "transform", (d) =>
 			radius= @getR(d)
 			"translate(" + d.x + "," + d.y + ")"
@@ -250,7 +257,7 @@ class nest
 			res= @palette(i+1)
 		else res= @palette(d.type)
 		if d.distance_rank?
-			res= d3.hsl(res).brighter(d.distance_rank*.8).toString()
+			res= d3.hsl(res).brighter(d.distance_rank).toString()
 		return res
 	dblclick : (d)=>
 		if d.type=="referData"
@@ -296,15 +303,18 @@ class nest
 			@highlight d
 			# history.pushState {},d.name,"/model/#{d.id}"
 			@update()
-			if click_handler?
-				click_handler(d)
+			if window.click_handler?
+				window.click_handler(d)
 		return
+	normalize_id: (x)->
+		if not x.id?
+			x.id= x.name
+		if x.id.indexOf('_')<0
+			x.id= "#{x.type}_#{x.id}"
+		return x
 	explore : (data)=>
 		for x in data.nodes
-			if not x.id?
-					x.id= x.name
-			if x.id.indexOf('_')<0
-				x.id= "#{x.type}_#{x.id}"
+			@normalize_id x
 			@nodes.push x
 		for l in data.links
 			@links.push l
@@ -321,9 +331,7 @@ class nest
 				continue
 			i=0
 			for x in data[id]
-				if not x.id?
-					x.id= x.name
-				x.id= "#{x.type}_#{x.id}"
+				@normalize_id x
 				if @blacklist.indexOf(x.id)>=0
 					continue
 				target=@hNode[x.id]
@@ -344,7 +352,7 @@ class nest
 			x.isHigh= false
 		for x in @nodes
 			x.isHigh= false
-		d.isHigh=true
+		d.isHigh= true
 		@theFocus = d
 		i=d.index
 		for link in @degree[d.index]
