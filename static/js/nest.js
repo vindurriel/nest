@@ -9,6 +9,7 @@ nest = (function() {
     this.expand = __bind(this.expand, this);
     this.explore = __bind(this.explore, this);
     this.click = __bind(this.click, this);
+    this.remove = __bind(this.remove, this);
     this.dblclick = __bind(this.dblclick, this);
     this.color = __bind(this.color, this);
     this.tick = __bind(this.tick, this);
@@ -165,7 +166,7 @@ nest = (function() {
     if (json.explored != null) {
       this.explored = json.explored;
     }
-    $(this.container).show();
+    $(this.container).removeClass("hidden");
     this.nodes = json.nodes;
     this.links = json.links;
     this.root = json.nodes[0];
@@ -230,16 +231,18 @@ nest = (function() {
     _this = this;
     nodeEnter = this.node.enter().append("g").attr("class", "node").on("click", this.click).on('mouseover', function(d) {
       d3.select(this).select('circle').attr("r", _this.getR(d) + 3);
-      d3.select(this).append('text').attr("class", "notclickable desc").attr("dx", function(d) {
-        return _this.getR(d) + 5;
-      }).classed("show", function(d) {
-        return d === _this.theFocus;
-      }).attr("font-size", (1 / _this.scale) + "em").text(function(d) {
-        return d.name;
-      });
+      if (d3.select(this).selectAll('text')[0].length === 0) {
+        d3.select(this).append('text').attr("class", "notclickable desc").attr("dx", function(d) {
+          return _this.getR(d) + 5;
+        }).classed("show", function(d) {
+          return d === _this.theFocus;
+        }).attr("font-size", (1 / _this.scale) + "em").text(function(d) {
+          return d.name;
+        });
+      }
     }).on('mouseout', function(d) {
       d3.select(this).select('circle').attr("r", _this.getR(d));
-      _this.vis.selectAll('.node text').remove();
+      _this.node.selectAll("text").remove();
     }).on('dblclick', this.dblclick).classed("highlight", function(d) {
       return d.isHigh === true;
     }).attr("transform", function(d) {
@@ -349,30 +352,37 @@ nest = (function() {
     $.post("/explore/", JSON.stringify(data), this.expand, 'json');
   };
 
-  nest.prototype.click = function(d) {
+  nest.prototype.remove = function(d) {
     var i, link, n, _i, _len, _ref;
+    if (d === this.root) {
+      alert("不能删除根节点");
+      this.shiftPressed = false;
+      return;
+    }
+    n = this.nodes.length;
+    i = d.index;
+    _ref = this.degree[d.index];
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      link = _ref[_i];
+      this.links.remove(link);
+      if (this.degree[link.target.index].length === 1) {
+        this.nodes.remove(link.target);
+      }
+      if (this.degree[link.source.index].length === 1) {
+        this.nodes.remove(link.source);
+      }
+    }
+    this.nodes.remove(d);
+    this.blacklist.push(d.id);
+    if (window.click_handler != null) {
+      window.click_handler(this.root);
+    }
+  };
+
+  nest.prototype.click = function(d) {
     d.fixed = false;
     if (this.shiftPressed) {
-      if (d === this.root) {
-        alert("不能删除根节点");
-        this.shiftPressed = false;
-        return;
-      }
-      n = this.nodes.length;
-      i = d.index;
-      _ref = this.degree[d.index];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        link = _ref[_i];
-        this.links.remove(link);
-        if (this.degree[link.target.index].length === 1) {
-          this.nodes.remove(link.target);
-        }
-        if (this.degree[link.source.index].length === 1) {
-          this.nodes.remove(link.source);
-        }
-      }
-      this.nodes.remove(d);
-      this.blacklist.push(d.id);
+      this.remove(d);
       this.update();
     } else if (this.ctrlPressed) {
       this.dblclick(d);

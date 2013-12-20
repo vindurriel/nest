@@ -102,7 +102,7 @@ class nest
 			@blacklist= json.blacklist
 		if json.explored?
 			@explored= json.explored
-		$(@container).show()
+		$(@container).removeClass "hidden"
 		@nodes= json.nodes
 		@links= json.links
 		@root = json.nodes[0]
@@ -169,19 +169,19 @@ class nest
 		.attr("class", "node")
 		.on("click", @click)
 		.on('mouseover',(d)->
-			# _this.vis.selectAll('text').remove()
 			d3.select(@).select('circle').attr("r",_this.getR(d)+3)
-			d3.select(@).append('text')
-			.attr("class","notclickable desc")
-			.attr("dx", (d)->_this.getR(d)+5)
-			.classed("show", (d)->d==_this.theFocus)
-			.attr("font-size", (1 / _this.scale) + "em")
-			.text (d)->d.name
+			if d3.select(@).selectAll('text')[0].length==0
+				d3.select(@).append('text')
+				.attr("class","notclickable desc")
+				.attr("dx", (d)->_this.getR(d)+5)
+				.classed("show", (d)->d==_this.theFocus)
+				.attr("font-size", (1 / _this.scale) + "em")
+				.text (d)->d.name
 			return
 		)
 		.on('mouseout',(d)->
 			d3.select(@).select('circle').attr("r",_this.getR(d))
-			_this.vis.selectAll('.node text').remove()
+			_this.node.selectAll("text").remove()
 			return
 		)
 		.on('dblclick',@dblclick)
@@ -285,31 +285,36 @@ class nest
 			data.is_subview= true
 		$.post "/explore/", JSON.stringify(data), @expand, 'json'
 		return
+	remove : (d) =>
+		if d==@root
+			alert "不能删除根节点"
+			@shiftPressed=false
+			return
+		n = @nodes.length
+		i= d.index
+		for link in @degree[d.index]
+			@links.remove link
+			if @degree[link.target.index].length==1
+				@nodes.remove link.target
+			if @degree[link.source.index].length==1
+				@nodes.remove link.source
+		@nodes.remove d
+		@blacklist.push d.id
+		if window.click_handler?
+			window.click_handler @root
+		return
 	click : (d) =>
 		d.fixed= false
 		if @shiftPressed
-			if d==@root
-				alert "不能删除根节点"
-				@shiftPressed=false
-				return
-			n = @nodes.length
-			i= d.index
-			for link in @degree[d.index]
-				@links.remove link
-				if @degree[link.target.index].length==1
-					@nodes.remove link.target
-				if @degree[link.source.index].length==1
-					@nodes.remove link.source
-			@nodes.remove d
-			@blacklist.push d.id
+			@remove d
 			@update()
 		else if @ctrlPressed
 			@dblclick d
 			@update()
 		else
 			@highlight d
-			# history.pushState {},d.name,"/model/#{d.id}"
 			@update()
+			# history.pushState {},d.name,"/model/#{d.id}"
 			if window.click_handler?
 				window.click_handler(d)
 		return

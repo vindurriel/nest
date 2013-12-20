@@ -28,7 +28,7 @@ require(['jquery', 'd3', 'nest', 'masonry', 'jquery_blockUI', 'imageloaded'], fu
       if (d.img != null) {
         imgurl = d.img;
       }
-      return "<div class=\"list-item normal\">\n	<h2 class=\"item-headline\">\n		<span>" + d.name + "</span>\n	</h2>\n	<span class=\"item-prop\">" + d.type + " </span>\n	<div>\n		<img class=\"item-image\" src=\"" + imgurl + "\"/>\n	</div>\n	<p class=\"item-detail\">" + details + "</p>\n</div>";
+      return "<div class=\"list-item normal\">\n	<h2 class=\"item-headline\">\n		<span>" + d.name + "</span>\n	</h2>\n	<div class=\"item-prop\">" + d.type + " </div>\n	<div>\n		<img class=\"item-image\" src=\"" + imgurl + "\"/>\n	</div>\n	<p class=\"item-detail\">" + details + "</p>\n</div>";
     };
     if (window.masonry == null) {
       window.masonry = new Masonry('#list-container', {
@@ -38,10 +38,9 @@ require(['jquery', 'd3', 'nest', 'masonry', 'jquery_blockUI', 'imageloaded'], fu
     }
     window.masonry.remove($(".list-item.normal").get());
     window.masonry.layout();
-    $item = $(t_list_item(d));
+    $item = $(t_list_item(d)).addClass('selected_info');
     $("#list-container").append($item);
     window.masonry.appended($item.get());
-    $("#list-container div:last-child").addClass('selected_info');
     if (d.nodes.length > 10) {
       return;
     }
@@ -60,19 +59,32 @@ require(['jquery', 'd3', 'nest', 'masonry', 'jquery_blockUI', 'imageloaded'], fu
     });
   };
   window.click_handler = function(d) {
-    var container, detail, docs, link, n, value, _i, _j, _len, _len1, _ref;
+    var actions, container, detail, docs, link, n, value, x, _i, _j, _len, _len1, _ref;
     if (d == null) {
       return;
     }
     $(".selected_info .item-headline span").text(d.name);
-    $(".selected_info .item-prop").text(d.type);
+    $(".selected_info .item-prop").empty();
+    actions = {
+      '探索': "dblclick",
+      '删除': "remove"
+    };
+    $("body").on("click", ".selected_info .item-action", function() {
+      var cmd;
+      cmd = $(this).data('nest-command');
+      window.nest[cmd](window.nest.theFocus);
+      window.nest.update();
+    });
+    for (x in actions) {
+      $(".selected_info .item-prop").append($("<li/>").text(x).addClass('item-action button').data('nest-command', actions[x]));
+    }
     if (d.type === "doc") {
       $(".selected_info .item-headline a").attr('href', d.url);
       container = ".selected_info .item-detail";
       value = window.degree[d.index][0].value;
       $(container).empty().append("<p>到聚类中心的距离：" + value + "</p>");
       $.getJSON("/keyword/" + d.name, function(res) {
-        var data, x;
+        var data;
         data = [];
         for (x in res.keyword) {
           data.push({

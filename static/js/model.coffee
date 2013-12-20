@@ -26,7 +26,7 @@ require ['jquery','d3','nest','masonry','jquery_blockUI','imageloaded'] , ($,d3,
 				<h2 class="item-headline">
 					<span>#{d.name}</span>
 				</h2>
-				<span class="item-prop">#{d.type} </span>
+				<div class="item-prop">#{d.type} </div>
 				<div>
 					<img class="item-image" src="#{imgurl}"/>
 				</div>
@@ -38,10 +38,9 @@ require ['jquery','d3','nest','masonry','jquery_blockUI','imageloaded'] , ($,d3,
 			window.masonry = new Masonry('#list-container',{"transitionDuration":"0.2s","itemSelector":".list-item"})
 		window.masonry.remove($(".list-item.normal").get())
 		window.masonry.layout()
-		$item= $(t_list_item(d))
+		$item= $(t_list_item(d)).addClass('selected_info')
 		$("#list-container").append($item)
 		window.masonry.appended($item.get())
-		$("#list-container div:last-child").addClass('selected_info')
 		if d.nodes.length > 10
 			return
 		for x in d.nodes
@@ -56,7 +55,20 @@ require ['jquery','d3','nest','masonry','jquery_blockUI','imageloaded'] , ($,d3,
 	window.click_handler= (d)->
 		if not d? then return
 		$(".selected_info .item-headline span").text(d.name)
-		$(".selected_info .item-prop").text(d.type)
+		$(".selected_info .item-prop").empty()
+		actions= {
+			'探索':"dblclick",
+			'删除':"remove",
+		}
+		$("body").on "click", ".selected_info .item-action", ()->
+			cmd=$(@).data('nest-command')
+			window.nest[cmd](window.nest.theFocus)
+			window.nest.update()
+			return
+		for x of actions
+			$(".selected_info .item-prop").append $("<li/>").text(x)
+			.addClass('item-action button')
+			.data('nest-command',actions[x])
 		if d.type=="doc"
 			$(".selected_info .item-headline a").attr('href',d.url)
 			container= ".selected_info .item-detail"
