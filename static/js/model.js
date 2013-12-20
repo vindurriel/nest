@@ -293,7 +293,7 @@ require(['jquery', 'd3', 'nest', 'masonry', 'jquery_blockUI', 'imageloaded'], fu
         $('.services').append("<li>\n	<input type=\"checkbox\"	 data-service-id=\"" + s.id + "\" " + checked + " class=\"check-service\" id=\"" + s.id + "\"> <span>使用 " + s.name + " 搜索</span>\n</li>");
       }
     });
-    window.nest = new Nest.nest({
+    window.nest = new Nest({
       "container": "#nest-container",
       "width": "400",
       "height": "200"

@@ -1,3 +1,4 @@
+
 class nest
 	@colors :[
 			"song",
@@ -9,10 +10,10 @@ class nest
 			"hudongBaikeCrawler",
 			"referData",
 		]
-	palette: d3.scale.category20()
 	constructor: (options)->
 		@hNode= {}
 		@position_cache={}
+		@palette= d3.scale.category20()
 		@container= options.container or "#container"
 		@w = options.width or 400
 		@h = options.height or 200
@@ -37,6 +38,8 @@ class nest
 				return
 			return
 		).on("tick", @tick)
+		.on('start', ()=> @start_time=new Date() )
+		.on('end', ()=> console.log(new Date()-@start_time) )
 		.charge (d)->
 			if d.type=="referData" then -20 else -200
 		.linkDistance(20)
@@ -166,11 +169,19 @@ class nest
 		.attr("class", "node")
 		.on("click", @click)
 		.on('mouseover',(d)->
-			d3.select(@).select('circle').attr("r",'13px')
+			# _this.vis.selectAll('text').remove()
+			d3.select(@).select('circle').attr("r",_this.getR(d)+3)
+			d3.select(@).append('text')
+			.attr("class","notclickable desc")
+			.attr("dx", (d)->_this.getR(d)+5)
+			.classed("show", (d)->d==_this.theFocus)
+			.attr("font-size", (1 / _this.scale) + "em")
+			.text (d)->d.name
 			return
 		)
 		.on('mouseout',(d)->
 			d3.select(@).select('circle').attr("r",_this.getR(d))
+			_this.vis.selectAll('.node text').remove()
 			return
 		)
 		.on('dblclick',@dblclick)
@@ -196,16 +207,8 @@ class nest
 		.attr("r", @getR)
 		.style("fill", @color)
 		
-		d3.selectAll(".node text").remove()
-		@node.filter((d)->d.isHigh)
-		.append('text')
-		.attr("class","notclickable desc")
-		.text (d)->d.name
-
-		d3.selectAll(".node text")
-		.attr("dx", (d)=>@getR(d)+5)
-		.classed("show", (d)->d==@theFocus)
-		.attr("font-size", (1 / @scale) + "em")
+		
+		
 
 		d3.selectAll(".search-img").remove()
 		d3.selectAll(".node circle").filter((d) ->d.isSearching)
@@ -228,8 +231,8 @@ class nest
 			@matrix[x.source.index][x.target.index]=x
 		@node.classed "highlight", (d)->d.isHigh==true
 		@link.classed "highlight", (d)->d.isHigh==true
-		@node.classed('hidden',(d)->d.type=="referData")
-		@link.classed('hidden',(d)->d.target.type=="referData")
+		@node.classed('hidden',(d)->d.type=="referData" or d.type=="doc")
+		@link.classed('hidden',(d)->d.target.type=="referData" or d.target.type=="doc")		
 		for nod of @hNode
 			@position_cache[nod]={
 				'x':@hNode[nod].x
@@ -399,7 +402,7 @@ Array::remove = (b) ->
 		@splice a, 1
 		return true
 	false
+
 if typeof(define)=="function" and define.amd?
-	define "nest", ['jquery','d3'], ($,d3)-> {
-		"nest":nest,
-	}
+	define "nest", ['jquery','d3'], ($,ff)-> 
+		return nest

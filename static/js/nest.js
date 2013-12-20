@@ -4,8 +4,6 @@ var nest,
 nest = (function() {
   nest.colors = ["song", "artist", "user", "album", 'relationship', "baiduBaikeCrawler", "hudongBaikeCrawler", "referData"];
 
-  nest.prototype.palette = d3.scale.category20();
-
   function nest(options) {
     this.highlight = __bind(this.highlight, this);
     this.expand = __bind(this.expand, this);
@@ -25,6 +23,7 @@ nest = (function() {
     var _this = this;
     this.hNode = {};
     this.position_cache = {};
+    this.palette = d3.scale.category20();
     this.container = options.container || "#container";
     this.w = options.width || 400;
     this.h = options.height || 200;
@@ -42,7 +41,11 @@ nest = (function() {
           n.fixed = true;
         }
       });
-    }).on("tick", this.tick).charge(function(d) {
+    }).on("tick", this.tick).on('start', function() {
+      return _this.start_time = new Date();
+    }).on('end', function() {
+      return console.log(new Date() - _this.start_time);
+    }).charge(function(d) {
       if (d.type === "referData") {
         return -20;
       } else {
@@ -200,8 +203,7 @@ nest = (function() {
   };
 
   nest.prototype.update = function() {
-    var i, j, l, n, nod, nodeEnter, x, _i, _j, _k, _l, _len, _len1, _ref, _ref1, _ref2, _ref3,
-      _this = this;
+    var i, j, l, n, nod, nodeEnter, x, _i, _j, _k, _l, _len, _len1, _ref, _ref1, _ref2, _ref3, _this;
     this.matrix = [];
     this.degree = [];
     this.hNode = {};
@@ -227,9 +229,17 @@ nest = (function() {
     });
     _this = this;
     nodeEnter = this.node.enter().append("g").attr("class", "node").on("click", this.click).on('mouseover', function(d) {
-      d3.select(this).select('circle').attr("r", '13px');
+      d3.select(this).select('circle').attr("r", _this.getR(d) + 3);
+      d3.select(this).append('text').attr("class", "notclickable desc").attr("dx", function(d) {
+        return _this.getR(d) + 5;
+      }).classed("show", function(d) {
+        return d === _this.theFocus;
+      }).attr("font-size", (1 / _this.scale) + "em").text(function(d) {
+        return d.name;
+      });
     }).on('mouseout', function(d) {
       d3.select(this).select('circle').attr("r", _this.getR(d));
+      _this.vis.selectAll('.node text').remove();
     }).on('dblclick', this.dblclick).classed("highlight", function(d) {
       return d.isHigh === true;
     }).attr("transform", function(d) {
@@ -238,17 +248,6 @@ nest = (function() {
     nodeEnter.append("circle").attr("cx", 0).attr("cy", 0).attr("r", this.getR).style("fill", this.color);
     this.node.exit().remove();
     d3.selectAll(".node circle").attr("r", this.getR).style("fill", this.color);
-    d3.selectAll(".node text").remove();
-    this.node.filter(function(d) {
-      return d.isHigh;
-    }).append('text').attr("class", "notclickable desc").text(function(d) {
-      return d.name;
-    });
-    d3.selectAll(".node text").attr("dx", function(d) {
-      return _this.getR(d) + 5;
-    }).classed("show", function(d) {
-      return d === this.theFocus;
-    }).attr("font-size", (1 / this.scale) + "em");
     d3.selectAll(".search-img").remove();
     d3.selectAll(".node circle").filter(function(d) {
       return d.isSearching;
@@ -268,10 +267,10 @@ nest = (function() {
       return d.isHigh === true;
     });
     this.node.classed('hidden', function(d) {
-      return d.type === "referData";
+      return d.type === "referData" || d.type === "doc";
     });
     this.link.classed('hidden', function(d) {
-      return d.target.type === "referData";
+      return d.target.type === "referData" || d.target.type === "doc";
     });
     for (nod in this.hNode) {
       this.position_cache[nod] = {
@@ -534,9 +533,7 @@ Array.prototype.remove = function(b) {
 };
 
 if (typeof define === "function" && (define.amd != null)) {
-  define("nest", ['jquery', 'd3'], function($, d3) {
-    return {
-      "nest": nest
-    };
+  define("nest", ['jquery', 'd3'], function($, ff) {
+    return nest;
   });
 }

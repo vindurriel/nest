@@ -220,7 +220,7 @@ require ['jquery','d3','nest','masonry','jquery_blockUI','imageloaded'] , ($,d3,
 				</li>
 				"""
 			return
-		window.nest= new Nest.nest ({
+		window.nest= new Nest ({
 			"container":"#nest-container",
 			"width":"400",
 			"height":"200",
