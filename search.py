@@ -1,7 +1,20 @@
 #encoding=utf-8
-import web
+import web,json,traceback
 from utils import *
-import traceback
+class neo:
+	def get(self,params={}):
+		depth=params.get('depth',3)
+		q=params.get('q',"artist_10165")
+		query =	 u"""start n=node:node_auto_index(id="{}") match n-[r*1..{}]-m  return m,r""".format(q,depth)
+		print query
+		from neo4jrestclient.client import GraphDatabase,Node,Relationship
+		gdb = GraphDatabase("http://localhost:7474/db/data")
+		res = gdb.query(q=query,returns=(Node,Relationship))
+		return res
+	def GET(self):
+		web.header('Content-Type', 'application/json')
+		params=web.input()
+		return self.get(params)
 class search:
 	def search(self,key,serviceType,dic={}):
 		print "###searching",serviceType
@@ -50,6 +63,11 @@ class search:
 		print self.result
 		return json.dumps(res)
 if __name__ == '__main__':
+	neo=neo()
+	res=neo.get({})
+	print len(res)
+	import sys
+	sys.exit(0)
 	instance=search()
 	from multiprocessing import Process,Queue
 	key=u"联合国"

@@ -13,20 +13,22 @@
 		<input type="text" name="q" id="q">
 		<input type="button"  id="btn_search" class="button main" isdefault="true" value="搜索">
 		<input type="button"  id="btn_tip" class="button" value="选项" style="min-width:0px;padding:0 1em;">
-		<input type="button"  id="btn_save" class="button" value="保存" >
-		<input type="button"  id="btn_load" class="button" value="打开宏" >
-		<a href="/list?theme=$theme" class="button">样例</a>
+		<input type="button"  id="btn_save" class="button" value="保存快照" >
+		<input type="button"  id="btn_load" class="button" value="加载宏" >
+		<a href="/list?theme=$theme" class="button">加载快照</a>
 		<div style="display:inline">
 			<div id="tip">
 				<ul class="services">
 				</ul>
-				<p>点击       = 选中节点和相邻节点</p>
-				<p>ctrl+点击  = 扩展节点（大圈）/访问知识链接（小圈）</p>
-				<p>shift+点击 = 删除节点和知识</p>
-				<p>alt+点击   = 将当前节点变成中心节点</p>
-				<p>空白处拖动 = 平移</p>
-				<p>滚轮       = 缩放</p>
-				<p>网址后面可以输入词语,例如/model/<b>java</b></p>
+				<div class="hidden">
+					<p>点击       = 选中节点和相邻节点</p>
+					<p>ctrl+点击  = 扩展节点（大圈）/访问知识链接（小圈）</p>
+					<p>shift+点击 = 删除节点和知识</p>
+					<p>alt+点击   = 将当前节点变成中心节点</p>
+					<p>空白处拖动 = 平移</p>
+					<p>滚轮       = 缩放</p>
+					<p>网址后面可以输入词语,例如/model/<b>java</b></p>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -35,7 +37,7 @@
 	<div id="list-container" >
 		<div id="nest-container" class="list-item hidden">
 			<input type="button"  class="btn-toggle-fullscreen"   value="展开">
-			<input type="button"  class="btn-automate"   value="运行">
+			<input type="button"  class="btn-automate"   value="运行宏">
 			<input type="button"  class="btn-next"   value="›">
 			<input type="button"  class="btn-prev"   value="‹">
 			<span id="story-indicator"></span>

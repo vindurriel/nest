@@ -59,9 +59,6 @@ nest = (function() {
         return 0.1;
       }
     }).size([this.w, this.h]);
-    this.drag = this.force.drag().on('dragend', function(d) {
-      d.fixed = true;
-    });
     this.relationships = {
       'artist': [
         {
@@ -204,7 +201,7 @@ nest = (function() {
   };
 
   nest.prototype.update = function() {
-    var i, j, l, n, nod, nodeEnter, x, _i, _j, _k, _l, _len, _len1, _ref, _ref1, _ref2, _ref3, _this;
+    var drag, i, j, l, n, nod, nodeEnter, x, _i, _j, _k, _l, _len, _len1, _ref, _ref1, _ref2, _ref3, _this;
     this.matrix = [];
     this.degree = [];
     this.hNode = {};
@@ -228,6 +225,9 @@ nest = (function() {
     this.node = this.vis.selectAll(".node").data(this.nodes, function(d) {
       return d.id;
     });
+    drag = this.force.drag().on('dragend', function(d) {
+      d.fixed = true;
+    });
     _this = this;
     nodeEnter = this.node.enter().append("g").attr("class", "node").on("click", this.click).on('mouseover', function(d) {
       d3.select(this).select('circle').attr("r", _this.getR(d) + 3);
@@ -247,7 +247,7 @@ nest = (function() {
       return d.isHigh === true;
     }).attr("transform", function(d) {
       return "translate(" + d.x + "," + d.y + ")";
-    }).call(this.drag);
+    }).call(drag);
     nodeEnter.append("circle").attr("cx", 0).attr("cy", 0).attr("r", this.getR).style("fill", this.color);
     this.node.exit().remove();
     d3.selectAll(".node circle").attr("r", this.getR).style("fill", this.color);
@@ -270,10 +270,10 @@ nest = (function() {
       return d.isHigh === true;
     });
     this.node.classed('hidden', function(d) {
-      return d.type === "referData" || d.type === "doc";
+      return d.type === "referData";
     });
     this.link.classed('hidden', function(d) {
-      return d.target.type === "referData" || d.target.type === "doc";
+      return d.target.type === "referData";
     });
     for (nod in this.hNode) {
       this.position_cache[nod] = {
@@ -345,9 +345,11 @@ nest = (function() {
     data = {
       keys: d.id
     };
-    if ((d.url != null) && d.url.indexOf("/subview/") >= 0) {
+    if (d.url != null) {
       data.url = d.url;
-      data.is_subview = true;
+      if (d.url.indexOf("/subview/") >= 0) {
+        data.is_subview = true;
+      }
     }
     $.post("/explore/", JSON.stringify(data), this.expand, 'json');
   };

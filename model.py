@@ -71,13 +71,15 @@ class keyword:
 		tags=dict([(x,freq[x])  for x in tags])
 		import summarize
 		summary=summarize.summarize(sentence)
+		summary=summary.replace('\n',"<br>")
 		return json.dumps({"keyword":tags,"summary":summary})
 class load:
 	def GET(self,key="机器学习"):
 		web.header('Content-Type', 'application/json')
 		web.header('Cache-Control', 'private, must-revalidate, max-age=0')
 		web.header('Expires', 'Thu, 01 Jan 1970 00:00:00')
-		import os,json
+		import os,json,urllib2
+		key=urllib2.unquote(key)
 		fname=get_file_name(key)
 		print "###"+key+"###",fname
 		res={}

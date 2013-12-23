@@ -28,7 +28,7 @@ require(['jquery', 'd3', 'nest', 'masonry', 'jquery_blockUI', 'imageloaded'], fu
       if (d.img != null) {
         imgurl = d.img;
       }
-      return "<div class=\"list-item normal\">\n	<h2 class=\"item-headline\">\n		<span>" + d.name + "</span>\n	</h2>\n	<div class=\"item-prop\">" + d.type + " </div>\n	<div>\n		<img class=\"item-image\" src=\"" + imgurl + "\"/>\n	</div>\n	<p class=\"item-detail\">" + details + "</p>\n</div>";
+      return "<div class=\"list-item normal\" data-nest-node=\"" + d.id + "\">\n	<h2 class=\"item-headline\">\n		<span>" + d.name + "</span>\n	</h2>\n	<div class=\"item-prop\">" + d.type + " </div>\n	<div>\n		<img class=\"item-image\" src=\"" + imgurl + "\"/>\n	</div>\n	<p class=\"item-detail\">" + details + "</p>\n</div>";
     };
     if (window.masonry == null) {
       window.masonry = new Masonry('#list-container', {
@@ -41,30 +41,36 @@ require(['jquery', 'd3', 'nest', 'masonry', 'jquery_blockUI', 'imageloaded'], fu
     $item = $(t_list_item(d)).addClass('selected_info');
     $("#list-container").append($item);
     window.masonry.appended($item.get());
-    if (d.nodes.length > 10) {
-      return;
-    }
-    _ref = d.nodes;
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      x = _ref[_i];
-      if (x.type === "referData") {
-        continue;
-      }
-      s = $(t_list_item(x));
-      $("#list-container").append(s);
-      window.masonry.appended(s.get());
-    }
-    imagesLoaded(document.querySelector("#list-container"), function() {
+    window.imagesLoaded = new imagesLoaded("#list-container", function() {
       window.masonry.layout();
     });
+    if (d.nodes.length <= 10 || d.nodes[0].type === "query") {
+      $("body").on("click", ".list-item.normal", function() {
+        var id;
+        id = $(this).data('nest-node');
+        return window.nest.click(window.nest.hNode[id]);
+      });
+      _ref = d.nodes;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        x = _ref[_i];
+        if (x.type === "referData") {
+          continue;
+        }
+        s = $(t_list_item(x));
+        $("#list-container").append(s);
+        window.masonry.appended(s.get());
+      }
+    }
   };
   window.click_handler = function(d) {
-    var actions, container, detail, docs, link, n, value, x, _i, _j, _len, _len1, _ref;
+    var actions, container, detail, docs, link, n, t, value, x, _i, _j, _len, _len1, _ref;
     if (d == null) {
       return;
     }
+    document.title = d.name;
     $(".selected_info .item-headline span").text(d.name);
     $(".selected_info .item-prop").empty();
+    $(".selected_info .item-image").attr('src', d.img);
     actions = {
       '探索': "dblclick",
       '删除': "remove"
@@ -76,12 +82,12 @@ require(['jquery', 'd3', 'nest', 'masonry', 'jquery_blockUI', 'imageloaded'], fu
       window.nest.update();
     });
     for (x in actions) {
-      $(".selected_info .item-prop").append($("<li/>").text(x).addClass('item-action button').data('nest-command', actions[x]));
+      $(".selected_info .item-prop").append($("<li/>").text(x).addClass('item-action button').data('nest-command', actions[x]).addClass('item-action button'));
     }
     if (d.type === "doc") {
       $(".selected_info .item-headline a").attr('href', d.url);
       container = ".selected_info .item-detail";
-      value = window.degree[d.index][0].value;
+      value = window.nest.degree[d.index][0].value;
       $(container).empty().append("<p>到聚类中心的距离：" + value + "</p>");
       $.getJSON("/keyword/" + d.name, function(res) {
         var data;
@@ -102,6 +108,8 @@ require(['jquery', 'd3', 'nest', 'masonry', 'jquery_blockUI', 'imageloaded'], fu
     } else {
       detail = $(".selected_info .item-detail");
       detail.empty();
+      t = d.type || "未知";
+      detail.append("<h3>类别：" + t + "</h3>");
       docs = [];
       _ref = window.nest.degree[d.index];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {

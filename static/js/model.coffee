@@ -22,7 +22,7 @@ require ['jquery','d3','nest','masonry','jquery_blockUI','imageloaded'] , ($,d3,
 			if d.img?
 				imgurl= d.img
 			return """
-			<div class="list-item normal">
+			<div class="list-item normal" data-nest-node="#{d.id}">
 				<h2 class="item-headline">
 					<span>#{d.name}</span>
 				</h2>
@@ -41,21 +41,26 @@ require ['jquery','d3','nest','masonry','jquery_blockUI','imageloaded'] , ($,d3,
 		$item= $(t_list_item(d)).addClass('selected_info')
 		$("#list-container").append($item)
 		window.masonry.appended($item.get())
-		if d.nodes.length > 10
-			return
-		for x in d.nodes
-			if x.type=="referData" then continue
-			s=$(t_list_item(x))
-			$("#list-container").append(s)
-			window.masonry.appended(s.get())
-		imagesLoaded document.querySelector("#list-container"),  ->
+		window.imagesLoaded= new  imagesLoaded "#list-container",  ->
 			window.masonry.layout()
 			return
+		if d.nodes.length <= 10 or d.nodes[0].type=="query"
+			$("body").on "click", ".list-item.normal", ()->
+				id=$(@).data('nest-node')
+				window.nest.click window.nest.hNode[id]
+			for x in d.nodes
+				if x.type=="referData" then continue
+				s=$(t_list_item(x))
+				$("#list-container").append(s)
+				window.masonry.appended(s.get())
 		return
 	window.click_handler= (d)->
 		if not d? then return
+		document.title= d.name
+
 		$(".selected_info .item-headline span").text(d.name)
 		$(".selected_info .item-prop").empty()
+		$(".selected_info .item-image").attr('src',d.img)
 		actions= {
 			'探索':"dblclick",
 			'删除':"remove",
@@ -69,10 +74,11 @@ require ['jquery','d3','nest','masonry','jquery_blockUI','imageloaded'] , ($,d3,
 			$(".selected_info .item-prop").append $("<li/>").text(x)
 			.addClass('item-action button')
 			.data('nest-command',actions[x])
+			.addClass('item-action button')
 		if d.type=="doc"
 			$(".selected_info .item-headline a").attr('href',d.url)
 			container= ".selected_info .item-detail"
-			value= window.degree[d.index][0].value
+			value= window.nest.degree[d.index][0].value
 			$(container).empty().append """<p>到聚类中心的距离：#{value}</p>"""
 			$.getJSON "/keyword/#{d.name}", (res)->
 				data= []
@@ -88,6 +94,8 @@ require ['jquery','d3','nest','masonry','jquery_blockUI','imageloaded'] , ($,d3,
 		else
 			detail=$(".selected_info .item-detail")
 			detail.empty()
+			t= d.type or "未知"
+			detail.append("<h3>类别：#{t}</h3>")
 			docs= []
 			for link in window.nest.degree[d.index]
 				if d==link.target then continue

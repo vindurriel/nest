@@ -45,9 +45,6 @@ class nest
 		.linkDistance(20)
 		.linkStrength((d)->if d.value? then 1.0-d.value else 0.1)
 		.size([@w, @h])
-		@drag= @force.drag().on 'dragend', (d)->
-			d.fixed= true
-			return
 		@relationships={
 			'artist':[{
 					"id": (d)-> "hitsongs_of_#{d.id}",
@@ -162,6 +159,9 @@ class nest
 
 		@node = @vis.selectAll(".node").data(@nodes,(d)->d.id)
 
+		drag= @force.drag().on 'dragend', (d)->
+			d.fixed= true
+			return
 		_this=@
 		#enter new nodes
 		nodeEnter=@node.enter()
@@ -188,7 +188,7 @@ class nest
 		.classed("highlight",(d)->d.isHigh==true)
 		.attr("transform", (d) ->
 			"translate(" + d.x + "," + d.y + ")"
-		).call(@drag)
+		).call(drag)
 
 		nodeEnter.append("circle")
 		.attr("cx",0)
@@ -231,8 +231,8 @@ class nest
 			@matrix[x.source.index][x.target.index]=x
 		@node.classed "highlight", (d)->d.isHigh==true
 		@link.classed "highlight", (d)->d.isHigh==true
-		@node.classed('hidden',(d)->d.type=="referData" or d.type=="doc")
-		@link.classed('hidden',(d)->d.target.type=="referData" or d.target.type=="doc")		
+		@node.classed('hidden',(d)->d.type=="referData" )
+		@link.classed('hidden',(d)->d.target.type=="referData"  )		
 		for nod of @hNode
 			@position_cache[nod]={
 				'x':@hNode[nod].x
@@ -280,9 +280,10 @@ class nest
 		data={
 			keys:d.id,
 		}
-		if d.url? and d.url.indexOf("/subview/")>=0
+		if d.url?
 			data.url= d.url
-			data.is_subview= true
+			if d.url.indexOf("/subview/")>=0
+				data.is_subview= true
 		$.post "/explore/", JSON.stringify(data), @expand, 'json'
 		return
 	remove : (d) =>
