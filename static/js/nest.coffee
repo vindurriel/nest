@@ -169,7 +169,9 @@ class nest
 		.attr("class", "node")
 		.on("click", @click)
 		.on('mouseover',(d)->
-			d3.select(@).select('circle').attr("r",_this.getR(d)+3)
+			d._fixed= d.fixed
+			d.fixed= true
+			d3.select(@).select('circle').attr("r",_this.getR(d)*1.1)
 			if d3.select(@).selectAll('text')[0].length==0
 				d3.select(@).append('text')
 				.attr("class","notclickable desc")
@@ -180,6 +182,7 @@ class nest
 			return
 		)
 		.on('mouseout',(d)->
+			d.fixed= d._fixed
 			d3.select(@).select('circle').attr("r",_this.getR(d))
 			_this.node.selectAll("text").remove()
 			return
@@ -230,6 +233,7 @@ class nest
 			@degree[x.target.index].push x
 			@matrix[x.source.index][x.target.index]=x
 		@node.classed "highlight", (d)->d.isHigh==true
+		@node.classed "focus", (d)=>d==@theFocus
 		@link.classed "highlight", (d)->d.isHigh==true
 		@node.classed('hidden',(d)->d.type=="referData" )
 		@link.classed('hidden',(d)->d.target.type=="referData"  )		
@@ -264,7 +268,7 @@ class nest
 			res= @palette(i+1)
 		else res= @palette(d.type)
 		if d.distance_rank?
-			res= d3.hsl(res).brighter(d.distance_rank).toString()
+			res= d3.hsl(res).brighter(d.distance_rank*.1).toString()
 		return res
 	dblclick : (d)=>
 		if d.type=="referData"

@@ -201,7 +201,8 @@ nest = (function() {
   };
 
   nest.prototype.update = function() {
-    var drag, i, j, l, n, nod, nodeEnter, x, _i, _j, _k, _l, _len, _len1, _ref, _ref1, _ref2, _ref3, _this;
+    var drag, i, j, l, n, nod, nodeEnter, x, _i, _j, _k, _l, _len, _len1, _ref, _ref1, _ref2, _ref3,
+      _this = this;
     this.matrix = [];
     this.degree = [];
     this.hNode = {};
@@ -230,7 +231,9 @@ nest = (function() {
     });
     _this = this;
     nodeEnter = this.node.enter().append("g").attr("class", "node").on("click", this.click).on('mouseover', function(d) {
-      d3.select(this).select('circle').attr("r", _this.getR(d) + 3);
+      d._fixed = d.fixed;
+      d.fixed = true;
+      d3.select(this).select('circle').attr("r", _this.getR(d) * 1.1);
       if (d3.select(this).selectAll('text')[0].length === 0) {
         d3.select(this).append('text').attr("class", "notclickable desc").attr("dx", function(d) {
           return _this.getR(d) + 5;
@@ -241,6 +244,7 @@ nest = (function() {
         });
       }
     }).on('mouseout', function(d) {
+      d.fixed = d._fixed;
       d3.select(this).select('circle').attr("r", _this.getR(d));
       _this.node.selectAll("text").remove();
     }).on('dblclick', this.dblclick).classed("highlight", function(d) {
@@ -265,6 +269,9 @@ nest = (function() {
     }
     this.node.classed("highlight", function(d) {
       return d.isHigh === true;
+    });
+    this.node.classed("focus", function(d) {
+      return d === _this.theFocus;
     });
     this.link.classed("highlight", function(d) {
       return d.isHigh === true;
@@ -322,7 +329,7 @@ nest = (function() {
       res = this.palette(d.type);
     }
     if (d.distance_rank != null) {
-      res = d3.hsl(res).brighter(d.distance_rank).toString();
+      res = d3.hsl(res).brighter(d.distance_rank * .1).toString();
     }
     return res;
   };

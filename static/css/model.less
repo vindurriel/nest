@@ -1,5 +1,5 @@
 @width: 80%;
-@item-width: 400px;
+@item-width: 100%;
 #wrapper{
   width: @width;
   margin: 0 auto;
@@ -81,10 +81,13 @@
   opacity: 1;
   &.highlight {
     // opacity: 1;
-    stroke-width:2px;
+    stroke-width:1px;
   }
   &:hover{
     // opacity: 1;
+  }
+  &.focus{
+    stroke-width:3px;
   }
   text{
     opacity: 0;
@@ -99,12 +102,11 @@
 }
 
 .link {
-
   stroke: black;
   stroke-width: 1px;
-  opacity:0.2;
+  opacity:.2;
   &.highlight{
-    // opacity: 1.0;
+    opacity: .5;
     stroke-width:2px;
   }
  
@@ -258,6 +260,9 @@ body.dark {
   #automate-form{
   	background: rgba(0, 0, 0, 0.8);
   }
+  .logo{
+    background-image: url('/img/logo-dark.png');
+  }
 }
 .fullscreen{
   position: fixed;
@@ -300,4 +305,13 @@ body.no-nav{
   #nav{
     display: none;
   }
+}
+.logo{
+  position: absolute;
+  z-index: 20;
+  height: 2em;
+  width: 10em;
+  margin-left: 1em;
+  background: url('/img/logo.png') no-repeat;
+  background-size: contain;
 }
