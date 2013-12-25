@@ -168,19 +168,21 @@ class nest
 		.append("g")
 		.attr("class", "node")
 		.on("click", @click)
-		# .on('mouseover',(d)->
-		# 	d._fixed= d.fixed
-		# 	d.fixed= true
-		# 	d3.select(@).select('circle').attr("r",_this.getR(d)*1.1)
-		# 	if d3.select(@).selectAll('text')[0].length==0
-		# 		d3.select(@).append('text')
-		# 		.attr("class","notclickable desc")
-		# 		.attr("dx", (d)->_this.getR(d)+5)
-		# 		.classed("show", (d)->d==_this.theFocus)
-		# 		.attr("font-size", (1 / _this.scale) + "em")
-		# 		.text (d)->d.name
-		# 	return
-		# )
+		.on('mouseover',(d)->
+			d._fixed= d.fixed
+			d.fixed= true
+			if window.click_handler?
+				window.click_handler d
+			d3.select(@).select('circle').attr("r",_this.getR(d)*1.2)
+			# if d3.select(@).selectAll('text')[0].length==0
+			# 	d3.select(@).append('text')
+			# 	.attr("class","notclickable desc")
+			# 	.attr("dx", (d)->_this.getR(d)+5)
+			# 	.classed("show", (d)->d==_this.theFocus)
+			# 	.attr("font-size", (1 / _this.scale) + "em")
+			# 	.text (d)->d.name
+			return
+		)
 		# .on('mouseout',(d)->
 		# 	d.fixed= d._fixed
 		# 	d3.select(@).select('circle').attr("r",_this.getR(d))
@@ -201,15 +203,13 @@ class nest
 
 		$('circle').qtip  
 			style:
-				classes:
-					'qtip-dark'
+				classes:'qtip-dark qtip-info',
+				tip:false,
 			content:
-				text: (e,a)->
-					d3.select(e.target).data()[0].name
+				text:  (e,a)-> return d3.select(e.target).data()[0].name
 			position:
 				at: "top left",
 				my: "bottom right"
-				viewport:$(window)
 		@node.exit().remove()
 
 		d3.selectAll(".node circle")

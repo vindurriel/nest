@@ -230,7 +230,14 @@ nest = (function() {
       d.fixed = true;
     });
     _this = this;
-    nodeEnter = this.node.enter().append("g").attr("class", "node").on("click", this.click).on('dblclick', this.dblclick).classed("highlight", function(d) {
+    nodeEnter = this.node.enter().append("g").attr("class", "node").on("click", this.click).on('mouseover', function(d) {
+      d._fixed = d.fixed;
+      d.fixed = true;
+      if (window.click_handler != null) {
+        window.click_handler(d);
+      }
+      d3.select(this).select('circle').attr("r", _this.getR(d) * 1.2);
+    }).on('dblclick', this.dblclick).classed("highlight", function(d) {
       return d.isHigh === true;
     }).attr("transform", function(d) {
       return "translate(" + d.x + "," + d.y + ")";
@@ -238,7 +245,8 @@ nest = (function() {
     nodeEnter.append("circle").attr("cx", 0).attr("cy", 0).attr("r", this.getR).style("fill", this.color);
     $('circle').qtip({
       style: {
-        classes: 'qtip-dark'
+        classes: 'qtip-dark qtip-info',
+        tip: false
       },
       content: {
         text: function(e, a) {
@@ -247,8 +255,7 @@ nest = (function() {
       },
       position: {
         at: "top left",
-        my: "bottom right",
-        viewport: $(window)
+        my: "bottom right"
       }
     });
     this.node.exit().remove();
