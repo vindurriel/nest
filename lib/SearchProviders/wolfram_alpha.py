@@ -33,4 +33,7 @@ class wolfram_alpha(search_provider_base):
 						'id':a.get('input'),
 						'type':'assumption',
 					})
-		return result
+		return {
+			"nodes": result,
+			'links':[]
+		}

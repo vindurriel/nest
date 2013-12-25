@@ -28,10 +28,10 @@ class search:
 		print "###searching",serviceType
 		try:
 			s=self.search_factory(serviceType)
-			resque.put(s.search(key,dic))
+			resque.put((serviceType,s.search(key,dic)))
 		except Exception, e:
 			traceback.print_exc()
-			resque.put([])
+			resque.put((serviceType,{"nodes":[],"links":[]}))
 		print "###done searching",serviceType
 	def __init__(self):
 		import sys
@@ -57,33 +57,32 @@ class search:
 			'links':[],
 		}
 		results=[q.get() for s in services]
-		for x in results:
-			for y in x:
-				res['nodes'].append(y)
-		print self.result
+		key_node = {
+			'type':"query",
+			'name':key,
+			'id':"query_"+key,
+		}
+		res['nodes'].append(key_node)
+		for service,service_res in results:
+			service_node={
+				'type':"SearchProvider",
+				'name':u"{} 返回的结果".format(service),
+				'id':u"SearchProvider_"+service,
+			}
+			res['nodes'].append(service_node)
+			res['links'].append({
+				'source':key_node['id'],
+				'target':service_node['id']
+			})
+			if len(service_res['nodes'])>0:
+				for x in service_res['nodes']:
+					res['nodes'].append(x)
+					res["links"].append({
+						'source':service_node['id'],
+						'target':x['id']
+					})
+				for x in service_res['links']:
+					res['links'].append(x)
 		return json.dumps(res)
 if __name__ == '__main__':
-	neo=neo()
-	res=neo.get({})
-	print len(res)
-	import sys
-	sys.exit(0)
-	instance=search()
-	from multiprocessing import Process,Queue
-	key=u"联合国"
-	services=["baike",'wolfram_alpha']
-	import json
-	dic={}
-	q=Queue()
-	ps=[ Process(target=instance.search2, args=(key,s,q,dic))  for s in services ]
-	for p in ps: p.start()
-	for p in ps: p.join()
-	res={
-		'nodes':[],
-		'links':[],
-	}
-	results=[q.get() for s in services]
-	for x in results:
-		for y in x:
-			res['nodes'].append(y)
-	print json.dumps(res)
+	pass

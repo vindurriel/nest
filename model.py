@@ -104,7 +104,8 @@ class service:
 				{'id':'tag2doc','name':"tag2doc",'select':False,},
 				{'id':'REGSVC','name':"线性回归",'select':False,},
 				{'id':'MDOSVC','name':"多目标优化",'select':False,},
-				{'id':'baike','name':"百科",'select':True,},
+				{'id':'baike','name':"百科",'select':False,},
+				{'id':'smartref','name':"Smart Ref",'select':True,},
 				{'id':'wolfram_alpha','name':"wolfram alpha",'select':False,},
 			]
 		}

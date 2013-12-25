@@ -44,7 +44,10 @@ def get_docs(term,dic={},limit=10):
 				'type':'referData',
 				"id":text,
 			})
-	return urls
+	return {
+		"nodes": urls,
+		'links':[],
+	}
 def json_print(dic):
 	import json
 	return json.dumps(dic,indent=2)

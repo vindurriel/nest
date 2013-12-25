@@ -1,4 +1,13 @@
 #encoding=utf-8
+def normalize_text(s):
+	if type(s)==type(u""):
+		return s.strip().replace("&nbsp;",'')
+	for coding in ('utf-8','gbk'):
+		try:
+			return s.decode(coding)
+		except Exception, e:
+			pass
+	raise Exception("cannot decode")
 class search_provider_base:
 	def __init__(self):
 		self.result={}

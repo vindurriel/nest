@@ -230,29 +230,27 @@ nest = (function() {
       d.fixed = true;
     });
     _this = this;
-    nodeEnter = this.node.enter().append("g").attr("class", "node").on("click", this.click).on('mouseover', function(d) {
-      d._fixed = d.fixed;
-      d.fixed = true;
-      d3.select(this).select('circle').attr("r", _this.getR(d) * 1.1);
-      if (d3.select(this).selectAll('text')[0].length === 0) {
-        d3.select(this).append('text').attr("class", "notclickable desc").attr("dx", function(d) {
-          return _this.getR(d) + 5;
-        }).classed("show", function(d) {
-          return d === _this.theFocus;
-        }).attr("font-size", (1 / _this.scale) + "em").text(function(d) {
-          return d.name;
-        });
-      }
-    }).on('mouseout', function(d) {
-      d.fixed = d._fixed;
-      d3.select(this).select('circle').attr("r", _this.getR(d));
-      _this.node.selectAll("text").remove();
-    }).on('dblclick', this.dblclick).classed("highlight", function(d) {
+    nodeEnter = this.node.enter().append("g").attr("class", "node").on("click", this.click).on('dblclick', this.dblclick).classed("highlight", function(d) {
       return d.isHigh === true;
     }).attr("transform", function(d) {
       return "translate(" + d.x + "," + d.y + ")";
     }).call(drag);
     nodeEnter.append("circle").attr("cx", 0).attr("cy", 0).attr("r", this.getR).style("fill", this.color);
+    $('circle').qtip({
+      style: {
+        classes: 'qtip-dark'
+      },
+      content: {
+        text: function(e, a) {
+          return d3.select(e.target).data()[0].name;
+        }
+      },
+      position: {
+        at: "top left",
+        my: "bottom right",
+        viewport: $(window)
+      }
+    });
     this.node.exit().remove();
     d3.selectAll(".node circle").attr("r", this.getR).style("fill", this.color);
     d3.selectAll(".search-img").remove();
@@ -275,12 +273,6 @@ nest = (function() {
     });
     this.link.classed("highlight", function(d) {
       return d.isHigh === true;
-    });
-    this.node.classed('hidden', function(d) {
-      return d.type === "referData";
-    });
-    this.link.classed('hidden', function(d) {
-      return d.target.type === "referData";
     });
     for (nod in this.hNode) {
       this.position_cache[nod] = {
@@ -407,10 +399,7 @@ nest = (function() {
 
   nest.prototype.normalize_id = function(x) {
     if (x.id == null) {
-      x.id = x.name;
-    }
-    if (x.id.indexOf('_') < 0) {
-      x.id = "" + x.type + "_" + x.id;
+      x.id = "" + x.type + "_" + x.name;
     }
     return x;
   };

@@ -16,9 +16,13 @@ class explore:
 		import json
 		web.header('Content-Type', 'application/json')
 		dic=json.loads(web.data())
+		print "###explore request",json.dumps(dic,indent=2)
 		tid=dic['keys']
-		i=tid.rindex('_')
-		dic['type'],key=tid[:i],tid[i+1:]
+		if "_"in tid:
+			i=tid.rindex('_')
+			dic['type'],key=tid[:i],tid[i+1:]
+		else:
+			key=tid
 		services=dic.get('services',['xiami','baike'])
 		for service in services:
 			if service=="": continue

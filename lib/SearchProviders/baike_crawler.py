@@ -55,4 +55,7 @@ class baike_crawler(search_provider_base):
 		res=self.result.values()
 		if len(res)>6:
 			res=res[:6]
-		return res
+		return {
+			"nodes": res,
+			'links':[]
+		}

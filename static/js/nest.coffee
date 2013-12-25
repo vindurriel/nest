@@ -168,25 +168,25 @@ class nest
 		.append("g")
 		.attr("class", "node")
 		.on("click", @click)
-		.on('mouseover',(d)->
-			d._fixed= d.fixed
-			d.fixed= true
-			d3.select(@).select('circle').attr("r",_this.getR(d)*1.1)
-			if d3.select(@).selectAll('text')[0].length==0
-				d3.select(@).append('text')
-				.attr("class","notclickable desc")
-				.attr("dx", (d)->_this.getR(d)+5)
-				.classed("show", (d)->d==_this.theFocus)
-				.attr("font-size", (1 / _this.scale) + "em")
-				.text (d)->d.name
-			return
-		)
-		.on('mouseout',(d)->
-			d.fixed= d._fixed
-			d3.select(@).select('circle').attr("r",_this.getR(d))
-			_this.node.selectAll("text").remove()
-			return
-		)
+		# .on('mouseover',(d)->
+		# 	d._fixed= d.fixed
+		# 	d.fixed= true
+		# 	d3.select(@).select('circle').attr("r",_this.getR(d)*1.1)
+		# 	if d3.select(@).selectAll('text')[0].length==0
+		# 		d3.select(@).append('text')
+		# 		.attr("class","notclickable desc")
+		# 		.attr("dx", (d)->_this.getR(d)+5)
+		# 		.classed("show", (d)->d==_this.theFocus)
+		# 		.attr("font-size", (1 / _this.scale) + "em")
+		# 		.text (d)->d.name
+		# 	return
+		# )
+		# .on('mouseout',(d)->
+		# 	d.fixed= d._fixed
+		# 	d3.select(@).select('circle').attr("r",_this.getR(d))
+		# 	_this.node.selectAll("text").remove()
+		# 	return
+		# )
 		.on('dblclick',@dblclick)
 		.classed("highlight",(d)->d.isHigh==true)
 		.attr("transform", (d) ->
@@ -199,11 +199,17 @@ class nest
 		.attr("r", @getR)
 		.style("fill", @color)
 
-		# nodeEnter.append("text")
-		# .attr("class","notclickable desc")
-		# .text (d) ->
-		#	 d.name
-
+		$('circle').qtip  
+			style:
+				classes:
+					'qtip-dark'
+			content:
+				text: (e,a)->
+					d3.select(e.target).data()[0].name
+			position:
+				at: "top left",
+				my: "bottom right"
+				viewport:$(window)
 		@node.exit().remove()
 
 		d3.selectAll(".node circle")
@@ -235,8 +241,8 @@ class nest
 		@node.classed "highlight", (d)->d.isHigh==true
 		@node.classed "focus", (d)=>d==@theFocus
 		@link.classed "highlight", (d)->d.isHigh==true
-		@node.classed('hidden',(d)->d.type=="referData" )
-		@link.classed('hidden',(d)->d.target.type=="referData"  )		
+		# @node.classed('hidden',(d)->d.type=="referData" )
+		# @link.classed('hidden',(d)->d.target.type=="referData"  )		
 		for nod of @hNode
 			@position_cache[nod]={
 				'x':@hNode[nod].x
@@ -325,9 +331,7 @@ class nest
 		return
 	normalize_id: (x)->
 		if not x.id?
-			x.id= x.name
-		if x.id.indexOf('_')<0
-			x.id= "#{x.type}_#{x.id}"
+			x.id= "#{x.type}_#{x.name}"
 		return x
 	explore : (data)=>
 		for x in data.nodes

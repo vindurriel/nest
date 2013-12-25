@@ -10,9 +10,9 @@ class baike(explore_provider_base):
 		url_explore="http://baike.baidu.com/search/word"
 		if "url" in dic and dic['url']!="":
 			url_explore="http://baike.baidu.com"+dic['url']
-			print "###url is:",url_explore
+			print "####url is:",url_explore
 		else:
-			print "###key is:",key
+			print "####key is:",key
 		res=r.get(url_explore,params={
 				'word':term,
 				'pic':1,
@@ -20,7 +20,7 @@ class baike(explore_provider_base):
 		res.raise_for_status()
 		content=normalize_text(res.content)
 		if u"您所进入的词条不存在" in content:
-			print "term not found:",term
+			print "####term not found:",term
 			return []
 		soup=bs(content)
 		links=soup.findAll('a',href=re.compile(r'/(?:sub)?view/\d+(?:/\d+)?.htm'))

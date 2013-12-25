@@ -1,3 +1,4 @@
+@import '/css/jquery.qtip.min.css';
 #wrapper {
   width: 80%;
   margin: 0 auto;
@@ -197,6 +198,7 @@
 .list-item .item-image {
   background-color: #eee;
   max-width: 100%;
+  max-height: 5em;
 }
 .list-item .item-prop {
   font-weight: bold;
@@ -313,4 +315,7 @@ body.no-nav #nav {
   margin-left: 1em;
   background: url('/img/logo.png') no-repeat;
   background-size: contain;
+}
+.qtip {
+  font-size: 1em;
 }

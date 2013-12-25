@@ -1,4 +1,15 @@
-require ['jquery','d3','nest','masonry','jquery_blockUI','imageloaded'] , ($,d3,Nest,Masonry,blockUI,imagesLoaded)->
+requirejs.config
+	"baseUrl": '/js'
+	"paths":
+		"jquery":"jquery"
+		'qtip':'jquery.qtip',
+		'imagesLoaded':'imagesLoaded',
+	"shim":
+		'qtip':
+			'deps':['jquery']
+		'imagesLoaded':
+			'deps':['jquery']
+require ['jquery','d3','nest','masonry','jquery_blockUI','imagesLoaded','qtip'] , ($,d3,Nest,Masonry,blockUI,imagesLoaded,qtip)->
 	url_params= ()->
 		res={} 
 		for x in window.location.search.substring(1).split('&')
@@ -41,15 +52,17 @@ require ['jquery','d3','nest','masonry','jquery_blockUI','imageloaded'] , ($,d3,
 		$item= $(t_list_item(d)).addClass('selected_info')
 		$("#list-container").append($item)
 		window.masonry.appended($item.get())
-		window.imagesLoaded= new  imagesLoaded "#list-container",  ->
-			window.masonry.layout()
-			return
+		if not window.imagesLoaded?
+			window.imagesLoaded= new  imagesLoaded "#list-container"
+			window.imagesLoaded.on 'progress', ->
+				window.masonry.layout()
+				return
 		if d.nodes.length <= 10 or d.nodes[0].type=="query"
 			$("body").on "click", ".list-item.normal", ()->
 				id=$(@).data('nest-node')
 				window.nest.click window.nest.hNode[id]
 			for x in d.nodes
-				if x.type=="referData" then continue
+				if x.type in "SearchProvider smartref_category query referData".split(" ") then continue
 				s=$(t_list_item(x))
 				$("#list-container").append(s)
 				window.masonry.appended(s.get())
@@ -57,24 +70,17 @@ require ['jquery','d3','nest','masonry','jquery_blockUI','imageloaded'] , ($,d3,
 	window.click_handler= (d)->
 		if not d? then return
 		document.title= d.name
-
 		$(".selected_info .item-headline span").text(d.name)
 		$(".selected_info .item-prop").empty()
-		$(".selected_info .item-image").attr('src',d.img)
+		$(".selected_info .item-image").attr('src',d.img or "")
 		actions= {
 			'探索':"dblclick",
 			'删除':"remove",
 		}
-		$("body").on "click", ".selected_info .item-action", ()->
-			cmd=$(@).data('nest-command')
-			window.nest[cmd](window.nest.theFocus)
-			window.nest.update()
-			return
 		for x of actions
 			$(".selected_info .item-prop").append $("<li/>").text(x)
 			.addClass('item-action button')
 			.data('nest-command',actions[x])
-			.addClass('item-action button')
 		if d.type=="doc"
 			$(".selected_info .item-headline a").attr('href',d.url)
 			container= ".selected_info .item-detail"
@@ -96,6 +102,9 @@ require ['jquery','d3','nest','masonry','jquery_blockUI','imageloaded'] , ($,d3,
 			detail.empty()
 			t= d.type or "未知"
 			detail.append("<h3>类别：#{t}</h3>")
+			detail.append("<h3>id: #{d.id}</h3>")
+			if d.content?
+				detail.append("<p>#{d.content}</p>")
 			docs= []
 			for link in window.nest.degree[d.index]
 				if d==link.target then continue
@@ -156,24 +165,24 @@ require ['jquery','d3','nest','masonry','jquery_blockUI','imageloaded'] , ($,d3,
 			'keys':key,
 			'services':services,
 		}
-		keynode = {
-			'type':"query",
-			'name':key,
-		}
+		# keynode = {
+		# 	'type':"query",
+		# 	'name':key,
+		# }
 		$.blockUI({message:"正在搜索"})
 		$.post "/search", JSON.stringify(data), (d)->
 				if not d or d.error?
 					return
-				d.nodes.splice 0,0,keynode
-				i=0
-				for x in d.nodes
-					x.index=i
-					if i>0
-						d.links.push {
-							source:0,
-							target:i,
-						}
-					i+=1
+				# d.nodes.splice 0,0,keynode
+				# i=0
+				# for x in d.nodes
+				# 	x.index=i
+				# 	if i>0
+				# 		d.links.push {
+				# 			source:0,
+				# 			target:i,
+				# 		}
+				# 	i+=1
 				window.nest.draw d
 				list d
 				click_handler (window.nest.root)
@@ -255,6 +264,11 @@ require ['jquery','d3','nest','masonry','jquery_blockUI','imageloaded'] , ($,d3,
 				ui.removeClass('fullscreen').addClass('list-item')
 				window.masonry.layout()
 			$(this).val(if toggle then "收起" else "展开")
+		$("body").on "click", ".selected_info .item-action", ()->
+			cmd=$(@).data('nest-command')
+			window.nest[cmd](window.nest.theFocus)
+			window.nest.update()
+			return
 		$("#btn_load").click ->
 			scr= prompt "要打开的文件名","default"
 			if not scr?

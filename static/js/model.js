@@ -1,4 +1,23 @@
-require(['jquery', 'd3', 'nest', 'masonry', 'jquery_blockUI', 'imageloaded'], function($, d3, Nest, Masonry, blockUI, imagesLoaded) {
+var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+
+requirejs.config({
+  "baseUrl": '/js',
+  "paths": {
+    "jquery": "jquery",
+    'qtip': 'jquery.qtip',
+    'imagesLoaded': 'imagesLoaded'
+  },
+  "shim": {
+    'qtip': {
+      'deps': ['jquery']
+    },
+    'imagesLoaded': {
+      'deps': ['jquery']
+    }
+  }
+});
+
+require(['jquery', 'd3', 'nest', 'masonry', 'jquery_blockUI', 'imagesLoaded', 'qtip'], function($, d3, Nest, Masonry, blockUI, imagesLoaded, qtip) {
   var get_selected_services, list, load_automate, play_step, save, search, t_item_action, url_params;
   url_params = function() {
     var pair, res, x, _i, _len, _ref;
@@ -19,7 +38,7 @@ require(['jquery', 'd3', 'nest', 'masonry', 'jquery_blockUI', 'imageloaded'], fu
     return "<a class=\"button small\" href=\"#\">收藏</a>\n<a class=\"button small\" href=\"#\">分享</a>";
   };
   list = function(d) {
-    var $item, s, t_list_item, x, _i, _len, _ref;
+    var $item, s, t_list_item, x, _i, _len, _ref, _ref1;
     t_list_item = function(d) {
       var details, i, imgurl;
       details = d.content != null ? d.content : "";
@@ -41,9 +60,12 @@ require(['jquery', 'd3', 'nest', 'masonry', 'jquery_blockUI', 'imageloaded'], fu
     $item = $(t_list_item(d)).addClass('selected_info');
     $("#list-container").append($item);
     window.masonry.appended($item.get());
-    window.imagesLoaded = new imagesLoaded("#list-container", function() {
-      window.masonry.layout();
-    });
+    if (window.imagesLoaded == null) {
+      window.imagesLoaded = new imagesLoaded("#list-container");
+      window.imagesLoaded.on('progress', function() {
+        window.masonry.layout();
+      });
+    }
     if (d.nodes.length <= 10 || d.nodes[0].type === "query") {
       $("body").on("click", ".list-item.normal", function() {
         var id;
@@ -53,7 +75,7 @@ require(['jquery', 'd3', 'nest', 'masonry', 'jquery_blockUI', 'imageloaded'], fu
       _ref = d.nodes;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         x = _ref[_i];
-        if (x.type === "referData") {
+        if (_ref1 = x.type, __indexOf.call("SearchProvider smartref_category query referData".split(" "), _ref1) >= 0) {
           continue;
         }
         s = $(t_list_item(x));
@@ -70,19 +92,13 @@ require(['jquery', 'd3', 'nest', 'masonry', 'jquery_blockUI', 'imageloaded'], fu
     document.title = d.name;
     $(".selected_info .item-headline span").text(d.name);
     $(".selected_info .item-prop").empty();
-    $(".selected_info .item-image").attr('src', d.img);
+    $(".selected_info .item-image").attr('src', d.img || "");
     actions = {
       '探索': "dblclick",
       '删除': "remove"
     };
-    $("body").on("click", ".selected_info .item-action", function() {
-      var cmd;
-      cmd = $(this).data('nest-command');
-      window.nest[cmd](window.nest.theFocus);
-      window.nest.update();
-    });
     for (x in actions) {
-      $(".selected_info .item-prop").append($("<li/>").text(x).addClass('item-action button').data('nest-command', actions[x]).addClass('item-action button'));
+      $(".selected_info .item-prop").append($("<li/>").text(x).addClass('item-action button').data('nest-command', actions[x]));
     }
     if (d.type === "doc") {
       $(".selected_info .item-headline a").attr('href', d.url);
@@ -110,6 +126,10 @@ require(['jquery', 'd3', 'nest', 'masonry', 'jquery_blockUI', 'imageloaded'], fu
       detail.empty();
       t = d.type || "未知";
       detail.append("<h3>类别：" + t + "</h3>");
+      detail.append("<h3>id: " + d.id + "</h3>");
+      if (d.content != null) {
+        detail.append("<p>" + d.content + "</p>");
+      }
       docs = [];
       _ref = window.nest.degree[d.index];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -202,36 +222,17 @@ require(['jquery', 'd3', 'nest', 'masonry', 'jquery_blockUI', 'imageloaded'], fu
     window.nest.draw(s);
   };
   search = function(key, services) {
-    var data, keynode;
+    var data;
     data = {
       'keys': key,
       'services': services
-    };
-    keynode = {
-      'type': "query",
-      'name': key
     };
     $.blockUI({
       message: "正在搜索"
     });
     $.post("/search", JSON.stringify(data), function(d) {
-      var i, x, _i, _len, _ref;
       if (!d || (d.error != null)) {
         return;
-      }
-      d.nodes.splice(0, 0, keynode);
-      i = 0;
-      _ref = d.nodes;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        x = _ref[_i];
-        x.index = i;
-        if (i > 0) {
-          d.links.push({
-            source: 0,
-            target: i
-          });
-        }
-        i += 1;
       }
       window.nest.draw(d);
       list(d);
@@ -330,6 +331,12 @@ require(['jquery', 'd3', 'nest', 'masonry', 'jquery_blockUI', 'imageloaded'], fu
         window.masonry.layout();
       }
       return $(this).val(toggle ? "收起" : "展开");
+    });
+    $("body").on("click", ".selected_info .item-action", function() {
+      var cmd;
+      cmd = $(this).data('nest-command');
+      window.nest[cmd](window.nest.theFocus);
+      window.nest.update();
     });
     $("#btn_load").click(function() {
       var scr;

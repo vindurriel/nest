@@ -30,4 +30,7 @@ class MDOSVC(search_provider_base):
 				'id':"{0}-{1}".format(self.id,uuid.uuid1()),
 				'content':desc,
 			})
-		return res
+		return {
+			"nodes": res,
+			'links':[]
+		}
