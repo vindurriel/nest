@@ -16,7 +16,7 @@ class nest
 		@palette= d3.scale.category20()
 		@container= options.container or "#container"
 		@w = options.width or 400
-		@h = options.height or 200
+		@h = options.height or 400
 		@ctrlPressed = false
 		@altPressed = false
 		@shiftPressed = false
@@ -24,9 +24,11 @@ class nest
 		@explored= []
 		@vis = d3.select(@container)
 			.append("svg:svg")
+			.style('width','inherit')
+			.style('height','inherit')
 			.attr("viewBox","0 0 #{@w} #{@h}")	
 			.attr("pointer-events", "all")
-			.attr("preserveAspectRatio","XMidYMid")
+			.attr("preserveAspectRatio","XMidYMid meet")
 			.call(d3.behavior.zoom().scaleExtent([0.01,10]).on("zoom", @zoom)).on('dblclick.zoom',null)
 			.append("svg:g")
 		@link = @vis.selectAll(".link")
@@ -99,7 +101,6 @@ class nest
 			@blacklist= json.blacklist
 		if json.explored?
 			@explored= json.explored
-		$(@container).removeClass "hidden"
 		@nodes= json.nodes
 		@links= json.links
 		@root = json.nodes[0]
@@ -132,7 +133,7 @@ class nest
 		l.source = @normalize(l.source)
 		l.target = @normalize(l.target)
 		return
-	update : ()=>
+	update : (start_force=true)=>
 		#init graph info
 		@matrix=[]
 		@degree=[]
@@ -159,9 +160,10 @@ class nest
 
 		@node = @vis.selectAll(".node").data(@nodes,(d)->d.id)
 
-		drag= @force.drag().on 'dragend', (d)->
-			d.fixed= true
-			return
+		drag= @force.drag()
+		# .on 'dragend', (d)->
+		# 	d.fixed= true
+		# 	return
 		_this=@
 		#enter new nodes
 		nodeEnter=@node.enter()
@@ -171,29 +173,21 @@ class nest
 		.on('mouseover',(d)->
 			d._fixed= d.fixed
 			d.fixed= true
-			if window.click_handler?
-				window.click_handler d
 			d3.select(@).select('circle').attr("r",_this.getR(d)*1.2)
-			# if d3.select(@).selectAll('text')[0].length==0
-			# 	d3.select(@).append('text')
-			# 	.attr("class","notclickable desc")
-			# 	.attr("dx", (d)->_this.getR(d)+5)
-			# 	.classed("show", (d)->d==_this.theFocus)
-			# 	.attr("font-size", (1 / _this.scale) + "em")
-			# 	.text (d)->d.name
 			return
 		)
-		# .on('mouseout',(d)->
-		# 	d.fixed= d._fixed
-		# 	d3.select(@).select('circle').attr("r",_this.getR(d))
-		# 	_this.node.selectAll("text").remove()
-		# 	return
-		# )
+		.on('mouseout',(d)->
+			d.fixed= d._fixed
+			d3.select(@).select('circle').attr("r",_this.getR(d))
+			_this.node.selectAll("text").remove()
+			return
+		)
 		.on('dblclick',@dblclick)
 		.classed("highlight",(d)->d.isHigh==true)
 		.attr("transform", (d) ->
 			"translate(" + d.x + "," + d.y + ")"
-		).call(drag)
+		)
+		.call(drag)
 
 		nodeEnter.append("circle")
 		.attr("cx",0)
@@ -216,8 +210,6 @@ class nest
 		.attr("r", @getR)
 		.style("fill", @color)
 		
-		
-		
 
 		d3.selectAll(".search-img").remove()
 		d3.selectAll(".node circle").filter((d) ->d.isSearching)
@@ -231,7 +223,8 @@ class nest
 		.attr("repeatCount",'indefinite')
 		.classed("search-img",true)
 
-		@force.start()
+		if start_force
+			@force.start()
 
 		# calculate graph info
 		for x in @links

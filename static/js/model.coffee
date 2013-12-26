@@ -2,38 +2,38 @@ requirejs.config
 	"baseUrl": '/js'
 	"paths":
 		"jquery":"jquery"
-		'qtip':'jquery.qtip',
-		'imagesLoaded':'imagesLoaded',
+		'qtip':'jquery.qtip'
+		'imagesLoaded':'imagesLoaded'
+		'gridster':'jquery.gridster.with-extras'
 	"shim":
+		'gridster':
+			'deps':['jquery']
 		'qtip':
 			'deps':['jquery']
 		'imagesLoaded':
 			'deps':['jquery']
-require ['jquery','d3','nest','masonry','jquery_blockUI','imagesLoaded','qtip'] , ($,d3,Nest,Masonry,blockUI,imagesLoaded,qtip)->
+require ['jquery','d3','nest' ,'jquery_blockUI','imagesLoaded','qtip','gridster'] , ($,d3,Nest,blockUI,imagesLoaded,qtip,gridster)->
 	url_params= ()->
 		res={} 
 		for x in window.location.search.substring(1).split('&')
 			pair= x.split('=')
 			res[pair[0]]= decodeURIComponent(pair[1])
 		return res
-	requirejs.onError= (err)->
-		console.log err
-		throw err
 	t_item_action= (d)->
 			"""
 				<a class="button small" href="#">收藏</a>
 				<a class="button small" href="#">分享</a>
 			"""
-	list= (d)->
-		t_list_item= (d)->
-			details= if d.content? then d.content else ""
-			i= Math.floor(Math.random() * (10 - 0 + 1))
-			# imgurl= "http://lorempixel.com/80/80/technics/#{i}"
-			imgurl= ""
-			if d.img?
-				imgurl= d.img
-			return """
-			<div class="list-item normal" data-nest-node="#{d.id}">
+	t_list_item= (d)->
+		details= if d.content? then d.content else ""
+		i= Math.floor(Math.random() * (10 - 0 + 1))
+		# imgurl= "http://lorempixel.com/80/80/technics/#{i}"
+		imgurl= ""
+		if d.img?
+			imgurl= d.img
+		return """
+		<div class="list-item normal" data-nest-node="#{d.id}">
+			<div class='inner'>
 				<h2 class="item-headline">
 					<span>#{d.name}</span>
 				</h2>
@@ -43,33 +43,38 @@ require ['jquery','d3','nest','masonry','jquery_blockUI','imagesLoaded','qtip'] 
 				</div>
 				<p class="item-detail">#{details}</p>
 			</div>
-			"""
-		if not window.masonry?
-			# window.masonry=$('#list-container').data('masonry')
-			window.masonry = new Masonry('#list-container',{"transitionDuration":"0.2s","itemSelector":".list-item"})
-		window.masonry.remove($(".list-item.normal").get())
-		window.masonry.layout()
-		$item= $(t_list_item(d)).addClass('selected_info')
-		$("#list-container").append($item)
-		window.masonry.appended($item.get())
-		if not window.imagesLoaded?
-			window.imagesLoaded= new  imagesLoaded "#list-container"
-			window.imagesLoaded.on 'progress', ->
-				window.masonry.layout()
+		</div>
+		"""	
+	list= (d)->
+		window.gridster[1].remove_all_widgets()
+		docs=[]
+		for link in window.nest.degree[d.index]
+			if d==link.target then continue
+			n= link.target
+			docs.push n
+		if docs.length==0
+			return
+		i=0
+		add_widget= (l)->
+			if l.length==0 or i==20
+				clearInterval interval
 				return
-		if d.nodes.length <= 10 or d.nodes[0].type=="query"
-			$("body").on "click", ".list-item.normal", ()->
-				id=$(@).data('nest-node')
-				window.nest.click window.nest.hNode[id]
-			for x in d.nodes
-				if x.type in "SearchProvider smartref_category query referData".split(" ") then continue
-				s=$(t_list_item(x))
-				$("#list-container").append(s)
-				window.masonry.appended(s.get())
+			x=l.pop()
+			if x.type in "SearchProvider smartref_category query referData".split(" ") then return
+			s=$(t_list_item(x))
+			t= if i%3>0 then 2 else 1
+			window.gridster[1].add_widget s, t,1
+			i+=1
+			return
+		interval= setInterval add_widget, 5, docs
 		return
 	window.click_handler= (d)->
 		if not d? then return
 		document.title= d.name
+		list d
+		if $(".selected_info").length==0
+			$item= $(t_list_item(d)).addClass('selected_info')
+			window.gridster[0].add_widget $item, 3,2
 		$(".selected_info .item-headline span").text(d.name)
 		$(".selected_info .item-prop").empty()
 		$(".selected_info .item-image").attr('src',d.img or "")
@@ -115,8 +120,6 @@ require ['jquery','d3','nest','masonry','jquery_blockUI','imagesLoaded','qtip'] 
 				detail.append("<h3>相关文档</h3>")
 				for n in docs
 					detail.append("<a href=#{n.url}  class='doc_url' target='_blank'>#{n.name}</a>")
-		if window.masonry?
-			window.masonry.layout()
 		return
 	get_selected_services = ->
 		service_ids= []
@@ -159,32 +162,19 @@ require ['jquery','d3','nest','masonry','jquery_blockUI','imagesLoaded','qtip'] 
 		$("#story-indicator,.btn-next,.btn-prev,.btn-automate").show()
 		$("#story-indicator").text("第#{window.current_step+1}步，共#{window.story.length}步， 节点数：#{info.nodes.length}")
 		window.nest.draw s
+		$('#nest-column').removeClass "hidden"
 		return
 	search= (key, services)->
 		data= {
 			'keys':key,
 			'services':services,
 		}
-		# keynode = {
-		# 	'type':"query",
-		# 	'name':key,
-		# }
 		$.blockUI({message:"正在搜索"})
 		$.post "/search", JSON.stringify(data), (d)->
 				if not d or d.error?
 					return
-				# d.nodes.splice 0,0,keynode
-				# i=0
-				# for x in d.nodes
-				# 	x.index=i
-				# 	if i>0
-				# 		d.links.push {
-				# 			source:0,
-				# 			target:i,
-				# 		}
-				# 	i+=1
 				window.nest.draw d
-				list d
+				$('#nest-column').removeClass "hidden"
 				click_handler (window.nest.root)
 				$.unblockUI()
 				return
@@ -209,7 +199,6 @@ require ['jquery','d3','nest','masonry','jquery_blockUI','imagesLoaded','qtip'] 
 				$.extend(cur,graph)
 				window.story.push cur
 			play_step()
-			list window.story[0]
 			click_handler (window.nest.root)
 	$ ->
 		params= url_params()
@@ -230,7 +219,7 @@ require ['jquery','d3','nest','masonry','jquery_blockUI','imagesLoaded','qtip'] 
 				if not d or d.error?
 					return
 				window.nest.draw d
-				list d
+				$('#nest-column').removeClass "hidden"
 				click_handler(window.nest.root)
 				return
 		else if params.automate?
@@ -251,19 +240,17 @@ require ['jquery','d3','nest','masonry','jquery_blockUI','imagesLoaded','qtip'] 
 			return
 		window.nest= new Nest ({
 			"container":"#nest-container",
-			"width":"400",
-			"height":"200",
 		})
 		$(document).on "click", ".btn-toggle-fullscreen" , ()->
-			ui= $(this).closest('div')
-			toggle= ui.hasClass('list-item')
-			if toggle
-				ui.attr('style',"")
-				ui.removeClass('list-item').addClass('fullscreen')
-			else
-				ui.removeClass('fullscreen').addClass('list-item')
-				window.masonry.layout()
+			ui= $(this).closest('div.list-item')
+			toggle= ui.attr('data-sizey')<=2
 			$(this).val(if toggle then "收起" else "展开")
+			if toggle
+				window.gridster[0].resize_widget ui,5,5
+				$('html, body').animate({"scrollTop":ui.offset().top-40})
+			else
+				window.gridster[0].resize_widget ui,2,2
+			return
 		$("body").on "click", ".selected_info .item-action", ()->
 			cmd=$(@).data('nest-command')
 			window.nest[cmd](window.nest.theFocus)
@@ -317,8 +304,15 @@ require ['jquery','d3','nest','masonry','jquery_blockUI','imagesLoaded','qtip'] 
 			search(key,services)
 			$('html, body').animate({"scrollTop":0})
 			return
+		$('#nav').on 'mouseenter', ->
+			$("#nav").removeClass("fade")
+			return
+		$('#nav').on 'mouseleave', ->
+			if $(window).scrollTop()>0
+				$("#nav").addClass("fade")
+			return	
 		$(window).scroll ->
-			toggle= $(this).scrollTop()>100
+			toggle= $(this).scrollTop()>0
 			if toggle
 				$("#nav").addClass("fade")
 			else
@@ -330,26 +324,44 @@ require ['jquery','d3','nest','masonry','jquery_blockUI','imagesLoaded','qtip'] 
 			return
 		$("#btn_save").on "click",save
 		$('body').on "click",".doc_url", (e)->
-			e.preventDefault()
 			if $(".doc_info").length==0
 				$item= $("""
 				<div class='doc_info list-item normal'>
 					<input type="button"  class="btn-toggle-fullscreen"   value="展开">
 					<input type="button" class="btn-small fav" style="left:5em;"  value="收藏">
 					<input type="button" class="btn-small share" style="left:9em;"  value="分享">
-					<h2 class="item-headline">
-						<span></span>
-					</h2>
-					<iframe></iframe>
+					<div class='inner'>
+						<h2 class="item-headline">
+							<span></span>
+						</h2>
+						<iframe  ></iframe>
+					</div>
 				</div>
 				""")
-				$(".selected_info").after $item
-				window.masonry.reloadItems()
-				window.masonry.layout()
+				window.gridster[0].add_widget $item, 2,2
 			url=$(this).attr('href')
 			text= $(this).text()
 			$(".doc_info iframe").attr('src',url)
 			$(".doc_info .item-headline span").text(text)
+			e.preventDefault()
 			return
+		window.gridster= []
+		window.gridster.push $("#nest-column").gridster({
+			widget_selector:".list-item",
+			widget_margins: [5,5],
+			max_cols:5,
+			widget_base_dimensions: [190, 190],
+			resize:
+				enabled:true
+		}).data('gridster')
+		window.gridster[0].disable()
+		window.gridster.push $("#list-column").gridster({
+			widget_selector:".list-item",
+			widget_margins: [5,5],
+			max_cols:5,
+			widget_base_dimensions: [190, 190],
+			resize:
+				enabled:true
+		}).data('gridster')
 		return
 	return

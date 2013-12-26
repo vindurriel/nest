@@ -1,8 +1,16 @@
+@import '/css/main.css';
 @import '/css/jquery.qtip.min.css';
+@import '/css/jquery.gridster.min.css';
+
 @width: 80%;
 @item-width: 400px;
+@light-border:#ccc;
+@dark-border:#555;
+@color: #0088dd;
+
+
 #wrapper{
-  width: @width;
+  width: 1005px;
   margin: 0 auto;
   min-height: 80%;
   position: relative;
@@ -12,16 +20,47 @@
 	display: block;
 	margin-bottom: 1em;
 }
+.button { 
+  padding: 0 .5em;
+  border: @dark-border solid 1px;
+  background-color: rgba(255, 255, 255, 0.1);
+  text-decoration: none;
+  cursor: pointer;
+  display: inline-block;
+  text-align: center;
+  vertical-align: center;
+  font-size:1em;
+  height: 2em;
+  line-height: 2em;
+  margin: 0 0 0 1em;
+  opacity: .8;
+  outline: none;
+  &:hover{
+    opacity: 1;
+  }
+  &.main{
+    opacity: 1;
+    color: white;
+    background-color: @color;
+    &:hover{
+      background-color: lighten(@color,5%);
+      color: white;
+    }
+  }
+}
 .btn-small{
     position: absolute;
-	z-index: 12;
-	padding: 0 .5em; 
-    background: #0088ee;
+    z-index: 12;
+    background: @color;
     color: white;
     width: auto;
     height: 1.5em;
     border: none;
     text-align: center;
+    cursor: pointer;
+    &:hover{
+      background: lighten(@color, 10%) ;
+    }
 }
 .btn-toggle-fullscreen{
 	.btn-small;
@@ -52,7 +91,7 @@
   z-index: 11;
   height: 100%;
   opacity: .3;
-  color: #0088ee;
+  color: @color;
   background: none;
   width: 20;
   border: none;
@@ -70,11 +109,7 @@
   .btn-play-control;
   left:0;
 }
-#list-container{
-  position: relative;
-  width: 100%;
-  margin: 0;
-}
+
 .node {
   cursor: pointer;
   stroke: black;
@@ -117,7 +152,7 @@
     display: none
   }
 
-.rounded-corners (@radius: 4px) {
+.rounded-corners (@radius: 0px) {
   -webkit-border-radius: @radius;
   -moz-border-radius: @radius;
   -ms-border-radius: @radius;
@@ -146,24 +181,24 @@
 #nav{
   width:100%;
   position: fixed;
-  background: #ddd;
+  background: #333;
   z-index: 100;
-  border-bottom: #ccc solid 1px;
+  border-bottom: solid 1px #444;
+  box-shadow: 0px 0 3px rgba(0,0,0,0.5);
   padding: 5px 0;
   transition: opacity .2s;
-  -webkit-transition: opacity .2s;  
-  -moz-transition: opacity .2s; 
+  -webkit-transition: opacity .2s,background-color .2s;  
+  -moz-transition:  opacity .2s,background-color .2s;  
   &.fade{
-    opacity: .5;
+    .logo{
+      background-image:url('/img/logo.png')
+    }
     .search{
       opacity: 0;
     }
-    &:hover{
-      opacity: 1;
-      .search{
-        opacity: 1;
-      }
-    }
+    background-color:transparent;
+    box-shadow: none;
+    border-bottom: none;
   }
   .search{
     position: relative;
@@ -173,15 +208,15 @@
     -webkit-transition: opacity .2s;  
     -moz-transition: opacity .2s; 
   }  
+  * {
+    color: white;
+  }
+  input[type=text]{
+    color: black;
+  }
 }
 
 .list-item{
-  width: @item-width;
-  position: absolute;
-  padding: 1em;
-  margin: 0;
-  margin-bottom: 1em;
-  margin-right: 1em;
   .rounded-corners;
   background: white;
   border:#ddd solid 1px;
@@ -216,7 +251,7 @@
 		width: 100%;
 		margin-right: .5em;
 		padding-left: .5em;
-		border-left: #0088ee 5px solid;
+		border-left: @color 5px solid;
 	}
 }
 
@@ -239,6 +274,15 @@
 }
 
 body.dark {
+  background: black;
+  color:white;
+  a {
+    color:white;
+  }
+  .button{
+    color:white;
+    border-color: #555;
+  }
   .node{
     stroke:white;
   }
@@ -249,15 +293,17 @@ body.dark {
     stroke: white;
   }
   #nav{
-    background: black;
-    border-color: #333;
+    border-color: black;
+    &.fade .logo{
+      background-image: url('/img/logo-dark.png');
+    }
   }
   .list-item{
-    background: #222;
+    background: #333;
     border-color: #444;
   }
-  .fullscreen{
-    background: #222;
+  #fullscreen-container{
+    background: #333;
   }
   #automate-form{
   	background: rgba(0, 0, 0, 0.8);
@@ -266,27 +312,13 @@ body.dark {
     background-image: url('/img/logo-dark.png');
   }
 }
-.fullscreen{
-  position: fixed;
-  z-index: 200;
-  left: 0;right: 0;top: 0;bottom: 0;margin: 0;padding: 0;
-  background: white;
-  height: auto;
-  .btn-toggle-fullscreen,.btn-automate{
-  	margin-top: 0;
-  	margin-left: 0;
-  }
-  svg{
-	height: auto;
-  }
-}
+
 body *{
     outline: none;
 }
 #automate-form {
   background: rgba(255, 255, 255, 0.8);
-  padding: 1em;
-  margin:-1em 0 0 -1em;
+  padding: 2em;
   position: absolute;
   z-index: 13;
   width: 100%;
@@ -313,15 +345,48 @@ body.no-nav{
   height: 2em;
   width: 10em;
   margin-left: 1em;
-  background: url('/img/logo.png') no-repeat;
+  background: url('/img/logo-dark.png') no-repeat;
   background-size: contain;
 }
 .qtip{
   font-size: 1em;
 }
-.qtip-info{
+
+.gs-w{
+  background: white;
+  list-style: none;
 }
-.qtip-content{
-  overflow: visible;
-  padding: 10;
+.gridster{
+}
+.gridster > div{
+  margin: 0;
+  padding: 0;
+}
+.inner{
+  position: absolute;
+  left: 1em;
+  right: 1em;
+  top: 1em;
+  bottom: 1em;
+  overflow-x:hidden;
+  overflow-y: visible;
+}
+
+#nest-container.inner{
+  overflow-y: hidden;
+}
+
+#fullscreen-container{
+  position: fixed;
+  z-index: 200;
+  left: 0;right: 0;top: 0;bottom: 0;margin: 0;padding: 0;
+  background: white;
+  height: auto;
+    .btn-toggle-fullscreen,.btn-automate{
+    margin-top: 0;
+    margin-left: 0;
+  }
+  svg{
+  height: auto;
+  }
 }

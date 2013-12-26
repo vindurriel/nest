@@ -54,7 +54,7 @@ class static:
             return '' # you can send an 404 error here if you want
 class favicon:
 	def GET(self):
-		return ""
+		web.redirect('/img/favicon.png')
 application=app.wsgifunc()
 if __name__ == "__main__":
     app.run()

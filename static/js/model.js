@@ -5,9 +5,13 @@ requirejs.config({
   "paths": {
     "jquery": "jquery",
     'qtip': 'jquery.qtip',
-    'imagesLoaded': 'imagesLoaded'
+    'imagesLoaded': 'imagesLoaded',
+    'gridster': 'jquery.gridster.with-extras'
   },
   "shim": {
+    'gridster': {
+      'deps': ['jquery']
+    },
     'qtip': {
       'deps': ['jquery']
     },
@@ -17,8 +21,8 @@ requirejs.config({
   }
 });
 
-require(['jquery', 'd3', 'nest', 'masonry', 'jquery_blockUI', 'imagesLoaded', 'qtip'], function($, d3, Nest, Masonry, blockUI, imagesLoaded, qtip) {
-  var get_selected_services, list, load_automate, play_step, save, search, t_item_action, url_params;
+require(['jquery', 'd3', 'nest', 'jquery_blockUI', 'imagesLoaded', 'qtip', 'gridster'], function($, d3, Nest, blockUI, imagesLoaded, qtip, gridster) {
+  var get_selected_services, list, load_automate, play_step, save, search, t_item_action, t_list_item, url_params;
   url_params = function() {
     var pair, res, x, _i, _len, _ref;
     res = {};
@@ -30,66 +34,64 @@ require(['jquery', 'd3', 'nest', 'masonry', 'jquery_blockUI', 'imagesLoaded', 'q
     }
     return res;
   };
-  requirejs.onError = function(err) {
-    console.log(err);
-    throw err;
-  };
   t_item_action = function(d) {
     return "<a class=\"button small\" href=\"#\">收藏</a>\n<a class=\"button small\" href=\"#\">分享</a>";
   };
+  t_list_item = function(d) {
+    var details, i, imgurl;
+    details = d.content != null ? d.content : "";
+    i = Math.floor(Math.random() * (10 - 0 + 1));
+    imgurl = "";
+    if (d.img != null) {
+      imgurl = d.img;
+    }
+    return "<div class=\"list-item normal\" data-nest-node=\"" + d.id + "\">\n	<div class='inner'>\n		<h2 class=\"item-headline\">\n			<span>" + d.name + "</span>\n		</h2>\n		<div class=\"item-prop\">" + d.type + " </div>\n		<div>\n			<img class=\"item-image\" src=\"" + imgurl + "\"/>\n		</div>\n		<p class=\"item-detail\">" + details + "</p>\n	</div>\n</div>";
+  };
   list = function(d) {
-    var $item, s, t_list_item, x, _i, _len, _ref, _ref1;
-    t_list_item = function(d) {
-      var details, i, imgurl;
-      details = d.content != null ? d.content : "";
-      i = Math.floor(Math.random() * (10 - 0 + 1));
-      imgurl = "";
-      if (d.img != null) {
-        imgurl = d.img;
+    var add_widget, docs, i, interval, link, n, _i, _len, _ref;
+    window.gridster[1].remove_all_widgets();
+    docs = [];
+    _ref = window.nest.degree[d.index];
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      link = _ref[_i];
+      if (d === link.target) {
+        continue;
       }
-      return "<div class=\"list-item normal\" data-nest-node=\"" + d.id + "\">\n	<h2 class=\"item-headline\">\n		<span>" + d.name + "</span>\n	</h2>\n	<div class=\"item-prop\">" + d.type + " </div>\n	<div>\n		<img class=\"item-image\" src=\"" + imgurl + "\"/>\n	</div>\n	<p class=\"item-detail\">" + details + "</p>\n</div>";
+      n = link.target;
+      docs.push(n);
+    }
+    if (docs.length === 0) {
+      return;
+    }
+    i = 0;
+    add_widget = function(l) {
+      var s, t, x, _ref1;
+      if (l.length === 0 || i === 20) {
+        clearInterval(interval);
+        return;
+      }
+      x = l.pop();
+      if (_ref1 = x.type, __indexOf.call("SearchProvider smartref_category query referData".split(" "), _ref1) >= 0) {
+        return;
+      }
+      s = $(t_list_item(x));
+      t = i % 3 > 0 ? 2 : 1;
+      window.gridster[1].add_widget(s, t, 1);
+      i += 1;
     };
-    if (window.masonry == null) {
-      window.masonry = new Masonry('#list-container', {
-        "transitionDuration": "0.2s",
-        "itemSelector": ".list-item"
-      });
-    }
-    window.masonry.remove($(".list-item.normal").get());
-    window.masonry.layout();
-    $item = $(t_list_item(d)).addClass('selected_info');
-    $("#list-container").append($item);
-    window.masonry.appended($item.get());
-    if (window.imagesLoaded == null) {
-      window.imagesLoaded = new imagesLoaded("#list-container");
-      window.imagesLoaded.on('progress', function() {
-        window.masonry.layout();
-      });
-    }
-    if (d.nodes.length <= 10 || d.nodes[0].type === "query") {
-      $("body").on("click", ".list-item.normal", function() {
-        var id;
-        id = $(this).data('nest-node');
-        return window.nest.click(window.nest.hNode[id]);
-      });
-      _ref = d.nodes;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        x = _ref[_i];
-        if (_ref1 = x.type, __indexOf.call("SearchProvider smartref_category query referData".split(" "), _ref1) >= 0) {
-          continue;
-        }
-        s = $(t_list_item(x));
-        $("#list-container").append(s);
-        window.masonry.appended(s.get());
-      }
-    }
+    interval = setInterval(add_widget, 5, docs);
   };
   window.click_handler = function(d) {
-    var actions, container, detail, docs, link, n, t, value, x, _i, _j, _len, _len1, _ref;
+    var $item, actions, container, detail, docs, link, n, t, value, x, _i, _j, _len, _len1, _ref;
     if (d == null) {
       return;
     }
     document.title = d.name;
+    list(d);
+    if ($(".selected_info").length === 0) {
+      $item = $(t_list_item(d)).addClass('selected_info');
+      window.gridster[0].add_widget($item, 3, 2);
+    }
     $(".selected_info .item-headline span").text(d.name);
     $(".selected_info .item-prop").empty();
     $(".selected_info .item-image").attr('src', d.img || "");
@@ -150,9 +152,6 @@ require(['jquery', 'd3', 'nest', 'masonry', 'jquery_blockUI', 'imagesLoaded', 'q
           detail.append("<a href=" + n.url + "  class='doc_url' target='_blank'>" + n.name + "</a>");
         }
       }
-    }
-    if (window.masonry != null) {
-      window.masonry.layout();
     }
   };
   get_selected_services = function() {
@@ -220,6 +219,7 @@ require(['jquery', 'd3', 'nest', 'masonry', 'jquery_blockUI', 'imagesLoaded', 'q
     $("#story-indicator,.btn-next,.btn-prev,.btn-automate").show();
     $("#story-indicator").text("第" + (window.current_step + 1) + "步，共" + window.story.length + "步， 节点数：" + info.nodes.length);
     window.nest.draw(s);
+    $('#nest-column').removeClass("hidden");
   };
   search = function(key, services) {
     var data;
@@ -235,7 +235,7 @@ require(['jquery', 'd3', 'nest', 'masonry', 'jquery_blockUI', 'imagesLoaded', 'q
         return;
       }
       window.nest.draw(d);
-      list(d);
+      $('#nest-column').removeClass("hidden");
       click_handler(window.nest.root);
       $.unblockUI();
     }, 'json');
@@ -264,7 +264,6 @@ require(['jquery', 'd3', 'nest', 'masonry', 'jquery_blockUI', 'imagesLoaded', 'q
         window.story.push(cur);
       }
       play_step();
-      list(window.story[0]);
       return click_handler(window.nest.root);
     });
   };
@@ -292,7 +291,7 @@ require(['jquery', 'd3', 'nest', 'masonry', 'jquery_blockUI', 'imagesLoaded', 'q
           return;
         }
         window.nest.draw(d);
-        list(d);
+        $('#nest-column').removeClass("hidden");
         click_handler(window.nest.root);
       });
     } else if (params.automate != null) {
@@ -315,22 +314,21 @@ require(['jquery', 'd3', 'nest', 'masonry', 'jquery_blockUI', 'imagesLoaded', 'q
       }
     });
     window.nest = new Nest({
-      "container": "#nest-container",
-      "width": "400",
-      "height": "200"
+      "container": "#nest-container"
     });
     $(document).on("click", ".btn-toggle-fullscreen", function() {
       var toggle, ui;
-      ui = $(this).closest('div');
-      toggle = ui.hasClass('list-item');
+      ui = $(this).closest('div.list-item');
+      toggle = ui.attr('data-sizey') <= 2;
+      $(this).val(toggle ? "收起" : "展开");
       if (toggle) {
-        ui.attr('style', "");
-        ui.removeClass('list-item').addClass('fullscreen');
+        window.gridster[0].resize_widget(ui, 5, 5);
+        $('html, body').animate({
+          "scrollTop": ui.offset().top - 40
+        });
       } else {
-        ui.removeClass('fullscreen').addClass('list-item');
-        window.masonry.layout();
+        window.gridster[0].resize_widget(ui, 2, 2);
       }
-      return $(this).val(toggle ? "收起" : "展开");
     });
     $("body").on("click", ".selected_info .item-action", function() {
       var cmd;
@@ -405,9 +403,17 @@ require(['jquery', 'd3', 'nest', 'masonry', 'jquery_blockUI', 'imagesLoaded', 'q
         "scrollTop": 0
       });
     });
+    $('#nav').on('mouseenter', function() {
+      $("#nav").removeClass("fade");
+    });
+    $('#nav').on('mouseleave', function() {
+      if ($(window).scrollTop() > 0) {
+        $("#nav").addClass("fade");
+      }
+    });
     $(window).scroll(function() {
       var toggle;
-      toggle = $(this).scrollTop() > 100;
+      toggle = $(this).scrollTop() > 0;
       if (toggle) {
         $("#nav").addClass("fade");
       } else {
@@ -422,17 +428,35 @@ require(['jquery', 'd3', 'nest', 'masonry', 'jquery_blockUI', 'imagesLoaded', 'q
     $("#btn_save").on("click", save);
     $('body').on("click", ".doc_url", function(e) {
       var $item, text, url;
-      e.preventDefault();
       if ($(".doc_info").length === 0) {
-        $item = $("<div class='doc_info list-item normal'>\n	<input type=\"button\"  class=\"btn-toggle-fullscreen\"   value=\"展开\">\n	<input type=\"button\" class=\"btn-small fav\" style=\"left:5em;\"  value=\"收藏\">\n	<input type=\"button\" class=\"btn-small share\" style=\"left:9em;\"  value=\"分享\">\n	<h2 class=\"item-headline\">\n		<span></span>\n	</h2>\n	<iframe></iframe>\n</div>");
-        $(".selected_info").after($item);
-        window.masonry.reloadItems();
-        window.masonry.layout();
+        $item = $("<div class='doc_info list-item normal'>\n	<input type=\"button\"  class=\"btn-toggle-fullscreen\"   value=\"展开\">\n	<input type=\"button\" class=\"btn-small fav\" style=\"left:5em;\"  value=\"收藏\">\n	<input type=\"button\" class=\"btn-small share\" style=\"left:9em;\"  value=\"分享\">\n	<div class='inner'>\n		<h2 class=\"item-headline\">\n			<span></span>\n		</h2>\n		<iframe  ></iframe>\n	</div>\n</div>");
+        window.gridster[0].add_widget($item, 2, 2);
       }
       url = $(this).attr('href');
       text = $(this).text();
       $(".doc_info iframe").attr('src', url);
       $(".doc_info .item-headline span").text(text);
+      e.preventDefault();
     });
+    window.gridster = [];
+    window.gridster.push($("#nest-column").gridster({
+      widget_selector: ".list-item",
+      widget_margins: [5, 5],
+      max_cols: 5,
+      widget_base_dimensions: [190, 190],
+      resize: {
+        enabled: true
+      }
+    }).data('gridster'));
+    window.gridster[0].disable();
+    window.gridster.push($("#list-column").gridster({
+      widget_selector: ".list-item",
+      widget_margins: [5, 5],
+      max_cols: 5,
+      widget_base_dimensions: [190, 190],
+      resize: {
+        enabled: true
+      }
+    }).data('gridster'));
   });
 });

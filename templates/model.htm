@@ -3,13 +3,13 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<title></title>
-	<link rel="stylesheet" href="/css/main.css">
+	<!-- <link rel="stylesheet" href="/css/main.css"> -->
 	<link rel="stylesheet" href="/css/model.css">
 	<script src="/js/require.js" data-main="/js/model.js"></script>
 </head>
 <body>
 <div id="nav">
-		<div   class="logo"></div>
+	<div class="logo"></div>
 	<div class="search">
 		<input type="text" name="q" id="q">
 		<input type="button"  id="btn_search" class="button main" isdefault="true" value="搜索">
@@ -34,14 +34,15 @@
 		</div>
 	</div>
 </div>
-<div id="wrapper">
-	<div id="list-container" >
-		<div id="nest-container" class="list-item hidden">
+<div id="wrapper" >
+	<div id="nest-column" class="gridster hidden" >
+		<div data-row="1" data-col="1"   data-sizex="2" data-sizey="2" class="list-item">
 			<input type="button"  class="btn-toggle-fullscreen"   value="展开">
 			<input type="button"  class="btn-automate"   value="运行宏">
 			<input type="button"  class="btn-next"   value="›">
 			<input type="button"  class="btn-prev"   value="‹">
 			<span id="story-indicator"></span>
+			<div id="nest-container" class="inner"></div>
 			<div id="automate-form" >
 				<label for="out_fname">请输入脚本名称:</label>
 				<input type="text" id="out_fname"  name="out_fname"   value="default">
@@ -62,7 +63,9 @@
 				<input type="button"  class="button main btn-automate-yes"   value="确定">
 				<input type="button"  class="button btn-automate-no"   value="取消">
 			</div>
-		</div>	
+		</div>
+	</div>
+	<div id="list-column" class="gridster"  >
 	</div>
 </div>
 </body>

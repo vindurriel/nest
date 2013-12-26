@@ -1,6 +1,10 @@
+@import '/css/main.css';
+
 @import '/css/jquery.qtip.min.css';
+
+@import '/css/jquery.gridster.min.css';
 #wrapper {
-  width: 80%;
+  width: 1005px;
   margin: 0 auto;
   min-height: 80%;
   position: relative;
@@ -10,41 +14,78 @@
   display: block;
   margin-bottom: 1em;
 }
+.button {
+  padding: 0 .5em;
+  border: #555555 solid 1px;
+  background-color: rgba(255, 255, 255, 0.1);
+  text-decoration: none;
+  cursor: pointer;
+  display: inline-block;
+  text-align: center;
+  vertical-align: center;
+  font-size: 1em;
+  height: 2em;
+  line-height: 2em;
+  margin: 0 0 0 1em;
+  opacity: .8;
+  outline: none;
+}
+.button:hover {
+  opacity: 1;
+}
+.button.main {
+  opacity: 1;
+  color: white;
+  background-color: #0088dd;
+}
+.button.main:hover {
+  background-color: #0098f7;
+  color: white;
+}
 .btn-small {
   position: absolute;
   z-index: 12;
-  padding: 0 .5em;
-  background: #0088ee;
+  background: #0088dd;
   color: white;
   width: auto;
   height: 1.5em;
   border: none;
   text-align: center;
+  cursor: pointer;
+}
+.btn-small:hover {
+  background: #11a3ff;
 }
 .btn-toggle-fullscreen {
   z-index: 12;
-  padding: 0 .5em;
-  background: #0088ee;
+  background: #0088dd;
   color: white;
   width: auto;
   height: 1.5em;
   border: none;
   text-align: center;
+  cursor: pointer;
   position: absolute;
   left: auto;
 }
+.btn-toggle-fullscreen:hover {
+  background: #11a3ff;
+}
 .btn-automate {
   z-index: 12;
-  padding: 0 .5em;
-  background: #0088ee;
+  background: #0088dd;
   color: white;
   width: auto;
   height: 1.5em;
   border: none;
   text-align: center;
+  cursor: pointer;
   position: absolute;
   left: auto;
   right: 1em;
+}
+.btn-automate:hover {
+  background: #11a3ff;
 }
 #story-indicator {
   display: none;
@@ -64,7 +105,7 @@
   z-index: 11;
   height: 100%;
   opacity: .3;
-  color: #0088ee;
+  color: #0088dd;
   background: none;
   width: 20;
   border: none;
@@ -81,7 +122,7 @@
   z-index: 11;
   height: 100%;
   opacity: .3;
-  color: #0088ee;
+  color: #0088dd;
   background: none;
   width: 20;
   border: none;
@@ -91,11 +132,6 @@
 }
 .btn-prev:hover {
   opacity: 1;
-}
-#list-container {
-  position: relative;
-  width: 100%;
-  margin: 0;
 }
 .node {
   cursor: pointer;
@@ -147,25 +183,25 @@
 #nav {
   width: 100%;
   position: fixed;
-  background: #ddd;
+  background: #333;
   z-index: 100;
-  border-bottom: #ccc solid 1px;
+  border-bottom: solid 1px #444;
+  box-shadow: 0px 0 3px rgba(0, 0, 0, 0.5);
   padding: 5px 0;
   transition: opacity .2s;
-  -webkit-transition: opacity .2s;
-  -moz-transition: opacity .2s;
+  -webkit-transition: opacity 0.2s, background-color 0.2s;
+  -moz-transition: opacity 0.2s, background-color 0.2s;
 }
 #nav.fade {
-  opacity: .5;
+  background-color: transparent;
+  box-shadow: none;
+  border-bottom: none;
+}
+#nav.fade .logo {
+  background-image: url('/img/logo.png');
 }
 #nav.fade .search {
   opacity: 0;
-}
-#nav.fade:hover {
-  opacity: 1;
-}
-#nav.fade:hover .search {
-  opacity: 1;
 }
 #nav .search {
   position: relative;
@@ -175,18 +211,18 @@
   -webkit-transition: opacity .2s;
   -moz-transition: opacity .2s;
 }
+#nav * {
+  color: white;
+}
+#nav input[type=text] {
+  color: black;
+}
 .list-item {
-  width: 400px;
-  position: absolute;
-  padding: 1em;
-  margin: 0;
-  margin-bottom: 1em;
-  margin-right: 1em;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  -ms-border-radius: 4px;
-  -o-border-radius: 4px;
-  border-radius: 4px;
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  -ms-border-radius: 0px;
+  -o-border-radius: 0px;
+  border-radius: 0px;
   background: white;
   border: #ddd solid 1px;
   overflow: hidden;
@@ -219,7 +255,7 @@
   width: 100%;
   margin-right: .5em;
   padding-left: .5em;
-  border-left: #0088ee 5px solid;
+  border-left: #0088dd 5px solid;
 }
 .hide {
   display: none;
@@ -236,6 +272,17 @@
   height: 1.5em;
   margin: 0;
 }
+body.dark {
+  background: black;
+  color: white;
+}
+body.dark a {
+  color: white;
+}
+body.dark .button {
+  color: white;
+  border-color: #555;
+}
 body.dark .node {
   stroke: white;
 }
@@ -246,15 +293,17 @@ body.dark .link {
   stroke: white;
 }
 body.dark #nav {
-  background: black;
-  border-color: #333;
+  border-color: black;
+}
+body.dark #nav.fade .logo {
+  background-image: url('/img/logo-dark.png');
 }
 body.dark .list-item {
-  background: #222;
+  background: #333;
   border-color: #444;
 }
-body.dark .fullscreen {
-  background: #222;
+body.dark #fullscreen-container {
+  background: #333;
 }
 body.dark #automate-form {
   background: rgba(0, 0, 0, 0.8);
@@ -262,33 +311,12 @@ body.dark #automate-form {
 body.dark .logo {
   background-image: url('/img/logo-dark.png');
 }
-.fullscreen {
-  position: fixed;
-  z-index: 200;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  margin: 0;
-  padding: 0;
-  background: white;
-  height: auto;
-}
-.fullscreen .btn-toggle-fullscreen,
-.fullscreen .btn-automate {
-  margin-top: 0;
-  margin-left: 0;
-}
-.fullscreen svg {
-  height: auto;
-}
 body * {
   outline: none;
 }
 #automate-form {
   background: rgba(255, 255, 255, 0.8);
-  padding: 1em;
-  margin: -1em 0 0 -1em;
+  padding: 2em;
   position: absolute;
   z-index: 13;
   width: 100%;
@@ -312,13 +340,49 @@ body.no-nav #nav {
   height: 2em;
   width: 10em;
   margin-left: 1em;
-  background: url('/img/logo.png') no-repeat;
+  background: url('/img/logo-dark.png') no-repeat;
   background-size: contain;
 }
 .qtip {
   font-size: 1em;
 }
-.qtip-content {
-  overflow: visible;
-  padding: 10;
+.gs-w {
+  background: white;
+  list-style: none;
+}
+.gridster > div {
+  margin: 0;
+  padding: 0;
+}
+.inner {
+  position: absolute;
+  left: 1em;
+  right: 1em;
+  top: 1em;
+  bottom: 1em;
+  overflow-x: hidden;
+  overflow-y: visible;
+}
+#nest-container.inner {
+  overflow-y: hidden;
+}
+#fullscreen-container {
+  position: fixed;
+  z-index: 200;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: 0;
+  padding: 0;
+  background: white;
+  height: auto;
+}
+#fullscreen-container .btn-toggle-fullscreen,
+#fullscreen-container .btn-automate {
+  margin-top: 0;
+  margin-left: 0;
+}
+#fullscreen-container svg {
+  height: auto;
 }

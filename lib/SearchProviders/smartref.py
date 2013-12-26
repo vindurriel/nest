@@ -36,7 +36,7 @@ class smartref(search_provider_base):
 			res.raise_for_status()
 			parse_tree(res.json()[0],[],g)
 		except Exception, e:
-			traceback.print_exc
+			traceback.print_exc()
 		return g
 if __name__ == '__main__':
 	res=smartref().search(u'ing')

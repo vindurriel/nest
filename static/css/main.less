@@ -1,34 +1,7 @@
-﻿@light-border:#ccc;
+﻿@import "/css/model.css";
+@light-border:#ccc;
 @dark-border:#555;
-.button {	
-	padding: 0 1em;
-	border: @light-border solid 1px;
-	border-radius: 4px;
-	background-color: transparent;
-	text-decoration: none;
-	cursor: pointer;
-	display: inline-block;
-	text-align: center;
-	vertical-align: center;
-	font-size:1em;
-	height: 2em;
-	line-height: 2em;
-	margin: 0 0 0 1em;
-	opacity: .8;
-	outline: none;
-	&:hover{
-		opacity: 11;
-	}
-	&.main{
-		opacity: 1;
-		color: white;
-		background-color: #0088dd;
-		&:hover{
-			background-color:#0099ee;
-			color: white;
-		}
-	}
-}
+
 
 .small{
 	padding: 1px 3px;
@@ -42,17 +15,6 @@ body{
 	font-family:微软雅黑,simsun;margin:0;padding:0;width:100%;
 	background:#eee;
 	color:black;
-	&.dark{
-		background: #333;
-		color:white;
-		a {
-			color:white;
-		}
-		.button{
-			color:white;
-			border-color: @dark-border;
-		}
-	}
 }
 a{
 	color: black;

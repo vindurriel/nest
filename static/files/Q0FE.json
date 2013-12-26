@@ -60,10 +60,9 @@
     }, 
     {
       "index": 7, 
-      "distance_rank": 0, 
       "name": "\u82f1\u6587\u5355\u8bcd", 
       "url": "", 
-      "fixed": false, 
+      "distance_rank": 0, 
       "type": "hudongBaikeCrawler", 
       "id": "hudongBaikeCrawler_\u82f1\u6587\u5355\u8bcd"
     }, 
@@ -430,220 +429,220 @@
   ], 
   "links": [
     {
-      "source": 0, 
-      "target": 1
+      "source": "undefined_CAD", 
+      "target": "referData_\u77e5\u8bc6\u70b9:AutoCAD\u4e2d\u5706\u7684\u7ed8\u5236"
     }, 
     {
-      "source": 0, 
-      "target": 2
+      "source": "undefined_CAD", 
+      "target": "referData_\u77e5\u8bc6\u70b9:10\u4e2a\u975e\u5e38\u597d\u7528\u7684CAD\u5236\u56fe\u8f6f\u4ef6"
     }, 
     {
-      "source": 0, 
-      "target": 3
+      "source": "undefined_CAD", 
+      "target": "baiduBaikeCrawler_\u8bbe\u8ba1"
     }, 
     {
-      "source": 0, 
-      "target": 4
+      "source": "undefined_CAD", 
+      "target": "baiduBaikeCrawler_\u6559\u6750"
     }, 
     {
-      "source": 0, 
-      "target": 5
+      "source": "undefined_CAD", 
+      "target": "hudongBaikeCrawler_\u684c\u9762\u8f6f\u4ef6"
     }, 
     {
-      "source": 0, 
-      "target": 6
+      "source": "undefined_CAD", 
+      "target": "referData_\u77e5\u8bc6\u70b9:\u5982\u4f55\u5378\u8f7d\u548c\u5b89\u88c5CAD"
     }, 
     {
-      "source": 0, 
-      "target": 7
+      "source": "undefined_CAD", 
+      "target": "hudongBaikeCrawler_\u82f1\u6587\u5355\u8bcd"
     }, 
     {
-      "source": 0, 
-      "target": 8
+      "source": "undefined_CAD", 
+      "target": "baiduBaikeCrawler_\u5de5\u7a0b\u5236\u56fe"
     }, 
     {
-      "source": 0, 
-      "target": 9
+      "source": "undefined_CAD", 
+      "target": "referData_\u77e5\u8bc6\u70b9:\u5efa\u7b51\u5de5\u7a0bCAD "
     }, 
     {
-      "source": 0, 
-      "target": 10
+      "source": "undefined_CAD", 
+      "target": "referData_\u77e5\u8bc6\u70b9:CAXA\u4e8c\u7ef4CAD\u6559\u7a0b\uff1a\u7535\u5b50\u56fe\u677f\u7684\u6807\u51c6\u4ef6\u56fe\u5e93"
     }, 
     {
-      "source": 0, 
-      "target": 11
+      "source": "undefined_CAD", 
+      "target": "\u77e5\u8bc6\u70b9:http://topslane.com.cn/cor06-04_05c.html"
     }, 
     {
-      "source": 0, 
-      "target": 12
+      "source": "undefined_CAD", 
+      "target": "referData_\u77e5\u8bc6\u70b9:CAD\u5feb\u6377\u952e"
     }, 
     {
-      "source": 0, 
-      "target": 0
+      "source": "undefined_CAD", 
+      "target": "undefined_CAD"
     }, 
     {
-      "source": 0, 
-      "target": 13
+      "source": "undefined_CAD", 
+      "target": "referData_\u77e5\u8bc6\u70b9:\u3010\u8f6f\u4ef6\u4e0b\u8f7d\u3011AutoCAD 2013\u7248\u672c\u4e0b\u8f7d\u94fe\u63a5"
     }, 
     {
-      "source": 0, 
-      "target": 14
+      "source": "undefined_CAD", 
+      "target": "referData_\u77e5\u8bc6\u70b9:http://blog.china.alibaba.com/blog/wuslchina2008/article/b0-i5353337.html"
     }, 
     {
-      "source": 0, 
-      "target": 15
+      "source": "undefined_CAD", 
+      "target": "referData_\u77e5\u8bc6\u70b9:autoCAD\u673a\u68b0\u56fe\u7eb8"
     }, 
     {
-      "source": 0, 
-      "target": 16
+      "source": "undefined_CAD", 
+      "target": "referData_\u77e5\u8bc6\u70b9:CAD"
     }, 
     {
-      "source": 0, 
-      "target": 17
+      "source": "undefined_CAD", 
+      "target": "referData_\u77e5\u8bc6\u70b9:CAD\u5236\u56fe\u5de5\u5177"
     }, 
     {
-      "source": 5, 
-      "target": 18
+      "source": "hudongBaikeCrawler_\u684c\u9762\u8f6f\u4ef6", 
+      "target": "hudongBaikeCrawler_\u684c\u9762"
     }, 
     {
-      "source": 5, 
-      "target": 19
+      "source": "hudongBaikeCrawler_\u684c\u9762\u8f6f\u4ef6", 
+      "target": "hudongBaikeCrawler_\u684c\u9762\u65e5\u5386"
     }, 
     {
-      "source": 5, 
-      "target": 20
+      "source": "hudongBaikeCrawler_\u684c\u9762\u8f6f\u4ef6", 
+      "target": "referData_\u77e5\u8bc6\u70b9:\u684c\u9762\u7f8e\u5316\u8f6f\u4ef6"
     }, 
     {
-      "source": 5, 
-      "target": 21
+      "source": "hudongBaikeCrawler_\u684c\u9762\u8f6f\u4ef6", 
+      "target": "referData_\u77e5\u8bc6\u70b9:\u684c\u9762\u8f6f\u4ef6"
     }, 
     {
-      "source": 5, 
-      "target": 22
+      "source": "hudongBaikeCrawler_\u684c\u9762\u8f6f\u4ef6", 
+      "target": "hudongBaikeCrawler_\u6d3b\u52a8\u684c\u9762"
     }, 
     {
-      "source": 5, 
-      "target": 23
+      "source": "hudongBaikeCrawler_\u684c\u9762\u8f6f\u4ef6", 
+      "target": "hudongBaikeCrawler_\u684c\u9762\u95f9\u949f"
     }, 
     {
-      "source": 5, 
-      "target": 24
+      "source": "hudongBaikeCrawler_\u684c\u9762\u8f6f\u4ef6", 
+      "target": "hudongBaikeCrawler_\u684c\u9762\u65f6\u95f4"
     }, 
     {
-      "source": 3, 
-      "target": 25
+      "source": "baiduBaikeCrawler_\u8bbe\u8ba1", 
+      "target": "baiduBaikeCrawler_\u5236\u9020"
     }, 
     {
-      "source": 3, 
-      "target": 26
+      "source": "baiduBaikeCrawler_\u8bbe\u8ba1", 
+      "target": "referData_\u77e5\u8bc6\u70b9:\u5982\u4f55\u505a\u4e00\u4e2a\u4f18\u79c0\u7684\u8bbe\u8ba1\u5e08\uff1f"
     }, 
     {
-      "source": 3, 
-      "target": 27
+      "source": "baiduBaikeCrawler_\u8bbe\u8ba1", 
+      "target": "baiduBaikeCrawler_\u5bb6\u88c5\u8bbe\u8ba1"
     }, 
     {
-      "source": 3, 
-      "target": 28
+      "source": "baiduBaikeCrawler_\u8bbe\u8ba1", 
+      "target": "\u77e5\u8bc6\u70b9:\u8bbe\u8ba1[sh\u00e8 j\u00ec]&nbsp;.speak{background:url(/static/lemma/view/img/speak_f653ac77.gif) no-repeat -29px 5px}.speaking{background:url(/static/lemma/view/img/speak_f653ac77.gif) no-repeat 0 5px}document.getElementById(\"speak\").style.display = \"\";function speak(){F.use(\"/static/widget/lemma/pinyin/pinyin.js\", function(FMP){var url = \"http://tts.baidu.com/text2audio?text=\" + encodeURI(\"\u8bbe\u8ba1\") + \"&lan=ZH&ie=UTF-8&spd=2\";FMP.cfg.movie = \"http://dict.baidu.com/static/flash/fmp.swf?v=090105a\";if(!window.FMPLoaded) {FMP.load();window.FMPLoaded = true;}try{nslog(location.href, 9046);if(FMP.loaded){FMP.stop();FMP.setUrl(url);FMP.play();}else{FMP.onLoad=function(){FMP.setUrl(url);FMP.play();}}}catch(b){}});}"
     }, 
     {
-      "source": 3, 
-      "target": 29
+      "source": "baiduBaikeCrawler_\u8bbe\u8ba1", 
+      "target": "baiduBaikeCrawler_\u8bbe\u8ba1\u6982\u5ff5"
     }, 
     {
-      "source": 3, 
-      "target": 30
+      "source": "baiduBaikeCrawler_\u8bbe\u8ba1", 
+      "target": "baiduBaikeCrawler_\u6807\u5fd7\u8bbe\u8ba1"
     }, 
     {
-      "source": 3, 
-      "target": 31
+      "source": "baiduBaikeCrawler_\u8bbe\u8ba1", 
+      "target": "baiduBaikeCrawler_\u8bbe\u8ba1\u5206\u6790"
     }, 
     {
-      "source": 3, 
-      "target": 3
+      "source": "baiduBaikeCrawler_\u8bbe\u8ba1", 
+      "target": "baiduBaikeCrawler_\u8bbe\u8ba1"
     }, 
     {
-      "source": 3, 
-      "target": 32
+      "source": "baiduBaikeCrawler_\u8bbe\u8ba1", 
+      "target": "referData_\u77e5\u8bc6\u70b9:\u8bbe\u8ba1 "
     }, 
     {
-      "source": 3, 
-      "target": 33
+      "source": "baiduBaikeCrawler_\u8bbe\u8ba1", 
+      "target": "referData_\u77e5\u8bc6\u70b9:Fab Lab\u521b\u65b0\u6a21\u5f0f\u53ca\u5176\u542f\u793a "
     }, 
     {
-      "source": 3, 
-      "target": 34
+      "source": "baiduBaikeCrawler_\u8bbe\u8ba1", 
+      "target": "referData_\u77e5\u8bc6\u70b9:\u8bbe\u8ba1"
     }, 
     {
-      "source": 3, 
-      "target": 35
+      "source": "baiduBaikeCrawler_\u8bbe\u8ba1", 
+      "target": "referData_\u77e5\u8bc6\u70b9:\u521b\u65b02.0\uff1a\u77e5\u8bc6\u793e\u4f1a\u73af\u5883\u4e0b\u7684\u521b\u65b0\u6c11\u4e3b\u5316 "
     }, 
     {
-      "source": 3, 
-      "target": 36
+      "source": "baiduBaikeCrawler_\u8bbe\u8ba1", 
+      "target": "referData_\u77e5\u8bc6\u70b9:Living Lab\u521b\u65b0\u6a21\u5f0f\u53ca\u5176\u542f\u793a "
     }, 
     {
-      "source": 3, 
-      "target": 37
+      "source": "baiduBaikeCrawler_\u8bbe\u8ba1", 
+      "target": "referData_\u77e5\u8bc6\u70b9:http://www.91spj.com/jiancai/xinxi/9381"
     }, 
     {
-      "source": 4, 
-      "target": 38
+      "source": "baiduBaikeCrawler_\u6559\u6750", 
+      "target": "baike_\u6559\u5b66"
     }, 
     {
-      "source": 4, 
-      "target": 39
+      "source": "baiduBaikeCrawler_\u6559\u6750", 
+      "target": "baike_\u6750\u6599"
     }, 
     {
-      "source": 4, 
-      "target": 40
+      "source": "baiduBaikeCrawler_\u6559\u6750", 
+      "target": "baike_\u8bfe\u5802"
     }, 
     {
-      "source": 4, 
-      "target": 41
+      "source": "baiduBaikeCrawler_\u6559\u6750", 
+      "target": "baike_\u8bfe\u672c"
     }, 
     {
-      "source": 4, 
-      "target": 42
+      "source": "baiduBaikeCrawler_\u6559\u6750", 
+      "target": "baike_\u8ba1\u7b97\u673a"
     }, 
     {
-      "source": 8, 
-      "target": 43
+      "source": "baiduBaikeCrawler_\u5de5\u7a0b\u5236\u56fe", 
+      "target": "baike_\u8bfe\u7a0b"
     }, 
     {
-      "source": 8, 
-      "target": 44
+      "source": "baiduBaikeCrawler_\u5de5\u7a0b\u5236\u56fe", 
+      "target": "baike_\u7ed8\u56fe"
     }, 
     {
-      "source": 8, 
-      "target": 45
+      "source": "baiduBaikeCrawler_\u5de5\u7a0b\u5236\u56fe", 
+      "target": "baike_\u7a7a\u95f4"
     }, 
     {
-      "source": 8, 
-      "target": 46
+      "source": "baiduBaikeCrawler_\u5de5\u7a0b\u5236\u56fe", 
+      "target": "baike_\u6295\u5f71"
     }, 
     {
-      "source": 8, 
-      "target": 47
+      "source": "baiduBaikeCrawler_\u5de5\u7a0b\u5236\u56fe", 
+      "target": "baike_\u56fe\u6837"
     }, 
     {
-      "source": 18, 
-      "target": 48
+      "source": "hudongBaikeCrawler_\u684c\u9762", 
+      "target": "baike_\u56fa\u5b9a"
     }, 
     {
-      "source": 18, 
-      "target": 49
+      "source": "hudongBaikeCrawler_\u684c\u9762", 
+      "target": "baike_\u6d3b\u52a8"
     }, 
     {
-      "source": 18, 
-      "target": 50
+      "source": "hudongBaikeCrawler_\u684c\u9762", 
+      "target": "baike_\u7535\u8111\u684c\u9762"
     }, 
     {
-      "source": 18, 
-      "target": 51
+      "source": "hudongBaikeCrawler_\u684c\u9762", 
+      "target": "baike_\u70b9\u51fb\u6b64\u5904"
     }, 
     {
-      "source": 18, 
-      "target": 52
+      "source": "hudongBaikeCrawler_\u684c\u9762", 
+      "target": "baike_\u663e\u793a\u5668"
     }
   ]
 }

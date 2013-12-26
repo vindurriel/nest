@@ -74,7 +74,7 @@ class search:
 				'source':key_node['id'],
 				'target':service_node['id']
 			})
-			if len(service_res['nodes'])>0:
+			if hasattr(service_res,'has_key') and len(service_res['nodes'])>0:
 				for x in service_res['nodes']:
 					res['nodes'].append(x)
 					res["links"].append({
