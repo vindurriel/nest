@@ -1,16 +1,15 @@
 @import '/css/main.css';
 @import '/css/jquery.qtip.min.css';
 @import '/css/jquery.gridster.min.css';
-
-@width: 80%;
+@import "/css/switcher.css";
+@width:  1260px;
 @item-width: 400px;
 @light-border:#ccc;
 @dark-border:#555;
-@color: #0088dd;
-
+@color: #3b89ec;
 
 #wrapper{
-  width: 1005px;
+  width:@width;
   margin: 0 auto;
   min-height: 80%;
   position: relative;
@@ -189,6 +188,9 @@
   transition: opacity .2s;
   -webkit-transition: opacity .2s,background-color .2s;  
   -moz-transition:  opacity .2s,background-color .2s;  
+  h3,a,input {
+    color: white;
+  }
   &.fade{
     .logo{
       background-image:url('/img/logo.png')
@@ -208,9 +210,7 @@
     -webkit-transition: opacity .2s;  
     -moz-transition: opacity .2s; 
   }  
-  * {
-    color: white;
-  }
+
   input[type=text]{
     color: black;
   }
@@ -221,11 +221,42 @@
   background: white;
   border:#ddd solid 1px;
   overflow: hidden;
-  table{
-    width: 100%;
-    table-layout: fixed;
+  &:hover {
+    .btn-close{
+      display:inline;
+    }
+    .drag-handle{
+      display: inline;
+    }
   }
-
+  .drag-handle{
+    position: absolute;
+    margin: 3px;
+    padding-right: 2em;
+    padding-bottom: 2em;
+    cursor:move;
+    color: #aaa;
+    display: none;
+    &:hover{
+      color: @color;
+    }
+  }
+  .btn-close{
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: #aaa;
+    &:hover{
+      color: @color;
+    }
+    background: transparent;
+    width: 10px;
+    height: 10px;
+    margin:3px;
+    margin-top: -3px;
+    cursor: pointer;
+    display: none;
+  }
   .item-image{
     background-color: #eee;
     max-width: @item-width;
@@ -263,13 +294,32 @@
 .services{
   list-style: none;
   padding: 0;
-  li{
-    margin: 1em 0;
+  *{
+      ::selection{
+        background:transparent;
+      }
   }
-  input[type="checkbox"]{
-    width: 1.5em;
-    height: 1.5em;
-    margin: 0;
+  li{
+    color: #333;
+    margin: 1em 0 0 0;
+    padding: 15px 1em 1em 15px;
+    width: 400px;
+    height: 80px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 5px;
+    cursor: pointer;
+    strong{
+      margin: 0 1em;
+    }
+    img{
+      float: left;
+    }
+    p{
+      margin-left: 42px;
+    }
+    &.on{
+      background-color: white;
+    }
   }
 }
 
@@ -390,3 +440,4 @@ body.no-nav{
   height: auto;
   }
 }
+

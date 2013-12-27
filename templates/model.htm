@@ -12,13 +12,14 @@
 	<div class="logo"></div>
 	<div class="search">
 		<input type="text" name="q" id="q">
-		<input type="button"  id="btn_search" class="button main" isdefault="true" value="搜索">
-		<input type="button"  id="btn_tip" class="button" value="选项" style="min-width:0px;padding:0 1em;">
-		<input type="button"  id="btn_save" class="button" value="保存快照" >
-		<input type="button"  id="btn_load" class="button" value="加载宏" >
+		<a type="button"  id="btn_search" class="button main" isdefault="true">搜索</a>
+		<a type="button"  id="btn_tip" class="button">选项</a>
+		<a type="button"  id="btn_save" class="button">保存快照</a>
+		<a type="button"  id="btn_load" class="button">加载宏</a>
 		<a href="/list?theme=$theme" class="button">加载快照</a>
 		<div style="display:inline">
 			<div id="tip">
+				<h3>使用下列哪些搜索服务:</h3>
 				<ul class="services">
 				</ul>
 				<div class="hidden">
@@ -37,7 +38,7 @@
 <div id="wrapper" >
 	<div id="nest-column" class="gridster hidden" >
 		<div data-row="1" data-col="1"   data-sizex="2" data-sizey="2" class="list-item">
-			<input type="button"  class="btn-toggle-fullscreen"   value="展开">
+			<header class="drag-handle">|||</header>
 			<input type="button"  class="btn-automate"   value="运行宏">
 			<input type="button"  class="btn-next"   value="›">
 			<input type="button"  class="btn-prev"   value="‹">

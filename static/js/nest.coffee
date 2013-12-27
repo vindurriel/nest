@@ -34,12 +34,7 @@ class nest
 		@link = @vis.selectAll(".link")
 		@node = @vis.selectAll(".node")
 		@force = d3.layout.force()
-		.on("end",(d)=>
-			@nodes.forEach (n)->
-				if n._fixed? then n.fixed= true
-				return
-			return
-		).on("tick", @tick)
+		.on("tick", @tick)
 		.on('start', ()=> @start_time=new Date() )
 		.on('end', ()=> console.log(new Date()-@start_time) )
 		.charge (d)->
@@ -111,16 +106,11 @@ class nest
 		#init node position for faster stablization
 		@nodes.forEach (d,i)=>
 			@normalize_id d
-			if d.fixed?
-				d.fixed= undefined
-				d._fixed= true
-			else
-				d.x=@w*(i%10)/10
-				d.y=i*@h/n
+			d.x=@w*(i%10)/10
+			d.y=i*@h/n
 			return
 		@root.x =@w /2
 		@root.y =@h /2
-		@root.fixed= true
 		@force.nodes(@nodes).links(@links)
 		@update() 
 		return
@@ -206,13 +196,13 @@ class nest
 				my: "bottom right"
 		@node.exit().remove()
 
-		d3.selectAll(".node circle")
+		@vis.selectAll(".node circle")
 		.attr("r", @getR)
 		.style("fill", @color)
 		
 
-		d3.selectAll(".search-img").remove()
-		d3.selectAll(".node circle").filter((d) ->d.isSearching)
+		@vis.selectAll(".search-img").remove()
+		@vis.selectAll(".node circle").filter((d) ->d.isSearching)
 		.append("animate")
 		.attr("attributeName",'cx')
 		.attr("begin",'0s')
@@ -247,9 +237,13 @@ class nest
 		if d == @theFocus
 			return 15
 		if d.isHigh then 10 else 5
-	tick : ()=>
+	tick : (e)=>
+		cx= @theFocus.x
+		cy= @theFocus.y
+		k= .05*e.alpha
 		@node.attr "transform", (d) =>
-			radius= @getR(d)
+			d.x+= (d.x-cx)*k
+			d.y+= (d.y-cy)*k
 			"translate(" + d.x + "," + d.y + ")"
 		@link.attr("x1", (d) ->
 			d.source.x

@@ -3,8 +3,10 @@
 @import '/css/jquery.qtip.min.css';
 
 @import '/css/jquery.gridster.min.css';
+
+@import "/css/switcher.css";
 #wrapper {
-  width: 1005px;
+  width: 1260px;
   margin: 0 auto;
   min-height: 80%;
   position: relative;
@@ -36,16 +38,16 @@
 .button.main {
   opacity: 1;
   color: white;
-  background-color: #0088dd;
+  background-color: #3b89ec;
 }
 .button.main:hover {
-  background-color: #0098f7;
+  background-color: #5297ee;
   color: white;
 }
 .btn-small {
   position: absolute;
   z-index: 12;
-  background: #0088dd;
+  background: #3b89ec;
   color: white;
   width: auto;
   height: 1.5em;
@@ -54,11 +56,11 @@
   cursor: pointer;
 }
 .btn-small:hover {
-  background: #11a3ff;
+  background: #69a5f1;
 }
 .btn-toggle-fullscreen {
   z-index: 12;
-  background: #0088dd;
+  background: #3b89ec;
   color: white;
   width: auto;
   height: 1.5em;
@@ -69,11 +71,11 @@
   left: auto;
 }
 .btn-toggle-fullscreen:hover {
-  background: #11a3ff;
+  background: #69a5f1;
 }
 .btn-automate {
   z-index: 12;
-  background: #0088dd;
+  background: #3b89ec;
   color: white;
   width: auto;
   height: 1.5em;
@@ -85,7 +87,7 @@
   right: 1em;
 }
 .btn-automate:hover {
-  background: #11a3ff;
+  background: #69a5f1;
 }
 #story-indicator {
   display: none;
@@ -105,7 +107,7 @@
   z-index: 11;
   height: 100%;
   opacity: .3;
-  color: #0088dd;
+  color: #3b89ec;
   background: none;
   width: 20;
   border: none;
@@ -122,7 +124,7 @@
   z-index: 11;
   height: 100%;
   opacity: .3;
-  color: #0088dd;
+  color: #3b89ec;
   background: none;
   width: 20;
   border: none;
@@ -192,6 +194,11 @@
   -webkit-transition: opacity 0.2s, background-color 0.2s;
   -moz-transition: opacity 0.2s, background-color 0.2s;
 }
+#nav h3,
+#nav a,
+#nav input {
+  color: white;
+}
 #nav.fade {
   background-color: transparent;
   box-shadow: none;
@@ -205,14 +212,11 @@
 }
 #nav .search {
   position: relative;
-  width: 80%;
+  width: 1260px;
   margin: 0 auto;
   transition: opacity .2s;
   -webkit-transition: opacity .2s;
   -moz-transition: opacity .2s;
-}
-#nav * {
-  color: white;
 }
 #nav input[type=text] {
   color: black;
@@ -227,9 +231,39 @@
   border: #ddd solid 1px;
   overflow: hidden;
 }
-.list-item table {
-  width: 100%;
-  table-layout: fixed;
+.list-item:hover .btn-close {
+  display: inline;
+}
+.list-item:hover .drag-handle {
+  display: inline;
+}
+.list-item .drag-handle {
+  position: absolute;
+  margin: 3px;
+  padding-right: 2em;
+  padding-bottom: 2em;
+  cursor: move;
+  color: #aaa;
+  display: none;
+}
+.list-item .drag-handle:hover {
+  color: #3b89ec;
+}
+.list-item .btn-close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: #aaa;
+  background: transparent;
+  width: 10px;
+  height: 10px;
+  margin: 3px;
+  margin-top: -3px;
+  cursor: pointer;
+  display: none;
+}
+.list-item .btn-close:hover {
+  color: #3b89ec;
 }
 .list-item .item-image {
   background-color: #eee;
@@ -255,7 +289,7 @@
   width: 100%;
   margin-right: .5em;
   padding-left: .5em;
-  border-left: #0088dd 5px solid;
+  border-left: #3b89ec 5px solid;
 }
 .hide {
   display: none;
@@ -264,13 +298,30 @@
   list-style: none;
   padding: 0;
 }
-.services li {
-  margin: 1em 0;
+.services * ::selection {
+  background: transparent;
 }
-.services input[type="checkbox"] {
-  width: 1.5em;
-  height: 1.5em;
-  margin: 0;
+.services li {
+  color: #333;
+  margin: 1em 0 0 0;
+  padding: 15px 1em 1em 15px;
+  width: 400px;
+  height: 80px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 5px;
+  cursor: pointer;
+}
+.services li strong {
+  margin: 0 1em;
+}
+.services li img {
+  float: left;
+}
+.services li p {
+  margin-left: 42px;
+}
+.services li.on {
+  background-color: white;
 }
 body.dark {
   background: black;

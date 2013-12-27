@@ -101,12 +101,27 @@ class service:
 		web.header('Content-Type', 'application/json')
 		res={
 			'services':[
-				{'id':'tag2doc','name':"tag2doc",'select':False,},
-				{'id':'REGSVC','name':"线性回归",'select':False,},
-				{'id':'MDOSVC','name':"多目标优化",'select':False,},
-				{'id':'baike','name':"百科",'select':False,},
-				{'id':'smartref','name':"Smart Ref",'select':True,},
-				{'id':'wolfram_alpha','name':"wolfram alpha",'select':False,},
+				{	'id':'baike','name':"百科",'select':False,
+					'desc':'使用百度百科搜索知识点和关联',
+					'img':'/img/baidu.png',
+				},
+				{	'id':'smartref','name':"Smart Ref",'select':True,
+					'desc':'搜索smart ref的零件库',
+					'img':'/img/coins.png',
+				},
+
+				{	'id':'REGSVC','name':"线性回归",'select':False,
+					'desc':'调用线性回归算法服务',
+					'img':'/img/line.png',
+				},
+				{	'id':'MDOSVC','name':"多目标优化",'select':False,
+					'desc':'调用优化算法服务',
+					'img':'/img/variable.png',
+				},
+				{	'id':'wolfram_alpha','name':"wolfram alpha",'select':False,
+					'desc':'使用wolfram alpha进行工程计算',
+					'img':'/img/wolfram_alpha.png',
+				},
 			]
 		}
 		return json.dumps(res,indent=2)
