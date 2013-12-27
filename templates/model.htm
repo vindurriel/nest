@@ -12,6 +12,12 @@
 	<div class="logo"></div>
 	<div class="search">
 		<input type="text" name="q" id="q">
+		<div id="dropimage-holder"><h2>把图片拖到这里</h2></div>
+		<form method="POST" enctype="multipart/form-data" action="/search">
+			<input type="file" name="myfile" />
+			<br/>
+			<input type="submit" />
+		</form>
 		<a type="button"  id="btn_search" class="button main" isdefault="true">搜索</a>
 		<a type="button"  id="btn_tip" class="button">选项</a>
 		<a type="button"  id="btn_save" class="button">保存快照</a>

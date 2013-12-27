@@ -389,19 +389,15 @@ require ['jquery','d3','nest' ,'jquery_blockUI','imagesLoaded','qtip','gridster'
 			$('html, body').animate({"scrollTop":0})
 			$("#tip").slideUp 200
 			return
-		$('#nav').on 'mouseenter', ->
-			$("#nav").removeClass("fade")
-			return
-		$('#nav').on 'mouseleave', ->
-			if $(window).scrollTop()>0
-				$("#nav").addClass("fade")
-			return	
+		window.last_scroll=0
 		$(window).scroll ->
-			toggle= $(this).scrollTop()>0
+			toggle= $(window).scrollTop()>window.last_scroll
 			if toggle
-				$("#nav").addClass("fade")
+				$("#nav").addClass "fade"
+				$("#tip").slideUp 200
 			else
-				$("#nav").removeClass("fade")
+				$("#nav").removeClass "fade"
+			window.last_scroll=$(window).scrollTop()
 			return
 		$('#q').keypress (e) ->
 			if e.keyCode==13
@@ -450,8 +446,39 @@ require ['jquery','d3','nest' ,'jquery_blockUI','imagesLoaded','qtip','gridster'
 			resize:
 				enabled:true
 		}).data('gridster')
+
 		$(window).on "mouseenter",".drag-handle", ->
 			$(this).attr('title',"按住拖动")
 			return
+		require ['dropimage'], (dropimage)->
+			$(window).on "dragover", ->
+				$('#dropimage-holder').addClass('dragover')
+				false
+			$(window).on "dragend", ->
+				$('#dropimage-holder').removeClass('dragover')
+				false
+			$holder=$('#dropimage-holder')
+			if dropimage.tests.dnd
+				$holder.on 'drop', (e)->
+					$(this).removeClass('dragover')
+					e.preventDefault()
+					data= new FormData()
+					for x in e.originalEvent.dataTransfer.files
+						data.append "myfile",x
+					$.ajax
+						url: '/search',
+						type: 'POST',
+						data: data,
+						cache: false,
+						contentType: false,
+						processData: false,
+						success: (d,e)->
+							console.log d
+							return
+						error: (d,e)->
+							console.log e
+							return
+					,"json"
+					return false
 		return
 	return

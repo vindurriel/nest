@@ -39,11 +39,25 @@ class search:
 		import SearchProviders
 		self.search_factory=SearchProviders.factory
 		self.result={}
+	def handle_upload(self,input):
+		try:
+			import uuid
+			fname=cwd('static','img', str(uuid.uuid1())+'.png')
+			file(fname,'wb').write(input.myfile.file.read())
+			return json.dumps({"message":"ok"})
+		except Exception, e:
+			print input.keys()
+			traceback.print_exc()
+			return json.dumps({"error":str(e)})
 	def POST(self):
 		timeout=3
 		import json
 		web.header('Content-Type', 'application/json')
-		dic=json.loads(web.data())
+		dic={}
+		try:
+			dic=json.loads(web.data())
+		except Exception, e:
+			return self.handle_upload(web.input())
 		key=dic['keys']
 		services=dic.get('services',[])
 		services=filter(lambda x:x!="",services)

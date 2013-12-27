@@ -479,22 +479,17 @@ require(['jquery', 'd3', 'nest', 'jquery_blockUI', 'imagesLoaded', 'qtip', 'grid
       });
       $("#tip").slideUp(200);
     });
-    $('#nav').on('mouseenter', function() {
-      $("#nav").removeClass("fade");
-    });
-    $('#nav').on('mouseleave', function() {
-      if ($(window).scrollTop() > 0) {
-        $("#nav").addClass("fade");
-      }
-    });
+    window.last_scroll = 0;
     $(window).scroll(function() {
       var toggle;
-      toggle = $(this).scrollTop() > 0;
+      toggle = $(window).scrollTop() > window.last_scroll;
       if (toggle) {
         $("#nav").addClass("fade");
+        $("#tip").slideUp(200);
       } else {
         $("#nav").removeClass("fade");
       }
+      window.last_scroll = $(window).scrollTop();
     });
     $('#q').keypress(function(e) {
       if (e.keyCode === 13) {
@@ -538,6 +533,46 @@ require(['jquery', 'd3', 'nest', 'jquery_blockUI', 'imagesLoaded', 'qtip', 'grid
     }).data('gridster'));
     $(window).on("mouseenter", ".drag-handle", function() {
       $(this).attr('title', "按住拖动");
+    });
+    require(['dropimage'], function(dropimage) {
+      var $holder;
+      $(window).on("dragover", function() {
+        $('#dropimage-holder').addClass('dragover');
+        return false;
+      });
+      $(window).on("dragend", function() {
+        $('#dropimage-holder').removeClass('dragover');
+        return false;
+      });
+      $holder = $('#dropimage-holder');
+      if (dropimage.tests.dnd) {
+        return $holder.on('drop', function(e) {
+          var data, x, _i, _len, _ref;
+          $(this).removeClass('dragover');
+          e.preventDefault();
+          data = new FormData();
+          _ref = e.originalEvent.dataTransfer.files;
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            x = _ref[_i];
+            data.append("myfile", x);
+          }
+          $.ajax({
+            url: '/search',
+            type: 'POST',
+            data: data,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function(d, e) {
+              console.log(d);
+            },
+            error: function(d, e) {
+              console.log(e);
+            }
+          }, "json");
+          return false;
+        });
+      }
     });
   });
 });
