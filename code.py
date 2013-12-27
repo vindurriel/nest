@@ -21,6 +21,7 @@ router="""
 """
 ###router
 urls=[]
+from search import search
 to_imports=set()
 for line in router.split("\n"):
     if line=="": continue

@@ -1,4 +1,5 @@
 #encoding=utf-8
+__all__=['search']
 import web,json,traceback
 from utils import *
 class neo:
@@ -43,10 +44,10 @@ class search:
 		try:
 			import uuid
 			fname=cwd('static','img', str(uuid.uuid1())+'.png')
-			file(fname,'wb').write(input.myfile.file.read())
+			s=input.myfile.file.read()
+			file(fname,'wb').write(s)
 			return json.dumps({"message":"ok"})
 		except Exception, e:
-			print input.keys()
 			traceback.print_exc()
 			return json.dumps({"error":str(e)})
 	def POST(self):
@@ -54,10 +55,11 @@ class search:
 		import json
 		web.header('Content-Type', 'application/json')
 		dic={}
+		input=web.input(myfile={})
 		try:
 			dic=json.loads(web.data())
 		except Exception, e:
-			return self.handle_upload(web.input())
+			return self.handle_upload(input)
 		key=dic['keys']
 		services=dic.get('services',[])
 		services=filter(lambda x:x!="",services)

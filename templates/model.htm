@@ -9,22 +9,21 @@
 </head>
 <body>
 <div id="nav">
-	<div class="logo"></div>
 	<div class="search">
-		<input type="text" name="q" id="q">
-		<div id="dropimage-holder"><h2>把图片拖到这里</h2></div>
-		<form method="POST" enctype="multipart/form-data" action="/search">
-			<input type="file" name="myfile" />
-			<br/>
-			<input type="submit" />
-		</form>
-		<a type="button"  id="btn_search" class="button main" isdefault="true">搜索</a>
-		<a type="button"  id="btn_tip" class="button">选项</a>
-		<a type="button"  id="btn_save" class="button">保存快照</a>
-		<a type="button"  id="btn_load" class="button">加载宏</a>
-		<a href="/list?theme=$theme" class="button">加载快照</a>
-		<div style="display:inline">
-			<div id="tip">
+		<div class="logo"></div>
+		<div id="search-wrap">
+			<input type="text" name="q" id="q">
+			<a type="button"  id="btn_search" class="button main" isdefault="true">搜索</a>
+			<div id="dropimage-holder"><h2>把图片拖到这里</h2></div>
+		</div>
+		<div id="nav-buttons">
+			<a type="button"  id="btn_tip" class="button">选项</a>
+			<a type="button"  id="btn_save" class="button">保存快照</a>
+			<a type="button"  id="btn_load" class="button">加载宏</a>
+			<a href="/list?theme=$theme" class="button">加载快照</a>
+		</div>
+		<div id="tip">
+			<div class="tip-inner">
 				<h3>使用下列哪些搜索服务:</h3>
 				<ul class="services">
 				</ul>

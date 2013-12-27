@@ -87,13 +87,13 @@ require ['jquery','d3','nest' ,'jquery_blockUI','imagesLoaded','qtip','gridster'
 			nodes.push link.source
 			nodes.push link.target
 		$svg= $('#nest-container svg').clone()
-		$item.append $svg
+		$item.find(".select_graph").append $svg
 		$g= $svg.find(">g")
 		$g.find('.node').remove()
 		$g.find('.link').remove()
 		if not d3?
 			d3= window.d3
-		d3.select($svg.get()[0]).attr("pointer-events", "all")
+		d3.select($svg[0]).attr("pointer-events", "all")
 		.attr("preserveAspectRatio","XMidYMid meet")
 		.call(d3.behavior.zoom()
 			.scaleExtent([0.01,10])
@@ -348,7 +348,10 @@ require ['jquery','d3','nest' ,'jquery_blockUI','imagesLoaded','qtip','gridster'
 		$("#btn_tip").click ->
 			$("#tip").slideToggle 200
 			return
-			
+		$('#tip').on "mouseenter", ->
+			$('body').addClass "no-scroll"		
+		$('#tip').on "mouseleave", ->
+			$('body').removeClass "no-scroll"
 		$(".btn-next").click ->
 			if window.current_step==window.story.length-1 then return
 			window.current_step+=1

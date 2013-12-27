@@ -1,4 +1,3 @@
-
 class nest
 	@colors :[
 			"song",
@@ -11,6 +10,7 @@ class nest
 			"referData",
 		]
 	constructor: (options)->
+		@shapes=d3.svg.symbolTypes
 		@hNode= {}
 		@position_cache={}
 		@palette= d3.scale.category20()
@@ -28,7 +28,7 @@ class nest
 			.style('height','inherit')
 			.attr("viewBox","0 0 #{@w} #{@h}")	
 			.attr("pointer-events", "all")
-			.attr("preserveAspectRatio","XMidYMid meet")
+			.attr("preserveAspectRatio","XMidYMid")
 			.call(d3.behavior.zoom().scaleExtent([0.01,10]).on("zoom", @zoom)).on('dblclick.zoom',null)
 			.append("svg:g")
 		@link = @vis.selectAll(".link")
@@ -38,8 +38,8 @@ class nest
 		.on('start', ()=> @start_time=new Date() )
 		.on('end', ()=> console.log(new Date()-@start_time) )
 		.charge (d)->
-			if d.type=="referData" then -20 else -200
-		.linkDistance(20)
+			if d.type=="referData" then -200 else -200
+		.linkDistance((d)->if d.target.type=="referData" then 5 else 20)
 		.linkStrength((d)->if d.value? then 1.0-d.value else 0.1)
 		.size([@w, @h])
 		@relationships={
@@ -123,128 +123,20 @@ class nest
 		l.source = @normalize(l.source)
 		l.target = @normalize(l.target)
 		return
-	update : (start_force=true)=>
-		#init graph info
-		@matrix=[]
-		@degree=[]
-		@hNode={}
-		n= @nodes.length
-		for i in [0..n-1]
-			@hNode[@nodes[i].id]=@nodes[i]
-			@degree.push []
-			@matrix.push []
-			for j in [0..n-1]
-				@matrix[i].push null
-		for l in @links
-			@normalize_link l 
-		# Update the links…
-		@link = @link.data(@links)
 
-		# Enter any new links.
-		@link.enter()
-		.insert("line", ".node")
-		.classed("link",true)
-
-		# Exit any old links.
-		@link.exit().remove()
-
-		@node = @vis.selectAll(".node").data(@nodes,(d)->d.id)
-
-		drag= @force.drag()
-		# .on 'dragend', (d)->
-		# 	d.fixed= true
-		# 	return
-		_this=@
-		#enter new nodes
-		nodeEnter=@node.enter()
-		.append("g")
-		.attr("class", "node")
-		.on("click", @click)
-		.on('mouseover',(d)->
-			d._fixed= d.fixed
-			d.fixed= true
-			d3.select(@).select('circle').attr("r",_this.getR(d)*1.2)
-			return
-		)
-		.on('mouseout',(d)->
-			d.fixed= d._fixed
-			d3.select(@).select('circle').attr("r",_this.getR(d))
-			_this.node.selectAll("text").remove()
-			return
-		)
-		.on('dblclick',@dblclick)
-		.classed("highlight",(d)->d.isHigh==true)
-		.attr("transform", (d) ->
-			"translate(" + d.x + "," + d.y + ")"
-		)
-		.call(drag)
-
-		nodeEnter.append("circle")
-		.attr("cx",0)
-		.attr("cy",0)
-		.attr("r", @getR)
-		.style("fill", @color)
-
-		$('circle').qtip  
-			style:
-				classes:'qtip-dark qtip-info',
-				tip:false,
-			content:
-				text:  (e,a)-> return d3.select(e.target).data()[0].name
-			position:
-				at: "top left",
-				my: "bottom right"
-		@node.exit().remove()
-
-		@vis.selectAll(".node circle")
-		.attr("r", @getR)
-		.style("fill", @color)
-		
-
-		@vis.selectAll(".search-img").remove()
-		@vis.selectAll(".node circle").filter((d) ->d.isSearching)
-		.append("animate")
-		.attr("attributeName",'cx')
-		.attr("begin",'0s')
-		.attr("dur",'0.1s')
-		.attr("from",'-5')
-		.attr("to",'5')
-		.attr("fill",'remove')
-		.attr("repeatCount",'indefinite')
-		.classed("search-img",true)
-
-		if start_force
-			@force.start()
-
-		# calculate graph info
-		for x in @links
-			@degree[x.source.index].push x
-			@degree[x.target.index].push x
-			@matrix[x.source.index][x.target.index]=x
-		@node.classed "highlight", (d)->d.isHigh==true
-		@node.classed "focus", (d)=>d==@theFocus
-		@link.classed "highlight", (d)->d.isHigh==true
-		# @node.classed('hidden',(d)->d.type=="referData" )
-		# @link.classed('hidden',(d)->d.target.type=="referData"  )		
-		for nod of @hNode
-			@position_cache[nod]={
-				'x':@hNode[nod].x
-				'y':@hNode[nod].y
-			}
-		return
 
 	getR : (d) =>
 		if d == @theFocus
-			return 15
-		if d.isHigh then 10 else 5
+			return 5
+		if d.isHigh then 5 else 5
 	tick : (e)=>
 		cx= @theFocus.x
 		cy= @theFocus.y
 		k= .05*e.alpha
-		@node.attr "transform", (d) =>
+		@node.attr "transform", (d) ->
 			d.x+= (d.x-cx)*k
 			d.y+= (d.y-cy)*k
-			"translate(" + d.x + "," + d.y + ")"
+			"translate(#{d.x},#{d.y})"
 		@link.attr("x1", (d) ->
 			d.source.x
 		).attr("y1", (d) ->
@@ -253,7 +145,11 @@ class nest
 			d.target.x
 		).attr("y2", (d) ->
 			d.target.y
-		)		
+		)
+		@text.attr "transform", (d)=>
+			angle=10*((d.id.length+d.index)%10-2)
+			dx=d.x+@.getR(d)+5*@scale
+			"translate(#{dx},#{d.y})rotate(#{angle})"
 	color : (d) =>
 		i= nest.colors.indexOf(d.type)
 		res= "black"
@@ -262,7 +158,7 @@ class nest
 		else res= @palette(d.type)
 		if d.distance_rank?
 			res= d3.hsl(res).brighter(d.distance_rank*.1).toString()
-		return res
+		return "#5297ee"
 	dblclick : (d)=>
 		if d.type=="referData"
 			window.open if d.url? then d.url else d.name
@@ -397,13 +293,120 @@ class nest
 				@links.remove link
 				@nodes.remove link.target
 		return
+	update : (start_force=true)=>
+		#init graph info
+		@matrix=[]
+		@degree=[]
+		@hNode={}
+		n= @nodes.length
+		for i in [0..n-1]
+			@hNode[@nodes[i].id]=@nodes[i]
+			@degree.push []
+			@matrix.push []
+			for j in [0..n-1]
+				@matrix[i].push null
+		for l in @links
+			@normalize_link l 
+		# Update the links…
+		@link = @link.data(@links)
+
+		# Enter any new links.
+		@link.enter()
+		.insert("line", ".node")
+		.classed("link",true)
+
+		# Exit any old links.
+		@link.exit().remove()
+
+		@node = @vis.selectAll(".node").data(@nodes,(d)->d.id)
+
+		drag= @force.drag()
+		_this=@
+		#enter new nodes
+		nodeEnter=@node.enter()
+		.append("g")
+		.attr("class", "node")
+		.on("click", @click)
+		.on('mouseover',(d)->
+			d._fixed= d.fixed
+			d.fixed= true
+			# d3.select(@).select('circle').attr("r",_this.getR(d)*1.2)
+			return
+		)
+		.on('mouseout',(d)->
+			d.fixed= d._fixed
+			# d3.select(@).select('circle').attr("r",_this.getR(d))
+			return
+		)
+		.on('dblclick',@dblclick)
+		.classed("highlight",(d)->d.isHigh==true)
+		.call(drag)
+
+		nodeEnter.append("path")
+		.attr('d',d3.svg.symbol().size(100).type((d)=>
+			if not d.type? then return "circle"
+			@shapes[d.type.hashCode()%@shapes.length]
+		))
+		# .attr("cx",0)
+		# .attr("cy",0)
+		# .attr("r", @getR)
+		.style("fill", @color)
+
+		@node.exit().remove()
+
+		@vis.selectAll(".node path")
+		.attr("r", @getR)
+		.style("fill", @color)
+		
+		@vis.selectAll(".search-img").remove()
+		@vis.selectAll(".node path").filter((d) ->d.isSearching)
+		.append("animate")
+		.attr("attributeName",'cx')
+		.attr("begin",'0s')
+		.attr("dur",'0.1s')
+		.attr("from",'-5')
+		.attr("to",'5')
+		.attr("fill",'remove')
+		.attr("repeatCount",'indefinite')
+		.classed("search-img",true)
+
+		@text=@vis.selectAll('text').data(@nodes.filter((d)->d.isHigh),(d)->d.id)
+		
+		@text.enter().append('text')
+		.text((d)-> if d.name.length <=5 then d.name else d.name.slice(0,5)+"...")
+		.style("font-size", (1 / @scale) + "em");
+		@text.exit().remove()
+
+		if start_force
+			@force.start()
+
+		# calculate graph info
+		for x in @links
+			@degree[x.source.index].push x
+			@degree[x.target.index].push x
+			@matrix[x.source.index][x.target.index]=x
+		@node.classed "highlight", (d)->d.isHigh==true
+		@node.classed "focus", (d)=>d==@theFocus
+		@link.classed "highlight", (d)->d.isHigh==true
+		# @node.classed('hidden',(d)->d.type=="referData" )
+		# @link.classed('hidden',(d)->d.target.type=="referData"  )		
+		for nod of @hNode
+			@position_cache[nod]= 
+				'x':@hNode[nod].x
+				'y':@hNode[nod].y
+		return
 Array::remove = (b) ->
 	a = @indexOf(b)
 	if a >= 0
 		@splice a, 1
 		return true
 	false
-
+String.prototype.hashCode = ()->
+    hash = 0.0
+    for i in [0..this.length]
+        if not isNaN this.charCodeAt(i)
+        	hash += this.charCodeAt(i)
+    return hash 
 if typeof(define)=="function" and define.amd?
 	define "nest", ['jquery','d3'], ($,ff)-> 
 		return nest
