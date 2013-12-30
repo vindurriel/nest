@@ -303,7 +303,7 @@
 .list-item .item-image {
   background-color: #eee;
   max-width: 400px;
-  max-height: 5em;
+  max-height: 200px;
 }
 .list-item .item-prop {
   font-weight: bold;
@@ -473,11 +473,11 @@ body.no-nav #nav {
 }
 #dropimage-holder {
   top: 0;
-  opacity: 0;
+  opacity: 0.1;
   text-align: center;
   position: absolute;
-  width: 300px;
-  height: 80px;
+  width: 500px;
+  height: 100px;
   z-index: -1;
   background: white;
   border: 10px dashed gray;

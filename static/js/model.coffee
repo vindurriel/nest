@@ -468,6 +468,7 @@ require ['jquery','d3','nest' ,'jquery_blockUI','imagesLoaded','qtip','gridster'
 					data= new FormData()
 					for x in e.originalEvent.dataTransfer.files
 						data.append "myfile",x
+					$.blockUI()
 					$.ajax
 						url: '/search',
 						type: 'POST',
@@ -475,11 +476,15 @@ require ['jquery','d3','nest' ,'jquery_blockUI','imagesLoaded','qtip','gridster'
 						cache: false,
 						contentType: false,
 						processData: false,
-						success: (d,e)->
-							console.log d
+						success: (d)->
+							$('#nest-column').removeClass "hidden"
+							window.nest.draw d
+							click_handler (window.nest.root)
+							$.unblockUI()
 							return
-						error: (d,e)->
+						error: (d)->
 							console.log e
+							$.unblockUI()
 							return
 					,"json"
 					return false

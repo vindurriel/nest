@@ -59,7 +59,14 @@ class search:
 		try:
 			dic=json.loads(web.data())
 		except Exception, e:
-			return self.handle_upload(input)
+			try:
+				s=input.myfile.file.read()
+				dic['img']=s
+				dic['keys']=""
+				dic['services']=['image_search']
+			except Exception, e:
+				traceback.print_exc()
+				return {'nodes':[],'links':{}}
 		key=dic['keys']
 		services=dic.get('services',[])
 		services=filter(lambda x:x!="",services)
