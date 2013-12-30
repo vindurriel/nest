@@ -136,7 +136,7 @@ require ['jquery','d3','nest' ,'jquery_blockUI','imagesLoaded','qtip','gridster'
 	window.click_handler= (d)->
 		if not d? then return
 		document.title= d.name
-		# list d
+		list d
 		if $(".selected_info").length==0
 			$item= $(t_list_item(d)).addClass('selected_info')
 			window.gridster[0].add_widget $item, 4,2
@@ -223,6 +223,15 @@ require ['jquery','d3','nest' ,'jquery_blockUI','imagesLoaded','qtip','gridster'
 				return
 			$.growlUI "","已保存"
 		return
+	blockUI= ()->
+		$('html, body').attr({"scrollTop":400})
+		$('html, body').animate({"scrollTop":0})
+		$('.busy').fadeIn()
+		return
+	unblockUI= ()->
+		$('html, body').animate({"scrollTop":400})
+		$('.busy').fadeOut()
+		return
 	play_step= ->
 		if window.current_step>=window.story.length or window.current_step<0 then return
 		s= window.story[window.current_step]
@@ -237,14 +246,14 @@ require ['jquery','d3','nest' ,'jquery_blockUI','imagesLoaded','qtip','gridster'
 			'keys':key,
 			'services':services,
 		}
-		$.blockUI({message:"正在搜索"})
+		blockUI()
 		$.post "/search", JSON.stringify(data), (d)->
 				if not d or d.error?
 					return
 				window.nest.draw d
 				$('#nest-column').removeClass "hidden"
 				click_handler (window.nest.root)
-				$.unblockUI()
+				unblockUI()
 				return
 			,'json'
 		return
@@ -296,6 +305,7 @@ require ['jquery','d3','nest' ,'jquery_blockUI','imagesLoaded','qtip','gridster'
 			if not d or d.error?
 				console.log('error get services')
 				return
+			window.services= d.services
 			for s in d.services
 				checked = ""
 				if s.select? and s.select==true
@@ -314,13 +324,77 @@ require ['jquery','d3','nest' ,'jquery_blockUI','imagesLoaded','qtip','gridster'
 				if checked=="checked"
 					$item.addClass('on')
 				$('.services').append $item
+			r= init_service(window.services)
 			$('.services').on 'click','li', ->
 				checkbox=$(@).find('input[type=checkbox]')
+				index=$(".services li").index($(@))
 				checkbox.prop("checked", !checkbox.prop("checked"))
+				checked= checkbox.prop("checked")
 				$(@).toggleClass('on')
+				window.services[index].select= checked
+				update_service(r)
 				return
 			return
+		update_service= (r)->
+			ns= window.services.filter((x)->x.select)
+			o=$('.logo').offset()
+			ns.splice(0,0,
+				'id':'services_root','name':"",'select':true,
+				'desc':'',
+				'img':'',
+				'fixed':true,
+				'x':o.left+64,
+				'y':o.top+64,
+			)
+			ls= []
+			i=0
+			for i in [0..ns.length-1]
+				if i==0 then  continue
+				ls.push {source:0,target:i}
+			r.force.nodes(ns).links(ls).start()
+			
+			r.nodes=r.nodes.data(r.force.nodes(),(d)->d.id)
+			r.links=r.links.data(r.force.links())
+
+			ne= r.nodes.enter().append('g').classed('node',true)
+			ne.append('image')
+			.attr('width',30)
+			.attr('height',30)
+			.attr('xlink:href',(d)->d.img)
+			.call(r.force.drag)
+			ne.append('title').text((d)->d.desc)
+			ne.append('text').text((d)->d.name).attr('dx',-10).attr('dy',20).attr('text-anchor','end')
+			r.nodes.exit().remove()
+
+			r.links.enter().insert("line", ".node").classed('link',true)
+			r.links.exit().remove()
 			return
+		init_service= (services)->
+			res= {}
+			d3= window.d3
+			res.svg= d3.select('#banner .overlay').append("svg")
+			res.nodes= res.svg.selectAll('.node')
+			res.links= res.svg.selectAll('.link')
+			res.force= d3.layout.force()
+			.charge(-800)
+			.linkDistance(150)
+			.linkStrength(1)
+			.size([200,200])	
+			.on('tick',()->
+				res.nodes.attr "transform", (d) ->
+					"translate(#{d.x},#{d.y})"
+				res.links.attr("x1", (d) ->
+					d.source.x
+				).attr("y1", (d) ->
+					d.source.y
+				).attr("x2", (d) ->
+					d.target.x
+				).attr("y2", (d) ->
+					d.target.y
+				)
+			)
+			update_service(res)
+			return res
 		window.nest= new Nest ({
 			"container":"#nest-container",
 		})
@@ -348,10 +422,10 @@ require ['jquery','d3','nest' ,'jquery_blockUI','imagesLoaded','qtip','gridster'
 		$("#btn_tip").click ->
 			$("#tip").slideToggle 200
 			return
-		$('#tip').on "mouseenter", ->
-			$('body').addClass "no-scroll"		
-		$('#tip').on "mouseleave", ->
-			$('body').removeClass "no-scroll"
+		# $('#tip').on "mouseenter", ->
+		# 	$('body').addClass "no-scroll"		
+		# $('#tip').on "mouseleave", ->
+		# 	$('body').removeClass "no-scroll"
 		$(".btn-next").click ->
 			if window.current_step==window.story.length-1 then return
 			window.current_step+=1
@@ -394,19 +468,23 @@ require ['jquery','d3','nest' ,'jquery_blockUI','imagesLoaded','qtip','gridster'
 			return
 		window.last_scroll=0
 		$(window).scroll ->
-			toggle= $(window).scrollTop()>window.last_scroll
-			if toggle
-				$("#nav").addClass "fade"
-				$("#tip").slideUp 200
+			toggle= false
+			if $(window).scrollTop()>400
+				toggle= $(window).scrollTop()>window.last_scroll
+			if $(window).scrollTop()>400
+				$("body").addClass "ready"
 			else
-				$("#nav").removeClass "fade"
-			window.last_scroll=$(window).scrollTop()
+				$("body").removeClass "ready"
 			return
 		$('#q').keypress (e) ->
 			if e.keyCode==13
 				$('#btn_search').click()
 			return
 		$("#btn_save").on "click",save
+		$(".logo").on "click", ()->
+			if $('body').hasClass('ready')
+				$("body").animate({'scrollTop':0})
+			return
 		$('body').on "click",".doc_url", (e)->
 			if $(".doc_info").length==0
 				$item= $("""
@@ -457,9 +535,6 @@ require ['jquery','d3','nest' ,'jquery_blockUI','imagesLoaded','qtip','gridster'
 			$(window).on "dragover", ->
 				$('#dropimage-holder').addClass('dragover')
 				false
-			$(window).on "dragend", ->
-				$('#dropimage-holder').removeClass('dragover')
-				false
 			$holder=$('#dropimage-holder')
 			if dropimage.tests.dnd
 				$holder.on 'drop', (e)->
@@ -468,7 +543,7 @@ require ['jquery','d3','nest' ,'jquery_blockUI','imagesLoaded','qtip','gridster'
 					data= new FormData()
 					for x in e.originalEvent.dataTransfer.files
 						data.append "myfile",x
-					$.blockUI()
+					blockUI()
 					$.ajax
 						url: '/search',
 						type: 'POST',
@@ -480,11 +555,11 @@ require ['jquery','d3','nest' ,'jquery_blockUI','imagesLoaded','qtip','gridster'
 							$('#nest-column').removeClass "hidden"
 							window.nest.draw d
 							click_handler (window.nest.root)
-							$.unblockUI()
+							unblockUI()
 							return
 						error: (d)->
 							console.log e
-							$.unblockUI()
+							unblockUI()
 							return
 					,"json"
 					return false

@@ -12,9 +12,15 @@ class image_search(search_provider_base):
 		try:
 			client = suds.client.Client(url)
 		except Exception, e:
-			import traceback
-			traceback.print_exc()
-			return []
+			try:
+				client = suds.client.Client(url)
+			except Exception, e:
+				import traceback
+				traceback.print_exc()
+				return {
+					"nodes": [],
+					'links':[]
+				}
 		bitstream=[]
 		# from base64 import b64encode
 		# bitstream=file('lib\\SearchProviders\\part1.png','rb').read().encode('base64')
@@ -43,4 +49,4 @@ class image_search(search_provider_base):
 			'links':[]
 		}
 if __name__ == '__main__':
-	image_search().search('')
+	print image_search().search('')

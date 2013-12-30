@@ -10,9 +10,8 @@
 <body>
 <div id="nav">
 	<div class="search">
-		<div class="logo"></div>
 		<div id="search-wrap">
-			<input type="text" name="q" id="q">
+			<input type="text" name="q" id="q" placeholder="请输入关键词">
 			<a type="button"  id="btn_search" class="button main" isdefault="true">搜索</a>
 			<div id="dropimage-holder"><h2>把图片拖到这里</h2></div>
 		</div>
@@ -22,23 +21,40 @@
 			<a type="button"  id="btn_load" class="button">加载宏</a>
 			<a href="/list?theme=$theme" class="button">加载快照</a>
 		</div>
-		<div id="tip">
-			<div class="tip-inner">
-				<h3>使用下列哪些搜索服务:</h3>
-				<ul class="services">
-				</ul>
-				<div class="hidden">
-					<p>点击       = 选中节点和相邻节点</p>
-					<p>ctrl+点击  = 扩展节点（大圈）/访问知识链接（小圈）</p>
-					<p>shift+点击 = 删除节点和知识</p>
-					<p>alt+点击   = 将当前节点变成中心节点</p>
-					<p>空白处拖动 = 平移</p>
-					<p>滚轮       = 缩放</p>
-					<p>网址后面可以输入词语,例如/model/<b>java</b></p>
-				</div>
+	</div>
+	<div id="tip">
+		<div class="tip-inner">
+			<h3>使用下列哪些搜索服务:</h3>
+			<ul class="services">
+			</ul>
+			<div class="hidden">
+				<p>点击       = 选中节点和相邻节点</p>
+				<p>ctrl+点击  = 扩展节点（大圈）/访问知识链接（小圈）</p>
+				<p>shift+点击 = 删除节点和知识</p>
+				<p>alt+点击   = 将当前节点变成中心节点</p>
+				<p>空白处拖动 = 平移</p>
+				<p>滚轮       = 缩放</p>
+				<p>网址后面可以输入词语,例如/model/<b>java</b></p>
 			</div>
 		</div>
 	</div>
+</div>
+<div id="banner">
+	<div class="overlay"></div>
+	<div class="hero">
+		<img src="/img/favicon.png" class='logo'>
+		<div class="busy" style="display:none;">
+			<div class="ball"> 
+				<div class="b1"></div>
+			</div>
+			<div class="ball1"> 
+				<div class="b1"></div>
+			</div>
+		</div>
+		<h1>K-Darwin</h1>
+		<h2>知识进化搜索引擎</h2>
+	</div>
+
 </div>
 <div id="wrapper" >
 	<div id="nest-column" class="gridster hidden" >

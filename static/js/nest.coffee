@@ -319,38 +319,25 @@ class nest
 		@link.exit().remove()
 
 		@node = @vis.selectAll(".node").data(@nodes,(d)->d.id)
-
-		drag= @force.drag()
 		_this=@
 		#enter new nodes
 		nodeEnter=@node.enter()
 		.append("g")
 		.attr("class", "node")
 		.on("click", @click)
-		.on('mouseover',(d)->
-			d._fixed= d.fixed
-			d.fixed= true
-			# d3.select(@).select('circle').attr("r",_this.getR(d)*1.2)
-			return
-		)
-		.on('mouseout',(d)->
-			d.fixed= d._fixed
-			# d3.select(@).select('circle').attr("r",_this.getR(d))
-			return
-		)
 		.on('dblclick',@dblclick)
 		.classed("highlight",(d)->d.isHigh==true)
-		.call(drag)
+		.call(@force.drag())
 
 		nodeEnter.append("path")
 		.attr('d',d3.svg.symbol().size(100).type((d)=>
-			if not d.type? then return "circle"
+			return "circle"
 			@shapes[d.type.hashCode()%@shapes.length]
 		))
-		# .attr("cx",0)
-		# .attr("cy",0)
-		# .attr("r", @getR)
 		.style("fill", @color)
+
+		nodeEnter.append('title')
+		.text((d)->d.name)
 
 		@node.exit().remove()
 

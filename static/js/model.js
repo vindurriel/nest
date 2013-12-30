@@ -22,7 +22,7 @@ requirejs.config({
 });
 
 require(['jquery', 'd3', 'nest', 'jquery_blockUI', 'imagesLoaded', 'qtip', 'gridster'], function($, d3, Nest, blockUI, imagesLoaded, qtip, gridster) {
-  var get_selected_services, list, load_automate, play_step, save, search, snapshot, t_item_action, t_list_item, url_params;
+  var get_selected_services, list, load_automate, play_step, save, search, snapshot, t_item_action, t_list_item, unblockUI, url_params;
   url_params = function() {
     var pair, res, x, _i, _len, _ref;
     res = {};
@@ -142,6 +142,7 @@ require(['jquery', 'd3', 'nest', 'jquery_blockUI', 'imagesLoaded', 'qtip', 'grid
       return;
     }
     document.title = d.name;
+    list(d);
     if ($(".selected_info").length === 0) {
       $item = $(t_list_item(d)).addClass('selected_info');
       window.gridster[0].add_widget($item, 4, 2);
@@ -267,6 +268,21 @@ require(['jquery', 'd3', 'nest', 'jquery_blockUI', 'imagesLoaded', 'qtip', 'grid
       return $.growlUI("", "已保存");
     });
   };
+  blockUI = function() {
+    $('html, body').attr({
+      "scrollTop": 400
+    });
+    $('html, body').animate({
+      "scrollTop": 0
+    });
+    $('.busy').fadeIn();
+  };
+  unblockUI = function() {
+    $('html, body').animate({
+      "scrollTop": 400
+    });
+    $('.busy').fadeOut();
+  };
   play_step = function() {
     var info, s;
     if (window.current_step >= window.story.length || window.current_step < 0) {
@@ -285,9 +301,7 @@ require(['jquery', 'd3', 'nest', 'jquery_blockUI', 'imagesLoaded', 'qtip', 'grid
       'keys': key,
       'services': services
     };
-    $.blockUI({
-      message: "正在搜索"
-    });
+    blockUI();
     $.post("/search", JSON.stringify(data), function(d) {
       if (!d || (d.error != null)) {
         return;
@@ -295,7 +309,7 @@ require(['jquery', 'd3', 'nest', 'jquery_blockUI', 'imagesLoaded', 'qtip', 'grid
       window.nest.draw(d);
       $('#nest-column').removeClass("hidden");
       click_handler(window.nest.root);
-      $.unblockUI();
+      unblockUI();
     }, 'json');
   };
   load_automate = function(scr) {
@@ -326,7 +340,7 @@ require(['jquery', 'd3', 'nest', 'jquery_blockUI', 'imagesLoaded', 'qtip', 'grid
     });
   };
   $(function() {
-    var id, key, needs_nest, params, services;
+    var id, init_service, key, needs_nest, params, services, update_service;
     params = url_params();
     if (params.theme != null) {
       $('body').addClass(params.theme);
@@ -356,11 +370,12 @@ require(['jquery', 'd3', 'nest', 'jquery_blockUI', 'imagesLoaded', 'qtip', 'grid
       load_automate(params.automate);
     }
     $.getJSON("/services/", function(d) {
-      var $item, checked, s, _i, _len, _ref;
+      var $item, checked, r, s, _i, _len, _ref;
       if (!d || (d.error != null)) {
         console.log('error get services');
         return;
       }
+      window.services = d.services;
       _ref = d.services;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         s = _ref[_i];
@@ -374,14 +389,88 @@ require(['jquery', 'd3', 'nest', 'jquery_blockUI', 'imagesLoaded', 'qtip', 'grid
         }
         $('.services').append($item);
       }
+      r = init_service(window.services);
       $('.services').on('click', 'li', function() {
-        var checkbox;
+        var checkbox, index;
         checkbox = $(this).find('input[type=checkbox]');
+        index = $(".services li").index($(this));
         checkbox.prop("checked", !checkbox.prop("checked"));
+        checked = checkbox.prop("checked");
         $(this).toggleClass('on');
+        window.services[index].select = checked;
+        update_service(r);
       });
-      return;
     });
+    update_service = function(r) {
+      var i, ls, ne, ns, o, _i, _ref;
+      ns = window.services.filter(function(x) {
+        return x.select;
+      });
+      o = $('.logo').offset();
+      ns.splice(0, 0, {
+        'id': 'services_root',
+        'name': "",
+        'select': true,
+        'desc': '',
+        'img': '',
+        'fixed': true,
+        'x': o.left + 64,
+        'y': o.top + 64
+      });
+      ls = [];
+      i = 0;
+      for (i = _i = 0, _ref = ns.length - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
+        if (i === 0) {
+          continue;
+        }
+        ls.push({
+          source: 0,
+          target: i
+        });
+      }
+      r.force.nodes(ns).links(ls).start();
+      r.nodes = r.nodes.data(r.force.nodes(), function(d) {
+        return d.id;
+      });
+      r.links = r.links.data(r.force.links());
+      ne = r.nodes.enter().append('g').classed('node', true);
+      ne.append('image').attr('width', 30).attr('height', 30).attr('xlink:href', function(d) {
+        return d.img;
+      }).call(r.force.drag);
+      ne.append('title').text(function(d) {
+        return d.desc;
+      });
+      ne.append('text').text(function(d) {
+        return d.name;
+      }).attr('dx', -10).attr('dy', 20).attr('text-anchor', 'end');
+      r.nodes.exit().remove();
+      r.links.enter().insert("line", ".node").classed('link', true);
+      r.links.exit().remove();
+    };
+    init_service = function(services) {
+      var res;
+      res = {};
+      d3 = window.d3;
+      res.svg = d3.select('#banner .overlay').append("svg");
+      res.nodes = res.svg.selectAll('.node');
+      res.links = res.svg.selectAll('.link');
+      res.force = d3.layout.force().charge(-800).linkDistance(150).linkStrength(1).size([200, 200]).on('tick', function() {
+        res.nodes.attr("transform", function(d) {
+          return "translate(" + d.x + "," + d.y + ")";
+        });
+        return res.links.attr("x1", function(d) {
+          return d.source.x;
+        }).attr("y1", function(d) {
+          return d.source.y;
+        }).attr("x2", function(d) {
+          return d.target.x;
+        }).attr("y2", function(d) {
+          return d.target.y;
+        });
+      });
+      update_service(res);
+      return res;
+    };
     window.nest = new Nest({
       "container": "#nest-container"
     });
@@ -421,12 +510,6 @@ require(['jquery', 'd3', 'nest', 'jquery_blockUI', 'imagesLoaded', 'qtip', 'grid
     });
     $("#btn_tip").click(function() {
       $("#tip").slideToggle(200);
-    });
-    $('#tip').on("mouseenter", function() {
-      return $('body').addClass("no-scroll");
-    });
-    $('#tip').on("mouseleave", function() {
-      return $('body').removeClass("no-scroll");
     });
     $(".btn-next").click(function() {
       if (window.current_step === window.story.length - 1) {
@@ -488,14 +571,15 @@ require(['jquery', 'd3', 'nest', 'jquery_blockUI', 'imagesLoaded', 'qtip', 'grid
     window.last_scroll = 0;
     $(window).scroll(function() {
       var toggle;
-      toggle = $(window).scrollTop() > window.last_scroll;
-      if (toggle) {
-        $("#nav").addClass("fade");
-        $("#tip").slideUp(200);
-      } else {
-        $("#nav").removeClass("fade");
+      toggle = false;
+      if ($(window).scrollTop() > 400) {
+        toggle = $(window).scrollTop() > window.last_scroll;
       }
-      window.last_scroll = $(window).scrollTop();
+      if ($(window).scrollTop() > 400) {
+        $("body").addClass("ready");
+      } else {
+        $("body").removeClass("ready");
+      }
     });
     $('#q').keypress(function(e) {
       if (e.keyCode === 13) {
@@ -503,6 +587,13 @@ require(['jquery', 'd3', 'nest', 'jquery_blockUI', 'imagesLoaded', 'qtip', 'grid
       }
     });
     $("#btn_save").on("click", save);
+    $(".logo").on("click", function() {
+      if ($('body').hasClass('ready')) {
+        $("body").animate({
+          'scrollTop': 0
+        });
+      }
+    });
     $('body').on("click", ".doc_url", function(e) {
       var $item, text, url;
       if ($(".doc_info").length === 0) {
@@ -546,10 +637,6 @@ require(['jquery', 'd3', 'nest', 'jquery_blockUI', 'imagesLoaded', 'qtip', 'grid
         $('#dropimage-holder').addClass('dragover');
         return false;
       });
-      $(window).on("dragend", function() {
-        $('#dropimage-holder').removeClass('dragover');
-        return false;
-      });
       $holder = $('#dropimage-holder');
       if (dropimage.tests.dnd) {
         return $holder.on('drop', function(e) {
@@ -562,7 +649,7 @@ require(['jquery', 'd3', 'nest', 'jquery_blockUI', 'imagesLoaded', 'qtip', 'grid
             x = _ref[_i];
             data.append("myfile", x);
           }
-          $.blockUI();
+          blockUI();
           $.ajax({
             url: '/search',
             type: 'POST',
@@ -574,11 +661,11 @@ require(['jquery', 'd3', 'nest', 'jquery_blockUI', 'imagesLoaded', 'qtip', 'grid
               $('#nest-column').removeClass("hidden");
               window.nest.draw(d);
               click_handler(window.nest.root);
-              $.unblockUI();
+              unblockUI();
             },
             error: function(d) {
               console.log(e);
-              $.unblockUI();
+              unblockUI();
             }
           }, "json");
           return false;

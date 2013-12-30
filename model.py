@@ -101,24 +101,24 @@ class service:
 		web.header('Content-Type', 'application/json')
 		res={
 			'services':[
-				{	'id':'baike','name':"百科",'select':False,
+				{	'id':'baike','name':"百科",'select':True,
 					'desc':'使用百度百科搜索知识点和关联',
 					'img':'/img/baidu.png',
 				},				
 				{	'id':'image_search','name':"草图搜索",'select':True,
 					'desc':'上传草图来搜索零件库中的零件',
-					'img':'/img/baidu.png',
+					'img':'/img/map.png',
 				},
 				{	'id':'smartref','name':"Smart Ref",'select':False,
 					'desc':'搜索smart ref的零件库',
 					'img':'/img/coins.png',
 				},
 
-				{	'id':'REGSVC','name':"线性回归",'select':False,
+				{	'id':'REGSVC','name':"线性回归",'select':True,
 					'desc':'调用线性回归算法服务',
 					'img':'/img/line.png',
 				},
-				{	'id':'MDOSVC','name':"多目标优化",'select':False,
+				{	'id':'MDOSVC','name':"多目标优化",'select':True,
 					'desc':'调用优化算法服务',
 					'img':'/img/variable.png',
 				},
