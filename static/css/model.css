@@ -17,6 +17,9 @@
   display: block;
   margin-bottom: 1em;
 }
+.marker {
+  pointer-events: none;
+}
 .button {
   padding: 0 .5em;
   border: #555555 solid 1px;

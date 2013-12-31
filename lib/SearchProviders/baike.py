@@ -9,6 +9,16 @@ def decode(s):
 		except Exception, e:
 			pass
 	raise Exception("cannot decode")
+def iso(x):
+	return x
+def distinct(l,id_fun=iso):
+	res=[]
+	seen=set()
+	for x in l:
+		if not id_fun(x) in seen:
+			res.append(x)
+			seen.add(id_fun(x))
+	return res
 def get_docs(term,dic={},limit=10):
 	import re,uuid
 	import requests as r
@@ -42,8 +52,9 @@ def get_docs(term,dic={},limit=10):
 				"url":x['href'],
 				"name":text,
 				'type':u'referData',
-				"id":unicode(uuid.uuid1()),
+				"id":u'referData_'+text
 			})
+	urls=distinct(urls,lambda x:x['id'])
 	return {
 		"nodes": urls,
 		'links':[],

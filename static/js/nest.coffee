@@ -182,14 +182,19 @@ class nest
 		l.target = @normalize(l.target)
 		return
 	getR : (d) =>
-		if d==@theFocus then 10 else 5
+		if d.type=="SearchProvider" then return 15
+		return 5
 	tick : (e)=>
-		k= .05*e.alpha
 		@node.attr("transform", (d) ->
 			"translate(#{d.x},#{d.y})"
 		)
 		.attr('clip-path',(d)->"url(#clip-#{d.index})")
 		
+		@vis.select('.marker')
+		.attr('x',@theFocus.x-22)
+		.attr('y':@theFocus.y-45)		
+
+
 		@link.attr("x1", (d) ->
 			d.source.x
 		).attr("y1", (d) ->
@@ -232,7 +237,8 @@ class nest
 			return
 		d.isSearching = true
 		data={
-			keys:d.name,
+			keys:d.name
+			return_id:d.id,
 		}
 		if d.url?
 			data.url= d.url
@@ -268,7 +274,7 @@ class nest
 			@update()
 		else
 			@highlight d
-			@update()
+			@update(false)
 			if window.click_handler?
 				window.click_handler(d)
 		return
@@ -312,19 +318,17 @@ class nest
 		@update()
 		return
 	highlight : (d)=>
-		for x in @links
+		for x in @links 
 			x.isHigh= false
 		for x in @nodes
 			x.isHigh= false
 		d.isHigh= true
 		@theFocus = d
-		@vis.selectAll(".marker").remove()
-		@node.filter((x)->x==d).append('image').classed('marker',true)
+		@vis.selectAll('.marker').remove()
+		@vis.append('image').classed('marker',true)
 		.attr('xlink:href',"/img/marker.svg")
 		.attr('width',50)
 		.attr('height',50)
-		.attr('x',-22)
-		.attr('y',-45)
 		return
 	update : (start_force=true)=>
 		#init graph info
@@ -370,7 +374,13 @@ class nest
 		.style("fill", @color)
 		.attr('r',@getR)
 
-
+		nodeEnter.filter((d)->d.img? and d.type=="SearchProvider")
+		.append('image')
+		.attr('xlink:href',(d)->d.img)
+		.attr('width',20)
+		.attr('height',20)
+		.attr('x',-10)
+		.attr('y',-10)
 
 		nodeEnter.append('title')
 		.text((d)->d.name)

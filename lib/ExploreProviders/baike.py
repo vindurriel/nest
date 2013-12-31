@@ -1,5 +1,15 @@
 #encoding=utf-8
 from explore_provider_base import *
+def iso(x):
+	return x
+def distinct(l,id_fun=iso):
+	res=[]
+	seen=set()
+	for x in l:
+		if not id_fun(x) in seen:
+			res.append(x)
+			seen.add(id_fun(x))
+	return res
 class baike(explore_provider_base):
 	def explore(self,key,dic={}):
 		import re
@@ -46,7 +56,10 @@ class baike(explore_provider_base):
 			}
 		#sort urls by text occurence
 		for x in urls.itervalues():
-			x['count']=len(re.findall(x['name'],content))
+			try:
+				x['count']=len(re.findall(x['name'],content))
+			except Exception, e:
+				x['count']=1
 		urls=sorted(urls.values(),key=lambda x:x["count"],reverse=True)
 		# for x in urls[:limit]:
 		# 	print x['name'],x['url'],x["count"]
@@ -63,8 +76,9 @@ class baike(explore_provider_base):
 					"url":x['href'],
 					"name":text,
 					'type':'referData',
-					"id":text,
+					"id":u"referData_"+text,
 				})
+		urls=distinct(urls,lambda x:x["id"])
 		for x in map(lambda x:x['name'].encode('gbk'),urls):
 			print x
 		return urls

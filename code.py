@@ -14,7 +14,7 @@ router="""
 /search(?:/)?  search
 /favicon.ico favicon
 /(js|css|files|img)/(.+) static
-/services(?:/)?  model.service
+/services(?:/)?  search.service
 /keyword/(.+) model.keyword
 /play/(.+) model.play
 /automate(?:/)? automate
@@ -45,6 +45,8 @@ class static:
         mime_type = mimetypes.guess_type(filename)[0]
         if filename.lower().endswith(".png"):
             mime_type="image/png" 
+        elif filename.lower().endswith(".svg"):
+            mime_type="image/svg+xml"
         web.header('Content-Type', "%s"%mime_type)
         try:
             f = file(cwd("static",media,filename), 'rb').read()

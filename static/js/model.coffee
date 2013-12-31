@@ -71,6 +71,7 @@ require ['jquery','d3','nest' ,'jquery_blockUI','imagesLoaded','qtip','gridster'
 			docs.push n
 		if docs.length==0
 			return
+		return
 		for x in docs.slice(0,6)
 			# if x.type in "SearchProvider smartref_category query referData".split(" ") then continue
 			s=$(t_list_item(x))
@@ -95,13 +96,14 @@ require ['jquery','d3','nest' ,'jquery_blockUI','imagesLoaded','qtip','gridster'
 		svg.selectAll('.node').data(window.nest.nodes).filter((x)->not x.isHigh).remove()
 		svg.selectAll('.link').data(window.nest.links).filter((x)->not x.isHigh).remove()
 		svg.selectAll('.ring').remove()
+		svg.selectAll('.marker').remove()
 		svg.attr("pointer-events", "all")
 		.attr("preserveAspectRatio","XMidYMid meet")
 		.call(d3.behavior.zoom()
 			.scaleExtent([0.01,10])
 			.on("zoom",()->
 				$g.attr "transform", "translate(" + d3.event.translate + ")" + " scale(" +  d3.event.scale + ")"
-				svg.selectAll('text').style("font-size", (1 / @scale) + "em")
+				svg.selectAll('text').style("font-size", (1.0 / d3.event.scale) + "em")
 				return
 			))
 		return
