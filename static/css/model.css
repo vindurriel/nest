@@ -124,19 +124,23 @@
 .node {
   cursor: pointer;
   stroke: black;
-  stroke-width: .5px;
+  stroke-width: 0px;
   opacity: 1;
 }
 .node.highlight {
-  stroke-width: 1px;
+  stroke-width: 0px;
 }
-.node.focus {
-  stroke-width: 3px;
+.node:hover .selection-helper {
+  fill-opacity: 0.3;
 }
 .node text {
   opacity: 1;
   fill: black;
   stroke: none;
+}
+.selection-helper {
+  fill: #3b89ec;
+  fill-opacity: 0.05;
 }
 .node text.show,
 .node:hover text {
@@ -157,7 +161,8 @@
   width: 100%;
   height: 400px;
   background-color: black;
-  background-image: url("/img/bg.jpg");
+  background-position: bottom;
+  background-image: url("/img/banner.png");
   background-repeat: no-repeat;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
   background-size: cover;
@@ -615,4 +620,10 @@ body.ready .logo {
   100% {
     -webkit-transform: rotate(0deg);
   }
+}
+.ring {
+  stroke: #3b89ec;
+  fill: #3b89ec;
+  fill-opacity: 0.05;
+  stroke-width: 2px;
 }

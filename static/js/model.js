@@ -76,65 +76,33 @@ require(['jquery', 'd3', 'nest', 'jquery_blockUI', 'imagesLoaded', 'qtip', 'grid
       }
       s = $(t_list_item(x));
       t = i % 3 > 0 ? 2 : 1;
-      window.gridster[1].add_widget(s, t, 1);
+      window.gridster[1].add_widget(s, 2, 1);
       i += 1;
     };
-    interval = setInterval(add_widget, 10, docs);
+    interval = setInterval(add_widget, 1, docs);
   };
   snapshot = function(d) {
-    var $g, $item, $svg, link, links, nodes, svg, _i, _len, _ref;
+    var $g, $item, $svg, svg;
     $item = $("<div class=\"list-item\">\n	<header class=\"drag-handle\">|||</header>\n	<div class=\"btn-close\">x</div>\n	<div class='inner select_graph'>\n	</div>\n</div>");
     window.gridster[1].add_widget($item, 2, 2);
-    nodes = [];
-    links = [];
-    _ref = window.nest.degree[d.index];
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      link = _ref[_i];
-      links.push(link);
-      nodes.push(link.source);
-      nodes.push(link.target);
+    if (d3 == null) {
+      d3 = window.d3;
     }
     $svg = $('#nest-container svg').clone();
     $item.find(".select_graph").append($svg);
     $g = $svg.find(">g");
-    $g.find('.node').remove();
-    $g.find('.link').remove();
-    if (d3 == null) {
-      d3 = window.d3;
-    }
-    d3.select($svg[0]).attr("pointer-events", "all").attr("preserveAspectRatio", "XMidYMid meet").call(d3.behavior.zoom().scaleExtent([0.01, 10]).on("zoom", function() {
+    svg = d3.select($svg.get()[0]);
+    svg.selectAll('.node').data(window.nest.nodes).filter(function(x) {
+      return !x.isHigh;
+    }).remove();
+    svg.selectAll('.link').data(window.nest.links).filter(function(x) {
+      return !x.isHigh;
+    }).remove();
+    svg.selectAll('.ring').remove();
+    svg.attr("pointer-events", "all").attr("preserveAspectRatio", "XMidYMid meet").call(d3.behavior.zoom().scaleExtent([0.01, 10]).on("zoom", function() {
       $g.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")");
+      svg.selectAll('text').style("font-size", (1 / this.scale) + "em");
     }));
-    svg = d3.select($g.get()[0]);
-    svg.selectAll('.node').data(nodes).enter().append('circle').attr("class", "node").attr('r', window.nest.getR).attr('cx', function(d) {
-      return d.x;
-    }).attr('cy', function(d) {
-      return d.y;
-    }).style("fill", window.nest.color);
-    svg.selectAll('.link').data(links).enter().insert("line", ".node").classed('link', true).classed('highlight', true).attr("x1", function(d) {
-      return d.source.x;
-    }).attr("y1", function(d) {
-      return d.source.y;
-    }).attr("x2", function(d) {
-      return d.target.x;
-    }).attr("y2", function(d) {
-      return d.target.y;
-    });
-    $('circle').qtip({
-      style: {
-        classes: 'qtip-dark qtip-info',
-        tip: false
-      },
-      content: {
-        text: function(e, a) {
-          return d3.select(e.target).data()[0].name;
-        }
-      },
-      position: {
-        at: "top left",
-        my: "bottom right"
-      }
-    });
   };
   window.click_handler = function(d) {
     var $item, actions, container, detail, docs, link, n, t, value, x, _i, _j, _len, _len1, _ref;
@@ -454,7 +422,7 @@ require(['jquery', 'd3', 'nest', 'jquery_blockUI', 'imagesLoaded', 'qtip', 'grid
       res.svg = d3.select('#banner .overlay').append("svg");
       res.nodes = res.svg.selectAll('.node');
       res.links = res.svg.selectAll('.link');
-      res.force = d3.layout.force().charge(-800).linkDistance(150).linkStrength(1).size([200, 200]).on('tick', function() {
+      res.force = d3.layout.force().charge(-1000).linkDistance(150).linkStrength(1).size([200, 200]).on('tick', function() {
         res.nodes.attr("transform", function(d) {
           return "translate(" + d.x + "," + d.y + ")";
         });

@@ -65,10 +65,10 @@ require ['jquery','d3','nest' ,'jquery_blockUI','imagesLoaded','qtip','gridster'
 			if x.type in "SearchProvider smartref_category query referData".split(" ") then return
 			s=$(t_list_item(x))
 			t= if i%3>0 then 2 else 1
-			window.gridster[1].add_widget s, t,1
+			window.gridster[1].add_widget s, 2,1
 			i+=1
 			return
-		interval= setInterval add_widget, 10, docs
+		interval= setInterval add_widget, 1, docs
 		return
 	snapshot= (d)->
 		$item= $("""
@@ -80,58 +80,24 @@ require ['jquery','d3','nest' ,'jquery_blockUI','imagesLoaded','qtip','gridster'
 			</div>
 		""")
 		window.gridster[1].add_widget $item, 2,2
-		nodes= []
-		links= []
-		for link in window.nest.degree[d.index]
-			links.push link
-			nodes.push link.source
-			nodes.push link.target
+		if not d3?
+			d3= window.d3
 		$svg= $('#nest-container svg').clone()
 		$item.find(".select_graph").append $svg
 		$g= $svg.find(">g")
-		$g.find('.node').remove()
-		$g.find('.link').remove()
-		if not d3?
-			d3= window.d3
-		d3.select($svg[0]).attr("pointer-events", "all")
+		svg= d3.select($svg.get()[0])
+		svg.selectAll('.node').data(window.nest.nodes).filter((x)->not x.isHigh).remove()
+		svg.selectAll('.link').data(window.nest.links).filter((x)->not x.isHigh).remove()
+		svg.selectAll('.ring').remove()
+		svg.attr("pointer-events", "all")
 		.attr("preserveAspectRatio","XMidYMid meet")
 		.call(d3.behavior.zoom()
 			.scaleExtent([0.01,10])
 			.on("zoom",()->
 				$g.attr "transform", "translate(" + d3.event.translate + ")" + " scale(" +  d3.event.scale + ")"
+				svg.selectAll('text').style("font-size", (1 / @scale) + "em")
 				return
 			))
-		svg= d3.select($g.get()[0])
-		svg.selectAll('.node').data(nodes).enter()
-		.append('circle')
-		.attr("class", "node")
-		.attr('r',window.nest.getR)
-		.attr('cx',(d)->d.x)
-		.attr('cy',(d)->d.y)
-		.style("fill", window.nest.color)
-
-		svg.selectAll('.link').data(links).enter()
-		.insert("line", ".node")
-		.classed('link',true)
-		.classed('highlight',true)
-		.attr("x1", (d) ->
-			d.source.x
-		).attr("y1", (d) ->
-			d.source.y
-		).attr("x2", (d) ->
-			d.target.x
-		).attr("y2", (d) ->
-			d.target.y
-		)		
-		$('circle').qtip  
-			style:
-				classes:'qtip-dark qtip-info',
-				tip:false,
-			content:
-				text:  (e,a)-> return d3.select(e.target).data()[0].name
-			position:
-				at: "top left",
-				my: "bottom right"
 		return
 	window.click_handler= (d)->
 		if not d? then return
@@ -352,10 +318,8 @@ require ['jquery','d3','nest' ,'jquery_blockUI','imagesLoaded','qtip','gridster'
 				if i==0 then  continue
 				ls.push {source:0,target:i}
 			r.force.nodes(ns).links(ls).start()
-			
-			r.nodes=r.nodes.data(r.force.nodes(),(d)->d.id)
-			r.links=r.links.data(r.force.links())
-
+			r.nodes= r.nodes.data(r.force.nodes(),(d)->d.id)
+			r.links= r.links.data(r.force.links())
 			ne= r.nodes.enter().append('g').classed('node',true)
 			ne.append('image')
 			.attr('width',30)
@@ -376,7 +340,7 @@ require ['jquery','d3','nest' ,'jquery_blockUI','imagesLoaded','qtip','gridster'
 			res.nodes= res.svg.selectAll('.node')
 			res.links= res.svg.selectAll('.link')
 			res.force= d3.layout.force()
-			.charge(-800)
+			.charge(-1000)
 			.linkDistance(150)
 			.linkStrength(1)
 			.size([200,200])	

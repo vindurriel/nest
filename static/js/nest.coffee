@@ -10,7 +10,6 @@ class nest
 			"referData",
 		]
 	constructor: (options)->
-		@shapes=d3.svg.symbolTypes
 		@hNode= {}
 		@position_cache={}
 		@palette= d3.scale.category20()
@@ -22,6 +21,7 @@ class nest
 		@shiftPressed = false
 		@blacklist= []
 		@explored= []
+		_t=@
 		@vis = d3.select(@container)
 			.append("svg:svg")
 			.style('width','inherit')
@@ -31,12 +31,30 @@ class nest
 			.attr("preserveAspectRatio","XMidYMid")
 			.call(d3.behavior.zoom().scaleExtent([0.01,10]).on("zoom", @zoom)).on('dblclick.zoom',null)
 			.append("svg:g")
+			.on('mousemove',()->
+				if _t.timed?
+					clearTimeout _t.timed
+				_t.timed= setTimeout _t.focus, 100, d3.mouse(@)
+				return
+			).on('mouseleave',()=>
+				@mouse_on=true
+				if @timed
+					clearTimeout @timed
+				return
+			)
+		@voronoi = d3.geom.voronoi()
+		.x((d)->d.x)
+		.y((d)->d.y)
+		# .clipExtent([[-10, -10], [@w+10, @h+10]])
+
+		@translate= [0,0]
+		@scale=1.0
 		@link = @vis.selectAll(".link")
 		@node = @vis.selectAll(".node")
+		@text=@vis.selectAll('text')
+		@clip=@vis.selectAll('.clip')
 		@force = d3.layout.force()
 		.on("tick", @tick)
-		.on('start', ()=> @start_time=new Date() )
-		.on('end', ()=> console.log(new Date()-@start_time) )
 		.charge (d)->
 			if d.type=="referData" then -200 else -200
 		.linkDistance((d)->if d.target.type=="referData" then 5 else 20)
@@ -76,19 +94,60 @@ class nest
 		$(document).keydown @cacheIt
 		$(document).keyup @cacheIt
 		return
-	highlighted: () => 
-		console.log @node.filter((d)->d.isHigh)
-		console.log @link.filter((d)->d.isHigh)
-		return
+	recenterVoronoi: (nodes) =>
+		shapes = []
+		@voronoi(nodes).forEach (d)->
+			if not d.length then return
+			n = []
+			d.forEach (c)->
+				n.push [ c[0] - d.point.x, c[1] - d.point.y ] 
+				return
+			n.point = d.point
+			shapes.push n
+			return
+		return shapes
 	cacheIt : (e) =>
 		@ctrlPressed = e.ctrlKey
 		@altPressed = e.altKey
 		@shiftPressed = e.shiftKey
 		return true
 	zoom : () =>
-		@scale= d3.event.scale
-		@vis.attr "transform", "translate(" + d3.event.translate + ")" + " scale(" + @scale + ")"
-		@vis.selectAll("text").style("font-size", (1 / @scale) + "em");
+		@scale = d3.event.scale
+		@translate=d3.event.translate
+		@vis.attr "transform", "translate(" + @translate + ")" + " scale(" + @scale + ")"
+		@text.style("font-size", (1 / @scale) + "em")
+
+		return
+	focus :(e)=>
+		@center = {x:e[0],y:e[1]}
+		if not @ring?
+			@ring=@vis.insert("circle",":first-child").classed('ring',true)
+		@ring.attr('r',150.0/@scale)
+		@ring.attr('cx',@center.x)
+		@ring.attr('cy',@center.y)
+		node_dist= []
+		@node.each (d)=>
+			node_dist.push [d.id, Math.pow((d.x-@center.x),2)+Math.pow((d.y-@center.y),2)]
+			return
+		node_dist.sort (a,b)-> a[1]-b[1]
+		threshold= Math.pow((150/@scale),2)
+		# node_dist= node_dist.slice(0,10)
+		node_dist= node_dist.filter((d)->d[1]<threshold)
+		hFocus= {}
+		@nodes.map (d)-> 
+			if d!=@theFocus then d.isHigh= false
+			return
+		node_dist.map (d)=>
+			hFocus[d[0]]=true
+			@hNode[d[0]].isHigh= true
+			return
+		@link.each (d)=>
+			d.isHigh= false
+			if hFocus[d.source.id]? and hFocus[d.target.id]
+				d.isHigh= true
+			return
+		@update(false)
+		return
 	draw : (json) =>
 		if not json.nodes? or json.nodes.length==0
 			return {'error':'no nodes'}
@@ -123,20 +182,14 @@ class nest
 		l.source = @normalize(l.source)
 		l.target = @normalize(l.target)
 		return
-
-
 	getR : (d) =>
-		if d == @theFocus
-			return 5
-		if d.isHigh then 5 else 5
+		if d==@theFocus then 10 else 5
 	tick : (e)=>
-		cx= @theFocus.x
-		cy= @theFocus.y
 		k= .05*e.alpha
-		@node.attr "transform", (d) ->
-			d.x+= (d.x-cx)*k
-			d.y+= (d.y-cy)*k
+		@node.attr("transform", (d) ->
 			"translate(#{d.x},#{d.y})"
+		).attr('clip-path',(d)->"url(#clip-#{d.index})")
+		
 		@link.attr("x1", (d) ->
 			d.source.x
 		).attr("y1", (d) ->
@@ -149,7 +202,15 @@ class nest
 		@text.attr "transform", (d)=>
 			angle=10*((d.id.length+d.index)%10-2)
 			dx=d.x+@.getR(d)+5*@scale
-			"translate(#{dx},#{d.y})rotate(#{angle})"
+			"translate(#{dx},#{d.y})"
+		@clip = @clip.data( @recenterVoronoi(@nodes), (d)->d.point.index )
+		@clip.enter().append('clipPath').classed('clip', true)
+		.attr('id', (d) -> 'clip-'+d.point.index)
+		@clip.exit().remove()
+		@clip.selectAll('path').remove();
+		@clip.append('path')
+		.attr('d', (d)-> 'M'+d.join(',')+'Z')
+		return
 	color : (d) =>
 		i= nest.colors.indexOf(d.type)
 		res= "black"
@@ -208,7 +269,6 @@ class nest
 		else
 			@highlight d
 			@update()
-			# history.pushState {},d.name,"/model/#{d.id}"
 			if window.click_handler?
 				window.click_handler(d)
 		return
@@ -258,40 +318,13 @@ class nest
 			x.isHigh= false
 		d.isHigh= true
 		@theFocus = d
-		i=d.index
-		for link in @degree[d.index]
-			link.isHigh= true
-			link.target.isHigh=true
-			link.source.isHigh=true
-		if not @existing_relation_links?
-			@existing_relation_links=[]
-		if @relationships[d.type]?
-			for rel in @relationships[d.type]
-				id= rel.id d
-				if not @hNode[id]?
-					n= {
-						'id':id,
-						'name': rel.name(d),
-						'type':"relationship",
-						'isHigh':true,
-						'x':d.x+Math.random()*100-50,
-						'y':d.y+Math.random()*100-50,
-					}
-					@nodes.push n
-					l= {
-						'source':d,
-						'target':n,
-						'isHigh':true,
-					}
-					@links.push l
-					@existing_relation_links.push l
-			for link in @existing_relation_links
-				if link.source==d
-					continue
-				if @degree[link.target.index]? and @degree[link.target.index].length>1
-					continue
-				@links.remove link
-				@nodes.remove link.target
+		@vis.selectAll(".marker").remove()
+		@node.filter((x)->x==d).append('image').classed('marker',true)
+		.attr('xlink:href',"/img/marker.svg")
+		.attr('width',50)
+		.attr('height',50)
+		.attr('x',-22)
+		.attr('y',-45)
 		return
 	update : (start_force=true)=>
 		#init graph info
@@ -329,12 +362,15 @@ class nest
 		.classed("highlight",(d)->d.isHigh==true)
 		.call(@force.drag())
 
-		nodeEnter.append("path")
-		.attr('d',d3.svg.symbol().size(100).type((d)=>
-			return "circle"
-			@shapes[d.type.hashCode()%@shapes.length]
-		))
+		nodeEnter.append('circle')
+		.classed('selection-helper',true)
+		.attr('r',50)
+
+		nodeEnter.append("circle")
 		.style("fill", @color)
+		.attr('r',@getR)
+
+
 
 		nodeEnter.append('title')
 		.text((d)->d.name)
@@ -357,13 +393,15 @@ class nest
 		.attr("repeatCount",'indefinite')
 		.classed("search-img",true)
 
-		@text=@vis.selectAll('text').data(@nodes.filter((d)->d.isHigh),(d)->d.id)
-		
+		@text= @text.data(@nodes.filter((d)->d.isHigh),(d)->d.id)
 		@text.enter().append('text')
 		.text((d)-> if d.name.length <=5 then d.name else d.name.slice(0,5)+"...")
-		.style("font-size", (1 / @scale) + "em");
-		@text.exit().remove()
+		.style("font-size", (1 / @scale) + "em")
+		.attr "transform", (d)=>
+			dx= d.x+@.getR(d)+5*@scale
+			"translate(#{dx},#{d.y})"
 
+		@text.exit().remove()
 		if start_force
 			@force.start()
 
@@ -389,11 +427,11 @@ Array::remove = (b) ->
 		return true
 	false
 String.prototype.hashCode = ()->
-    hash = 0.0
-    for i in [0..this.length]
-        if not isNaN this.charCodeAt(i)
-        	hash += this.charCodeAt(i)
-    return hash 
+	hash = 0.0
+	for i in [0..this.length]
+		if not isNaN this.charCodeAt(i)
+			hash += this.charCodeAt(i)
+	return hash 
 if typeof(define)=="function" and define.amd?
 	define "nest", ['jquery','d3'], ($,ff)-> 
 		return nest

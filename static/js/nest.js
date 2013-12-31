@@ -18,11 +18,12 @@ nest = (function() {
     this.normalize_link = __bind(this.normalize_link, this);
     this.normalize = __bind(this.normalize, this);
     this.draw = __bind(this.draw, this);
+    this.focus = __bind(this.focus, this);
     this.zoom = __bind(this.zoom, this);
     this.cacheIt = __bind(this.cacheIt, this);
-    this.highlighted = __bind(this.highlighted, this);
-    var _this = this;
-    this.shapes = d3.svg.symbolTypes;
+    this.recenterVoronoi = __bind(this.recenterVoronoi, this);
+    var _t,
+      _this = this;
     this.hNode = {};
     this.position_cache = {};
     this.palette = d3.scale.category20();
@@ -34,14 +35,30 @@ nest = (function() {
     this.shiftPressed = false;
     this.blacklist = [];
     this.explored = [];
-    this.vis = d3.select(this.container).append("svg:svg").style('width', 'inherit').style('height', 'inherit').attr("viewBox", "0 0 " + this.w + " " + this.h).attr("pointer-events", "all").attr("preserveAspectRatio", "XMidYMid").call(d3.behavior.zoom().scaleExtent([0.01, 10]).on("zoom", this.zoom)).on('dblclick.zoom', null).append("svg:g");
+    _t = this;
+    this.vis = d3.select(this.container).append("svg:svg").style('width', 'inherit').style('height', 'inherit').attr("viewBox", "0 0 " + this.w + " " + this.h).attr("pointer-events", "all").attr("preserveAspectRatio", "XMidYMid").call(d3.behavior.zoom().scaleExtent([0.01, 10]).on("zoom", this.zoom)).on('dblclick.zoom', null).append("svg:g").on('mousemove', function() {
+      if (_t.timed != null) {
+        clearTimeout(_t.timed);
+      }
+      _t.timed = setTimeout(_t.focus, 100, d3.mouse(this));
+    }).on('mouseleave', function() {
+      _this.mouse_on = true;
+      if (_this.timed) {
+        clearTimeout(_this.timed);
+      }
+    });
+    this.voronoi = d3.geom.voronoi().x(function(d) {
+      return d.x;
+    }).y(function(d) {
+      return d.y;
+    });
+    this.translate = [0, 0];
+    this.scale = 1.0;
     this.link = this.vis.selectAll(".link");
     this.node = this.vis.selectAll(".node");
-    this.force = d3.layout.force().on("tick", this.tick).on('start', function() {
-      return _this.start_time = new Date();
-    }).on('end', function() {
-      return console.log(new Date() - _this.start_time);
-    }).charge(function(d) {
+    this.text = this.vis.selectAll('text');
+    this.clip = this.vis.selectAll('.clip');
+    this.force = d3.layout.force().on("tick", this.tick).charge(function(d) {
       if (d.type === "referData") {
         return -200;
       } else {
@@ -128,13 +145,22 @@ nest = (function() {
     return;
   }
 
-  nest.prototype.highlighted = function() {
-    console.log(this.node.filter(function(d) {
-      return d.isHigh;
-    }));
-    console.log(this.link.filter(function(d) {
-      return d.isHigh;
-    }));
+  nest.prototype.recenterVoronoi = function(nodes) {
+    var shapes;
+    shapes = [];
+    this.voronoi(nodes).forEach(function(d) {
+      var n;
+      if (!d.length) {
+        return;
+      }
+      n = [];
+      d.forEach(function(c) {
+        n.push([c[0] - d.point.x, c[1] - d.point.y]);
+      });
+      n.point = d.point;
+      shapes.push(n);
+    });
+    return shapes;
   };
 
   nest.prototype.cacheIt = function(e) {
@@ -146,8 +172,52 @@ nest = (function() {
 
   nest.prototype.zoom = function() {
     this.scale = d3.event.scale;
-    this.vis.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + this.scale + ")");
-    return this.vis.selectAll("text").style("font-size", (1 / this.scale) + "em");
+    this.translate = d3.event.translate;
+    this.vis.attr("transform", "translate(" + this.translate + ")" + " scale(" + this.scale + ")");
+    this.text.style("font-size", (1 / this.scale) + "em");
+  };
+
+  nest.prototype.focus = function(e) {
+    var hFocus, node_dist, threshold,
+      _this = this;
+    this.center = {
+      x: e[0],
+      y: e[1]
+    };
+    if (this.ring == null) {
+      this.ring = this.vis.insert("circle", ":first-child").classed('ring', true);
+    }
+    this.ring.attr('r', 150.0 / this.scale);
+    this.ring.attr('cx', this.center.x);
+    this.ring.attr('cy', this.center.y);
+    node_dist = [];
+    this.node.each(function(d) {
+      node_dist.push([d.id, Math.pow(d.x - _this.center.x, 2) + Math.pow(d.y - _this.center.y, 2)]);
+    });
+    node_dist.sort(function(a, b) {
+      return a[1] - b[1];
+    });
+    threshold = Math.pow(150 / this.scale, 2);
+    node_dist = node_dist.filter(function(d) {
+      return d[1] < threshold;
+    });
+    hFocus = {};
+    this.nodes.map(function(d) {
+      if (d !== this.theFocus) {
+        d.isHigh = false;
+      }
+    });
+    node_dist.map(function(d) {
+      hFocus[d[0]] = true;
+      _this.hNode[d[0]].isHigh = true;
+    });
+    this.link.each(function(d) {
+      d.isHigh = false;
+      if ((hFocus[d.source.id] != null) && hFocus[d.target.id]) {
+        d.isHigh = true;
+      }
+    });
+    this.update(false);
   };
 
   nest.prototype.draw = function(json) {
@@ -196,25 +266,20 @@ nest = (function() {
 
   nest.prototype.getR = function(d) {
     if (d === this.theFocus) {
-      return 5;
-    }
-    if (d.isHigh) {
-      return 5;
+      return 10;
     } else {
       return 5;
     }
   };
 
   nest.prototype.tick = function(e) {
-    var cx, cy, k,
+    var k,
       _this = this;
-    cx = this.theFocus.x;
-    cy = this.theFocus.y;
     k = .05 * e.alpha;
     this.node.attr("transform", function(d) {
-      d.x += (d.x - cx) * k;
-      d.y += (d.y - cy) * k;
       return "translate(" + d.x + "," + d.y + ")";
+    }).attr('clip-path', function(d) {
+      return "url(#clip-" + d.index + ")";
     });
     this.link.attr("x1", function(d) {
       return d.source.x;
@@ -225,11 +290,22 @@ nest = (function() {
     }).attr("y2", function(d) {
       return d.target.y;
     });
-    return this.text.attr("transform", function(d) {
+    this.text.attr("transform", function(d) {
       var angle, dx;
       angle = 10 * ((d.id.length + d.index) % 10 - 2);
       dx = d.x + _this.getR(d) + 5 * _this.scale;
-      return "translate(" + dx + "," + d.y + ")rotate(" + angle + ")";
+      return "translate(" + dx + "," + d.y + ")";
+    });
+    this.clip = this.clip.data(this.recenterVoronoi(this.nodes), function(d) {
+      return d.point.index;
+    });
+    this.clip.enter().append('clipPath').classed('clip', true).attr('id', function(d) {
+      return 'clip-' + d.point.index;
+    });
+    this.clip.exit().remove();
+    this.clip.selectAll('path').remove();
+    this.clip.append('path').attr('d', function(d) {
+      return 'M' + d.join(',') + 'Z';
     });
   };
 
@@ -385,7 +461,7 @@ nest = (function() {
   };
 
   nest.prototype.highlight = function(d) {
-    var i, id, l, link, n, rel, x, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _m, _ref, _ref1, _ref2, _ref3, _ref4;
+    var x, _i, _j, _len, _len1, _ref, _ref1;
     _ref = this.links;
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       x = _ref[_i];
@@ -398,54 +474,10 @@ nest = (function() {
     }
     d.isHigh = true;
     this.theFocus = d;
-    i = d.index;
-    _ref2 = this.degree[d.index];
-    for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
-      link = _ref2[_k];
-      link.isHigh = true;
-      link.target.isHigh = true;
-      link.source.isHigh = true;
-    }
-    if (this.existing_relation_links == null) {
-      this.existing_relation_links = [];
-    }
-    if (this.relationships[d.type] != null) {
-      _ref3 = this.relationships[d.type];
-      for (_l = 0, _len3 = _ref3.length; _l < _len3; _l++) {
-        rel = _ref3[_l];
-        id = rel.id(d);
-        if (this.hNode[id] == null) {
-          n = {
-            'id': id,
-            'name': rel.name(d),
-            'type': "relationship",
-            'isHigh': true,
-            'x': d.x + Math.random() * 100 - 50,
-            'y': d.y + Math.random() * 100 - 50
-          };
-          this.nodes.push(n);
-          l = {
-            'source': d,
-            'target': n,
-            'isHigh': true
-          };
-          this.links.push(l);
-          this.existing_relation_links.push(l);
-        }
-      }
-      _ref4 = this.existing_relation_links;
-      for (_m = 0, _len4 = _ref4.length; _m < _len4; _m++) {
-        link = _ref4[_m];
-        if (link.source === d) {
-          continue;
-        }
-        if ((this.degree[link.target.index] != null) && this.degree[link.target.index].length > 1) {
-          continue;
-        }
-        this.links.remove(link);
-        this.nodes.remove(link.target);
-      }
-    }
+    this.vis.selectAll(".marker").remove();
+    this.node.filter(function(x) {
+      return x === d;
+    }).append('image').classed('marker', true).attr('xlink:href', "/img/marker.svg").attr('width', 50).attr('height', 50).attr('x', -22).attr('y', -45);
   };
 
   nest.prototype.update = function(start_force) {
@@ -481,10 +513,8 @@ nest = (function() {
     nodeEnter = this.node.enter().append("g").attr("class", "node").on("click", this.click).on('dblclick', this.dblclick).classed("highlight", function(d) {
       return d.isHigh === true;
     }).call(this.force.drag());
-    nodeEnter.append("path").attr('d', d3.svg.symbol().size(100).type(function(d) {
-      return "circle";
-      return _this.shapes[d.type.hashCode() % _this.shapes.length];
-    })).style("fill", this.color);
+    nodeEnter.append('circle').classed('selection-helper', true).attr('r', 50);
+    nodeEnter.append("circle").style("fill", this.color).attr('r', this.getR);
     nodeEnter.append('title').text(function(d) {
       return d.name;
     });
@@ -494,7 +524,7 @@ nest = (function() {
     this.vis.selectAll(".node path").filter(function(d) {
       return d.isSearching;
     }).append("animate").attr("attributeName", 'cx').attr("begin", '0s').attr("dur", '0.1s').attr("from", '-5').attr("to", '5').attr("fill", 'remove').attr("repeatCount", 'indefinite').classed("search-img", true);
-    this.text = this.vis.selectAll('text').data(this.nodes.filter(function(d) {
+    this.text = this.text.data(this.nodes.filter(function(d) {
       return d.isHigh;
     }), function(d) {
       return d.id;
@@ -505,7 +535,11 @@ nest = (function() {
       } else {
         return d.name.slice(0, 5) + "...";
       }
-    }).style("font-size", (1 / this.scale) + "em");
+    }).style("font-size", (1 / this.scale) + "em").attr("transform", function(d) {
+      var dx;
+      dx = d.x + _this.getR(d) + 5 * _this.scale;
+      return "translate(" + dx + "," + d.y + ")";
+    });
     this.text.exit().remove();
     if (start_force) {
       this.force.start();

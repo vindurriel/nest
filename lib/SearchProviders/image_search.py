@@ -34,7 +34,7 @@ class image_search(search_provider_base):
 				res.append({
 					'type':u'referData',
 					'id': u"referData_"+unicode(x.modelID),
-					'name':normalize_text(x.modelName),
+					'name':u"模型_"+unicode(x.modelID),
 					'distance_rank':x.score,
 					'img': u"/img/smartref/{}.png".format(x.modelView1),
 				})
