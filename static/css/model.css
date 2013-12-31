@@ -6,11 +6,11 @@
 
 @import "/css/switcher.css";
 #wrapper {
-  width: 1260px;
+  width: 95%;
   margin: 0 auto;
-  min-height: 80%;
+  min-height: 100%;
   position: relative;
-  padding: 2em;
+  padding: 2em 0;
   top: 450px;
 }
 .doc_url {
@@ -248,7 +248,7 @@ body.ready #nav {
 }
 #nav .search {
   position: relative;
-  width: 1260px;
+  width: 95%;
   height: inherit;
   margin: 0 auto;
   transition: opacity .2s;
@@ -312,15 +312,36 @@ body.ready #nav {
 .toggle.on {
   background: #3b89ec;
 }
+.inner {
+  position: absolute;
+  left: 1em;
+  right: 1em;
+  top: 1em;
+  bottom: 1em;
+  overflow-x: hidden;
+  overflow-y: visible;
+}
+#nest-container {
+  overflow-y: hidden;
+}
+.list-item.expanded {
+  overflow-y: hidden;
+  width: 95% !important;
+  height: 600px !important;
+}
 .list-item {
   -webkit-border-radius: 0px;
   -moz-border-radius: 0px;
   -ms-border-radius: 0px;
   -o-border-radius: 0px;
   border-radius: 0px;
+  box-sizing: border-box;
+  width: 200px;
+  height: 200px;
   background: white;
   border: #ddd solid 1px;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 .list-item:hover .btn-close {
   display: inline;
@@ -328,13 +349,19 @@ body.ready #nav {
 .list-item:hover .drag-handle {
   display: inline;
 }
+.list-item.w2 {
+  width: 410px;
+}
+.list-item.h2 {
+  height: 410px;
+}
 .list-item .drag-handle {
   position: absolute;
   margin: 3px;
   padding-right: 2em;
   padding-bottom: 2em;
   cursor: move;
-  color: #aaa;
+  color: #999;
   display: none;
 }
 .list-item .drag-handle:hover {
@@ -490,18 +517,6 @@ body.no-nav #nav {
   margin: 0;
   padding: 0;
 }
-.inner {
-  position: absolute;
-  left: 1em;
-  right: 1em;
-  top: 1em;
-  bottom: 1em;
-  overflow-x: hidden;
-  overflow-y: visible;
-}
-#nest-container.inner {
-  overflow-y: hidden;
-}
 #dropimage-holder {
   top: 0;
   opacity: 0;
@@ -509,12 +524,13 @@ body.no-nav #nav {
   position: absolute;
   width: 500px;
   height: 100px;
-  z-index: -1;
+  pointer-events: none;
   background: white;
   border: 10px dashed gray;
 }
 #dropimage-holder.dragover {
   z-index: 9999;
+  pointer-events: all;
   opacity: 1;
 }
 .logo {
@@ -530,10 +546,10 @@ body.no-nav #nav {
 body.ready .logo {
   position: fixed;
   left: 10px;
-  top: 10px;
+  top: 5px;
   z-index: 9999;
-  width: 35px;
-  height: 35px;
+  width: 40px;
+  height: 40px;
 }
 .ball {
   box-sizing: content-box;

@@ -2,17 +2,19 @@ requirejs.config
 	"baseUrl": '/js'
 	"paths":
 		"jquery":"jquery"
-		'qtip':'jquery.qtip'
-		'imagesLoaded':'imagesLoaded'
-		'gridster':'jquery.gridster.min'
-	"shim":
-		'gridster':
-			'deps':['jquery']
-		'qtip':
-			'deps':['jquery']
-		'imagesLoaded':
-			'deps':['jquery']
-require ['jquery','d3','nest' ,'jquery_blockUI','imagesLoaded','qtip','gridster'] , ($,d3,Nest,blockUI,imagesLoaded,qtip,gridster)->
+		'blockUI': "jquery_blockUI"
+	'shim':
+		'blockUI':
+			"deps":['jquery']
+require ['packery.pkgd.min'], (x)->
+	require ['packery/js/packery'] ,(pack)->
+		window.packery= new pack "#wrapper",
+			'itemSelector':'.list-item'
+			'columnWidth':200,
+			'gutter':10,
+		return
+	return
+require ['jquery','d3','nest','blockUI'] , ($,d3,Nest,bui)->
 	url_params= ()->
 		res={} 
 		for x in window.location.search.substring(1).split('&')
@@ -32,7 +34,7 @@ require ['jquery','d3','nest' ,'jquery_blockUI','imagesLoaded','qtip','gridster'
 		if d.img?
 			imgurl= d.img
 		return """
-		<div class="list-item normal" data-nest-node="#{d.id}">
+		<div class="list-item normal w2" data-nest-node="#{d.id}">
 			<header class="drag-handle">|||</header>
 			<div class="btn-close">x</div>
 			<div class='inner'>
@@ -62,20 +64,30 @@ require ['jquery','d3','nest' ,'jquery_blockUI','imagesLoaded','qtip','gridster'
 			click_handler(window.nest.root)
 			return
 		return
+	add_widget = ($x)->
+		$('#wrapper').append($x)
+		window.packery.appended $x
+		require ['draggabilly.pkgd.min'], (Draggabilly)->
+			draggie=new Draggabilly $x.get()[0],
+				handle: ".drag-handle"
+			window.packery.bindDraggabillyEvents draggie
+			return
+		return
 	list= (d)->
-		window.gridster[1].remove_all_widgets()
-		docs=[]
+		if  $('.list-item.normal').length>0
+			window.packery.remove $('.list-item.normal').get()
+			window.packery.layout()
+		docs=[]	
 		for link in window.nest.degree[d.index]
 			if d==link.target then continue
 			n= link.target
 			docs.push n
 		if docs.length==0
 			return
-		return
-		for x in docs.slice(0,6)
+		for x in docs
 			# if x.type in "SearchProvider smartref_category query referData".split(" ") then continue
 			s=$(t_list_item(x))
-			window.gridster[1].add_widget s, 1,1
+			add_widget s		
 		return
 	snapshot= (d)->
 		$item= $("""
@@ -86,7 +98,7 @@ require ['jquery','d3','nest' ,'jquery_blockUI','imagesLoaded','qtip','gridster'
 				</div>
 			</div>
 		""")
-		window.gridster[1].add_widget $item, 2,2
+		# window.gridster[1].add_widget $item, 2,2
 		if not d3?
 			d3= window.d3
 		$svg= $('#nest-container svg').clone()
@@ -113,7 +125,7 @@ require ['jquery','d3','nest' ,'jquery_blockUI','imagesLoaded','qtip','gridster'
 		list d
 		if $(".selected_info").length==0
 			$item= $(t_list_item(d)).addClass('selected_info')
-			window.gridster[0].add_widget $item, 4,2
+			# window.gridster[0].add_widget $item, 4,2
 		$(".selected_info .item-headline span").text(d.name)
 		$(".selected_info .item-prop").empty()
 		$(".selected_info .item-image").attr('src',d.img or "")
@@ -404,14 +416,7 @@ require ['jquery','d3','nest' ,'jquery_blockUI','imagesLoaded','qtip','gridster'
 		})
 		$(document).on "click", ".btn-close" , ()->
 			ui= $(this).closest('div.list-item')
-			get_grister_instance= (ui)->
-				for x in window.gridster
-					if x.$widgets.index(ui)>=0
-						return x
-				return null
-			gridster= get_grister_instance ui
-			if not gridster? then return
-			gridster.remove_widget ui
+			# gridster.remove_widget ui
 			return
 		$("body")
 		.on "click", ".selected_info .item-action", ()->
@@ -458,14 +463,14 @@ require ['jquery','d3','nest' ,'jquery_blockUI','imagesLoaded','qtip','gridster'
 			load_model $(@).text()
 			return		
 		$(".btn-resize").click ->
-			ui=$("#nest-container").parent()
-			flag= ui.attr('data-sizex')=="6"
-			if not flag
-				window.gridster[0].resize_widget ui, 6,4
+			ui=$(@).closest('.list-item')
+			ui.toggleClass('expanded')
+			flag= ui.hasClass('expanded')
+			if  flag
+				# window.gridster[0].resize_widget ui, 6,4
 				$('body').animate({'scrollTop':ui.offset().top-80})
-			else
-				window.gridster[0].resize_widget ui, 2,2
-			$(@).val(if flag then "放大" else "缩小")
+			$(@).val(if flag then "缩小" else  "放大")
+			window.packery.layout()
 			return
 
 		$("#btn_search").click ->
@@ -507,32 +512,13 @@ require ['jquery','d3','nest' ,'jquery_blockUI','imagesLoaded','qtip','gridster'
 					</div>
 				</div>
 				""")
-				window.gridster[1].add_widget $item, 4,2
+				# window.gridster[1].add_widget $item, 4,2
 			url=$(this).attr('href')
 			text= $(this).text()
 			$(".doc_info iframe").attr('src',url)
 			$(".doc_info .item-headline span").text(text)
 			e.preventDefault()
 			return
-		window.gridster= []
-		window.gridster.push $("#nest-column").gridster({
-			widget_selector:".list-item",
-			widget_margins: [5,5],
-			max_cols:6,
-			widget_base_dimensions: [200, 200],
-			draggable:
-				handle: '.drag-handle'
-			resize:
-				enabled:true
-		}).data('gridster')
-		window.gridster.push $("#list-column").gridster({
-			widget_selector:".list-item",
-			widget_margins: [5,5],
-			max_cols:6,
-			widget_base_dimensions: [200, 200],
-			resize:
-				enabled:true
-		}).data('gridster')
 		$(window).on "mouseenter",".drag-handle", ->
 			$(this).attr('title',"按住拖动")
 			return

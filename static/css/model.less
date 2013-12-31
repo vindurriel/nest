@@ -2,7 +2,7 @@
 @import '/css/jquery.qtip.min.css';
 @import '/css/jquery.gridster.min.css';
 @import "/css/switcher.css";
-@width:  1260px;
+@width:  95%;
 @item-width: 400px;
 @light-border:#ccc;
 @dark-border:#555;
@@ -11,9 +11,9 @@
 #wrapper{
   width:@width;
   margin: 0 auto;
-  min-height: 80%;
+  min-height: 100%;
   position: relative;
-  padding: 2em;
+  padding: 2em 0;
   top: 450px;
 }
 .doc_url{
@@ -325,11 +325,33 @@ body.ready #nav{
   }
 }
 
+.inner{
+  position: absolute;
+  left: 1em;
+  right: 1em;
+  top: 1em;
+  bottom: 1em;
+  overflow-x:hidden;
+  overflow-y: visible;
+}
+#nest-container{
+  overflow-y: hidden;
+}
+.list-item.expanded{
+  overflow-y: hidden;
+  width: 95% !important;
+  height: 600px !important;
+}
+
 .list-item{
   .rounded-corners;
+  box-sizing:border-box;
+  width: 200px;
+  height: 200px;
   background: white;
   border:#ddd solid 1px;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   &:hover {
     .btn-close{
       display:inline;
@@ -338,13 +360,19 @@ body.ready #nav{
       display: inline;
     }
   }
+  &.w2{
+    width: 410px;
+  }
+  &.h2{
+    height: 410px;
+  }
   .drag-handle{
     position: absolute;
     margin: 3px;
     padding-right: 2em;
     padding-bottom: 2em;
     cursor:move;
-    color: #aaa;
+    color: #999;
     display: none;
     &:hover{
       color: @color;
@@ -514,19 +542,8 @@ body.no-nav{
   margin: 0;
   padding: 0;
 }
-.inner{
-  position: absolute;
-  left: 1em;
-  right: 1em;
-  top: 1em;
-  bottom: 1em;
-  overflow-x:hidden;
-  overflow-y: visible;
-}
 
-#nest-container.inner{
-  overflow-y: hidden;
-}
+ 
 
 #dropimage-holder{
   top:0;
@@ -535,11 +552,12 @@ body.no-nav{
   position: absolute;
   width: 500px;
   height: 100px;
-  z-index: -1;
+  pointer-events:none;
   background: white;
   border:10px dashed gray;
   &.dragover{
     z-index: 9999;
+    pointer-events:all;
     opacity: 1;
   }
 }
@@ -557,10 +575,10 @@ body.no-nav{
 body.ready .logo{
   position: fixed;
   left: 10px;
-  top: 10px;
+  top: 5px;
   z-index: 9999;
-  width: 35px;
-  height: 35px;
+  width: 40px;
+  height: 40px;
 }
 
 

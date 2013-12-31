@@ -65,7 +65,6 @@ def print_json(d):
 	return res
 def _post_json(url,data):
 	d=json.dumps(data)
-	#print d
 	res= r.post(url,
 		data=d,
 		headers={
@@ -99,7 +98,8 @@ def search(key):
 	return res
 def explore(node):
 	res=_post_json("{}/explore".format(host),{
-			"keys":u"baike_"+node.name,
+			"return_id":u"baike_"+node.name,
+			'keys':node.name,
 			"services":["baike"],
 			"url":node.url,
 	})

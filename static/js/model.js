@@ -3,25 +3,27 @@
     "baseUrl": '/js',
     "paths": {
       "jquery": "jquery",
-      'qtip': 'jquery.qtip',
-      'imagesLoaded': 'imagesLoaded',
-      'gridster': 'jquery.gridster.min'
+      'blockUI': "jquery_blockUI"
     },
-    "shim": {
-      'gridster': {
-        'deps': ['jquery']
-      },
-      'qtip': {
-        'deps': ['jquery']
-      },
-      'imagesLoaded': {
-        'deps': ['jquery']
+    'shim': {
+      'blockUI': {
+        "deps": ['jquery']
       }
     }
   });
 
-  require(['jquery', 'd3', 'nest', 'jquery_blockUI', 'imagesLoaded', 'qtip', 'gridster'], function($, d3, Nest, blockUI, imagesLoaded, qtip, gridster) {
-    var close_toggle, get_selected_services, init_service, list, list_automate, list_model, list_service, load_automate, load_model, play_step, save, search, snapshot, t_item_action, t_list_item, unblockUI, update_service, url_params;
+  require(['packery.pkgd.min'], function(x) {
+    require(['packery/js/packery'], function(pack) {
+      window.packery = new pack("#wrapper", {
+        'itemSelector': '.list-item',
+        'columnWidth': 200,
+        'gutter': 10
+      });
+    });
+  });
+
+  require(['jquery', 'd3', 'nest', 'blockUI'], function($, d3, Nest, bui) {
+    var add_widget, blockUI, close_toggle, get_selected_services, init_service, list, list_automate, list_model, list_service, load_automate, load_model, play_step, save, search, snapshot, t_item_action, t_list_item, unblockUI, update_service, url_params;
     url_params = function() {
       var pair, res, x, _i, _len, _ref;
       res = {};
@@ -44,7 +46,7 @@
       if (d.img != null) {
         imgurl = d.img;
       }
-      return "<div class=\"list-item normal\" data-nest-node=\"" + d.id + "\">\n	<header class=\"drag-handle\">|||</header>\n	<div class=\"btn-close\">x</div>\n	<div class='inner'>\n		<h2 class=\"item-headline\">\n			<span>" + d.name + "</span>\n		</h2>\n		<div class=\"item-prop\">" + d.type + " </div>\n		<div>\n			<img class=\"item-image\" src=\"" + imgurl + "\"/>\n		</div>\n		<p class=\"item-detail\">" + details + "</p>\n	</div>\n</div>";
+      return "<div class=\"list-item normal w2\" data-nest-node=\"" + d.id + "\">\n	<header class=\"drag-handle\">|||</header>\n	<div class=\"btn-close\">x</div>\n	<div class='inner'>\n		<h2 class=\"item-headline\">\n			<span>" + d.name + "</span>\n		</h2>\n		<div class=\"item-prop\">" + d.type + " </div>\n		<div>\n			<img class=\"item-image\" src=\"" + imgurl + "\"/>\n		</div>\n		<p class=\"item-detail\">" + details + "</p>\n	</div>\n</div>";
     };
     close_toggle = function() {
       $('.toggle').removeClass('on');
@@ -62,9 +64,23 @@
         click_handler(window.nest.root);
       });
     };
+    add_widget = function($x) {
+      $('#wrapper').append($x);
+      window.packery.appended($x);
+      require(['draggabilly.pkgd.min'], function(Draggabilly) {
+        var draggie;
+        draggie = new Draggabilly($x.get()[0], {
+          handle: ".drag-handle"
+        });
+        window.packery.bindDraggabillyEvents(draggie);
+      });
+    };
     list = function(d) {
-      var docs, link, n, s, x, _i, _j, _len, _len1, _ref, _ref1;
-      window.gridster[1].remove_all_widgets();
+      var docs, link, n, s, x, _i, _j, _len, _len1, _ref;
+      if ($('.list-item.normal').length > 0) {
+        window.packery.remove($('.list-item.normal').get());
+        window.packery.layout();
+      }
       docs = [];
       _ref = window.nest.degree[d.index];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -78,18 +94,15 @@
       if (docs.length === 0) {
         return;
       }
-      return;
-      _ref1 = docs.slice(0, 6);
-      for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-        x = _ref1[_j];
+      for (_j = 0, _len1 = docs.length; _j < _len1; _j++) {
+        x = docs[_j];
         s = $(t_list_item(x));
-        window.gridster[1].add_widget(s, 1, 1);
+        add_widget(s);
       }
     };
     snapshot = function(d) {
       var $g, $item, $svg, svg;
       $item = $("<div class=\"list-item\">\n	<header class=\"drag-handle\">|||</header>\n	<div class=\"btn-close\">x</div>\n	<div class='inner select_graph'>\n	</div>\n</div>");
-      window.gridster[1].add_widget($item, 2, 2);
       if (d3 == null) {
         d3 = window.d3;
       }
@@ -119,7 +132,6 @@
       list(d);
       if ($(".selected_info").length === 0) {
         $item = $(t_list_item(d)).addClass('selected_info');
-        window.gridster[0].add_widget($item, 4, 2);
       }
       $(".selected_info .item-headline span").text(d.name);
       $(".selected_info .item-prop").empty();
@@ -482,24 +494,8 @@
         "container": "#nest-container"
       });
       $(document).on("click", ".btn-close", function() {
-        var get_grister_instance, ui;
+        var ui;
         ui = $(this).closest('div.list-item');
-        get_grister_instance = function(ui) {
-          var x, _i, _len, _ref;
-          _ref = window.gridster;
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            x = _ref[_i];
-            if (x.$widgets.index(ui) >= 0) {
-              return x;
-            }
-          }
-          return null;
-        };
-        gridster = get_grister_instance(ui);
-        if (gridster == null) {
-          return;
-        }
-        gridster.remove_widget(ui);
       });
       $("body").on("click", ".selected_info .item-action", function() {
         var cmd;
@@ -555,17 +551,16 @@
       });
       $(".btn-resize").click(function() {
         var flag, ui;
-        ui = $("#nest-container").parent();
-        flag = ui.attr('data-sizex') === "6";
-        if (!flag) {
-          window.gridster[0].resize_widget(ui, 6, 4);
+        ui = $(this).closest('.list-item');
+        ui.toggleClass('expanded');
+        flag = ui.hasClass('expanded');
+        if (flag) {
           $('body').animate({
             'scrollTop': ui.offset().top - 80
           });
-        } else {
-          window.gridster[0].resize_widget(ui, 2, 2);
         }
-        $(this).val(flag ? "放大" : "缩小");
+        $(this).val(flag ? "缩小" : "放大");
+        window.packery.layout();
       });
       $("#btn_search").click(function() {
         key = $('#q').val();
@@ -601,7 +596,6 @@
         var $item, text, url;
         if ($(".doc_info").length === 0) {
           $item = $("<div class='doc_info list-item normal'>\n	<header class=\"drag-handle\">|||</header>\n	<input type=\"button\"  class=\"btn-close\"   value=\"X\">\n	<input type=\"button\" class=\"btn-small fav\" style=\"left:5em;\"  value=\"收藏\">\n	<input type=\"button\" class=\"btn-small share\" style=\"left:9em;\"  value=\"分享\">\n	<div class='inner'>\n		<h2 class=\"item-headline\">\n			<span></span>\n		</h2>\n		<iframe  ></iframe>\n	</div>\n</div>");
-          window.gridster[1].add_widget($item, 4, 2);
         }
         url = $(this).attr('href');
         text = $(this).text();
@@ -609,28 +603,6 @@
         $(".doc_info .item-headline span").text(text);
         e.preventDefault();
       });
-      window.gridster = [];
-      window.gridster.push($("#nest-column").gridster({
-        widget_selector: ".list-item",
-        widget_margins: [5, 5],
-        max_cols: 6,
-        widget_base_dimensions: [200, 200],
-        draggable: {
-          handle: '.drag-handle'
-        },
-        resize: {
-          enabled: true
-        }
-      }).data('gridster'));
-      window.gridster.push($("#list-column").gridster({
-        widget_selector: ".list-item",
-        widget_margins: [5, 5],
-        max_cols: 6,
-        widget_base_dimensions: [200, 200],
-        resize: {
-          enabled: true
-        }
-      }).data('gridster'));
       $(window).on("mouseenter", ".drag-handle", function() {
         $(this).attr('title', "按住拖动");
       });
