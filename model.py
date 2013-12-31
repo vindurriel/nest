@@ -37,15 +37,25 @@ class model:
 class list:
 	def GET(self):
 		theme=web.input().get("theme","light")
+		output=web.input().get("output","html")
+		t=web.input().get("type","model")
 		import os
 		l=os.listdir(cwd('static','files'))
-		l= filter(lambda x:x.endswith(".json"),l)
+		ext=".json"
+		if t=="automate":
+			ext=".txt"
+		l= filter(lambda x:x.endswith(ext),l)
 		import base64,urllib2
-		l= map(lambda x: decode(base64.b64decode(x[:-5])),l)
+		l= map(lambda x: decode(base64.b64decode(x[:-len(ext)])),l)
 		l= map(lambda x: (x,urllib2.quote(x.encode("utf-8"))),l)
-		static=cwd("static")
-		render=web.template.render(cwd('templates'),globals=locals())
-		return render.list()
+		if output=='html':
+			static=cwd("static")
+			render=web.template.render(cwd('templates'),globals=locals())
+			return render.list()
+		elif output=='json':
+			import json
+			web.header('Content-Type', 'application/json')
+			return json.dumps(l)
 class keyword:
 	def GET(self,key="机器学习"):
 		fname=cwd("static","files", "cluster",key)
@@ -114,11 +124,11 @@ class service:
 					'img':'/img/coins.png',
 				},
 
-				{	'id':'REGSVC','name':"线性回归",'select':True,
+				{	'id':'REGSVC','name':"线性回归",'select':False,
 					'desc':'调用线性回归算法服务',
 					'img':'/img/line.png',
 				},
-				{	'id':'MDOSVC','name':"多目标优化",'select':True,
+				{	'id':'MDOSVC','name':"多目标优化",'select':False,
 					'desc':'调用优化算法服务',
 					'img':'/img/variable.png',
 				},

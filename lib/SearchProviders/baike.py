@@ -10,7 +10,7 @@ def decode(s):
 			pass
 	raise Exception("cannot decode")
 def get_docs(term,dic={},limit=10):
-	import re
+	import re,uuid
 	import requests as r
 	from BeautifulSoup import BeautifulSoup as bs
 	term=decode(term).strip().replace('&nbsp;','')
@@ -41,8 +41,8 @@ def get_docs(term,dic={},limit=10):
 			urls.append({
 				"url":x['href'],
 				"name":text,
-				'type':'referData',
-				"id":text,
+				'type':u'referData',
+				"id":unicode(uuid.uuid1()),
 			})
 	return {
 		"nodes": urls,

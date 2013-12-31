@@ -29,7 +29,7 @@
   font-size: 1em;
   height: 2em;
   line-height: 2em;
-  margin: 0 0 0 1em;
+  margin: 0 1em 0 0;
   opacity: .8;
   outline: none;
 }
@@ -59,7 +59,7 @@
 .btn-small:hover {
   background: #69a5f1;
 }
-.btn-automate {
+.btn-resize {
   z-index: 12;
   background: #3b89ec;
   color: white;
@@ -72,7 +72,7 @@
   left: auto;
   right: 1em;
 }
-.btn-automate:hover {
+.btn-resize:hover {
   background: #69a5f1;
 }
 #story-indicator {
@@ -99,6 +99,7 @@
   border: none;
   font-size: 2em;
   outline: none;
+  cursor: pointer;
   right: 0;
 }
 .btn-next:hover {
@@ -116,6 +117,7 @@
   border: none;
   font-size: 2em;
   outline: none;
+  cursor: pointer;
   left: 0;
 }
 .btn-prev:hover {
@@ -133,7 +135,9 @@
 .node:hover .selection-helper {
   fill-opacity: 0.3;
 }
-.node text {
+text {
+  pointer-events: none;
+  cursor: normal;
   opacity: 1;
   fill: black;
   stroke: none;
@@ -236,8 +240,7 @@ body.ready #nav {
   box-sizing: border-box;
 }
 #nav h3,
-#nav a,
-#nav input {
+#nav a {
   color: white;
 }
 #nav .search {
@@ -280,7 +283,11 @@ body.ready #nav {
   left: 880px;
   top: 4px;
 }
-#tip {
+#nav #nav-buttons .button {
+  margin: 0 0 0 5px;
+  padding: 0 5px;
+}
+.toggle-container {
   background-color: rgba(0, 0, 0, 0.8);
   position: absolute;
   left: 0;
@@ -289,9 +296,18 @@ body.ready #nav {
   display: none;
   height: auto;
 }
-#tip .tip-inner {
+.toggle-container .toggle-inner {
   width: 500px;
   margin: 0 auto;
+  max-height: 500px;
+  overflow-y: auto;
+  padding-bottom: 1em;
+}
+.toggle-container .toggle-inner label {
+  color: white;
+}
+.toggle.on {
+  background: #3b89ec;
 }
 .list-item {
   -webkit-border-radius: 0px;
@@ -379,12 +395,6 @@ body.ready #nav {
   border-radius: 5px;
   cursor: pointer;
 }
-.services li label {
-  pointer-events: none;
-}
-.services li ::selection {
-  background: none;
-}
 .services li strong {
   margin: 0 1em;
 }
@@ -436,9 +446,6 @@ body.dark #dropimage-holder {
 body.dark .list-item {
   background: #333;
   border-color: #444;
-}
-body.dark #automate-form {
-  background: rgba(0, 0, 0, 0.8);
 }
 body * {
   outline: none;
@@ -626,4 +633,14 @@ body.ready .logo {
   fill: #3b89ec;
   fill-opacity: 0.05;
   stroke-width: 2px;
+}
+.list {
+  cursor: pointer;
+  list-style: none;
+  margin-bottom: 1em;
+  opacity: .7;
+  color: white;
+}
+.list:hover {
+  opacity: 1;
 }

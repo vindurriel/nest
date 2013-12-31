@@ -45,7 +45,6 @@ class nest
 		@voronoi = d3.geom.voronoi()
 		.x((d)->d.x)
 		.y((d)->d.y)
-		# .clipExtent([[-10, -10], [@w+10, @h+10]])
 
 		@translate= [0,0]
 		@scale=1.0
@@ -131,7 +130,7 @@ class nest
 			return
 		node_dist.sort (a,b)-> a[1]-b[1]
 		threshold= Math.pow((150/@scale),2)
-		# node_dist= node_dist.slice(0,10)
+		node_dist= node_dist.slice(0,15)
 		node_dist= node_dist.filter((d)->d[1]<threshold)
 		hFocus= {}
 		@nodes.map (d)-> 
@@ -188,7 +187,8 @@ class nest
 		k= .05*e.alpha
 		@node.attr("transform", (d) ->
 			"translate(#{d.x},#{d.y})"
-		).attr('clip-path',(d)->"url(#clip-#{d.index})")
+		)
+		.attr('clip-path',(d)->"url(#clip-#{d.index})")
 		
 		@link.attr("x1", (d) ->
 			d.source.x
@@ -232,7 +232,7 @@ class nest
 			return
 		d.isSearching = true
 		data={
-			keys:d.id,
+			keys:d.name,
 		}
 		if d.url?
 			data.url= d.url

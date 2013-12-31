@@ -198,6 +198,7 @@ nest = (function() {
       return a[1] - b[1];
     });
     threshold = Math.pow(150 / this.scale, 2);
+    node_dist = node_dist.slice(0, 15);
     node_dist = node_dist.filter(function(d) {
       return d[1] < threshold;
     });
@@ -340,7 +341,7 @@ nest = (function() {
     }
     d.isSearching = true;
     data = {
-      keys: d.id
+      keys: d.name
     };
     if (d.url != null) {
       data.url = d.url;

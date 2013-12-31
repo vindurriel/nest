@@ -4,7 +4,7 @@ requirejs.config
 		"jquery":"jquery"
 		'qtip':'jquery.qtip'
 		'imagesLoaded':'imagesLoaded'
-		'gridster':'jquery.gridster.with-extras'
+		'gridster':'jquery.gridster.min'
 	"shim":
 		'gridster':
 			'deps':['jquery']
@@ -46,7 +46,22 @@ require ['jquery','d3','nest' ,'jquery_blockUI','imagesLoaded','qtip','gridster'
 				<p class="item-detail">#{details}</p>
 			</div>
 		</div>
-		"""	
+		"""
+	close_toggle= ()->
+		$('.toggle').removeClass('on')
+		$(".toggle-container").slideUp 200
+		return
+	load_model= (id)->
+		id= encodeURIComponent id
+		close_toggle()
+		$.getJSON "/model/load/#{id}", (d)->
+			if not d or d.error?
+				return
+			window.nest.draw d
+			$('#nest-column').removeClass "hidden"
+			click_handler(window.nest.root)
+			return
+		return
 	list= (d)->
 		window.gridster[1].remove_all_widgets()
 		docs=[]
@@ -56,19 +71,10 @@ require ['jquery','d3','nest' ,'jquery_blockUI','imagesLoaded','qtip','gridster'
 			docs.push n
 		if docs.length==0
 			return
-		i=0
-		add_widget= (l)->
-			if l.length==0 or i==20
-				clearInterval interval
-				return
-			x=l.pop()
-			if x.type in "SearchProvider smartref_category query referData".split(" ") then return
+		for x in docs.slice(0,6)
+			# if x.type in "SearchProvider smartref_category query referData".split(" ") then continue
 			s=$(t_list_item(x))
-			t= if i%3>0 then 2 else 1
-			window.gridster[1].add_widget s, 2,1
-			i+=1
-			return
-		interval= setInterval add_widget, 1, docs
+			window.gridster[1].add_widget s, 1,1
 		return
 	snapshot= (d)->
 		$item= $("""
@@ -168,8 +174,9 @@ require ['jquery','d3','nest' ,'jquery_blockUI','imagesLoaded','qtip','gridster'
 			"links":[],
 			"blacklist":window.nest.blacklist,
 		}
-		fname= prompt "请输入要保存的名字",window.nest.root.id
-		if not fname? then return
+		close_toggle()
+		fname= window.save_name[1].value
+		if not fname? or fname=="" then return
 		prop_node= "id name value index type url fixed distance_rank img".split(" ")
 		for x in window.nest.nodes
 			n= {}
@@ -188,6 +195,7 @@ require ['jquery','d3','nest' ,'jquery_blockUI','imagesLoaded','qtip','gridster'
 				$.growlUI "保存出现如下错误:", d.error
 				return
 			$.growlUI "","已保存"
+			list_model()
 		return
 	blockUI= ()->
 		$('html, body').attr({"scrollTop":400})
@@ -212,6 +220,7 @@ require ['jquery','d3','nest' ,'jquery_blockUI','imagesLoaded','qtip','gridster'
 			'keys':key,
 			'services':services,
 		}
+		close_toggle()
 		blockUI()
 		$.post "/search", JSON.stringify(data), (d)->
 				if not d or d.error?
@@ -225,6 +234,7 @@ require ['jquery','d3','nest' ,'jquery_blockUI','imagesLoaded','qtip','gridster'
 		return
 	load_automate= (scr)->
 		scr= encodeURIComponent(scr)
+		close_toggle()
 		$.getJSON "/play/#{scr}", (d)->
 			window.story= []
 			window.current_step=0
@@ -243,35 +253,42 @@ require ['jquery','d3','nest' ,'jquery_blockUI','imagesLoaded','qtip','gridster'
 				window.story.push cur
 			play_step()
 			click_handler (window.nest.root)
-	$ ->
-		params= url_params()
-		if params.theme?
-			$('body').addClass(params.theme)
-		if params.no_nav?
-			$('body').addClass("no-nav")
-		needs_nest= false			
-		if params.q?
-			key= params.q
-			services=  ['baike']
-			if params.services?
-				services= params.services.split('|')
-			search(key,services)
-		else if params.id?
-			id= encodeURIComponent params.id
-			$.getJSON "/model/load/#{id}", (d)->
-				if not d or d.error?
-					return
-				window.nest.draw d
-				$('#nest-column').removeClass "hidden"
-				click_handler(window.nest.root)
+			return
+		return
+	list_automate= ()->
+		$.getJSON "/list?output=json&type=automate", (d)->
+			if not d or d.error?
+				console.log('error get services')
 				return
-		else if params.automate?
-			load_automate params.automate
-		$.getJSON "/services/",(d)->
+			$('.automates').empty()
+			for x in d
+				$('.automates').append $("""
+					<li class="list" >#{x[0]}</li>
+				""")
+			return
+		return
+	list_model= ()->
+		$.getJSON "/list?output=json&type=model", (d)->
+			if not d or d.error?
+				console.log('error get services')
+				return
+			$('.snapshots').empty()	
+			for x in d
+				$('.snapshots').append $("""
+					<li class="list" >#{x[0]}</li>
+				""")
+			$("body").on "click", ".snapshots li", ()->
+				load_model $(@).text()
+				return
+			return
+		return
+	list_service= ()->
+		$.getJSON "/services",(d)->
 			if not d or d.error?
 				console.log('error get services')
 				return
 			window.services= d.services
+			$('.services').empty()
 			for s in d.services
 				checked = ""
 				if s.select? and s.select==true
@@ -291,9 +308,9 @@ require ['jquery','d3','nest' ,'jquery_blockUI','imagesLoaded','qtip','gridster'
 					$item.addClass('on')
 				$('.services').append $item
 			r= init_service(window.services)
-			$('.services').on 'click','li', ->
+			$('body').on 'click','.services li', (e)->
 				checkbox=$(@).find('input[type=checkbox]')
-				index=$(".services li").index($(@))
+				index=$(@).parent().find("li").index($(@))
 				checkbox.prop("checked", !checkbox.prop("checked"))
 				checked= checkbox.prop("checked")
 				$(@).toggleClass('on')
@@ -301,64 +318,85 @@ require ['jquery','d3','nest' ,'jquery_blockUI','imagesLoaded','qtip','gridster'
 				update_service(r)
 				return
 			return
-		update_service= (r)->
-			ns= window.services.filter((x)->x.select)
-			o=$('.logo').offset()
-			ns.splice(0,0,
-				'id':'services_root','name':"",'select':true,
-				'desc':'',
-				'img':'',
-				'fixed':true,
-				'x':o.left+64,
-				'y':o.top+64,
-			)
-			ls= []
-			i=0
-			for i in [0..ns.length-1]
-				if i==0 then  continue
-				ls.push {source:0,target:i}
-			r.force.nodes(ns).links(ls).start()
-			r.nodes= r.nodes.data(r.force.nodes(),(d)->d.id)
-			r.links= r.links.data(r.force.links())
-			ne= r.nodes.enter().append('g').classed('node',true)
-			ne.append('image')
-			.attr('width',30)
-			.attr('height',30)
-			.attr('xlink:href',(d)->d.img)
-			.call(r.force.drag)
-			ne.append('title').text((d)->d.desc)
-			ne.append('text').text((d)->d.name).attr('dx',-10).attr('dy',20).attr('text-anchor','end')
-			r.nodes.exit().remove()
+		return
+	update_service= (r)->
+		ns= window.services.filter((x)->x.select)
+		o=$('.logo').offset()
+		ns.splice(0,0,
+			'id':'services_root','name':"",'select':true,
+			'desc':'',
+			'img':'',
+			'fixed':true,
+			'x':o.left+64,
+			'y':o.top+64,
+		)
+		ls= []
+		i=0
+		for i in [0..ns.length-1]
+			if i==0 then  continue
+			ls.push {source:0,target:i}
+		r.force.nodes(ns).links(ls).start()
+		r.nodes= r.nodes.data(r.force.nodes(),(d)->d.id)
+		r.links= r.links.data(r.force.links())
+		ne= r.nodes.enter().append('g').classed('node',true)
+		ne.append('image')
+		.attr('width',30)
+		.attr('height',30)
+		.attr('xlink:href',(d)->d.img)
+		.call(r.force.drag)
+		ne.append('title').text((d)->d.desc)
+		ne.append('text').text((d)->d.name).attr('dx',-10).attr('dy',20).attr('text-anchor','end')
+		r.nodes.exit().remove()
 
-			r.links.enter().insert("line", ".node").classed('link',true)
-			r.links.exit().remove()
-			return
-		init_service= (services)->
-			res= {}
-			d3= window.d3
-			res.svg= d3.select('#banner .overlay').append("svg")
-			res.nodes= res.svg.selectAll('.node')
-			res.links= res.svg.selectAll('.link')
-			res.force= d3.layout.force()
-			.charge(-1000)
-			.linkDistance(150)
-			.linkStrength(1)
-			.size([200,200])	
-			.on('tick',()->
-				res.nodes.attr "transform", (d) ->
-					"translate(#{d.x},#{d.y})"
-				res.links.attr("x1", (d) ->
-					d.source.x
-				).attr("y1", (d) ->
-					d.source.y
-				).attr("x2", (d) ->
-					d.target.x
-				).attr("y2", (d) ->
-					d.target.y
-				)
+		r.links.enter().insert("line", ".node").classed('link',true)
+		r.links.exit().remove()
+		return
+	init_service= (services)->
+		res= {}
+		d3= window.d3
+		res.svg= d3.select('#banner .overlay').append("svg")
+		res.nodes= res.svg.selectAll('.node')
+		res.links= res.svg.selectAll('.link')
+		res.force= d3.layout.force()
+		.charge(-1000)
+		.linkDistance(150)
+		.linkStrength(1)
+		.size([200,200])	
+		.on('tick',()->
+			res.nodes.attr "transform", (d) ->
+				"translate(#{d.x},#{d.y})"
+			res.links.attr("x1", (d) ->
+				d.source.x
+			).attr("y1", (d) ->
+				d.source.y
+			).attr("x2", (d) ->
+				d.target.x
+			).attr("y2", (d) ->
+				d.target.y
 			)
-			update_service(res)
-			return res
+		)
+		update_service(res)
+		return res	
+	$ ->
+		params= url_params()
+		if params.theme?
+			$('body').addClass(params.theme)
+		if params.no_nav?
+			$('body').addClass("no-nav")
+		needs_nest= false			
+		if params.q?
+			key= params.q
+			services=  ['baike']
+			if params.services?
+				services= params.services.split('|')
+			search(key,services)
+		else if params.id?
+			load_model params.id
+		else if params.automate?
+			load_automate params.automate
+		list_service()
+		list_model()
+		list_automate()
 		window.nest= new Nest ({
 			"container":"#nest-container",
 		})
@@ -373,62 +411,65 @@ require ['jquery','d3','nest' ,'jquery_blockUI','imagesLoaded','qtip','gridster'
 			if not gridster? then return
 			gridster.remove_widget ui
 			return
-		$("body").on "click", ".selected_info .item-action", ()->
+		$("body")
+		.on "click", ".selected_info .item-action", ()->
 			cmd=$(@).data('nest-command')
 			window.nest[cmd](window.nest.theFocus)
 			window.nest.update()
 			return
-		$("#btn_load").click ->
-			scr= prompt "要打开的文件名","default"
-			if not scr?
-				return
-			load_automate scr
-		$("#btn_tip").click ->
-			$("#tip").slideToggle 200
-			return
-		# $('#tip').on "mouseenter", ->
-		# 	$('body').addClass "no-scroll"		
-		# $('#tip').on "mouseleave", ->
-		# 	$('body').removeClass "no-scroll"
-		$(".btn-next").click ->
-			if window.current_step==window.story.length-1 then return
-			window.current_step+=1
-			play_step()
-			return
-		$(".btn-prev").click ->
-			if window.current_step==0 then return
-			window.current_step-=1
-			play_step()
-			return
-		$(".btn-automate-yes").click ->
+		.on "click", ".btn-no", ()->
+			close_toggle()
+			return			
+		.on "click", ".btn-automate-yes", ()->
+			close_toggle()
 			dic=
 				"nodes":window.nest.nodes,
 				"links":window.nest.links.map((d)->{"source":d.source.index,"target":d.target.index}),
 				"blacklist":window.nest.blacklist,
 			for p in "max_total_node_num max_single_node_num timeout_seconds max_depth out_fname".split(" ")
-				dic[p]=$("#"+p).val()
+				dic[p]=window[p][1].value
 			console.log dic
-			$("#automate-form").slideToggle()
 			$.growlUI "", "宏 #{dic.out_fname} 已开始运行"
 			$.post "/automate",	JSON.stringify(dic), (d)->
 				if d.error?
 					$.growlUI "宏 #{dic.out_fname} 运行出现如下错误",d.error
 				else
 					$.growlUI "","宏 #{dic.out_fname} 已完成运行"
+					list_automate()
 				return
 			return
-		$(".btn-automate-no").click ->
-			$("#automate-form").slideToggle()
+		.on "click", ".btn-next", ()->
+			if window.current_step==window.story.length-1 then return
+			window.current_step+=1
+			play_step()
 			return
-		$(".btn-automate").click ->
-			$("#automate-form").slideToggle()
+		.on "click", ".btn-prev", ()->
+			if window.current_step==0 then return
+			window.current_step-=1
+			play_step()
 			return
+		.on("click", '.btn-save', save)
+		.on "click", ".automates li", ()->
+			load_automate $(@).text()
+			return
+		.on "click", ".snapshots li", ()->
+			load_model $(@).text()
+			return		
+		$(".btn-resize").click ->
+			ui=$("#nest-container").parent()
+			flag= ui.attr('data-sizex')=="6"
+			if not flag
+				window.gridster[0].resize_widget ui, 6,4
+				$('body').animate({'scrollTop':ui.offset().top-80})
+			else
+				window.gridster[0].resize_widget ui, 2,2
+			$(@).val(if flag then "放大" else "缩小")
+			return
+
 		$("#btn_search").click ->
 			key=$('#q').val()
 			services= get_selected_services()
 			search(key,services)
-			$('html, body').animate({"scrollTop":0})
-			$("#tip").slideUp 200
 			return
 		window.last_scroll=0
 		$(window).scroll ->
@@ -444,7 +485,6 @@ require ['jquery','d3','nest' ,'jquery_blockUI','imagesLoaded','qtip','gridster'
 			if e.keyCode==13
 				$('#btn_search').click()
 			return
-		$("#btn_save").on "click",save
 		$(".logo").on "click", ()->
 			if $('body').hasClass('ready')
 				$("body").animate({'scrollTop':0})
@@ -491,7 +531,6 @@ require ['jquery','d3','nest' ,'jquery_blockUI','imagesLoaded','qtip','gridster'
 			resize:
 				enabled:true
 		}).data('gridster')
-
 		$(window).on "mouseenter",".drag-handle", ->
 			$(this).attr('title',"按住拖动")
 			return
@@ -527,5 +566,17 @@ require ['jquery','d3','nest' ,'jquery_blockUI','imagesLoaded','qtip','gridster'
 							return
 					,"json"
 					return false
+
+		$("#nav-buttons .toggle").on "click",()->
+			$("#nav-buttons .toggle").not($(@)).removeClass 'on'
+			$(@).toggleClass 'on'
+			c=$(".toggle-container")
+			if $(@).hasClass 'on'
+				id=$(@).data('toggleId')
+				c.children(":first").empty().append($(id).clone().removeAttr('id').show())
+				c.slideDown 200
+			else
+				c.slideUp(200).children(":first").empty()
+			return
 		return
 	return

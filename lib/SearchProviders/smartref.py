@@ -27,16 +27,22 @@ class smartref(search_provider_base):
 			"links":[],
 		}
 		url='http://192.168.4.119:8096/Service/Getdata'
+		headers={ "user-agent":"Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1500.95 Safari/537.36"}
 		try:
-			res=r.get (url,params={
+			res=r.get(url,params={
 				"name":key,
-			},headers={
-				"user-agent":"Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1500.95 Safari/537.36"
-			}) 
+			},headers=headers) 
 			res.raise_for_status()
 			parse_tree(res.json()[0],[],g)
 		except Exception, e:
-			traceback.print_exc()
+			try:
+				res=r.get(url,params={
+					"name":key,
+				},headers=headers) 
+				res.raise_for_status()
+				parse_tree(res.json()[0],[],g)
+			except Exception, e:
+				traceback.print_exc()
 		return g
 if __name__ == '__main__':
 	res=smartref().search(u'ing')
