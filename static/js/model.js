@@ -64,9 +64,18 @@
         click_handler(window.nest.root);
       });
     };
-    add_widget = function($x) {
-      $('#wrapper').append($x);
-      window.packery.appended($x);
+    add_widget = function($x, after) {
+      if (after == null) {
+        after = null;
+      }
+      if (after != null) {
+        $x.insertAfter(after);
+        window.packery.reloadItems();
+        window.packery.layout();
+      } else {
+        $('#wrapper').append($x);
+        window.packery.appended($x);
+      }
       require(['draggabilly.pkgd.min'], function(Draggabilly) {
         var draggie;
         draggie = new Draggabilly($x.get()[0], {
@@ -102,7 +111,8 @@
     };
     snapshot = function(d) {
       var $g, $item, $svg, svg;
-      $item = $("<div class=\"list-item\">\n	<header class=\"drag-handle\">|||</header>\n	<div class=\"btn-close\">x</div>\n	<div class='inner select_graph'>\n	</div>\n</div>");
+      $item = $("<div class=\"list-item w2 h2\">\n	<header class=\"drag-handle\">|||</header>\n	<div class=\"btn-close\">x</div>\n	<div class='inner select_graph'>\n	</div>\n</div>");
+      add_widget($item, $('.selected_info'));
       if (d3 == null) {
         d3 = window.d3;
       }
@@ -131,7 +141,8 @@
       document.title = d.name;
       list(d);
       if ($(".selected_info").length === 0) {
-        $item = $(t_list_item(d)).addClass('selected_info');
+        $item = $(t_list_item(d)).attr('class', "selected_info list-item w2 h2");
+        add_widget($item, $('#nest-container').parent());
       }
       $(".selected_info .item-headline span").text(d.name);
       $(".selected_info .item-prop").empty();
@@ -493,9 +504,18 @@
       window.nest = new Nest({
         "container": "#nest-container"
       });
+      require(['draggabilly.pkgd.min'], function(Draggabilly) {
+        var draggie;
+        draggie = new Draggabilly($("#nest-container").parent().get()[0], {
+          handle: ".drag-handle"
+        });
+        window.packery.bindDraggabillyEvents(draggie);
+      });
       $(document).on("click", ".btn-close", function() {
         var ui;
         ui = $(this).closest('div.list-item');
+        window.packery.remove(ui);
+        window.packery.layout();
       });
       $("body").on("click", ".selected_info .item-action", function() {
         var cmd;
@@ -548,8 +568,7 @@
         load_automate($(this).text());
       }).on("click", ".snapshots li", function() {
         load_model($(this).text());
-      });
-      $(".btn-resize").click(function() {
+      }).on("click", ".btn-resize", function() {
         var flag, ui;
         ui = $(this).closest('.list-item');
         ui.toggleClass('expanded');
@@ -595,7 +614,8 @@
       $('body').on("click", ".doc_url", function(e) {
         var $item, text, url;
         if ($(".doc_info").length === 0) {
-          $item = $("<div class='doc_info list-item normal'>\n	<header class=\"drag-handle\">|||</header>\n	<input type=\"button\"  class=\"btn-close\"   value=\"X\">\n	<input type=\"button\" class=\"btn-small fav\" style=\"left:5em;\"  value=\"收藏\">\n	<input type=\"button\" class=\"btn-small share\" style=\"left:9em;\"  value=\"分享\">\n	<div class='inner'>\n		<h2 class=\"item-headline\">\n			<span></span>\n		</h2>\n		<iframe  ></iframe>\n	</div>\n</div>");
+          $item = $("<div class='doc_info list-item w2 h2 expanded'>\n	<header class=\"drag-handle\">|||</header>\n	<input type=\"button\" class=\"btn-resize\" value=\"缩小\">\n	<div  class=\"btn-close\">x</div>\n	<input type=\"button\" class=\"btn-small fav\"  style=\"left:3em;\"  value=\"收藏\">\n	<input type=\"button\" class=\"btn-small share\" style=\"left:6em;\"  value=\"分享\">\n	<div class='inner'>\n		<h2 class=\"item-headline\">\n			<span></span>\n		</h2>\n		<iframe  ></iframe>\n	</div>\n</div>");
+          add_widget($item, $(".selected_info"));
         }
         url = $(this).attr('href');
         text = $(this).text();

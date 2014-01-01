@@ -467,9 +467,6 @@ body.dark .link {
 body.dark #nav {
   border-color: black;
 }
-body.dark #nav.fade .logo {
-  background-image: url('/img/logo-dark.png');
-}
 body.dark #dropimage-holder {
   background-color: black;
 }
@@ -570,7 +567,9 @@ body.ready .logo {
   height: 20px;
   background: red;
   border-radius: 10px;
+  border: 5px white solid;
   margin: 10px;
+  box-sizing: border-box;
 }
 .ball1 {
   box-sizing: content-box;
@@ -594,7 +593,9 @@ body.ready .logo {
   height: 20px;
   background: red;
   border-radius: 10px;
+  border: 5px white solid;
   margin: 10px;
+  box-sizing: border-box;
 }
 .ball1 .b1 {
   margin: -10px;

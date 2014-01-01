@@ -64,9 +64,14 @@ require ['jquery','d3','nest','blockUI'] , ($,d3,Nest,bui)->
 			click_handler(window.nest.root)
 			return
 		return
-	add_widget = ($x)->
-		$('#wrapper').append($x)
-		window.packery.appended $x
+	add_widget = ($x, after=null)->
+		if after?
+			$x.insertAfter after
+			window.packery.reloadItems()
+			window.packery.layout()
+		else
+			$('#wrapper').append($x)
+			window.packery.appended $x
 		require ['draggabilly.pkgd.min'], (Draggabilly)->
 			draggie=new Draggabilly $x.get()[0],
 				handle: ".drag-handle"
@@ -91,14 +96,14 @@ require ['jquery','d3','nest','blockUI'] , ($,d3,Nest,bui)->
 		return
 	snapshot= (d)->
 		$item= $("""
-			<div class="list-item">
+			<div class="list-item w2 h2">
 				<header class="drag-handle">|||</header>
 				<div class="btn-close">x</div>
 				<div class='inner select_graph'>
 				</div>
 			</div>
 		""")
-		# window.gridster[1].add_widget $item, 2,2
+		add_widget $item, $('.selected_info')
 		if not d3?
 			d3= window.d3
 		$svg= $('#nest-container svg').clone()
@@ -124,8 +129,8 @@ require ['jquery','d3','nest','blockUI'] , ($,d3,Nest,bui)->
 		document.title= d.name
 		list d
 		if $(".selected_info").length==0
-			$item= $(t_list_item(d)).addClass('selected_info')
-			# window.gridster[0].add_widget $item, 4,2
+			$item= $(t_list_item(d)).attr('class',"selected_info list-item w2 h2")
+			add_widget $item, $('#nest-container').parent()
 		$(".selected_info .item-headline span").text(d.name)
 		$(".selected_info .item-prop").empty()
 		$(".selected_info .item-image").attr('src',d.img or "")
@@ -414,9 +419,15 @@ require ['jquery','d3','nest','blockUI'] , ($,d3,Nest,bui)->
 		window.nest= new Nest ({
 			"container":"#nest-container",
 		})
+		require ['draggabilly.pkgd.min'], (Draggabilly)->
+			draggie=new Draggabilly $("#nest-container").parent().get()[0],
+				handle: ".drag-handle"
+			window.packery.bindDraggabillyEvents draggie
+			return
 		$(document).on "click", ".btn-close" , ()->
 			ui= $(this).closest('div.list-item')
-			# gridster.remove_widget ui
+			window.packery.remove ui
+			window.packery.layout()
 			return
 		$("body")
 		.on "click", ".selected_info .item-action", ()->
@@ -462,12 +473,11 @@ require ['jquery','d3','nest','blockUI'] , ($,d3,Nest,bui)->
 		.on "click", ".snapshots li", ()->
 			load_model $(@).text()
 			return		
-		$(".btn-resize").click ->
+		.on "click", ".btn-resize", ()->
 			ui=$(@).closest('.list-item')
 			ui.toggleClass('expanded')
 			flag= ui.hasClass('expanded')
 			if  flag
-				# window.gridster[0].resize_widget ui, 6,4
 				$('body').animate({'scrollTop':ui.offset().top-80})
 			$(@).val(if flag then "缩小" else  "放大")
 			window.packery.layout()
@@ -499,11 +509,12 @@ require ['jquery','d3','nest','blockUI'] , ($,d3,Nest,bui)->
 		$('body').on "click",".doc_url", (e)->
 			if $(".doc_info").length==0
 				$item= $("""
-				<div class='doc_info list-item normal'>
+				<div class='doc_info list-item w2 h2 expanded'>
 					<header class="drag-handle">|||</header>
-					<input type="button"  class="btn-close"   value="X">
-					<input type="button" class="btn-small fav" style="left:5em;"  value="收藏">
-					<input type="button" class="btn-small share" style="left:9em;"  value="分享">
+					<input type="button" class="btn-resize" value="缩小">
+					<div  class="btn-close">x</div>
+					<input type="button" class="btn-small fav"  style="left:3em;"  value="收藏">
+					<input type="button" class="btn-small share" style="left:6em;"  value="分享">
 					<div class='inner'>
 						<h2 class="item-headline">
 							<span></span>
@@ -512,7 +523,7 @@ require ['jquery','d3','nest','blockUI'] , ($,d3,Nest,bui)->
 					</div>
 				</div>
 				""")
-				# window.gridster[1].add_widget $item, 4,2
+				add_widget $item, $(".selected_info")
 			url=$(this).attr('href')
 			text= $(this).text()
 			$(".doc_info iframe").attr('src',url)
