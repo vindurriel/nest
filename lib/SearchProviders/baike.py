@@ -40,6 +40,12 @@ def get_docs(term,dic={},limit=10):
 	soup=bs(content)
 	links=soup.findAll('a',href=re.compile(r'/(?:sub)?view/\d+(?:/\d+)?.htm'))
 	urls=[]
+	urls.append({
+		"url":res.url,
+		"name":u"百科:"+term,
+		'type':'referData',
+		"id":u"referData_"+term,
+	})
 	refs=soup.find(attrs={'class':re.compile(r'\breference\b')})
 	if refs!=None:
 		refs=refs.findAll('a')

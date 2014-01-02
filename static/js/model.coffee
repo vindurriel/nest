@@ -31,8 +31,10 @@ require ['jquery','d3','nest','blockUI'] , ($,d3,Nest,bui)->
 		i= Math.floor(Math.random() * (10 - 0 + 1))
 		# imgurl= "http://lorempixel.com/80/80/technics/#{i}"
 		imgurl= ""
+		img_hide= "hidden"
 		if d.img?
 			imgurl= d.img
+			img_hide= ""
 		return """
 		<div class="list-item normal w2" data-nest-node="#{d.id}">
 			<header class="drag-handle">|||</header>
@@ -42,9 +44,7 @@ require ['jquery','d3','nest','blockUI'] , ($,d3,Nest,bui)->
 					<span>#{d.name}</span>
 				</h2>
 				<div class="item-prop">#{d.type} </div>
-				<div>
-					<img class="item-image" src="#{imgurl}"/>
-				</div>
+				<img class="item-image #{img_hide}" src="#{imgurl}"/>
 				<p class="item-detail">#{details}</p>
 			</div>
 		</div>
@@ -60,7 +60,7 @@ require ['jquery','d3','nest','blockUI'] , ($,d3,Nest,bui)->
 			if not d or d.error?
 				return
 			window.nest.draw d
-			$('#nest-column').removeClass "hidden"
+			$('#nest-container').parent().removeClass "hidden"
 			click_handler(window.nest.root)
 			return
 		return
@@ -82,16 +82,30 @@ require ['jquery','d3','nest','blockUI'] , ($,d3,Nest,bui)->
 		if  $('.list-item.normal').length>0
 			window.packery.remove $('.list-item.normal').get()
 			window.packery.layout()
-		docs=[]	
+		related=[]	
 		for link in window.nest.degree[d.index]
 			if d==link.target then continue
 			n= link.target
-			docs.push n
-		if docs.length==0
+			if n.type in "SearchProvider smartref_category query referData".split(" ") then continue
+			related.push n
+		if related.length==0
 			return
-		for x in docs
-			# if x.type in "SearchProvider smartref_category query referData".split(" ") then continue
+		related= related.slice 0,50
+		for x in related
 			s=$(t_list_item(x))
+			detail= s.find('.item-detail')
+			if x.content?
+				detail.append("<p>#{x.content}</p>")
+			docs= []
+			for link in window.nest.degree[x.index]
+				if x==link.target then continue
+				n= link.target
+				if n.type!="referData" then continue
+				docs.push n
+			if docs.length>0
+				detail.append("<h3>相关文档</h3>")
+				for n in docs
+					detail.append("<span  data-doc-id='#{n.id}' class='doc_url'>#{n.name}</span>")
 			add_widget s		
 		return
 	snapshot= (d)->
@@ -128,6 +142,7 @@ require ['jquery','d3','nest','blockUI'] , ($,d3,Nest,bui)->
 		if not d? then return
 		document.title= d.name
 		list d
+		window.nest.highlight d
 		if $(".selected_info").length==0
 			$item= $(t_list_item(d)).attr('class',"selected_info list-item w2 h2")
 			add_widget $item, $('#nest-container').parent()
@@ -150,7 +165,9 @@ require ['jquery','d3','nest','blockUI'] , ($,d3,Nest,bui)->
 			container= ".selected_info .item-detail"
 			value= window.nest.degree[d.index][0].value
 			$(container).empty().append """<p>到聚类中心的距离：#{value}</p>"""
+			$(container).append $("<p class='placeholder'>正在载入信息...</p>")
 			$.getJSON "/keyword/#{d.name}", (res)->
+				$(container).find(".placeholder").remove()
 				data= []
 				for x of res.keyword
 					data.push {'k':x,'v':res.keyword[x]}
@@ -165,8 +182,9 @@ require ['jquery','d3','nest','blockUI'] , ($,d3,Nest,bui)->
 			detail=$(".selected_info .item-detail")
 			detail.empty()
 			t= d.type or "未知"
-			detail.append("<h3>类别：#{t}</h3>")
-			detail.append("<h3>id: #{d.id}</h3>")
+			$(".selected_info .item-headline").attr('title',"""
+				类别:#{t} id:#{d.id}
+			""")
 			if d.content?
 				detail.append("<p>#{d.content}</p>")
 			docs= []
@@ -178,7 +196,27 @@ require ['jquery','d3','nest','blockUI'] , ($,d3,Nest,bui)->
 			if docs.length>0
 				detail.append("<h3>相关文档</h3>")
 				for n in docs
-					detail.append("<a href=#{n.url}  class='doc_url' target='_blank'>#{n.name}</a>")
+					detail.append("<span data-doc-id='#{n.id}'  class='doc_url' >#{n.name}</span>")
+		return
+	window.doc_handler= (d)->
+		url= d.url or d.name
+		text= d.name
+		$item= $("""
+		<div  class='doc_info list-item w2 h2 expanded'>
+			<header class="drag-handle">|||</header>
+			<input type="button" class="btn-resize" value="缩小">
+			<div  class="btn-close">x</div>
+			<input type="button" class="btn-small fav"  style="left:3em;"  value="收藏">
+			<input type="button" class="btn-small share" style="left:6em;"  value="分享">
+			<div class='inner'>
+				<h2 class="item-headline">
+					<span>#{text}</span>
+				</h2>
+				<iframe src="#{url}" ></iframe>
+			</div>
+		</div>
+		""")
+		add_widget $item, $(".selected_info")
 		return
 	get_selected_services = ->
 		return window.services.filter((d)->d.select).map((d)->d.id)
@@ -226,8 +264,9 @@ require ['jquery','d3','nest','blockUI'] , ($,d3,Nest,bui)->
 		info= window.story[window.current_step]
 		$("#story-indicator,.btn-next,.btn-prev,.btn-automate").show()
 		$("#story-indicator").text("第#{window.current_step+1}步，共#{window.story.length}步， 节点数：#{info.nodes.length}")
+		$('#nest-container').parent().removeClass "hidden"
 		window.nest.draw s
-		$('#nest-column').removeClass "hidden"
+		click_handler window.nest.hNode[s.current_node_id]
 		return
 	search= (key, services)->
 		data= {
@@ -240,7 +279,7 @@ require ['jquery','d3','nest','blockUI'] , ($,d3,Nest,bui)->
 				if not d or d.error?
 					return
 				window.nest.draw d
-				$('#nest-column').removeClass "hidden"
+				$('#nest-container').parent().removeClass "hidden"
 				click_handler (window.nest.root)
 				unblockUI()
 				return
@@ -250,6 +289,7 @@ require ['jquery','d3','nest','blockUI'] , ($,d3,Nest,bui)->
 		scr= encodeURIComponent(scr)
 		close_toggle()
 		$.getJSON "/play/#{scr}", (d)->
+			console.log d
 			window.story= []
 			window.current_step=0
 			graph=
@@ -262,11 +302,11 @@ require ['jquery','d3','nest','blockUI'] , ($,d3,Nest,bui)->
 				else
 					graph.nodes= graph.nodes.concat(s.nodes)
 					graph.links= graph.links.concat(s.links)
+				graph.current_node_id= s.current_node_id or s.nodes[0].id
 				cur= {}
 				$.extend(cur,graph)
 				window.story.push cur
 			play_step()
-			click_handler (window.nest.root)
 			return
 		return
 	list_automate= ()->
@@ -487,29 +527,9 @@ require ['jquery','d3','nest','blockUI'] , ($,d3,Nest,bui)->
 		.on "mouseenter",".drag-handle", ->
 			$(this).attr('title',"按住拖动")
 			return
-		.on "click",".doc_url", (e)->
-			if $(".doc_info").length==0
-				$item= $("""
-				<div class='doc_info list-item w2 h2 expanded'>
-					<header class="drag-handle">|||</header>
-					<input type="button" class="btn-resize" value="缩小">
-					<div  class="btn-close">x</div>
-					<input type="button" class="btn-small fav"  style="left:3em;"  value="收藏">
-					<input type="button" class="btn-small share" style="left:6em;"  value="分享">
-					<div class='inner'>
-						<h2 class="item-headline">
-							<span></span>
-						</h2>
-						<iframe  ></iframe>
-					</div>
-				</div>
-				""")
-				add_widget $item, $(".selected_info")
-			url=$(this).attr('href')
-			text= $(this).text()
-			$(".doc_info iframe").attr('src',url)
-			$(".doc_info .item-headline span").text(text)
-			e.preventDefault()
+		.on "click",".doc_url", ()->
+			id= $(@).attr('data-doc-id')
+			window.doc_handler window.nest.hNode[id]
 			return
 		$("#btn_search").click ->
 			key=$('#q').val()
@@ -554,7 +574,7 @@ require ['jquery','d3','nest','blockUI'] , ($,d3,Nest,bui)->
 						contentType: false,
 						processData: false,
 						success: (d)->
-							$('#nest-column').removeClass "hidden"
+							$('#nest-container').parent().removeClass "hidden"
 							window.nest.draw d
 							click_handler (window.nest.root)
 							unblockUI()

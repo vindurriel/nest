@@ -164,16 +164,19 @@ def do_automate(nodes,links,dic):
 		print "##exploring node",node.id.encode("gbk")
 		source=node.index
 		res=explore(node)
-		items=res.items[:min(max_single_node_num,max_total_node_num-len(h_nodes))]
 		step={
 			"event":'explore',
 			"nodes":[],
 			"links":[],
 		}
-		for n in items:
+		i=0
+		for n in res.items:
 			if "_" not in n.id:
 				n.id=u"{}_{}".format(n.type,n.name)
 			if n.id in blacklist:continue
+			if n.type!="referData":
+				if i>= min(max_single_node_num,max_total_node_num-len(h_nodes)):
+					continue
 			if n.id not in h_nodes:
 				h_nodes[n.id]=n
 				n.distance_rank=node.distance_rank+1
@@ -187,12 +190,14 @@ def do_automate(nodes,links,dic):
 				h_nodes.values()[source].degree+=1
 				h_nodes.values()[target].degree+=1
 				step['links'].append({"source":source,"target":target})
+			i+=1
 		explored.add(node.id)
 		if len(step['nodes']):
 			logger.add({
 				'event':"explore",
 				"nodes":step['nodes'],
 				"links":step['links'],
+				'current_node_id':node.id,
 			})
 		print "##loop end with num",len(h_nodes)
 	import base64

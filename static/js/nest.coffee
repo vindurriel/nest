@@ -93,6 +93,27 @@ class nest
 		$(document).keydown @cacheIt
 		$(document).keyup @cacheIt
 		return
+	normalize_id: (x)->
+		x.name=x.name.replace(/^\s+|\s+$/, '')
+		if not x.id?
+			x.id= "#{x.type}_#{x.name}"
+		x.id= x.id.replace(/^\s+|\s+$/, '')
+		return
+	convert_link_id:  (x)=>
+		## x is string
+		if typeof(x)=="string"
+			x= x.replace(/^\s+|\s+$/g, '')
+			if @hNode[x]?
+				return @hNode[x]
+		return x
+	normalize_link: (l)=>
+		l.source = @convert_link_id l.source
+		l.target = @convert_link_id l.target
+		return
+	normalize_text: (x)->
+		if typeof(x)=="string"
+			x = x.replace(/^\s+|\s+$/g, '')
+		return x
 	recenterVoronoi: (nodes) =>
 		shapes = []
 		@voronoi(nodes).forEach (d)->
@@ -147,6 +168,7 @@ class nest
 			return
 		@update(false)
 		return
+
 	draw : (json) =>
 		if not json.nodes? or json.nodes.length==0
 			return {'error':'no nodes'}
@@ -154,32 +176,26 @@ class nest
 			@blacklist= json.blacklist
 		if json.explored?
 			@explored= json.explored
+		i=0
+		for d in json.nodes
+			@normalize_id d
+			d.x=@w*(i%10)/10
+			d.y=i*@h/n
+			i+=1
+		for d in json.links
+			d.source= @normalize_text d.source
+			d.target= @normalize_text d.target
 		@nodes= json.nodes
 		@links= json.links
 		@root = json.nodes[0]
 		@theFocus= @root
 		@root.isHigh= true
-		@force.nodes(@nodes).links(@links)
 		n=@nodes.length
 		#init node position for faster stablization
-		@nodes.forEach (d,i)=>
-			@normalize_id d
-			d.x=@w*(i%10)/10
-			d.y=i*@h/n
-			return
 		@root.x =@w /2
 		@root.y =@h /2
 		@force.nodes(@nodes).links(@links)
 		@update() 
-		return
-	normalize:  (x)=>
-		## x is string
-		if typeof(x)=="string" and @hNode[x]?
-			return @hNode[x]
-		return x
-	normalize_link: (l)=>
-		l.source = @normalize(l.source)
-		l.target = @normalize(l.target)
 		return
 	getR : (d) =>
 		if d.type=="SearchProvider" then return 15
@@ -188,8 +204,7 @@ class nest
 		@node.attr("transform", (d) ->
 			"translate(#{d.x},#{d.y})"
 		)
-		.attr('clip-path',(d)->"url(#clip-#{d.id})")
-		
+		.attr('clip-path',(d)->"url(#clip-#{d.index})")
 		@vis.select('.marker')
 		.attr('x',@theFocus.x-22)
 		.attr('y':@theFocus.y-45)		
@@ -207,9 +222,9 @@ class nest
 		@text.attr "transform", (d)=>
 			dx=d.x+@.getR(d)+5*@scale
 			"translate(#{dx},#{d.y})"
-		@clip = @clip.data( @recenterVoronoi(@nodes), (d)->d.point.id )
+		@clip = @clip.data(@recenterVoronoi(@nodes), (d)->d.point.index)
 		@clip.enter().append('clipPath').classed('clip', true)
-		.attr('id', (d) -> 'clip-'+d.point.id)
+		.attr('id', (d) -> 'clip-'+d.point.index)
 		@clip.exit().remove()
 		@clip.selectAll('path').remove()
 		@clip.append('path')
@@ -218,16 +233,18 @@ class nest
 	color : (d) =>
 		i= nest.colors.indexOf(d.type)
 		res= "black"
-		if i>=0
-			res= @palette(i+1)
-		else res= @palette(d.type)
+		if d.type=="SearchProvider"
+			return "#dd0000"
+		res= @palette(d.type)
 		if d.distance_rank?
 			res= d3.hsl(res).brighter(d.distance_rank*.1).toString()
-		# return "#5297ee"
-		res
+		return res
 	dblclick : (d)=>
-		if d.type=="referData"
-			window.open if d.url? then d.url else d.name
+		if d.type=="referData" or d.type=="doc"
+			if window.doc_handler?
+				window.doc_handler d
+			else
+				window.open if d.url? then d.url else d.name
 			return
 		if d.type=="doc"
 			window.open if d.url? then d.url else d.name
@@ -251,16 +268,18 @@ class nest
 			alert "不能删除根节点"
 			@shiftPressed=false
 			return
-		n = @nodes.length
-		i= d.index
 		for link in @degree[d.index]
 			@links.remove link
-			if @degree[link.target.index].length==1
+			if @degree[link.target.index].length==1 and link.target!=@root
 				@nodes.remove link.target
-			if @degree[link.source.index].length==1
+			if @degree[link.source.index].length==1 and link.source!=@root
 				@nodes.remove link.source
 		@nodes.remove d
 		@blacklist.push d.id
+
+		@clip=@clip.data([])
+		@clip.exit().remove()
+
 		if window.click_handler?
 			window.click_handler @root
 		return
@@ -278,10 +297,6 @@ class nest
 			if window.click_handler?
 				window.click_handler(d)
 		return
-	normalize_id: (x)->
-		if not x.id?
-			x.id= "#{x.type}_#{x.name}"
-		return x
 	explore : (data)=>
 		for x in data.nodes
 			@normalize_id x
@@ -324,11 +339,13 @@ class nest
 			x.isHigh= false
 		d.isHigh= true
 		@theFocus = d
-		@vis.selectAll('.marker').remove()
-		@vis.append('image').classed('marker',true)
-		.attr('xlink:href',"/img/marker.svg")
-		.attr('width',50)
-		.attr('height',50)
+		if $(".marker").length==0
+			@vis.append('image').classed('marker',true)
+			.attr('xlink:href',"/img/marker.svg")
+			.attr('width',50)
+			.attr('height',50)
+			.attr('x',@theFocus.x-22)
+			.attr('y':@theFocus.y-45)	
 		return
 	update : (start_force=true)=>
 		#init graph info
@@ -343,7 +360,7 @@ class nest
 			for j in [0..n-1]
 				@matrix[i].push null
 		for l in @links
-			@normalize_link l 
+			@normalize_link l
 		# Update the links…
 		@link = @link.data(@links)
 
@@ -418,14 +435,18 @@ class nest
 
 		# calculate graph info
 		for x in @links
-			@degree[x.source.index].push x
-			@degree[x.target.index].push x
-			@matrix[x.source.index][x.target.index]=x
+			try
+				@degree[x.source.index].push x
+				@degree[x.target.index].push x
+				@matrix[x.source.index][x.target.index]=x
+			catch e
+				console.log x
 		@node.classed "highlight", (d)->d.isHigh==true
-		@node.classed "focus", (d)=>d==@theFocus
+		# @node.classed "focus", (d)=>d==@theFocus
 		@link.classed "highlight", (d)->d.isHigh==true
 		# @node.classed('hidden',(d)->d.type=="referData" )
 		# @link.classed('hidden',(d)->d.target.type=="referData"  )		
+		# @text.classed('hidden',(d)->d.type=="referData"  )		
 		for nod of @hNode
 			@position_cache[nod]= 
 				'x':@hNode[nod].x

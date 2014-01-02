@@ -61,9 +61,13 @@ class baike(explore_provider_base):
 			except Exception, e:
 				x['count']=1
 		urls=sorted(urls.values(),key=lambda x:x["count"],reverse=True)
-		# for x in urls[:limit]:
-		# 	print x['name'],x['url'],x["count"]
 		urls=urls[:limit]	
+		urls.append({
+			"url":res.url,
+			"name":u"百科:"+term,
+			'type':'referData',
+			"id":u"referData_"+term,
+		})
 		refs=soup.find(attrs={'class':re.compile(r'\breference\b')})
 		if refs!=None:
 			refs=refs.findAll('a')
@@ -79,6 +83,7 @@ class baike(explore_provider_base):
 					"id":u"referData_"+text,
 				})
 		urls=distinct(urls,lambda x:x["id"])
+
 		for x in map(lambda x:x['name'].encode('gbk'),urls):
 			print x
 		return urls

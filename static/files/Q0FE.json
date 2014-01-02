@@ -1,5 +1,7 @@
 {
-  "blacklist": [], 
+  "blacklist": [
+    "referData_\u77e5\u8bc6\u70b9:\u8bbe\u8ba1"
+  ], 
   "nodes": [
     {
       "index": 0, 
@@ -12,9 +14,10 @@
     }, 
     {
       "index": 1, 
+      "distance_rank": 0, 
       "name": "\u77e5\u8bc6\u70b9:AutoCAD\u4e2d\u5706\u7684\u7ed8\u5236", 
       "url": "http://www.myplwaai.com/shipin-312.html", 
-      "distance_rank": 0, 
+      "fixed": 0, 
       "type": "referData", 
       "id": "referData_\u77e5\u8bc6\u70b9:AutoCAD\u4e2d\u5706\u7684\u7ed8\u5236"
     }, 
@@ -36,9 +39,10 @@
     }, 
     {
       "index": 4, 
+      "distance_rank": 0, 
       "name": "\u6559\u6750", 
       "url": "", 
-      "distance_rank": 0, 
+      "fixed": false, 
       "type": "baiduBaikeCrawler", 
       "id": "baiduBaikeCrawler_\u6559\u6750"
     }, 
@@ -76,11 +80,12 @@
     }, 
     {
       "index": 9, 
-      "name": "\u77e5\u8bc6\u70b9:\u5efa\u7b51\u5de5\u7a0bCAD ", 
-      "url": "http://www.tup.tsinghua.edu.cn/book/Showbook.asp?CPBH=046390-01&amp;DJ=29.8", 
       "distance_rank": 0, 
+      "name": "\u77e5\u8bc6\u70b9:\u5efa\u7b51\u5de5\u7a0bCAD", 
+      "url": "http://www.tup.tsinghua.edu.cn/book/Showbook.asp?CPBH=046390-01&amp;DJ=29.8", 
+      "fixed": false, 
       "type": "referData", 
-      "id": "referData_\u77e5\u8bc6\u70b9:\u5efa\u7b51\u5de5\u7a0bCAD "
+      "id": "referData_\u77e5\u8bc6\u70b9:\u5efa\u7b51\u5de5\u7a0bCAD"
     }, 
     {
       "index": 10, 
@@ -100,9 +105,10 @@
     }, 
     {
       "index": 12, 
+      "distance_rank": 0, 
       "name": "\u77e5\u8bc6\u70b9:CAD\u5feb\u6377\u952e", 
       "url": "http://wenku.baidu.com/view/055da017866fb84ae45c8d2d.html", 
-      "distance_rank": 0, 
+      "fixed": false, 
       "type": "referData", 
       "id": "referData_\u77e5\u8bc6\u70b9:CAD\u5feb\u6377\u952e"
     }, 
@@ -220,9 +226,10 @@
     }, 
     {
       "index": 27, 
+      "distance_rank": 0, 
       "name": "\u5bb6\u88c5\u8bbe\u8ba1", 
       "url": "", 
-      "distance_rank": 0, 
+      "fixed": false, 
       "type": "baiduBaikeCrawler", 
       "id": "baiduBaikeCrawler_\u5bb6\u88c5\u8bbe\u8ba1"
     }, 
@@ -236,9 +243,10 @@
     }, 
     {
       "index": 29, 
+      "distance_rank": 0, 
       "name": "\u8bbe\u8ba1\u6982\u5ff5", 
       "url": "", 
-      "distance_rank": 0, 
+      "fixed": false, 
       "type": "baiduBaikeCrawler", 
       "id": "baiduBaikeCrawler_\u8bbe\u8ba1\u6982\u5ff5"
     }, 
@@ -260,22 +268,14 @@
     }, 
     {
       "index": 32, 
-      "name": "\u77e5\u8bc6\u70b9:\u8bbe\u8ba1 ", 
-      "url": "http://202.116.45.198:8080/0518/index0.htm", 
-      "distance_rank": 0, 
-      "type": "referData", 
-      "id": "referData_\u77e5\u8bc6\u70b9:\u8bbe\u8ba1 "
-    }, 
-    {
-      "index": 33, 
-      "name": "\u77e5\u8bc6\u70b9:Fab Lab\u521b\u65b0\u6a21\u5f0f\u53ca\u5176\u542f\u793a ", 
+      "name": "\u77e5\u8bc6\u70b9:Fab Lab\u521b\u65b0\u6a21\u5f0f\u53ca\u5176\u542f\u793a", 
       "url": "http://www.mgov.cn/complexity/complexity13.htm", 
       "distance_rank": 0, 
       "type": "referData", 
-      "id": "referData_\u77e5\u8bc6\u70b9:Fab Lab\u521b\u65b0\u6a21\u5f0f\u53ca\u5176\u542f\u793a "
+      "id": "referData_\u77e5\u8bc6\u70b9:Fab Lab\u521b\u65b0\u6a21\u5f0f\u53ca\u5176\u542f\u793a"
     }, 
     {
-      "index": 34, 
+      "index": 33, 
       "name": "\u77e5\u8bc6\u70b9:\u8bbe\u8ba1", 
       "url": "http://www.baike.com/wiki/\u8bbe\u8ba1&prd=resoukuang", 
       "distance_rank": 0, 
@@ -283,23 +283,23 @@
       "id": "referData_\u77e5\u8bc6\u70b9:\u8bbe\u8ba1"
     }, 
     {
-      "index": 35, 
-      "name": "\u77e5\u8bc6\u70b9:\u521b\u65b02.0\uff1a\u77e5\u8bc6\u793e\u4f1a\u73af\u5883\u4e0b\u7684\u521b\u65b0\u6c11\u4e3b\u5316 ", 
+      "index": 34, 
+      "name": "\u77e5\u8bc6\u70b9:\u521b\u65b02.0\uff1a\u77e5\u8bc6\u793e\u4f1a\u73af\u5883\u4e0b\u7684\u521b\u65b0\u6c11\u4e3b\u5316", 
       "url": "http://www.mgov.cn/complexity/complexity16.htm", 
       "distance_rank": 0, 
       "type": "referData", 
-      "id": "referData_\u77e5\u8bc6\u70b9:\u521b\u65b02.0\uff1a\u77e5\u8bc6\u793e\u4f1a\u73af\u5883\u4e0b\u7684\u521b\u65b0\u6c11\u4e3b\u5316 "
+      "id": "referData_\u77e5\u8bc6\u70b9:\u521b\u65b02.0\uff1a\u77e5\u8bc6\u793e\u4f1a\u73af\u5883\u4e0b\u7684\u521b\u65b0\u6c11\u4e3b\u5316"
     }, 
     {
-      "index": 36, 
-      "name": "\u77e5\u8bc6\u70b9:Living Lab\u521b\u65b0\u6a21\u5f0f\u53ca\u5176\u542f\u793a ", 
+      "index": 35, 
+      "name": "\u77e5\u8bc6\u70b9:Living Lab\u521b\u65b0\u6a21\u5f0f\u53ca\u5176\u542f\u793a", 
       "url": "http://www.mgov.cn/complexity/complexity10.htm", 
       "distance_rank": 0, 
       "type": "referData", 
-      "id": "referData_\u77e5\u8bc6\u70b9:Living Lab\u521b\u65b0\u6a21\u5f0f\u53ca\u5176\u542f\u793a "
+      "id": "referData_\u77e5\u8bc6\u70b9:Living Lab\u521b\u65b0\u6a21\u5f0f\u53ca\u5176\u542f\u793a"
     }, 
     {
-      "index": 37, 
+      "index": 36, 
       "name": "\u77e5\u8bc6\u70b9:http://www.91spj.com/jiancai/xinxi/9381", 
       "url": "http://www.91spj.com/jiancai/xinxi/9381", 
       "distance_rank": 0, 
@@ -307,7 +307,7 @@
       "id": "referData_\u77e5\u8bc6\u70b9:http://www.91spj.com/jiancai/xinxi/9381"
     }, 
     {
-      "index": 38, 
+      "index": 37, 
       "name": "\u6559\u5b66", 
       "url": "/view/296035.htm", 
       "distance_rank": 1, 
@@ -315,7 +315,7 @@
       "id": "baike_\u6559\u5b66"
     }, 
     {
-      "index": 39, 
+      "index": 38, 
       "name": "\u6750\u6599", 
       "url": "/view/115747.htm", 
       "distance_rank": 1, 
@@ -323,7 +323,7 @@
       "id": "baike_\u6750\u6599"
     }, 
     {
-      "index": 40, 
+      "index": 39, 
       "name": "\u8bfe\u5802", 
       "url": "/view/559323.htm", 
       "distance_rank": 1, 
@@ -331,15 +331,16 @@
       "id": "baike_\u8bfe\u5802"
     }, 
     {
-      "index": 41, 
+      "index": 40, 
+      "distance_rank": 1, 
       "name": "\u8bfe\u672c", 
       "url": "/view/19396.htm", 
-      "distance_rank": 1, 
+      "fixed": false, 
       "type": "baike", 
       "id": "baike_\u8bfe\u672c"
     }, 
     {
-      "index": 42, 
+      "index": 41, 
       "name": "\u8ba1\u7b97\u673a", 
       "url": "/view/3314.htm", 
       "distance_rank": 1, 
@@ -347,7 +348,7 @@
       "id": "baike_\u8ba1\u7b97\u673a"
     }, 
     {
-      "index": 43, 
+      "index": 42, 
       "name": "\u8bfe\u7a0b", 
       "url": "/view/183341.htm", 
       "distance_rank": 1, 
@@ -355,7 +356,7 @@
       "id": "baike_\u8bfe\u7a0b"
     }, 
     {
-      "index": 44, 
+      "index": 43, 
       "name": "\u7ed8\u56fe", 
       "url": "/view/773060.htm", 
       "distance_rank": 1, 
@@ -363,7 +364,7 @@
       "id": "baike_\u7ed8\u56fe"
     }, 
     {
-      "index": 45, 
+      "index": 44, 
       "name": "\u7a7a\u95f4", 
       "url": "/view/31260.htm", 
       "distance_rank": 1, 
@@ -371,7 +372,7 @@
       "id": "baike_\u7a7a\u95f4"
     }, 
     {
-      "index": 46, 
+      "index": 45, 
       "name": "\u6295\u5f71", 
       "url": "/view/550991.htm", 
       "distance_rank": 1, 
@@ -379,7 +380,7 @@
       "id": "baike_\u6295\u5f71"
     }, 
     {
-      "index": 47, 
+      "index": 46, 
       "name": "\u56fe\u6837", 
       "url": "/view/1086590.htm", 
       "distance_rank": 1, 
@@ -387,7 +388,7 @@
       "id": "baike_\u56fe\u6837"
     }, 
     {
-      "index": 48, 
+      "index": 47, 
       "name": "\u56fa\u5b9a", 
       "url": "/view/19218.htm", 
       "distance_rank": 1, 
@@ -395,7 +396,7 @@
       "id": "baike_\u56fa\u5b9a"
     }, 
     {
-      "index": 49, 
+      "index": 48, 
       "name": "\u6d3b\u52a8", 
       "url": "/view/384192.htm", 
       "distance_rank": 1, 
@@ -403,7 +404,7 @@
       "id": "baike_\u6d3b\u52a8"
     }, 
     {
-      "index": 50, 
+      "index": 49, 
       "name": "\u7535\u8111\u684c\u9762", 
       "url": "/view/559885.htm", 
       "distance_rank": 1, 
@@ -411,7 +412,7 @@
       "id": "baike_\u7535\u8111\u684c\u9762"
     }, 
     {
-      "index": 51, 
+      "index": 50, 
       "name": "\u70b9\u51fb\u6b64\u5904", 
       "url": "/view/79807.htm?force=1", 
       "distance_rank": 1, 
@@ -419,7 +420,7 @@
       "id": "baike_\u70b9\u51fb\u6b64\u5904"
     }, 
     {
-      "index": 52, 
+      "index": 51, 
       "name": "\u663e\u793a\u5668", 
       "url": "/view/18610.htm", 
       "distance_rank": 1, 
@@ -462,7 +463,7 @@
     }, 
     {
       "source": "undefined_CAD", 
-      "target": "referData_\u77e5\u8bc6\u70b9:\u5efa\u7b51\u5de5\u7a0bCAD "
+      "target": "referData_\u77e5\u8bc6\u70b9:\u5efa\u7b51\u5de5\u7a0bCAD"
     }, 
     {
       "source": "undefined_CAD", 
@@ -562,11 +563,11 @@
     }, 
     {
       "source": "baiduBaikeCrawler_\u8bbe\u8ba1", 
-      "target": "referData_\u77e5\u8bc6\u70b9:\u8bbe\u8ba1 "
+      "target": "referData_\u77e5\u8bc6\u70b9:\u8bbe\u8ba1"
     }, 
     {
       "source": "baiduBaikeCrawler_\u8bbe\u8ba1", 
-      "target": "referData_\u77e5\u8bc6\u70b9:Fab Lab\u521b\u65b0\u6a21\u5f0f\u53ca\u5176\u542f\u793a "
+      "target": "referData_\u77e5\u8bc6\u70b9:Fab Lab\u521b\u65b0\u6a21\u5f0f\u53ca\u5176\u542f\u793a"
     }, 
     {
       "source": "baiduBaikeCrawler_\u8bbe\u8ba1", 
@@ -574,11 +575,11 @@
     }, 
     {
       "source": "baiduBaikeCrawler_\u8bbe\u8ba1", 
-      "target": "referData_\u77e5\u8bc6\u70b9:\u521b\u65b02.0\uff1a\u77e5\u8bc6\u793e\u4f1a\u73af\u5883\u4e0b\u7684\u521b\u65b0\u6c11\u4e3b\u5316 "
+      "target": "referData_\u77e5\u8bc6\u70b9:\u521b\u65b02.0\uff1a\u77e5\u8bc6\u793e\u4f1a\u73af\u5883\u4e0b\u7684\u521b\u65b0\u6c11\u4e3b\u5316"
     }, 
     {
       "source": "baiduBaikeCrawler_\u8bbe\u8ba1", 
-      "target": "referData_\u77e5\u8bc6\u70b9:Living Lab\u521b\u65b0\u6a21\u5f0f\u53ca\u5176\u542f\u793a "
+      "target": "referData_\u77e5\u8bc6\u70b9:Living Lab\u521b\u65b0\u6a21\u5f0f\u53ca\u5176\u542f\u793a"
     }, 
     {
       "source": "baiduBaikeCrawler_\u8bbe\u8ba1", 

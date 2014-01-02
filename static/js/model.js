@@ -1,3 +1,5 @@
+var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+
 requirejs.config({
   "baseUrl": '/js',
   "paths": {
@@ -38,14 +40,16 @@ require(['jquery', 'd3', 'nest', 'blockUI'], function($, d3, Nest, bui) {
     return "<a class=\"button small\" href=\"#\">收藏</a>\n<a class=\"button small\" href=\"#\">分享</a>";
   };
   t_list_item = function(d) {
-    var details, i, imgurl;
+    var details, i, img_hide, imgurl;
     details = d.content != null ? d.content : "";
     i = Math.floor(Math.random() * (10 - 0 + 1));
     imgurl = "";
+    img_hide = "hidden";
     if (d.img != null) {
       imgurl = d.img;
+      img_hide = "";
     }
-    return "<div class=\"list-item normal w2\" data-nest-node=\"" + d.id + "\">\n	<header class=\"drag-handle\">|||</header>\n	<div class=\"btn-close\">x</div>\n	<div class='inner'>\n		<h2 class=\"item-headline\">\n			<span>" + d.name + "</span>\n		</h2>\n		<div class=\"item-prop\">" + d.type + " </div>\n		<div>\n			<img class=\"item-image\" src=\"" + imgurl + "\"/>\n		</div>\n		<p class=\"item-detail\">" + details + "</p>\n	</div>\n</div>";
+    return "<div class=\"list-item normal w2\" data-nest-node=\"" + d.id + "\">\n	<header class=\"drag-handle\">|||</header>\n	<div class=\"btn-close\">x</div>\n	<div class='inner'>\n		<h2 class=\"item-headline\">\n			<span>" + d.name + "</span>\n		</h2>\n		<div class=\"item-prop\">" + d.type + " </div>\n		<img class=\"item-image " + img_hide + "\" src=\"" + imgurl + "\"/>\n		<p class=\"item-detail\">" + details + "</p>\n	</div>\n</div>";
   };
   close_toggle = function() {
     $('.toggle').removeClass('on');
@@ -59,7 +63,7 @@ require(['jquery', 'd3', 'nest', 'blockUI'], function($, d3, Nest, bui) {
         return;
       }
       window.nest.draw(d);
-      $('#nest-column').removeClass("hidden");
+      $('#nest-container').parent().removeClass("hidden");
       click_handler(window.nest.root);
     });
   };
@@ -84,12 +88,12 @@ require(['jquery', 'd3', 'nest', 'blockUI'], function($, d3, Nest, bui) {
     });
   };
   list = function(d) {
-    var docs, link, n, s, x, _i, _j, _len, _len1, _ref;
+    var detail, docs, link, n, related, s, x, _i, _j, _k, _l, _len, _len1, _len2, _len3, _ref, _ref1, _ref2;
     if ($('.list-item.normal').length > 0) {
       window.packery.remove($('.list-item.normal').get());
       window.packery.layout();
     }
-    docs = [];
+    related = [];
     _ref = window.nest.degree[d.index];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       link = _ref[_i];
@@ -97,14 +101,42 @@ require(['jquery', 'd3', 'nest', 'blockUI'], function($, d3, Nest, bui) {
         continue;
       }
       n = link.target;
-      docs.push(n);
+      if (_ref1 = n.type, __indexOf.call("SearchProvider smartref_category query referData".split(" "), _ref1) >= 0) {
+        continue;
+      }
+      related.push(n);
     }
-    if (docs.length === 0) {
+    if (related.length === 0) {
       return;
     }
-    for (_j = 0, _len1 = docs.length; _j < _len1; _j++) {
-      x = docs[_j];
+    related = related.slice(0, 50);
+    for (_j = 0, _len1 = related.length; _j < _len1; _j++) {
+      x = related[_j];
       s = $(t_list_item(x));
+      detail = s.find('.item-detail');
+      if (x.content != null) {
+        detail.append("<p>" + x.content + "</p>");
+      }
+      docs = [];
+      _ref2 = window.nest.degree[x.index];
+      for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
+        link = _ref2[_k];
+        if (x === link.target) {
+          continue;
+        }
+        n = link.target;
+        if (n.type !== "referData") {
+          continue;
+        }
+        docs.push(n);
+      }
+      if (docs.length > 0) {
+        detail.append("<h3>相关文档</h3>");
+        for (_l = 0, _len3 = docs.length; _l < _len3; _l++) {
+          n = docs[_l];
+          detail.append("<span  data-doc-id='" + n.id + "' class='doc_url'>" + n.name + "</span>");
+        }
+      }
       add_widget(s);
     }
   };
@@ -139,6 +171,7 @@ require(['jquery', 'd3', 'nest', 'blockUI'], function($, d3, Nest, bui) {
     }
     document.title = d.name;
     list(d);
+    window.nest.highlight(d);
     if ($(".selected_info").length === 0) {
       $item = $(t_list_item(d)).attr('class', "selected_info list-item w2 h2");
       add_widget($item, $('#nest-container').parent());
@@ -162,8 +195,10 @@ require(['jquery', 'd3', 'nest', 'blockUI'], function($, d3, Nest, bui) {
       container = ".selected_info .item-detail";
       value = window.nest.degree[d.index][0].value;
       $(container).empty().append("<p>到聚类中心的距离：" + value + "</p>");
+      $(container).append($("<p class='placeholder'>正在载入信息...</p>"));
       $.getJSON("/keyword/" + d.name, function(res) {
         var data;
+        $(container).find(".placeholder").remove();
         data = [];
         for (x in res.keyword) {
           data.push({
@@ -182,8 +217,7 @@ require(['jquery', 'd3', 'nest', 'blockUI'], function($, d3, Nest, bui) {
       detail = $(".selected_info .item-detail");
       detail.empty();
       t = d.type || "未知";
-      detail.append("<h3>类别：" + t + "</h3>");
-      detail.append("<h3>id: " + d.id + "</h3>");
+      $(".selected_info .item-headline").attr('title', "类别:" + t + " id:" + d.id);
       if (d.content != null) {
         detail.append("<p>" + d.content + "</p>");
       }
@@ -204,10 +238,17 @@ require(['jquery', 'd3', 'nest', 'blockUI'], function($, d3, Nest, bui) {
         detail.append("<h3>相关文档</h3>");
         for (_j = 0, _len1 = docs.length; _j < _len1; _j++) {
           n = docs[_j];
-          detail.append("<a href=" + n.url + "  class='doc_url' target='_blank'>" + n.name + "</a>");
+          detail.append("<span data-doc-id='" + n.id + "'  class='doc_url' >" + n.name + "</span>");
         }
       }
     }
+  };
+  window.doc_handler = function(d) {
+    var $item, text, url;
+    url = d.url || d.name;
+    text = d.name;
+    $item = $("<div  class='doc_info list-item w2 h2 expanded'>\n	<header class=\"drag-handle\">|||</header>\n	<input type=\"button\" class=\"btn-resize\" value=\"缩小\">\n	<div  class=\"btn-close\">x</div>\n	<input type=\"button\" class=\"btn-small fav\"  style=\"left:3em;\"  value=\"收藏\">\n	<input type=\"button\" class=\"btn-small share\" style=\"left:6em;\"  value=\"分享\">\n	<div class='inner'>\n		<h2 class=\"item-headline\">\n			<span>" + text + "</span>\n		</h2>\n		<iframe src=\"" + url + "\" ></iframe>\n	</div>\n</div>");
+    add_widget($item, $(".selected_info"));
   };
   get_selected_services = function() {
     return window.services.filter(function(d) {
@@ -284,8 +325,9 @@ require(['jquery', 'd3', 'nest', 'blockUI'], function($, d3, Nest, bui) {
     info = window.story[window.current_step];
     $("#story-indicator,.btn-next,.btn-prev,.btn-automate").show();
     $("#story-indicator").text("第" + (window.current_step + 1) + "步，共" + window.story.length + "步， 节点数：" + info.nodes.length);
+    $('#nest-container').parent().removeClass("hidden");
     window.nest.draw(s);
-    $('#nest-column').removeClass("hidden");
+    click_handler(window.nest.hNode[s.current_node_id]);
   };
   search = function(key, services) {
     var data;
@@ -300,7 +342,7 @@ require(['jquery', 'd3', 'nest', 'blockUI'], function($, d3, Nest, bui) {
         return;
       }
       window.nest.draw(d);
-      $('#nest-column').removeClass("hidden");
+      $('#nest-container').parent().removeClass("hidden");
       click_handler(window.nest.root);
       unblockUI();
     }, 'json');
@@ -310,6 +352,7 @@ require(['jquery', 'd3', 'nest', 'blockUI'], function($, d3, Nest, bui) {
     close_toggle();
     $.getJSON("/play/" + scr, function(d) {
       var cur, graph, s, _i, _len;
+      console.log(d);
       window.story = [];
       window.current_step = 0;
       graph = {
@@ -325,12 +368,12 @@ require(['jquery', 'd3', 'nest', 'blockUI'], function($, d3, Nest, bui) {
           graph.nodes = graph.nodes.concat(s.nodes);
           graph.links = graph.links.concat(s.links);
         }
+        graph.current_node_id = s.current_node_id || s.nodes[0].id;
         cur = {};
         $.extend(cur, graph);
         window.story.push(cur);
       }
       play_step();
-      click_handler(window.nest.root);
     });
   };
   list_automate = function() {
@@ -577,17 +620,10 @@ require(['jquery', 'd3', 'nest', 'blockUI'], function($, d3, Nest, bui) {
       window.packery.layout();
     }).on("mouseenter", ".drag-handle", function() {
       $(this).attr('title', "按住拖动");
-    }).on("click", ".doc_url", function(e) {
-      var $item, text, url;
-      if ($(".doc_info").length === 0) {
-        $item = $("<div class='doc_info list-item w2 h2 expanded'>\n	<header class=\"drag-handle\">|||</header>\n	<input type=\"button\" class=\"btn-resize\" value=\"缩小\">\n	<div  class=\"btn-close\">x</div>\n	<input type=\"button\" class=\"btn-small fav\"  style=\"left:3em;\"  value=\"收藏\">\n	<input type=\"button\" class=\"btn-small share\" style=\"left:6em;\"  value=\"分享\">\n	<div class='inner'>\n		<h2 class=\"item-headline\">\n			<span></span>\n		</h2>\n		<iframe  ></iframe>\n	</div>\n</div>");
-        add_widget($item, $(".selected_info"));
-      }
-      url = $(this).attr('href');
-      text = $(this).text();
-      $(".doc_info iframe").attr('src', url);
-      $(".doc_info .item-headline span").text(text);
-      e.preventDefault();
+    }).on("click", ".doc_url", function() {
+      var id;
+      id = $(this).attr('data-doc-id');
+      window.doc_handler(window.nest.hNode[id]);
     });
     $("#btn_search").click(function() {
       key = $('#q').val();
@@ -643,7 +679,7 @@ require(['jquery', 'd3', 'nest', 'blockUI'], function($, d3, Nest, bui) {
             contentType: false,
             processData: false,
             success: function(d) {
-              $('#nest-column').removeClass("hidden");
+              $('#nest-container').parent().removeClass("hidden");
               window.nest.draw(d);
               click_handler(window.nest.root);
               unblockUI();

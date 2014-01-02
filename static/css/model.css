@@ -16,6 +16,7 @@
 .doc_url {
   display: block;
   margin-bottom: 1em;
+  cursor: pointer;
 }
 .marker {
   pointer-events: none;
@@ -402,6 +403,7 @@ body.ready #nav {
   color: #3b89ec;
 }
 .list-item .item-image {
+  display: block;
   max-width: 400px;
   max-height: 200px;
 }
