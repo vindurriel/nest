@@ -13,6 +13,7 @@ nest = (function() {
     this.remove = __bind(this.remove, this);
     this.dblclick = __bind(this.dblclick, this);
     this.color = __bind(this.color, this);
+    this.toggle_doc = __bind(this.toggle_doc, this);
     this.tick = __bind(this.tick, this);
     this.getR = __bind(this.getR, this);
     this.draw = __bind(this.draw, this);
@@ -197,6 +198,9 @@ nest = (function() {
     this.ctrlPressed = e.ctrlKey;
     this.altPressed = e.altKey;
     this.shiftPressed = e.shiftKey;
+    if (e.type === "keydown" && e.keyCode === 68) {
+      this.toggle_doc();
+    }
     return true;
   };
 
@@ -333,6 +337,25 @@ nest = (function() {
     this.clip.append('path').attr('d', function(d) {
       return 'M' + d.join(',') + 'Z';
     });
+  };
+
+  nest.prototype.toggle_doc = function() {
+    this.flag = !this.flag;
+    if (this.flag) {
+      this.node.classed('hidden', function(d) {
+        return d.type === "referData";
+      });
+      this.link.classed('hidden', function(d) {
+        return d.target.type === "referData";
+      });
+      return this.text.classed('hidden', function(d) {
+        return d.type === "referData";
+      });
+    } else {
+      this.node.classed('hidden', false);
+      this.link.classed('hidden', false);
+      return this.text.classed('hidden', false);
+    }
   };
 
   nest.prototype.color = function(d) {
@@ -569,6 +592,11 @@ nest = (function() {
       dx = d.x + _this.getR(d) + 5 * _this.scale;
       return "translate(" + dx + "," + d.y + ")";
     });
+    if (this.flag) {
+      this.text.classed("hidden", function(d) {
+        return d.type === "referData";
+      });
+    }
     this.text.exit().remove();
     if (start_force) {
       this.force.start();

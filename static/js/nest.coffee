@@ -130,6 +130,8 @@ class nest
 		@ctrlPressed = e.ctrlKey
 		@altPressed = e.altKey
 		@shiftPressed = e.shiftKey
+		if e.type=="keydown" and e.keyCode==68
+			@toggle_doc()
 		return true
 	zoom : () =>
 		@scale = d3.event.scale
@@ -230,6 +232,16 @@ class nest
 		@clip.append('path')
 		.attr('d', (d)-> 'M'+d.join(',')+'Z')
 		return
+	toggle_doc : ()=>
+		@flag= not @flag
+		if  @flag
+			@node.classed('hidden',(d)->d.type=="referData" )
+			@link.classed('hidden',(d)->d.target.type=="referData" )		
+			@text.classed('hidden',(d)->d.type=="referData" )
+		else
+			@node.classed('hidden',false)
+			@link.classed('hidden',false)		
+			@text.classed('hidden',false)
 	color : (d) =>
 		i= nest.colors.indexOf(d.type)
 		res= "black"
@@ -428,7 +440,8 @@ class nest
 		.attr "transform", (d)=>
 			dx= d.x+@.getR(d)+5*@scale
 			"translate(#{dx},#{d.y})"
-
+		if @flag
+			@text.classed("hidden",(d)->d.type=="referData")
 		@text.exit().remove()
 		if start_force
 			@force.start()
@@ -443,10 +456,7 @@ class nest
 				console.log x
 		@node.classed "highlight", (d)->d.isHigh==true
 		# @node.classed "focus", (d)=>d==@theFocus
-		@link.classed "highlight", (d)->d.isHigh==true
-		# @node.classed('hidden',(d)->d.type=="referData" )
-		# @link.classed('hidden',(d)->d.target.type=="referData"  )		
-		# @text.classed('hidden',(d)->d.type=="referData"  )		
+		@link.classed "highlight", (d)->d.isHigh==true	
 		for nod of @hNode
 			@position_cache[nod]= 
 				'x':@hNode[nod].x
