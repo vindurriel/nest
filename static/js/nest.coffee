@@ -188,7 +188,7 @@ class nest
 		@node.attr("transform", (d) ->
 			"translate(#{d.x},#{d.y})"
 		)
-		.attr('clip-path',(d)->"url(#clip-#{d.index})")
+		.attr('clip-path',(d)->"url(#clip-#{d.id})")
 		
 		@vis.select('.marker')
 		.attr('x',@theFocus.x-22)
@@ -205,14 +205,13 @@ class nest
 			d.target.y
 		)
 		@text.attr "transform", (d)=>
-			angle=10*((d.id.length+d.index)%10-2)
 			dx=d.x+@.getR(d)+5*@scale
 			"translate(#{dx},#{d.y})"
-		@clip = @clip.data( @recenterVoronoi(@nodes), (d)->d.point.index )
+		@clip = @clip.data( @recenterVoronoi(@nodes), (d)->d.point.id )
 		@clip.enter().append('clipPath').classed('clip', true)
-		.attr('id', (d) -> 'clip-'+d.point.index)
+		.attr('id', (d) -> 'clip-'+d.point.id)
 		@clip.exit().remove()
-		@clip.selectAll('path').remove();
+		@clip.selectAll('path').remove()
 		@clip.append('path')
 		.attr('d', (d)-> 'M'+d.join(',')+'Z')
 		return
@@ -224,7 +223,8 @@ class nest
 		else res= @palette(d.type)
 		if d.distance_rank?
 			res= d3.hsl(res).brighter(d.distance_rank*.1).toString()
-		return "#5297ee"
+		# return "#5297ee"
+		res
 	dblclick : (d)=>
 		if d.type=="referData"
 			window.open if d.url? then d.url else d.name
@@ -369,6 +369,7 @@ class nest
 		nodeEnter.append('circle')
 		.classed('selection-helper',true)
 		.attr('r',50)
+		.style("fill", @color)
 
 		nodeEnter.append("circle")
 		.style("fill", @color)

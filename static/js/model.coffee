@@ -181,12 +181,7 @@ require ['jquery','d3','nest','blockUI'] , ($,d3,Nest,bui)->
 					detail.append("<a href=#{n.url}  class='doc_url' target='_blank'>#{n.name}</a>")
 		return
 	get_selected_services = ->
-		service_ids= []
-		$('.check-service').each ->
-			if not this.checked then return
-			if $(this).data('serviceId')?
-				service_ids.push $(this).data('serviceId')
-		return service_ids
+		return window.services.filter((d)->d.select).map((d)->d.id)
 	save = ->
 		res= {
 			"nodes":[],
@@ -313,11 +308,11 @@ require ['jquery','d3','nest','blockUI'] , ($,d3,Nest,bui)->
 				if s.select? and s.select==true
 					checked= "checked"
 				$item= $("""
-				<li>
+				<li data-service-id="#{s.id}">
 					<img src="#{s.img}"/>
 					<strong>#{s.name}</strong>
 					<label>
-						<input type="checkbox" class="ios-switch   check-service" data-service-id="#{s.id}" #{checked}  id="#{s.id}">
+						<input type="checkbox" class="ios-switch   check-service"  #{checked}>
 						<div><div></div></div>
 					</label>
 					<p>#{s.desc}</p>
@@ -326,19 +321,11 @@ require ['jquery','d3','nest','blockUI'] , ($,d3,Nest,bui)->
 				if checked=="checked"
 					$item.addClass('on')
 				$('.services').append $item
-			r= init_service(window.services)
-			$('body').on 'click','.services li', (e)->
-				checkbox=$(@).find('input[type=checkbox]')
-				index=$(@).parent().find("li").index($(@))
-				checkbox.prop("checked", !checkbox.prop("checked"))
-				checked= checkbox.prop("checked")
-				$(@).toggleClass('on')
-				window.services[index].select= checked
-				update_service(r)
-				return
+			init_service(window.services)
 			return
 		return
-	update_service= (r)->
+	update_service= ()->
+		r= window.service_nest
 		ns= window.services.filter((x)->x.select)
 		o=$('.logo').offset()
 		ns.splice(0,0,
@@ -366,7 +353,6 @@ require ['jquery','d3','nest','blockUI'] , ($,d3,Nest,bui)->
 		ne.append('title').text((d)->d.desc)
 		ne.append('text').text((d)->d.name).attr('dx',-10).attr('dy',20).attr('text-anchor','end')
 		r.nodes.exit().remove()
-
 		r.links.enter().insert("line", ".node").classed('link',true)
 		r.links.exit().remove()
 		return
@@ -394,8 +380,9 @@ require ['jquery','d3','nest','blockUI'] , ($,d3,Nest,bui)->
 				d.target.y
 			)
 		)
-		update_service(res)
-		return res	
+		window.service_nest= res
+		update_service()
+		return
 	$ ->
 		params= url_params()
 		if params.theme?
@@ -472,7 +459,22 @@ require ['jquery','d3','nest','blockUI'] , ($,d3,Nest,bui)->
 			return
 		.on "click", ".snapshots li", ()->
 			load_model $(@).text()
-			return		
+			return
+		.on 'click','.services li', (e)->
+			checkbox=$(@).find('input[type=checkbox]')
+			checkbox.prop("checked", !checkbox.prop("checked"))
+			checked= checkbox.prop("checked")
+			$(@).toggleClass('on')
+			index=$(@).parent().find("li").index($(@))
+			window.services[index].select= checked
+			sid= $(@).attr('data-service-id')
+			$('#service-list')
+			.find("li[data-service-id=#{sid}]")
+			.toggleClass('on')
+			.find("input[type=checkbox]")
+			.prop("checked",checked)
+			update_service()
+			return
 		.on "click", ".btn-resize", ()->
 			ui=$(@).closest('.list-item')
 			ui.toggleClass('expanded')
@@ -482,31 +484,10 @@ require ['jquery','d3','nest','blockUI'] , ($,d3,Nest,bui)->
 			$(@).val(if flag then "缩小" else  "放大")
 			window.packery.layout()
 			return
-
-		$("#btn_search").click ->
-			key=$('#q').val()
-			services= get_selected_services()
-			search(key,services)
+		.on "mouseenter",".drag-handle", ->
+			$(this).attr('title',"按住拖动")
 			return
-		window.last_scroll=0
-		$(window).scroll ->
-			toggle= false
-			if $(window).scrollTop()>400
-				toggle= $(window).scrollTop()>window.last_scroll
-			if $(window).scrollTop()>400
-				$("body").addClass "ready"
-			else
-				$("body").removeClass "ready"
-			return
-		$('#q').keypress (e) ->
-			if e.keyCode==13
-				$('#btn_search').click()
-			return
-		$(".logo").on "click", ()->
-			if $('body').hasClass('ready')
-				$("body").animate({'scrollTop':0})
-			return
-		$('body').on "click",".doc_url", (e)->
+		.on "click",".doc_url", (e)->
 			if $(".doc_info").length==0
 				$item= $("""
 				<div class='doc_info list-item w2 h2 expanded'>
@@ -530,13 +511,32 @@ require ['jquery','d3','nest','blockUI'] , ($,d3,Nest,bui)->
 			$(".doc_info .item-headline span").text(text)
 			e.preventDefault()
 			return
-		$(window).on "mouseenter",".drag-handle", ->
-			$(this).attr('title',"按住拖动")
+		$("#btn_search").click ->
+			key=$('#q').val()
+			services= get_selected_services()
+			search(key,services)
+			return
+		$(window).scroll ->
+			if $(window).scrollTop()>400
+				$("body").addClass "ready"
+			else
+				$("body").removeClass "ready"
+			return
+		$('#q').keypress (e) ->
+			if e.keyCode==13
+				$('#btn_search').click()
+			return
+		$(".logo").on "click", ()->
+			if $('body').hasClass('ready')
+				$("body").animate({'scrollTop':0})
 			return
 		require ['dropimage'], (dropimage)->
 			$(window).on "dragover", ->
 				$('#dropimage-holder').addClass('dragover')
 				false
+			$(window).on "mouseup", ->
+				$('#dropimage-holder').removeClass('dragover')
+				return
 			$holder=$('#dropimage-holder')
 			if dropimage.tests.dnd
 				$holder.on 'drop', (e)->

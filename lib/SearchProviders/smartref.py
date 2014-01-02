@@ -36,6 +36,7 @@ class smartref(search_provider_base):
 			parse_tree(res.json()[0],[],g)
 		except Exception, e:
 			try:
+				print "try again",url
 				res=r.get(url,params={
 					"name":key,
 				},headers=headers) 
@@ -43,6 +44,7 @@ class smartref(search_provider_base):
 				parse_tree(res.json()[0],[],g)
 			except Exception, e:
 				traceback.print_exc()
+				print url
 		return g
 if __name__ == '__main__':
 	res=smartref().search(u'ing')

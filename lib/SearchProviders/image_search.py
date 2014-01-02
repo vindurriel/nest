@@ -13,10 +13,12 @@ class image_search(search_provider_base):
 			client = suds.client.Client(url)
 		except Exception, e:
 			try:
+				print "try again",url
 				client = suds.client.Client(url)
 			except Exception, e:
 				import traceback
 				traceback.print_exc()
+				print url
 				return {
 					"nodes": [],
 					'links':[]

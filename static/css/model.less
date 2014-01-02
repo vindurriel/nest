@@ -134,7 +134,6 @@ text{
 }
 
 .selection-helper{
-  fill:@color;
   fill-opacity:0.05;
 }
 .node text.show,
@@ -298,7 +297,7 @@ body.ready #nav{
       padding: 0 5px;
     }
   }
-}
+} 
 .toggle-container{
     background-color: rgba(0, 0, 0, .8);
     position: absolute;
@@ -307,12 +306,22 @@ body.ready #nav{
     width: 100%;
     display: none;
     height: auto;
+    ::-webkit-scrollbar-track{
+      border: 1px solid #333;
+      background-color: #000;
+    }
+    ::-webkit-scrollbar{
+      width: 12px;
+    }
+    ::-webkit-scrollbar-thumb{
+      background-color: #555;
+    }  
     .toggle-inner{
       width: 500px;
       margin: 0 auto;
       max-height: 500px;
       overflow-y: auto;
-      padding-bottom: 1em;
+      padding: 1em 0;  
       label{
         color:white;
       }
@@ -352,6 +361,17 @@ body.ready #nav{
   border:#ddd solid 1px;
   overflow-x: hidden;
   overflow-y: auto;
+  ::-webkit-scrollbar-track{
+    border: 1px solid #ddd;
+    background-color: #fff;
+  }
+  ::-webkit-scrollbar{
+    width: 12px;
+  }
+
+  ::-webkit-scrollbar-thumb{
+    background-color: #ddd;
+  }
   &:hover {
     .btn-close{
       display:inline;
@@ -394,7 +414,6 @@ body.ready #nav{
     display: none;
   }
   .item-image{
-    background-color: #eee;
     max-width: @item-width;
     max-height: 200px;
   }
@@ -438,6 +457,7 @@ body.ready #nav{
     height: 80px;
     background-color: rgba(0, 0, 0, 0.3);
     border-radius: 5px;
+    border: 1px solid #555;
     cursor: pointer;
     strong{
       margin: 0 1em;
@@ -489,6 +509,19 @@ body.dark {
   .list-item{
     background: #333;
     border-color: #444;
+
+  }
+  .list-item{
+    ::-webkit-scrollbar-track{
+      border: 1px solid #333;
+      background-color: #000;
+    }
+    ::-webkit-scrollbar{
+      width: 12px;
+    }
+    ::-webkit-scrollbar-thumb{
+      background-color: #555;
+    }    
   }
 }
 
@@ -585,7 +618,6 @@ body.ready .logo{
     height:20px;
     background:red;
     border-radius:10px;
-    border: 5px white solid;
     margin:10px;
     box-sizing: border-box;
   }
