@@ -13,14 +13,15 @@ router="""
 /explore(?:/)?  explore
 /search(?:/)?  search
 /favicon.ico favicon
-/(js|css|files|images)/(.+) static
-/services(?:/)?  model.service
+/(js|css|files|img)/(.+) static
+/services(?:/)?  search.service
 /keyword/(.+) model.keyword
 /play/(.+) model.play
 /automate(?:/)? automate
 """
 ###router
 urls=[]
+from search import search
 to_imports=set()
 for line in router.split("\n"):
     if line=="": continue
@@ -41,17 +42,22 @@ app = web.application(urls, globals(), autoreload=True)
 class static:
     def GET(self,media, filename):
         import mimetypes
-        mime_type = mimetypes.guess_type(filename)
-        web.header('Content-Type', "%s"%mime_type[0])  
+        mime_type = mimetypes.guess_type(filename)[0]
+        if filename.lower().endswith(".png"):
+            mime_type="image/png" 
+        elif filename.lower().endswith(".svg"):
+            mime_type="image/svg+xml"
+        web.header('Content-Type', "%s"%mime_type)
         try:
-            f = file(cwd("static",media,filename), 'r')
-            return f.read()
-        except :
+            f = file(cwd("static",media,filename), 'rb').read()
+            return f
+        except IOError:
             traceback.print_exc()
+            web.notfound()
             return '' # you can send an 404 error here if you want
 class favicon:
 	def GET(self):
-		return ""
+		web.redirect('/img/favicon.png')
 application=app.wsgifunc()
 if __name__ == "__main__":
     app.run()

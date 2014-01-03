@@ -37,15 +37,25 @@ class model:
 class list:
 	def GET(self):
 		theme=web.input().get("theme","light")
+		output=web.input().get("output","html")
+		t=web.input().get("type","model")
 		import os
 		l=os.listdir(cwd('static','files'))
-		l= filter(lambda x:x.endswith(".json"),l)
+		ext=".json"
+		if t=="automate":
+			ext=".txt"
+		l= filter(lambda x:x.endswith(ext),l)
 		import base64,urllib2
-		l= map(lambda x: decode(base64.b64decode(x[:-5])),l)
+		l= map(lambda x: decode(base64.b64decode(x[:-len(ext)])),l)
 		l= map(lambda x: (x,urllib2.quote(x.encode("utf-8"))),l)
-		static=cwd("static")
-		render=web.template.render(cwd('templates'),globals=locals())
-		return render.list()
+		if output=='html':
+			static=cwd("static")
+			render=web.template.render(cwd('templates'),globals=locals())
+			return render.list()
+		elif output=='json':
+			import json
+			web.header('Content-Type', 'application/json')
+			return json.dumps(l)
 class keyword:
 	def GET(self,key="机器学习"):
 		fname=cwd("static","files", "cluster",key)
@@ -71,15 +81,17 @@ class keyword:
 		tags=dict([(x,freq[x])  for x in tags])
 		import summarize
 		summary=summarize.summarize(sentence)
+		summary=summary.replace('\n',"<br>")
 		return json.dumps({"keyword":tags,"summary":summary})
 class load:
 	def GET(self,key="机器学习"):
 		web.header('Content-Type', 'application/json')
 		web.header('Cache-Control', 'private, must-revalidate, max-age=0')
 		web.header('Expires', 'Thu, 01 Jan 1970 00:00:00')
-		import os,json
+		import os,json,urllib2
+		key=urllib2.unquote(key)
 		fname=get_file_name(key)
-		print "###"+key+"###",fname
+		print fname
 		res={}
 		if not os.path.isfile(fname):
 			return json.dumps({"error":"json file not found"})
@@ -93,17 +105,3 @@ class play:
 		print fname
 		raw=file(fname,"r").read()
 		return raw
-class service:
-	def GET(self):
-		import json
-		web.header('Content-Type', 'application/json')
-		res={
-			'services':[
-				{'id':'tag2doc','name':"tag2doc",'select':False,},
-				{'id':'REGSVC','name':"线性回归",'select':False,},
-				{'id':'MDOSVC','name':"多目标优化",'select':False,},
-				{'id':'baike','name':"百科",'select':True,},
-				{'id':'wolfram_alpha','name':"wolfram alpha",'select':False,},
-			]
-		}
-		return json.dumps(res,indent=2)

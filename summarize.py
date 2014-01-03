@@ -2,7 +2,7 @@
 from collections import defaultdict
 import re
 MAX_SUMMARY_SIZE = 300
-SUMMARY_RATIO= 0.2
+SUMMARY_RATIO= 0.1
 stop_words= set(u"where the of is and to in that we for an are by be as on with can if from which you it this then at have all not one has or that".split())
 def tokenize(text):
 	'''Very simple white space tokenizer, in real life we'll be much more
@@ -39,7 +39,7 @@ def create_summary(sentences,frequencies):
 	import math
 	len_sentence=int(math.ceil(len(sentences)*SUMMARY_RATIO))
 	len_sentence=max(len_sentence,1)
-	len_sentence=min(len_sentence,10)
+	len_sentence=min(len_sentence,5)
 	index=[]
 	for i in range(len(sentences)):
 		index.append((i,sentence_score(sentences[i],frequencies)))

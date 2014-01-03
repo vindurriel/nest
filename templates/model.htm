@@ -3,63 +3,99 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<title></title>
-	<link rel="stylesheet" href="/css/main.css">
 	<link rel="stylesheet" href="/css/model.css">
 	<script src="/js/require.js" data-main="/js/model.js"></script>
 </head>
 <body>
 <div id="nav">
 	<div class="search">
-		<input type="text" name="q" id="q">
-		<input type="button"  id="btn_search" class="button main" isdefault="true" value="搜索">
-		<input type="button"  id="btn_tip" class="button" value="选项" style="min-width:0px;padding:0 1em;">
-		<input type="button"  id="btn_save" class="button" value="保存" >
-		<input type="button"  id="btn_load" class="button" value="打开宏" >
-		<a href="/list?theme=$theme" class="button">样例</a>
-		<div style="display:inline">
-			<div id="tip">
-				<ul class="services">
-				</ul>
-				<p>点击       = 选中节点和相邻节点</p>
-				<p>ctrl+点击  = 扩展节点（大圈）/访问知识链接（小圈）</p>
-				<p>shift+点击 = 删除节点和知识</p>
-				<p>alt+点击   = 将当前节点变成中心节点</p>
-				<p>空白处拖动 = 平移</p>
-				<p>滚轮       = 缩放</p>
-				<p>网址后面可以输入词语,例如/model/<b>java</b></p>
-			</div>
+		<div id="search-wrap">
+			<input type="text" name="q" id="q" placeholder="请输入关键词">
+			<a type="button"  id="btn_search" class="button main" isdefault="true">搜索</a>
+			<div id="dropimage-holder"><h2>把图片拖到这里</h2></div>
+		</div>
+		<div id="nav-buttons">
+			<a data-toggle-id="#service-list"  id="btn_tip" class="button toggle">选项</a>
+			<a   data-toggle-id="#snapshot-form" class="button toggle">保存快照</a>
+			<a 	 data-toggle-id="#snapshot-list" class="button toggle">加载快照</a>
+			<a   data-toggle-id="#automate-form" class="button toggle">录制宏</a>
+			<a   data-toggle-id="#automate-list" class="button toggle">加载宏</a>
 		</div>
 	</div>
+	<div style="display:none">
+		<div id="service-list">
+			<h3>使用下列哪些搜索服务:</h3>
+			<ul class="services">
+			</ul>
+		</div>
+		<div id="snapshot-list">
+			<h3>可选的快照有:</h3>
+			<ul class="snapshots">
+			</ul>
+		</div>
+		<div id="automate-list">
+			<h3>可选的宏有:</h3>
+			<ul class="automates">
+			</ul>
+		</div>
+		<div id="snapshot-form">
+			<label for="save_name">请输入要保存的名字</label>
+			<br>
+			<input type="text" id="save_name" name="save_name" value="">
+			<br>
+			<a class="button main btn-save" >保存</a>
+			<a class="button main btn-no" >取消</a>
+		</div>
+		<div id="automate-form">
+			<label for="out_fname">请输入脚本名称:</label>
+			<input type="text" id="out_fname"  name="out_fname"   value="default">
+			<br>				
+			<label for="max_total_node_num">节点总数上限:</label>
+			<input type="number" id="max_total_node_num"  name="max_total_node_num"   value="20">
+			<br>
+			<label for="max_single_node_num">单个节点联结数上限:</label>
+			<input type="number" id="max_single_node_num"  name="max_single_node_num"   value="5">
+			<br>
+			<label for="timeout_seconds">计算时间上限（秒）:</label>
+			<input type="number" id="timeout_seconds"  name="timeout_seconds"   value="5">
+			<br>
+			<label for="max_depth">最大深度:</label>
+			<input type="number" id="max_depth"  name="max_depth"   value="5">
+			<br>
+			<br>
+			<a class="button main btn-automate-yes" >开始</a>
+			<a  class="button btn-no">取消</a>
+		</div>
+	</div>
+	<div class="toggle-container">
+		<div class="toggle-inner"></div>
+	</div>
 </div>
-<div id="wrapper">
-	<div id="list-container" >
-		<div id="nest-container" class="list-item hidden">
-			<input type="button"  class="btn-toggle-fullscreen"   value="展开">
-			<input type="button"  class="btn-automate"   value="运行">
-			<input type="button"  class="btn-next"   value="›">
-			<input type="button"  class="btn-prev"   value="‹">
-			<span id="story-indicator"></span>
-			<div id="automate-form" >
-				<label for="out_fname">请输入脚本名称:</label>
-				<input type="text" id="out_fname"  name="out_fname"   value="default">
-				<br>				
-				<label for="max_total_node_num">节点总数上限:</label>
-				<input type="number" id="max_total_node_num"  name="max_total_node_num"   value="20">
-				<br>
-				<label for="max_single_node_num">单个节点联结数上限:</label>
-				<input type="number" id="max_single_node_num"  name="max_single_node_num"   value="5">
-				<br>
-				<label for="timeout_seconds">计算时间上限（秒）:</label>
-				<input type="number" id="timeout_seconds"  name="timeout_seconds"   value="5">
-				<br>
-				<label for="max_depth">最大深度:</label>
-				<input type="number" id="max_depth"  name="max_depth"   value="5">
-				<br>
-				<br>
-				<input type="button"  class="button main btn-automate-yes"   value="确定">
-				<input type="button"  class="button btn-automate-no"   value="取消">
+<div id="banner">
+	<div class="overlay"></div>
+	<div class="hero">
+		<img src="/img/favicon.png" class='logo'>
+		<div class="busy" style="display:none;">
+			<div class="ball"> 
+				<div class="b1"></div>
 			</div>
-		</div>	
+			<div class="ball1"> 
+				<div class="b1"></div>
+			</div>
+		</div>
+		<h1>K-Darwin</h1>
+		<h2>知识进化搜索引擎</h2>
+		<!-- <h3 class="info">sddd</h3> -->
+	</div>
+</div>
+<div id="wrapper" >
+	<div class="list-item w2 h2 hidden">
+		<header class="drag-handle">|||</header>
+		<input type="button"  class="btn-resize"   value="放大">
+		<input type="button"  class="btn-next"   value="›">
+		<input type="button"  class="btn-prev"   value="‹">
+		<span id="story-indicator"></span>
+		<div id="nest-container" class="inner"></div>
 	</div>
 </div>
 </body>

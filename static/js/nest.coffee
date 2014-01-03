@@ -9,42 +9,56 @@ class nest
 			"hudongBaikeCrawler",
 			"referData",
 		]
-	palette: d3.scale.category20()
 	constructor: (options)->
 		@hNode= {}
 		@position_cache={}
+		@palette= d3.scale.category20()
 		@container= options.container or "#container"
 		@w = options.width or 400
-		@h = options.height or 200
+		@h = options.height or 400
 		@ctrlPressed = false
 		@altPressed = false
 		@shiftPressed = false
 		@blacklist= []
 		@explored= []
+		_t=@
 		@vis = d3.select(@container)
 			.append("svg:svg")
+			.style('width','inherit')
+			.style('height','inherit')
 			.attr("viewBox","0 0 #{@w} #{@h}")	
 			.attr("pointer-events", "all")
 			.attr("preserveAspectRatio","XMidYMid")
 			.call(d3.behavior.zoom().scaleExtent([0.01,10]).on("zoom", @zoom)).on('dblclick.zoom',null)
 			.append("svg:g")
+			.on('mousemove',()->
+				if _t.timed?
+					clearTimeout _t.timed
+				_t.timed= setTimeout _t.focus, 100, d3.mouse(@)
+				return
+			).on('mouseleave',()=>
+				@mouse_on=true
+				if @timed
+					clearTimeout @timed
+				return
+			)
+		@voronoi = d3.geom.voronoi()
+		.x((d)->d.x)
+		.y((d)->d.y)
+
+		@translate= [0,0]
+		@scale=1.0
 		@link = @vis.selectAll(".link")
 		@node = @vis.selectAll(".node")
+		@text=@vis.selectAll('text')
+		@clip=@vis.selectAll('.clip')
 		@force = d3.layout.force()
-		.on("end",(d)=>
-			@nodes.forEach (n)->
-				if n._fixed? then n.fixed= true
-				return
-			return
-		).on("tick", @tick)
+		.on("tick", @tick)
 		.charge (d)->
-			if d.type=="referData" then -20 else -200
-		.linkDistance(20)
+			if d.type=="referData" then -200 else -200
+		.linkDistance((d)->if d.target.type=="referData" then 5 else 20)
 		.linkStrength((d)->if d.value? then 1.0-d.value else 0.1)
 		.size([@w, @h])
-		@drag= @force.drag().on 'dragend', (d)->
-			d.fixed= true
-			return
 		@relationships={
 			'artist':[{
 					"id": (d)-> "hitsongs_of_#{d.id}",
@@ -79,19 +93,84 @@ class nest
 		$(document).keydown @cacheIt
 		$(document).keyup @cacheIt
 		return
-	highlighted: () => 
-		console.log @node.filter((d)->d.isHigh)
-		console.log @link.filter((d)->d.isHigh)
+	normalize_id: (x)->
+		x.name=x.name.replace(/^\s+|\s+$/, '')
+		if not x.id?
+			x.id= "#{x.type}_#{x.name}"
+		x.id= x.id.replace(/^\s+|\s+$/, '')
 		return
+	convert_link_id:  (x)=>
+		## x is string
+		if typeof(x)=="string"
+			x= x.replace(/^\s+|\s+$/g, '')
+			if @hNode[x]?
+				return @hNode[x]
+		return x
+	normalize_link: (l)=>
+		l.source = @convert_link_id l.source
+		l.target = @convert_link_id l.target
+		return
+	normalize_text: (x)->
+		if typeof(x)=="string"
+			x = x.replace(/^\s+|\s+$/g, '')
+		return x
+	recenterVoronoi: (nodes) =>
+		shapes = []
+		@voronoi(nodes).forEach (d)->
+			if not d.length then return
+			n = []
+			d.forEach (c)->
+				n.push [ c[0] - d.point.x, c[1] - d.point.y ] 
+				return
+			n.point = d.point
+			shapes.push n
+			return
+		return shapes
 	cacheIt : (e) =>
 		@ctrlPressed = e.ctrlKey
 		@altPressed = e.altKey
 		@shiftPressed = e.shiftKey
+		if e.type=="keydown" and e.keyCode==68
+			@toggle_doc()
 		return true
 	zoom : () =>
-		@scale= d3.event.scale
-		@vis.attr "transform", "translate(" + d3.event.translate + ")" + " scale(" + @scale + ")"
-		@vis.selectAll("text").style("font-size", (1 / @scale) + "em");
+		@scale = d3.event.scale
+		@translate=d3.event.translate
+		@vis.attr "transform", "translate(" + @translate + ")" + " scale(" + @scale + ")"
+		@text.style("font-size", (1 / @scale) + "em")
+
+		return
+	focus :(e)=>
+		@center = {x:e[0],y:e[1]}
+		if not @ring?
+			@ring=@vis.insert("circle",":first-child").classed('ring',true)
+		@ring.attr('r',150.0/@scale)
+		@ring.attr('cx',@center.x)
+		@ring.attr('cy',@center.y)
+		node_dist= []
+		@node.each (d)=>
+			node_dist.push [d.id, Math.pow((d.x-@center.x),2)+Math.pow((d.y-@center.y),2)]
+			return
+		node_dist.sort (a,b)-> a[1]-b[1]
+		threshold= Math.pow((150/@scale),2)
+		node_dist= node_dist.slice(0,15)
+		node_dist= node_dist.filter((d)->d[1]<threshold)
+		hFocus= {}
+		@nodes.map (d)-> 
+			if d!=@theFocus then d.isHigh= false
+			return
+		node_dist.map (d)=>
+			hFocus[d[0]]=true
+			@hNode[d[0]].isHigh= true
+			return
+		@link.each (d)=>
+			d.isHigh= false
+			if hFocus[d.source.id]? and hFocus[d.target.id]
+				d.isHigh= true
+			return
+		@update(false)
+		return
+
 	draw : (json) =>
 		if not json.nodes? or json.nodes.length==0
 			return {'error':'no nodes'}
@@ -99,152 +178,40 @@ class nest
 			@blacklist= json.blacklist
 		if json.explored?
 			@explored= json.explored
-		$(@container).show()
+		i=0
+		for d in json.nodes
+			@normalize_id d
+			d.x=@w*(i%10)/10
+			d.y=i*@h/n
+			i+=1
+		for d in json.links
+			d.source= @normalize_text d.source
+			d.target= @normalize_text d.target
 		@nodes= json.nodes
 		@links= json.links
 		@root = json.nodes[0]
 		@theFocus= @root
 		@root.isHigh= true
-		@force.nodes(@nodes).links(@links)
 		n=@nodes.length
 		#init node position for faster stablization
-		@nodes.forEach (d,i)=>
-			@normalize_id d
-			if d.fixed?
-				d.fixed= undefined
-				d._fixed= true
-			else
-				d.x=@w*(i%10)/10
-				d.y=i*@h/n
-			return
 		@root.x =@w /2
 		@root.y =@h /2
-		@root.fixed= true
 		@force.nodes(@nodes).links(@links)
 		@update() 
 		return
-	normalize:  (x)=>
-		## x is string
-		if typeof(x)=="string" and @hNode[x]?
-			return @hNode[x]
-		return x
-	normalize_link: (l)=>
-		l.source = @normalize(l.source)
-		l.target = @normalize(l.target)
-		return
-	update : ()=>
-		#init graph info
-		@matrix=[]
-		@degree=[]
-		@hNode={}
-		n= @nodes.length
-		for i in [0..n-1]
-			@hNode[@nodes[i].id]=@nodes[i]
-			@degree.push []
-			@matrix.push []
-			for j in [0..n-1]
-				@matrix[i].push null
-		for l in @links
-			@normalize_link l 
-		# Update the links…
-		@link = @link.data(@links)
-
-		# Enter any new links.
-		@link.enter()
-		.insert("line", ".node")
-		.classed("link",true)
-
-		# Exit any old links.
-		@link.exit().remove()
-
-		@node = @vis.selectAll(".node").data(@nodes,(d)->d.id)
-
-		_this=@
-		#enter new nodes
-		nodeEnter=@node.enter()
-		.append("g")
-		.attr("class", "node")
-		.on("click", @click)
-		.on('mouseover',(d)->
-			d3.select(@).select('circle').attr("r",'13px')
-			return
-		)
-		.on('mouseout',(d)->
-			d3.select(@).select('circle').attr("r",_this.getR(d))
-			return
-		)
-		.on('dblclick',@dblclick)
-		.classed("highlight",(d)->d.isHigh==true)
-		.attr("transform", (d) ->
-			"translate(" + d.x + "," + d.y + ")"
-		).call(@drag)
-
-		nodeEnter.append("circle")
-		.attr("cx",0)
-		.attr("cy",0)
-		.attr("r", @getR)
-		.style("fill", @color)
-
-		# nodeEnter.append("text")
-		# .attr("class","notclickable desc")
-		# .text (d) ->
-		#	 d.name
-
-		@node.exit().remove()
-
-		d3.selectAll(".node circle")
-		.attr("r", @getR)
-		.style("fill", @color)
-		
-		d3.selectAll(".node text").remove()
-		@node.filter((d)->d.isHigh)
-		.append('text')
-		.attr("class","notclickable desc")
-		.text (d)->d.name
-
-		d3.selectAll(".node text")
-		.attr("dx", (d)=>@getR(d)+5)
-		.classed("show", (d)->d==@theFocus)
-		.attr("font-size", (1 / @scale) + "em")
-
-		d3.selectAll(".search-img").remove()
-		d3.selectAll(".node circle").filter((d) ->d.isSearching)
-		.append("animate")
-		.attr("attributeName",'cx')
-		.attr("begin",'0s')
-		.attr("dur",'0.1s')
-		.attr("from",'-5')
-		.attr("to",'5')
-		.attr("fill",'remove')
-		.attr("repeatCount",'indefinite')
-		.classed("search-img",true)
-
-		@force.start()
-
-		# calculate graph info
-		for x in @links
-			@degree[x.source.index].push x
-			@degree[x.target.index].push x
-			@matrix[x.source.index][x.target.index]=x
-		@node.classed "highlight", (d)->d.isHigh==true
-		@link.classed "highlight", (d)->d.isHigh==true
-		@node.classed('hidden',(d)->d.type=="referData")
-		@link.classed('hidden',(d)->d.target.type=="referData")
-		for nod of @hNode
-			@position_cache[nod]={
-				'x':@hNode[nod].x
-				'y':@hNode[nod].y
-			}
-		return
-
 	getR : (d) =>
-		if d == @theFocus
-			return 15
-		if d.isHigh then 10 else 5
-	tick : ()=>
-		@node.attr "transform", (d) =>
-			radius= @getR(d)
-			"translate(" + d.x + "," + d.y + ")"
+		if d.type=="SearchProvider" then return 15
+		return 5
+	tick : (e)=>
+		@node.attr("transform", (d) ->
+			"translate(#{d.x},#{d.y})"
+		)
+		.attr('clip-path',(d)->"url(#clip-#{d.index})")
+		@vis.select('.marker')
+		.attr('x',@theFocus.x-22)
+		.attr('y':@theFocus.y-45)		
+
+
 		@link.attr("x1", (d) ->
 			d.source.x
 		).attr("y1", (d) ->
@@ -253,19 +220,43 @@ class nest
 			d.target.x
 		).attr("y2", (d) ->
 			d.target.y
-		)		
+		)
+		@text.attr "transform", (d)=>
+			dx=d.x+@.getR(d)+5*@scale
+			"translate(#{dx},#{d.y})"
+		@clip = @clip.data(@recenterVoronoi(@nodes), (d)->d.point.index)
+		@clip.enter().append('clipPath').classed('clip', true)
+		.attr('id', (d) -> 'clip-'+d.point.index)
+		@clip.exit().remove()
+		@clip.selectAll('path').remove()
+		@clip.append('path')
+		.attr('d', (d)-> 'M'+d.join(',')+'Z')
+		return
+	toggle_doc : ()=>
+		@flag= not @flag
+		if  @flag
+			@node.classed('hidden',(d)->d.type=="referData" )
+			@link.classed('hidden',(d)->d.target.type=="referData" )		
+			@text.classed('hidden',(d)->d.type=="referData" )
+		else
+			@node.classed('hidden',false)
+			@link.classed('hidden',false)		
+			@text.classed('hidden',false)
 	color : (d) =>
 		i= nest.colors.indexOf(d.type)
 		res= "black"
-		if i>=0
-			res= @palette(i+1)
-		else res= @palette(d.type)
+		if d.type=="SearchProvider"
+			return "#dd0000"
+		res= @palette(d.type)
 		if d.distance_rank?
-			res= d3.hsl(res).brighter(d.distance_rank).toString()
+			res= d3.hsl(res).brighter(d.distance_rank*.1).toString()
 		return res
 	dblclick : (d)=>
-		if d.type=="referData"
-			window.open if d.url? then d.url else d.name
+		if d.type=="referData" or d.type=="doc"
+			if window.doc_handler?
+				window.doc_handler d
+			else
+				window.open if d.url? then d.url else d.name
 			return
 		if d.type=="doc"
 			window.open if d.url? then d.url else d.name
@@ -275,47 +266,49 @@ class nest
 			return
 		d.isSearching = true
 		data={
-			keys:d.id,
+			keys:d.name
+			return_id:d.id,
 		}
-		if d.url? and d.url.indexOf("/subview/")>=0
+		if d.url?
 			data.url= d.url
-			data.is_subview= true
+			if d.url.indexOf("/subview/")>=0
+				data.is_subview= true
 		$.post "/explore/", JSON.stringify(data), @expand, 'json'
+		return
+	remove : (d) =>
+		if d==@root
+			alert "不能删除根节点"
+			@shiftPressed=false
+			return
+		for link in @degree[d.index]
+			@links.remove link
+			if @degree[link.target.index].length==1 and link.target!=@root
+				@nodes.remove link.target
+			if @degree[link.source.index].length==1 and link.source!=@root
+				@nodes.remove link.source
+		@nodes.remove d
+		@blacklist.push d.id
+
+		@clip=@clip.data([])
+		@clip.exit().remove()
+
+		if window.click_handler?
+			window.click_handler @root
 		return
 	click : (d) =>
 		d.fixed= false
 		if @shiftPressed
-			if d==@root
-				alert "不能删除根节点"
-				@shiftPressed=false
-				return
-			n = @nodes.length
-			i= d.index
-			for link in @degree[d.index]
-				@links.remove link
-				if @degree[link.target.index].length==1
-					@nodes.remove link.target
-				if @degree[link.source.index].length==1
-					@nodes.remove link.source
-			@nodes.remove d
-			@blacklist.push d.id
+			@remove d
 			@update()
 		else if @ctrlPressed
 			@dblclick d
 			@update()
 		else
 			@highlight d
-			# history.pushState {},d.name,"/model/#{d.id}"
-			@update()
+			@update(false)
 			if window.click_handler?
 				window.click_handler(d)
 		return
-	normalize_id: (x)->
-		if not x.id?
-			x.id= x.name
-		if x.id.indexOf('_')<0
-			x.id= "#{x.type}_#{x.id}"
-		return x
 	explore : (data)=>
 		for x in data.nodes
 			@normalize_id x
@@ -352,46 +345,122 @@ class nest
 		@update()
 		return
 	highlight : (d)=>
-		for x in @links
+		for x in @links 
 			x.isHigh= false
 		for x in @nodes
 			x.isHigh= false
 		d.isHigh= true
 		@theFocus = d
-		i=d.index
-		for link in @degree[d.index]
-			link.isHigh= true
-			link.target.isHigh=true
-			link.source.isHigh=true
-		if not @existing_relation_links?
-			@existing_relation_links=[]
-		if @relationships[d.type]?
-			for rel in @relationships[d.type]
-				id= rel.id d
-				if not @hNode[id]?
-					n= {
-						'id':id,
-						'name': rel.name(d),
-						'type':"relationship",
-						'isHigh':true,
-						'x':d.x+Math.random()*100-50,
-						'y':d.y+Math.random()*100-50,
-					}
-					@nodes.push n
-					l= {
-						'source':d,
-						'target':n,
-						'isHigh':true,
-					}
-					@links.push l
-					@existing_relation_links.push l
-			for link in @existing_relation_links
-				if link.source==d
-					continue
-				if @degree[link.target.index]? and @degree[link.target.index].length>1
-					continue
-				@links.remove link
-				@nodes.remove link.target
+		if $(".marker").length==0
+			@vis.append('image').classed('marker',true)
+			.attr('xlink:href',"/img/marker.svg")
+			.attr('width',50)
+			.attr('height',50)
+			.attr('x',@theFocus.x-22)
+			.attr('y':@theFocus.y-45)	
+		return
+	update : (start_force=true)=>
+		#init graph info
+		@matrix=[]
+		@degree=[]
+		@hNode={}
+		n= @nodes.length
+		for i in [0..n-1]
+			@hNode[@nodes[i].id]=@nodes[i]
+			@degree.push []
+			@matrix.push []
+			for j in [0..n-1]
+				@matrix[i].push null
+		for l in @links
+			@normalize_link l
+		# Update the links…
+		@link = @link.data(@links)
+
+		# Enter any new links.
+		@link.enter()
+		.insert("line", ".node")
+		.classed("link",true)
+
+		# Exit any old links.
+		@link.exit().remove()
+
+		@node = @vis.selectAll(".node").data(@nodes,(d)->d.id)
+		_this=@
+		#enter new nodes
+		nodeEnter=@node.enter()
+		.append("g")
+		.attr("class", "node")
+		.on("click", @click)
+		.on('dblclick',@dblclick)
+		.classed("highlight",(d)->d.isHigh==true)
+		.call(@force.drag())
+
+		nodeEnter.append('circle')
+		.classed('selection-helper',true)
+		.attr('r',50)
+		.style("fill", "#0088ff")
+
+		nodeEnter.append("circle")
+		.style("fill", @color)
+		.attr('r',@getR)
+
+		nodeEnter.filter((d)->d.img? and d.type=="SearchProvider")
+		.append('image')
+		.attr('xlink:href',(d)->d.img)
+		.attr('width',20)
+		.attr('height',20)
+		.attr('x',-10)
+		.attr('y',-10)
+
+		nodeEnter.append('title')
+		.text((d)->d.name)
+
+		@node.exit().remove()
+
+		@vis.selectAll(".node path")
+		.attr("r", @getR)
+		.style("fill", @color)
+		
+		@vis.selectAll(".search-img").remove()
+		@vis.selectAll(".node path").filter((d) ->d.isSearching)
+		.append("animate")
+		.attr("attributeName",'cx')
+		.attr("begin",'0s')
+		.attr("dur",'0.1s')
+		.attr("from",'-5')
+		.attr("to",'5')
+		.attr("fill",'remove')
+		.attr("repeatCount",'indefinite')
+		.classed("search-img",true)
+
+		@text= @text.data(@nodes.filter((d)->d.isHigh),(d)->d.id)
+		@text.enter().append('text')
+		.text((d)-> if d.name.length <=5 then d.name else d.name.slice(0,5)+"...")
+		.style("font-size", (1 / @scale) + "em")
+		.attr "transform", (d)=>
+			dx= d.x+@.getR(d)+5*@scale
+			"translate(#{dx},#{d.y})"
+		if @flag
+			@text.classed("hidden",(d)->d.type=="referData")
+		@text.exit().remove()
+		if start_force
+			@force.start()
+
+		# calculate graph info
+		for x in @links
+			try
+				@degree[x.source.index].push x
+				@degree[x.target.index].push x
+				@matrix[x.source.index][x.target.index]=x
+			catch e
+				console.log x
+		@node.classed "highlight", (d)->d.isHigh==true
+		# @node.classed "focus", (d)=>d==@theFocus
+		@link.classed "highlight", (d)->d.isHigh==true	
+		for nod of @hNode
+			@position_cache[nod]= 
+				'x':@hNode[nod].x
+				'y':@hNode[nod].y
 		return
 Array::remove = (b) ->
 	a = @indexOf(b)
@@ -399,7 +468,12 @@ Array::remove = (b) ->
 		@splice a, 1
 		return true
 	false
+String.prototype.hashCode = ()->
+	hash = 0.0
+	for i in [0..this.length]
+		if not isNaN this.charCodeAt(i)
+			hash += this.charCodeAt(i)
+	return hash 
 if typeof(define)=="function" and define.amd?
-	define "nest", ['jquery','d3'], ($,d3)-> {
-		"nest":nest,
-	}
+	define "nest", ['jquery','d3'], ($,ff)-> 
+		return nest

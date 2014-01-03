@@ -1,32 +1,4 @@
-.button {
-  padding: 0 1em;
-  border: #cccccc solid 1px;
-  border-radius: 4px;
-  background-color: transparent;
-  text-decoration: none;
-  cursor: pointer;
-  display: inline-block;
-  text-align: center;
-  vertical-align: center;
-  font-size: 1em;
-  height: 2em;
-  line-height: 2em;
-  margin: 0 0 0 1em;
-  opacity: .8;
-  outline: none;
-}
-.button:hover {
-  opacity: 11;
-}
-.button.main {
-  opacity: 1;
-  color: white;
-  background-color: #0088dd;
-}
-.button.main:hover {
-  background-color: #0099ee;
-  color: white;
-}
+@import "/css/model.css";
 .small {
   padding: 1px 3px;
   font-size: 12px;
@@ -41,17 +13,6 @@ body {
   width: 100%;
   background: #eee;
   color: black;
-}
-body.dark {
-  background: #333;
-  color: white;
-}
-body.dark a {
-  color: white;
-}
-body.dark .button {
-  color: white;
-  border-color: #555555;
 }
 a {
   color: black;

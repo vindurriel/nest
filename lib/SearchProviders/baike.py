@@ -9,8 +9,18 @@ def decode(s):
 		except Exception, e:
 			pass
 	raise Exception("cannot decode")
+def iso(x):
+	return x
+def distinct(l,id_fun=iso):
+	res=[]
+	seen=set()
+	for x in l:
+		if not id_fun(x) in seen:
+			res.append(x)
+			seen.add(id_fun(x))
+	return res
 def get_docs(term,dic={},limit=10):
-	import re
+	import re,uuid
 	import requests as r
 	from BeautifulSoup import BeautifulSoup as bs
 	term=decode(term).strip().replace('&nbsp;','')
@@ -30,6 +40,12 @@ def get_docs(term,dic={},limit=10):
 	soup=bs(content)
 	links=soup.findAll('a',href=re.compile(r'/(?:sub)?view/\d+(?:/\d+)?.htm'))
 	urls=[]
+	urls.append({
+		"url":res.url,
+		"name":u"百科:"+term,
+		'type':'referData',
+		"id":u"referData_"+term,
+	})
 	refs=soup.find(attrs={'class':re.compile(r'\breference\b')})
 	if refs!=None:
 		refs=refs.findAll('a')
@@ -41,10 +57,14 @@ def get_docs(term,dic={},limit=10):
 			urls.append({
 				"url":x['href'],
 				"name":text,
-				'type':'referData',
-				"id":text,
+				'type':u'referData',
+				"id":u'referData_'+text
 			})
-	return urls
+	urls=distinct(urls,lambda x:x['id'])
+	return {
+		"nodes": urls,
+		'links':[],
+	}
 def json_print(dic):
 	import json
 	return json.dumps(dic,indent=2)

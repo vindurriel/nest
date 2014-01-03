@@ -16,9 +16,14 @@ class explore:
 		import json
 		web.header('Content-Type', 'application/json')
 		dic=json.loads(web.data())
+		print "###explore request",json.dumps(dic,indent=2)
 		tid=dic['keys']
-		i=tid.rindex('_')
-		dic['type'],key=tid[:i],tid[i+1:]
+		return_id=dic['return_id']
+		if "_"in tid:
+			i=tid.rindex('_')
+			dic['type'],key=tid[:i],tid[i+1:]
+		else:
+			key=tid
 		services=dic.get('services',['xiami','baike'])
 		for service in services:
 			if service=="": continue
@@ -27,11 +32,11 @@ class explore:
 			except Exception, e:
 				traceback.print_exc()
 		res={
-			tid:[]
+			return_id:[]
 		}
 		for x in self.result.values():
 			for y in x:
-				res[tid].append(y)
+				res[return_id].append(y)
 		return json.dumps(res)
 if __name__ == '__main__':
 	ro=explore()
