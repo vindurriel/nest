@@ -44,3 +44,5 @@ def tryget(dic,keys):
 		if k in dic:
 			return dic[k]
 	return None
+if __name__ == '__main__':
+	print cwd("lib")

@@ -398,7 +398,7 @@ class nest
 		nodeEnter.append('circle')
 		.classed('selection-helper',true)
 		.attr('r',50)
-		.style("fill", @color)
+		.style("fill", "#0088ff")
 
 		nodeEnter.append("circle")
 		.style("fill", @color)

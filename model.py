@@ -91,7 +91,7 @@ class load:
 		import os,json,urllib2
 		key=urllib2.unquote(key)
 		fname=get_file_name(key)
-		print "###"+key+"###",fname
+		print fname
 		res={}
 		if not os.path.isfile(fname):
 			return json.dumps({"error":"json file not found"})

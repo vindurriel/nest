@@ -40,7 +40,7 @@ require(['jquery', 'd3', 'nest', 'blockUI'], function($, d3, Nest, bui) {
     return "<a class=\"button small\" href=\"#\">收藏</a>\n<a class=\"button small\" href=\"#\">分享</a>";
   };
   t_list_item = function(d) {
-    var details, i, img_hide, imgurl;
+    var color, details, i, img_hide, imgurl;
     details = d.content != null ? d.content : "";
     i = Math.floor(Math.random() * (10 - 0 + 1));
     imgurl = "";
@@ -49,7 +49,8 @@ require(['jquery', 'd3', 'nest', 'blockUI'], function($, d3, Nest, bui) {
       imgurl = d.img;
       img_hide = "";
     }
-    return "<div class=\"list-item normal w2\" data-nest-node=\"" + d.id + "\">\n	<header class=\"drag-handle\">|||</header>\n	<div class=\"btn-close\">x</div>\n	<div class='inner'>\n		<h2 class=\"item-headline\">\n			<span>" + d.name + "</span>\n		</h2>\n		<div class=\"item-prop\">" + d.type + " </div>\n		<img class=\"item-image " + img_hide + "\" src=\"" + imgurl + "\"/>\n		<p class=\"item-detail\">" + details + "</p>\n	</div>\n</div>";
+    color = window.nest.color(d);
+    return "<div class=\"list-item normal w2\" data-nest-node=\"" + d.id + "\">\n	<header class=\"drag-handle\">|||</header>\n	<div class=\"btn-close\">x</div>\n	<div class='inner'>\n		<h2 class=\"item-headline\">\n			<span style=\"border-color:" + color + "\">" + d.name + "</span>\n		</h2>\n		<div class=\"item-prop\">" + d.type + " </div>\n		<img class=\"item-image " + img_hide + "\" src=\"" + imgurl + "\"/>\n		<p class=\"item-detail\">" + details + "</p>\n	</div>\n</div>";
   };
   close_toggle = function() {
     $('.toggle').removeClass('on');
@@ -177,6 +178,7 @@ require(['jquery', 'd3', 'nest', 'blockUI'], function($, d3, Nest, bui) {
       add_widget($item, $('#nest-container').parent());
     }
     $(".selected_info .item-headline span").text(d.name);
+    $(".selected_info .item-headline span").css("border-color", window.nest.color(d));
     $(".selected_info .item-prop").empty();
     $(".selected_info .item-image").attr('src', d.img || "");
     if (!window.nest.snapshot) {
@@ -620,6 +622,12 @@ require(['jquery', 'd3', 'nest', 'blockUI'], function($, d3, Nest, bui) {
       window.packery.layout();
     }).on("mouseenter", ".drag-handle", function() {
       $(this).attr('title', "按住拖动");
+    }).on("mouseup", ".list-item", function() {
+      var n;
+      n = window.nest.hNode[$(this).attr('data-nest-node')];
+      if (n != null) {
+        click_handler(n);
+      }
     }).on("click", ".doc_url", function() {
       var id;
       id = $(this).attr('data-doc-id');

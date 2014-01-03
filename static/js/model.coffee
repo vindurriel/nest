@@ -35,13 +35,14 @@ require ['jquery','d3','nest','blockUI'] , ($,d3,Nest,bui)->
 		if d.img?
 			imgurl= d.img
 			img_hide= ""
+		color= window.nest.color d
 		return """
 		<div class="list-item normal w2" data-nest-node="#{d.id}">
 			<header class="drag-handle">|||</header>
 			<div class="btn-close">x</div>
 			<div class='inner'>
 				<h2 class="item-headline">
-					<span>#{d.name}</span>
+					<span style="border-color:#{color}">#{d.name}</span>
 				</h2>
 				<div class="item-prop">#{d.type} </div>
 				<img class="item-image #{img_hide}" src="#{imgurl}"/>
@@ -147,6 +148,7 @@ require ['jquery','d3','nest','blockUI'] , ($,d3,Nest,bui)->
 			$item= $(t_list_item(d)).attr('class',"selected_info list-item w2 h2")
 			add_widget $item, $('#nest-container').parent()
 		$(".selected_info .item-headline span").text(d.name)
+		$(".selected_info .item-headline span").css("border-color",window.nest.color(d))
 		$(".selected_info .item-prop").empty()
 		$(".selected_info .item-image").attr('src',d.img or "")
 		if not window.nest.snapshot
@@ -526,6 +528,11 @@ require ['jquery','d3','nest','blockUI'] , ($,d3,Nest,bui)->
 			return
 		.on "mouseenter",".drag-handle", ->
 			$(this).attr('title',"按住拖动")
+			return
+		.on "mouseup", ".list-item", ()->
+			n= window.nest.hNode[$(@).attr('data-nest-node')]
+			if n?
+				click_handler n
 			return
 		.on "click",".doc_url", ()->
 			id= $(@).attr('data-doc-id')

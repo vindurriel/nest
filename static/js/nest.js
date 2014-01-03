@@ -560,7 +560,7 @@ nest = (function() {
     nodeEnter = this.node.enter().append("g").attr("class", "node").on("click", this.click).on('dblclick', this.dblclick).classed("highlight", function(d) {
       return d.isHigh === true;
     }).call(this.force.drag());
-    nodeEnter.append('circle').classed('selection-helper', true).attr('r', 50).style("fill", this.color);
+    nodeEnter.append('circle').classed('selection-helper', true).attr('r', 50).style("fill", "#0088ff");
     nodeEnter.append("circle").style("fill", this.color).attr('r', this.getR);
     nodeEnter.filter(function(d) {
       return (d.img != null) && d.type === "SearchProvider";
