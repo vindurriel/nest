@@ -53,26 +53,24 @@
   }
 }
 .btn-small{
-    position: absolute;
-    z-index: 12;
-    background: @color;
-    color: white;
+    // z-index: 12;
+    color:#999;
+    // background: @color;
     width: auto;
-    height: 1.5em;
-    border: none;
+    border:none;
+    background: rgba(200, 200, 200, 0.2);
     text-align: center;
     cursor: pointer;
     &:hover{
-      background: lighten(@color, 10%) ;
+      color:@color;
+      // background: lighten(@color, 10%) ;
     }
 }
 
-.btn-resize{
-	.btn-small;
-    position: absolute;
-    left:auto;
-    right:1em;
+.doc_info .inner{
+  overflow:hidden;
 }
+
 #story-indicator{
   display: none;
   position: absolute;
@@ -172,7 +170,7 @@ text{
   height: 400px;
   background-color: black;
   background-position:bottom;
-  background-image: url("/img/bg.png");
+  background-image: url("/img/bg3.jpg");
   background-repeat: no-repeat;;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
   background-size: cover;
@@ -339,7 +337,7 @@ body.ready #nav{
   position: absolute;
   left: 1em;
   right: 1em;
-  top: 1em;
+  top: 1.5em;
   bottom: 1em;
   overflow-x:hidden;
   overflow-y: visible;
@@ -375,10 +373,10 @@ body.ready #nav{
   }
   &:hover {
     .btn-close{
-      display:inline;
+      // display:inline;
     }
     .drag-handle{
-      display: inline;
+      // display: inline;
     }
   }
   &.w2{
@@ -388,31 +386,20 @@ body.ready #nav{
     height: 410px;
   }
   .drag-handle{
-    position: absolute;
-    margin: 3px;
-    padding-right: 2em;
-    padding-bottom: 2em;
+    margin-top:-5px !important;
     cursor:move;
     color: #999;
-    display: none;
     &:hover{
       color: @color;
     }
   }
   .btn-close{
-    position: absolute;
-    top: 0;
-    right: 0;
-    color: #aaa;
-    &:hover{
-      color: @color;
-    }
-    background: transparent;
-    width: 10px;
-    height: 10px;
-    margin:3px;
+    .btn-small;
+    // width: 10px;
+    // height: 10px;
+    // margin:3px;
     cursor: pointer;
-    display: none;
+    // display: none;
   }
   .item-image{
     display: block;
@@ -430,9 +417,30 @@ body.ready #nav{
     word-wrap:break-word;
     margin-top:0;
   }
+  .top{
+    top:0;
+    margin: 0;
+    display: inline;
+  }
+  .left{
+    position:relative;
+    float: left;
+    margin-right: 5px;
+  }
+  .right{
+    position:relative;
+    float: right;
+    margin-right: 5px;
+  }
 }
-
+.btn-resize{
+  .btn-small;
+  // position: absolute;
+  left:auto;
+  // right:1em;
+}
 .item-headline{
+  margin: 0 0 1em 0;
 	max-width: @item-width;
 	text-overflow: ellipsis;
 	span{
@@ -554,6 +562,12 @@ iframe {
 body.no-nav{
   #nav{
     display: none;
+  }
+   #banner{
+    display: none;
+  }
+  #wrapper{
+    top: 0;
   }
 }
 

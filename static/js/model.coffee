@@ -2,9 +2,9 @@ requirejs.config
 	"baseUrl": '/js'
 	"paths":
 		"jquery":"jquery"
-		'blockUI': "jquery_blockUI"
+		'noty': "jquery.noty.packaged.min"
 	'shim':
-		'blockUI':
+		'noty':
 			"deps":['jquery']
 require ['packery.pkgd.min'], (x)->
 	require ['packery/js/packery'] ,(pack)->
@@ -14,7 +14,7 @@ require ['packery.pkgd.min'], (x)->
 			'gutter':10,
 		return
 	return
-require ['jquery','d3','nest','blockUI'] , ($,d3,Nest,bui)->
+require ['jquery','d3','nest'] , ($,d3,Nest)->
 	url_params= ()->
 		res={} 
 		for x in window.location.search.substring(1).split('&')
@@ -38,8 +38,9 @@ require ['jquery','d3','nest','blockUI'] , ($,d3,Nest,bui)->
 		color= window.nest.color d
 		return """
 		<div class="list-item normal w2" data-nest-node="#{d.id}">
-			<header class="drag-handle">|||</header>
-			<div class="btn-close">x</div>
+			<header class="drag-handle top left">|||</header>
+			<input type="button" class="btn-close top right" value="关闭" />
+			<input type="button" class="btn-resize top right" value="放大" />
 			<div class='inner'>
 				<h2 class="item-headline">
 					<span style="border-color:#{color}">#{d.name}</span>
@@ -205,11 +206,11 @@ require ['jquery','d3','nest','blockUI'] , ($,d3,Nest,bui)->
 		text= d.name
 		$item= $("""
 		<div  class='doc_info list-item w2 h2 expanded'>
-			<header class="drag-handle">|||</header>
-			<input type="button" class="btn-resize" value="缩小">
-			<div  class="btn-close">x</div>
-			<input type="button" class="btn-small fav"  style="left:3em;"  value="收藏">
-			<input type="button" class="btn-small share" style="left:6em;"  value="分享">
+			<header class="drag-handle top left">|||</header>
+			<input type="button" class="btn-close top right" value="关闭">
+			<input type="button" class="btn-resize top right" value="缩小">
+			<input type="button" class="btn-small fav top left"    value="收藏">
+			<input type="button" class="btn-small share  top left"   value="分享">
 			<div class='inner'>
 				<h2 class="item-headline">
 					<span>#{text}</span>
@@ -246,10 +247,20 @@ require ['jquery','d3','nest','blockUI'] , ($,d3,Nest,bui)->
 		res= JSON.stringify res
 		$.post "/model?id=#{fname}", res, (d)->
 			if d.error?
-				$.growlUI "保存出现如下错误:", d.error
+				notify "保存出现如下错误:"+ d.error
 				return
-			$.growlUI "","已保存"
+			notify "已保存"
 			list_model()
+		return
+	notify = (what)->
+		require ['noty'], (noty)->
+			window.noty
+				text: what
+				type: 'error'
+				timeout:3000
+				closeWith: ['click']
+				layout:'bottomRight'
+			return
 		return
 	blockUI= ()->
 		$('html, body').attr({"scrollTop":400})
@@ -466,7 +477,13 @@ require ['jquery','d3','nest','blockUI'] , ($,d3,Nest,bui)->
 			return
 		.on "click", ".btn-no", ()->
 			close_toggle()
-			return			
+			return
+		.on "click", ".fav", ()->
+			notify "已收藏"
+			return		
+		.on "click", ".share", ()->
+			notify "已分享"
+			return		
 		.on "click", ".btn-automate-yes", ()->
 			close_toggle()
 			dic=
@@ -476,12 +493,12 @@ require ['jquery','d3','nest','blockUI'] , ($,d3,Nest,bui)->
 			for p in "max_total_node_num max_single_node_num timeout_seconds max_depth out_fname".split(" ")
 				dic[p]=window[p][1].value
 			console.log dic
-			$.growlUI "", "宏 #{dic.out_fname} 已开始运行"
+			notify "宏 #{dic.out_fname} 已开始运行"
 			$.post "/automate",	JSON.stringify(dic), (d)->
 				if d.error?
-					$.growlUI "宏 #{dic.out_fname} 运行出现如下错误",d.error
+					notify "宏 #{dic.out_fname} 运行出现如下错误 "+d.error
 				else
-					$.growlUI "","宏 #{dic.out_fname} 已完成运行"
+					notify "宏 #{dic.out_fname} 已完成运行"
 					list_automate()
 				return
 			return
@@ -529,11 +546,11 @@ require ['jquery','d3','nest','blockUI'] , ($,d3,Nest,bui)->
 		.on "mouseenter",".drag-handle", ->
 			$(this).attr('title',"按住拖动")
 			return
-		.on "mouseup", ".list-item", ()->
-			n= window.nest.hNode[$(@).attr('data-nest-node')]
-			if n?
-				click_handler n
-			return
+		# .on "mouseup", ".list-item", ()->
+		# 	n= window.nest.hNode[$(@).attr('data-nest-node')]
+		# 	if n?
+		# 		click_handler n
+		# 	return
 		.on "click",".doc_url", ()->
 			id= $(@).attr('data-doc-id')
 			window.doc_handler window.nest.hNode[id]

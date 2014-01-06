@@ -357,7 +357,8 @@ class nest
 			.attr('width',50)
 			.attr('height',50)
 			.attr('x',@theFocus.x-22)
-			.attr('y':@theFocus.y-45)	
+			.attr('y':@theFocus.y-45)
+		$('.marker').remove().appendTo $(@vis[0][0])
 		return
 	update : (start_force=true)=>
 		#init graph info
