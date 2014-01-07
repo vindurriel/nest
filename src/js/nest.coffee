@@ -415,7 +415,7 @@ class nest
 		.attr('width',20)
 		.attr('height',20)
 		.attr('x',-10)
-		.attr('y',-10)
+		.attr('y',-10) 
 
 		nodeEnter.append('title')
 		.text((d)->d.name)

@@ -1,10 +1,10 @@
-requirejs.config
+requirejs.config 
 	"baseUrl": '/js'
 	"paths":
 		"jquery":"jquery"
 		'noty': "jquery.noty.packaged.min"
 	'shim':
-		'noty':
+		'noty':  
 			"deps":['jquery']
 require ['packery.pkgd.min'], (x)->
 	require ['packery/js/packery'] ,(pack)->
@@ -30,7 +30,7 @@ require ['jquery','d3','nest'] , ($,d3,Nest)->
 		details= if d.content? then d.content else ""
 		i= Math.floor(Math.random() * (10 - 0 + 1))
 		# imgurl= "http://lorempixel.com/80/80/technics/#{i}"
-		imgurl= ""
+		imgurl= "" 
 		img_hide= "hidden"
 		if d.img?
 			imgurl= d.img
@@ -51,7 +51,7 @@ require ['jquery','d3','nest'] , ($,d3,Nest)->
 			</div>
 		</div>
 		"""
-	close_toggle= ()->
+	close_toggle= ()-> 
 		$('.toggle').removeClass('on')
 		$(".toggle-container").slideUp 200
 		return

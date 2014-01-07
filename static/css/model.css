@@ -1,9 +1,6 @@
 @import '/css/main.css';
-
 @import '/css/jquery.qtip.min.css';
-
 @import '/css/jquery.gridster.min.css';
-
 @import "/css/switcher.css";
 #wrapper {
   width: 95%;
