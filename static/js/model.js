@@ -166,8 +166,11 @@ require(['jquery', 'd3', 'nest'], function($, d3, Nest) {
     }));
   };
   window.click_handler = function(d) {
-    var $item, actions, container, detail, docs, link, n, t, value, x, _i, _j, _len, _len1, _ref;
+    var $item, actions, container, detail, docs, link, n, t, value, viewer, x, _i, _j, _len, _len1, _ref;
     if (d == null) {
+      return;
+    }
+    if ((window.last_click != null) && d === window.last_click) {
       return;
     }
     document.title = d.name;
@@ -181,6 +184,21 @@ require(['jquery', 'd3', 'nest'], function($, d3, Nest) {
     $(".selected_info .item-headline span").css("border-color", window.nest.color(d));
     $(".selected_info .item-prop").empty();
     $(".selected_info .item-image").attr('src', d.img || "");
+    $(".selected_info .obj").remove();
+    if (d.obj != null) {
+      $('.selected_info .item-prop').after($("<canvas class=\"obj\" width=380 height=300 ></canvas>"));
+      viewer = new JSC3D.Viewer($(".selected_info .obj").get()[0]);
+      viewer.setParameter('SceneUrl', d.obj);
+      viewer.setParameter('InitRotationX', 20);
+      viewer.setParameter('InitRotationY', 20);
+      viewer.setParameter('InitRotationZ', 0);
+      viewer.setParameter('ModelColor', '#0088dd');
+      viewer.setParameter('BackgroundColor1', '#ffffff');
+      viewer.setParameter('BackgroundColor2', '#ffffff');
+      viewer.setParameter('RenderMode', 'wireframe');
+      viewer.init();
+      viewer.update();
+    }
     if (!window.nest.snapshot) {
       window.nest.snapshot = snapshot;
     }
@@ -244,12 +262,13 @@ require(['jquery', 'd3', 'nest'], function($, d3, Nest) {
         }
       }
     }
+    window.last_click = d;
   };
   window.doc_handler = function(d) {
     var $item, text, url;
     url = d.url || d.name;
     text = d.name;
-    $item = $("<div  class='doc_info list-item w2 h2 expanded'>\n	<header class=\"drag-handle top left\">|||</header>\n	<input type=\"button\" class=\"btn-close top right\" value=\"关闭\">\n	<input type=\"button\" class=\"btn-resize top right\" value=\"缩小\">\n	<input type=\"button\" class=\"btn-small fav top left\"    value=\"收藏\">\n	<input type=\"button\" class=\"btn-small share  top left\"   value=\"分享\">\n	<div class='inner'>\n		<h2 class=\"item-headline\">\n			<span>" + text + "</span>\n		</h2>\n		<iframe src=\"" + url + "\" ></iframe>\n	</div>\n</div>");
+    $item = $("<div  class='doc_info list-item w2 h2 expanded'>\n	<header class=\"drag-handle top left\">|||</header>\n	<input type=\"button\" class=\"btn-close top right\" value=\"关闭\">\n	<input type=\"button\" class=\"btn-resize top right\" value=\"缩小\">\n	<input type=\"button\" class=\"btn-small fav top left\"	value=\"收藏\">\n	<input type=\"button\" class=\"btn-small share  top left\"   value=\"分享\">\n	<div class='inner'>\n		<h2 class=\"item-headline\">\n			<span>" + text + "</span>\n		</h2>\n		<iframe src=\"" + url + "\" ></iframe>\n	</div>\n</div>");
     add_widget($item, $(".selected_info"));
   };
   get_selected_services = function() {

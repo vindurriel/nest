@@ -142,9 +142,10 @@ require ['jquery','d3','nest'] , ($,d3,Nest)->
 				svg.selectAll('text').style("font-size", (1.0 / d3.event.scale) + "em")
 				return
 			))
-		return
+		return	
 	window.click_handler= (d)->
 		if not d? then return
+		if window.last_click? and d==window.last_click then return
 		document.title= d.name
 		list d
 		window.nest.highlight d
@@ -155,6 +156,22 @@ require ['jquery','d3','nest'] , ($,d3,Nest)->
 		$(".selected_info .item-headline span").css("border-color",window.nest.color(d))
 		$(".selected_info .item-prop").empty()
 		$(".selected_info .item-image").attr('src',d.img or "")
+		$(".selected_info .obj").remove()
+		if d.obj?
+			$('.selected_info .item-prop').after $("""
+				<canvas class="obj" width=380 height=300 ></canvas>
+				""")
+			viewer = new JSC3D.Viewer($(".selected_info .obj").get()[0])
+			viewer.setParameter('SceneUrl',		 d.obj)
+			viewer.setParameter('InitRotationX', 20);
+			viewer.setParameter('InitRotationY', 20);
+			viewer.setParameter('InitRotationZ', 0);
+			viewer.setParameter('ModelColor',	   '#0088dd')
+			viewer.setParameter('BackgroundColor1', '#ffffff')
+			viewer.setParameter('BackgroundColor2', '#ffffff')
+			viewer.setParameter('RenderMode', 'wireframe')
+			viewer.init()
+			viewer.update()
 		if not window.nest.snapshot
 			window.nest.snapshot= snapshot
 		actions= {
@@ -203,6 +220,7 @@ require ['jquery','d3','nest'] , ($,d3,Nest)->
 				detail.append("<h3>相关文档</h3>")
 				for n in docs
 					detail.append("<span data-doc-id='#{n.id}'  class='doc_url' >#{n.name}</span>")
+		window.last_click=d
 		return
 	window.doc_handler= (d)->
 		url= d.url or d.name
@@ -212,7 +230,7 @@ require ['jquery','d3','nest'] , ($,d3,Nest)->
 			<header class="drag-handle top left">|||</header>
 			<input type="button" class="btn-close top right" value="关闭">
 			<input type="button" class="btn-resize top right" value="缩小">
-			<input type="button" class="btn-small fav top left"    value="收藏">
+			<input type="button" class="btn-small fav top left"	value="收藏">
 			<input type="button" class="btn-small share  top left"   value="分享">
 			<div class='inner'>
 				<h2 class="item-headline">

@@ -24,13 +24,10 @@ class image_search(search_provider_base):
 					'links':[]
 				}
 		bitstream=[]
-		# from base64 import b64encode
-		# bitstream=file('lib\\SearchProviders\\part1.png','rb').read().encode('base64')
-		import time
-		time.sleep(0.01)
 		bitstream=dic['img'].encode('base64')
 		n=client.service.sketchSearch(["img1.png"],[bitstream])
 		res=[]
+		print n[0][0]
 		try:
 			for x in n[0]:
 				res.append({
@@ -38,10 +35,11 @@ class image_search(search_provider_base):
 					'id': u"referData_"+unicode(x.modelID),
 					'name':u"模型_"+unicode(x.modelID),
 					'distance_rank':x.score,
-					'img': u"/img/smartref/{}.png".format(x.modelView1),
+					# 'img': u"/img/smartref/{}.png".format(x.modelView1),
+					'obj': u"/files/obj/{}.obj".format(x.modelID),
 				})
-			max_score=max([x['distance_rank'] for x in res])
-			import math
+			# max_score=max([x['distance_rank'] for x in res])
+			# import math
 			# for x in res:
 			# 	x['distance_rank']=math.floor((x['distance_rank']/max_score*4))
 		except Exception, e:
