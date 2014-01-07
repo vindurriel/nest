@@ -103,7 +103,7 @@
           continue;
         }
         n = link.target;
-        if (_ref1 = n.type, __indexOf.call("SearchProvider smartref_category query referData".split(" "), _ref1) >= 0) {
+        if (_ref1 = n.type, __indexOf.call("SearchProvider smartref_category query".split(" "), _ref1) >= 0) {
           continue;
         }
         related.push(n);
@@ -144,7 +144,7 @@
     };
     snapshot = function(d) {
       var $g, $item, $svg, svg;
-      $item = $("<div class=\"list-item w2 h2\">\n	<header class=\"drag-handle\">|||</header>\n	<div class=\"btn-close\">x</div>\n	<div class='inner select_graph'>\n	</div>\n</div>");
+      $item = $("<div class=\"list-item w2 h2\">\n	<header class=\"drag-handle top left\">|||</header>\n	<input type=\"button\" class=\"btn-small fav top left\" value=\"收藏\">\n	<input type=\"button\" class=\"btn-small share top left\" value=\"分享\">\n	<div class=\"btn-close top right\">x</div>\n	<input type=\"button\" class=\"btn-resize top right\" value=\"放大\">\n	<div class='inner select_graph'>\n	</div>\n</div>");
       add_widget($item, $('.selected_info'));
       if (d3 == null) {
         d3 = window.d3;

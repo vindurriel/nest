@@ -88,7 +88,7 @@ require ['jquery','d3','nest'] , ($,d3,Nest)->
 		for link in window.nest.degree[d.index]
 			if d==link.target then continue
 			n= link.target
-			if n.type in "SearchProvider smartref_category query referData".split(" ") then continue
+			if n.type in "SearchProvider smartref_category query".split(" ") then continue
 			related.push n
 		if related.length==0
 			return
@@ -113,8 +113,11 @@ require ['jquery','d3','nest'] , ($,d3,Nest)->
 	snapshot= (d)->
 		$item= $("""
 			<div class="list-item w2 h2">
-				<header class="drag-handle">|||</header>
-				<div class="btn-close">x</div>
+				<header class="drag-handle top left">|||</header>
+				<input type="button" class="btn-small fav top left" value="收藏">
+				<input type="button" class="btn-small share top left" value="分享">
+				<div class="btn-close top right">x</div>
+				<input type="button" class="btn-resize top right" value="放大">
 				<div class='inner select_graph'>
 				</div>
 			</div>

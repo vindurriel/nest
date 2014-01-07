@@ -67,6 +67,9 @@
           return -200;
         }
       }).linkDistance(function(d) {
+        if (d.target.distance_rank != null) {
+          return d.target.distance_rank * 20;
+        }
         if (d.target.type === "referData") {
           return 5;
         } else {
@@ -563,7 +566,7 @@
         return d.isHigh === true;
       }).call(this.force.drag());
       nodeEnter.append('circle').classed('selection-helper', true).attr('r', 50).style("fill", "#0088ff");
-      nodeEnter.append("circle").style("fill", this.color).attr('r', this.getR);
+      nodeEnter.append("circle").style("fill", "#0088ff").attr('r', this.getR);
       nodeEnter.filter(function(d) {
         return (d.img != null) && d.type === "SearchProvider";
       }).append('image').attr('xlink:href', function(d) {

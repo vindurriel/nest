@@ -85,6 +85,9 @@ class search:
 			'name':key,
 			'id':"query_"+key,
 		}
+		if "img" in dic:
+			key_node['name']="image"
+			key_node['id']="query_image"
 		res['nodes'].append(key_node)
 		services=dict(map(lambda x:(x['id'],x),service().all()))
 		for sid,service_res in results:
@@ -116,7 +119,7 @@ class service:
 					'desc':'使用百度百科搜索知识点和关联',
 					'img':'/img/baidu.png',
 				},				
-				{	'id':'smartref','name':"Smart Ref",'select':False,
+				{	'id':'smartref','name':"Smart Ref",'select':True,
 					'desc':'搜索smart ref的零件库',
 					'img':'/img/coins.png',
 				},
@@ -132,7 +135,7 @@ class service:
 					'desc':'调用优化算法服务',
 					'img':'/img/variable.png',
 				},
-				{	'id':'image_search','name':"草图搜索",'select':True,
+				{	'id':'image_search','name':"草图搜索",'select':False,
 					'desc':'上传草图来搜索零件库中的零件',
 					'img':'/img/map.png',
 				},

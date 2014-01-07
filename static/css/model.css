@@ -347,6 +347,9 @@ body.ready #nav {
 .list-item ::-webkit-scrollbar-thumb {
   background-color: #ddd;
 }
+.list-item:hover .top {
+  display: inline;
+}
 .list-item.w2 {
   width: 410px;
 }
@@ -391,7 +394,7 @@ body.ready #nav {
 .list-item .top {
   top: 0;
   margin: 0;
-  display: inline;
+  display: none;
 }
 .list-item .left {
   position: relative;

@@ -56,7 +56,11 @@ class nest
 		.on("tick", @tick)
 		.charge (d)->
 			if d.type=="referData" then -200 else -200
-		.linkDistance((d)->if d.target.type=="referData" then 5 else 20)
+		.linkDistance((d)->
+			if d.target.distance_rank?
+				return d.target.distance_rank*20
+			if d.target.type=="referData" then 5 else 20
+		)
 		.linkStrength((d)->if d.value? then 1.0-d.value else 0.1)
 		.size([@w, @h])
 		@relationships={
@@ -402,7 +406,7 @@ class nest
 		.style("fill", "#0088ff")
 
 		nodeEnter.append("circle")
-		.style("fill", @color)
+		.style("fill", "#0088ff")
 		.attr('r',@getR)
 
 		nodeEnter.filter((d)->d.img? and d.type=="SearchProvider")

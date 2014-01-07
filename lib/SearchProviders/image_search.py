@@ -42,10 +42,11 @@ class image_search(search_provider_base):
 				})
 			max_score=max([x['distance_rank'] for x in res])
 			import math
-			for x in res:
-				x['distance_rank']=math.floor((x['distance_rank']/max_score*4))
+			# for x in res:
+			# 	x['distance_rank']=math.floor((x['distance_rank']/max_score*4))
 		except Exception, e:
 			raise
+		res=res[:10]
 		return {
 			"nodes": res,
 			'links':[]
