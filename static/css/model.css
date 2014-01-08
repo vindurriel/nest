@@ -697,3 +697,9 @@ body.ready .logo {
 .list:hover {
   opacity: 1;
 }
+.load-more {
+  position: relative;
+  display: block;
+  height: 30px;
+  width: 100%;
+}

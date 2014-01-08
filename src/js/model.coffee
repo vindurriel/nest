@@ -1,11 +1,15 @@
 requirejs.config 
 	"baseUrl": '/js'
 	"paths":
+		'jsc3d':'jsc3d.min'
+		'jsc3d_touch':'jsc3d.touch'
 		"jquery":"jquery"
 		'noty': "jquery.noty.packaged.min"
 	'shim':
 		'noty':  
 			"deps":['jquery']
+require ["jsc3d",'jsc3d_touch'], (a,b)->
+	return
 require ['packery.pkgd.min'], (x)->
 	require ['packery/js/packery'] ,(pack)->
 		window.packery= new pack "#wrapper",
@@ -36,7 +40,7 @@ require ['jquery','d3','nest'] , ($,d3,Nest)->
 			imgurl= d.img
 			img_hide= ""
 		color= window.nest.color d
-		return """
+		res=$("""
 		<div class="list-item normal w2" data-nest-node="#{d.id}">
 			<header class="drag-handle top left">|||</header>
 			<input type="button" class="btn-close top right" value="关闭" />
@@ -50,7 +54,8 @@ require ['jquery','d3','nest'] , ($,d3,Nest)->
 				<p class="item-detail">#{details}</p>
 			</div>
 		</div>
-		"""
+		""") 
+		return res
 	close_toggle= ()-> 
 		$('.toggle').removeClass('on')
 		$(".toggle-container").slideUp 200
@@ -80,7 +85,7 @@ require ['jquery','d3','nest'] , ($,d3,Nest)->
 			window.packery.bindDraggabillyEvents draggie
 			return
 		return
-	list= (d)->
+	list= (d)-> 
 		if  $('.list-item.normal').length>0
 			window.packery.remove $('.list-item.normal').get()
 			window.packery.layout()
@@ -92,24 +97,33 @@ require ['jquery','d3','nest'] , ($,d3,Nest)->
 			related.push n
 		if related.length==0
 			return
-		related= related.slice 0,50
-		for x in related
-			s=$(t_list_item(x))
-			detail= s.find('.item-detail')
-			if x.content?
-				detail.append("<p>#{x.content}</p>")
-			docs= []
-			for link in window.nest.degree[x.index]
-				if x==link.target then continue
-				n= link.target
-				if n.type!="referData" then continue
-				docs.push n
-			if docs.length>0
-				detail.append("<h3>相关文档</h3>")
-				for n in docs
-					detail.append("<span  data-doc-id='#{n.id}' class='doc_url'>#{n.name}</span>")
-			add_widget s		
+		window.loadFunc= load_more_docs related,10
+		window.loadFunc()
 		return
+	load_more_docs= (items,num=10)->
+		return ()->
+			window.packery.layout()
+			new_items= items.splice 0,num
+			for x in new_items
+				s= t_list_item(x)
+				detail= s.find('.item-detail')
+				if x.obj?
+					detail.append make_3d_obj(x.obj)
+					s.addClass("h2")
+				if x.content?
+					detail.append("<p>#{x.content}</p>")
+				docs= []
+				for link in window.nest.degree[x.index]
+					if x==link.target then continue
+					n= link.target
+					if n.type!="referData" then continue
+					docs.push n
+				if docs.length>0
+					detail.append("<h3>相关文档</h3>")
+					for n in docs
+						detail.append("<span  data-doc-id='#{n.id}' class='doc_url'>#{n.name}</span>")
+				add_widget s
+			return 
 	snapshot= (d)->
 		$item= $("""
 			<div class="list-item w2 h2">
@@ -142,7 +156,20 @@ require ['jquery','d3','nest'] , ($,d3,Nest)->
 				svg.selectAll('text').style("font-size", (1.0 / d3.event.scale) + "em")
 				return
 			))
-		return	
+		return
+	make_3d_obj= (url,container)->
+			cv= $("""
+				<canvas class="obj" width=380 height=300 ></canvas>
+				""")
+			viewer = new JSC3D.Viewer(cv.get()[0])
+			viewer.setParameter('SceneUrl',	url)
+			viewer.setParameter('ModelColor',   '#0088dd')
+			viewer.setParameter('BackgroundColor1', '#ffffff')
+			viewer.setParameter('BackgroundColor2', '#ffffff')
+			viewer.setParameter('RenderMode', 'wireframe')
+			viewer.init()
+			viewer.update()
+			return cv
 	window.click_handler= (d)->
 		if not d? then return
 		if window.last_click? and d==window.last_click then return
@@ -150,7 +177,7 @@ require ['jquery','d3','nest'] , ($,d3,Nest)->
 		list d
 		window.nest.highlight d
 		if $(".selected_info").length==0
-			$item= $(t_list_item(d)).attr('class',"selected_info list-item w2 h2")
+			$item=  t_list_item(d).attr('class',"selected_info list-item w2 h2")
 			add_widget $item, $('#nest-container').parent()
 		$(".selected_info .item-headline span").text(d.name)
 		$(".selected_info .item-headline span").css("border-color",window.nest.color(d))
@@ -158,20 +185,7 @@ require ['jquery','d3','nest'] , ($,d3,Nest)->
 		$(".selected_info .item-image").attr('src',d.img or "")
 		$(".selected_info .obj").remove()
 		if d.obj?
-			$('.selected_info .item-prop').after $("""
-				<canvas class="obj" width=380 height=300 ></canvas>
-				""")
-			viewer = new JSC3D.Viewer($(".selected_info .obj").get()[0])
-			viewer.setParameter('SceneUrl',		 d.obj)
-			viewer.setParameter('InitRotationX', 20);
-			viewer.setParameter('InitRotationY', 20);
-			viewer.setParameter('InitRotationZ', 0);
-			viewer.setParameter('ModelColor',	   '#0088dd')
-			viewer.setParameter('BackgroundColor1', '#ffffff')
-			viewer.setParameter('BackgroundColor2', '#ffffff')
-			viewer.setParameter('RenderMode', 'wireframe')
-			viewer.init()
-			viewer.update()
+			$('.selected_info .item-prop').after make_3d_obj(d.obj)
 		if not window.nest.snapshot
 			window.nest.snapshot= snapshot
 		actions= {
@@ -630,7 +644,11 @@ require ['jquery','d3','nest'] , ($,d3,Nest)->
 							return
 					,"json"
 					return false
-
+		$(window).on "scroll", ()->
+			if $(".load-more").offset().top<=$(window).scrollTop()+$(window).height()
+				if window.loadFunc?
+					window.loadFunc()
+			return
 		$("#nav-buttons .toggle").on "click",()->
 			$("#nav-buttons .toggle").not($(@)).removeClass 'on'
 			$(@).toggleClass 'on'

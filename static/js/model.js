@@ -3,6 +3,8 @@ var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; 
 requirejs.config({
   "baseUrl": '/js',
   "paths": {
+    'jsc3d': 'jsc3d.min',
+    'jsc3d_touch': 'jsc3d.touch',
     "jquery": "jquery",
     'noty': "jquery.noty.packaged.min"
   },
@@ -12,6 +14,8 @@ requirejs.config({
     }
   }
 });
+
+require(["jsc3d", 'jsc3d_touch'], function(a, b) {});
 
 require(['packery.pkgd.min'], function(x) {
   require(['packery/js/packery'], function(pack) {
@@ -24,7 +28,7 @@ require(['packery.pkgd.min'], function(x) {
 });
 
 require(['jquery', 'd3', 'nest'], function($, d3, Nest) {
-  var add_widget, blockUI, close_toggle, get_selected_services, init_service, list, list_automate, list_model, list_service, load_automate, load_model, notify, play_step, save, search, snapshot, t_item_action, t_list_item, unblockUI, update_service, url_params;
+  var add_widget, blockUI, close_toggle, get_selected_services, init_service, list, list_automate, list_model, list_service, load_automate, load_model, load_more_docs, make_3d_obj, notify, play_step, save, search, snapshot, t_item_action, t_list_item, unblockUI, update_service, url_params;
   url_params = function() {
     var pair, res, x, _i, _len, _ref;
     res = {};
@@ -40,7 +44,7 @@ require(['jquery', 'd3', 'nest'], function($, d3, Nest) {
     return "<a class=\"button small\" href=\"#\">收藏</a>\n<a class=\"button small\" href=\"#\">分享</a>";
   };
   t_list_item = function(d) {
-    var color, details, i, img_hide, imgurl;
+    var color, details, i, img_hide, imgurl, res;
     details = d.content != null ? d.content : "";
     i = Math.floor(Math.random() * (10 - 0 + 1));
     imgurl = "";
@@ -50,7 +54,8 @@ require(['jquery', 'd3', 'nest'], function($, d3, Nest) {
       img_hide = "";
     }
     color = window.nest.color(d);
-    return "<div class=\"list-item normal w2\" data-nest-node=\"" + d.id + "\">\n	<header class=\"drag-handle top left\">|||</header>\n	<input type=\"button\" class=\"btn-close top right\" value=\"关闭\" />\n	<input type=\"button\" class=\"btn-resize top right\" value=\"放大\" />\n	<div class='inner'>\n		<h2 class=\"item-headline\">\n			<span style=\"border-color:" + color + "\">" + d.name + "</span>\n		</h2>\n		<div class=\"item-prop\">" + d.type + " </div>\n		<img class=\"item-image " + img_hide + "\" src=\"" + imgurl + "\"/>\n		<p class=\"item-detail\">" + details + "</p>\n	</div>\n</div>";
+    res = $("<div class=\"list-item normal w2\" data-nest-node=\"" + d.id + "\">\n	<header class=\"drag-handle top left\">|||</header>\n	<input type=\"button\" class=\"btn-close top right\" value=\"关闭\" />\n	<input type=\"button\" class=\"btn-resize top right\" value=\"放大\" />\n	<div class='inner'>\n		<h2 class=\"item-headline\">\n			<span style=\"border-color:" + color + "\">" + d.name + "</span>\n		</h2>\n		<div class=\"item-prop\">" + d.type + " </div>\n		<img class=\"item-image " + img_hide + "\" src=\"" + imgurl + "\"/>\n		<p class=\"item-detail\">" + details + "</p>\n	</div>\n</div>");
+    return res;
   };
   close_toggle = function() {
     $('.toggle').removeClass('on');
@@ -89,7 +94,7 @@ require(['jquery', 'd3', 'nest'], function($, d3, Nest) {
     });
   };
   list = function(d) {
-    var detail, docs, link, n, related, s, x, _i, _j, _k, _l, _len, _len1, _len2, _len3, _ref, _ref1, _ref2;
+    var link, n, related, _i, _len, _ref, _ref1;
     if ($('.list-item.normal').length > 0) {
       window.packery.remove($('.list-item.normal').get());
       window.packery.layout();
@@ -110,36 +115,51 @@ require(['jquery', 'd3', 'nest'], function($, d3, Nest) {
     if (related.length === 0) {
       return;
     }
-    related = related.slice(0, 50);
-    for (_j = 0, _len1 = related.length; _j < _len1; _j++) {
-      x = related[_j];
-      s = $(t_list_item(x));
-      detail = s.find('.item-detail');
-      if (x.content != null) {
-        detail.append("<p>" + x.content + "</p>");
-      }
-      docs = [];
-      _ref2 = window.nest.degree[x.index];
-      for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
-        link = _ref2[_k];
-        if (x === link.target) {
-          continue;
-        }
-        n = link.target;
-        if (n.type !== "referData") {
-          continue;
-        }
-        docs.push(n);
-      }
-      if (docs.length > 0) {
-        detail.append("<h3>相关文档</h3>");
-        for (_l = 0, _len3 = docs.length; _l < _len3; _l++) {
-          n = docs[_l];
-          detail.append("<span  data-doc-id='" + n.id + "' class='doc_url'>" + n.name + "</span>");
-        }
-      }
-      add_widget(s);
+    window.loadFunc = load_more_docs(related, 10);
+    window.loadFunc();
+  };
+  load_more_docs = function(items, num) {
+    if (num == null) {
+      num = 10;
     }
+    return function() {
+      var detail, docs, link, n, new_items, s, x, _i, _j, _k, _len, _len1, _len2, _ref;
+      window.packery.layout();
+      new_items = items.splice(0, num);
+      for (_i = 0, _len = new_items.length; _i < _len; _i++) {
+        x = new_items[_i];
+        s = t_list_item(x);
+        detail = s.find('.item-detail');
+        if (x.obj != null) {
+          detail.append(make_3d_obj(x.obj));
+          s.addClass("h2");
+        }
+        if (x.content != null) {
+          detail.append("<p>" + x.content + "</p>");
+        }
+        docs = [];
+        _ref = window.nest.degree[x.index];
+        for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
+          link = _ref[_j];
+          if (x === link.target) {
+            continue;
+          }
+          n = link.target;
+          if (n.type !== "referData") {
+            continue;
+          }
+          docs.push(n);
+        }
+        if (docs.length > 0) {
+          detail.append("<h3>相关文档</h3>");
+          for (_k = 0, _len2 = docs.length; _k < _len2; _k++) {
+            n = docs[_k];
+            detail.append("<span  data-doc-id='" + n.id + "' class='doc_url'>" + n.name + "</span>");
+          }
+        }
+        add_widget(s);
+      }
+    };
   };
   snapshot = function(d) {
     var $g, $item, $svg, svg;
@@ -165,8 +185,21 @@ require(['jquery', 'd3', 'nest'], function($, d3, Nest) {
       svg.selectAll('text').style("font-size", (1.0 / d3.event.scale) + "em");
     }));
   };
+  make_3d_obj = function(url, container) {
+    var cv, viewer;
+    cv = $("<canvas class=\"obj\" width=380 height=300 ></canvas>");
+    viewer = new JSC3D.Viewer(cv.get()[0]);
+    viewer.setParameter('SceneUrl', url);
+    viewer.setParameter('ModelColor', '#0088dd');
+    viewer.setParameter('BackgroundColor1', '#ffffff');
+    viewer.setParameter('BackgroundColor2', '#ffffff');
+    viewer.setParameter('RenderMode', 'wireframe');
+    viewer.init();
+    viewer.update();
+    return cv;
+  };
   window.click_handler = function(d) {
-    var $item, actions, container, detail, docs, link, n, t, value, viewer, x, _i, _j, _len, _len1, _ref;
+    var $item, actions, container, detail, docs, link, n, t, value, x, _i, _j, _len, _len1, _ref;
     if (d == null) {
       return;
     }
@@ -177,7 +210,7 @@ require(['jquery', 'd3', 'nest'], function($, d3, Nest) {
     list(d);
     window.nest.highlight(d);
     if ($(".selected_info").length === 0) {
-      $item = $(t_list_item(d)).attr('class', "selected_info list-item w2 h2");
+      $item = t_list_item(d).attr('class', "selected_info list-item w2 h2");
       add_widget($item, $('#nest-container').parent());
     }
     $(".selected_info .item-headline span").text(d.name);
@@ -186,18 +219,7 @@ require(['jquery', 'd3', 'nest'], function($, d3, Nest) {
     $(".selected_info .item-image").attr('src', d.img || "");
     $(".selected_info .obj").remove();
     if (d.obj != null) {
-      $('.selected_info .item-prop').after($("<canvas class=\"obj\" width=380 height=300 ></canvas>"));
-      viewer = new JSC3D.Viewer($(".selected_info .obj").get()[0]);
-      viewer.setParameter('SceneUrl', d.obj);
-      viewer.setParameter('InitRotationX', 20);
-      viewer.setParameter('InitRotationY', 20);
-      viewer.setParameter('InitRotationZ', 0);
-      viewer.setParameter('ModelColor', '#0088dd');
-      viewer.setParameter('BackgroundColor1', '#ffffff');
-      viewer.setParameter('BackgroundColor2', '#ffffff');
-      viewer.setParameter('RenderMode', 'wireframe');
-      viewer.init();
-      viewer.update();
+      $('.selected_info .item-prop').after(make_3d_obj(d.obj));
     }
     if (!window.nest.snapshot) {
       window.nest.snapshot = snapshot;
@@ -727,6 +749,13 @@ require(['jquery', 'd3', 'nest'], function($, d3, Nest) {
           }, "json");
           return false;
         });
+      }
+    });
+    $(window).on("scroll", function() {
+      if ($(".load-more").offset().top <= $(window).scrollTop() + $(window).height()) {
+        if (window.loadFunc != null) {
+          window.loadFunc();
+        }
       }
     });
     $("#nav-buttons .toggle").on("click", function() {

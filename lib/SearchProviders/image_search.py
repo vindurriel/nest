@@ -44,7 +44,7 @@ class image_search(search_provider_base):
 			# 	x['distance_rank']=math.floor((x['distance_rank']/max_score*4))
 		except Exception, e:
 			raise
-		res=res[:10]
+		# res=res[:10]
 		return {
 			"nodes": res,
 			'links':[]
