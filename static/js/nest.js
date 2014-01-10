@@ -9,6 +9,9 @@ nest = (function() {
     this.highlight = __bind(this.highlight, this);
     this.expand = __bind(this.expand, this);
     this.explore = __bind(this.explore, this);
+    this.rm = __bind(this.rm, this);
+    this.find_link = __bind(this.find_link, this);
+    this.find_node = __bind(this.find_node, this);
     this.click = __bind(this.click, this);
     this.remove = __bind(this.remove, this);
     this.dblclick = __bind(this.dblclick, this);
@@ -286,9 +289,9 @@ nest = (function() {
       d.source = this.normalize_text(d.source);
       d.target = this.normalize_text(d.target);
     }
-    this.nodes = json.nodes;
-    this.links = json.links;
-    this.root = json.nodes[0];
+    this.nodes = json.nodes.slice();
+    this.links = json.links.slice();
+    this.root = this.nodes[0];
     this.theFocus = this.root;
     this.root.isHigh = true;
     n = this.nodes.length;
@@ -444,30 +447,71 @@ nest = (function() {
       this.update();
     } else {
       this.highlight(d);
-      this.update(false);
       if (window.click_handler != null) {
         window.click_handler(d);
       }
     }
   };
 
+  nest.prototype.find_node = function(linknode) {
+    var i, n, t;
+    t = typeof linknode;
+    if (t === "string") {
+      n = this.hNode[this.normalize_text(linknode)];
+      return n;
+    } else if (t === "object") {
+      n = this.hNode[linknode.id];
+      return n;
+    } else if (t === "number") {
+      i = linknode;
+      if (i > this.nodes.length - 1 || i < 0) {
+        return;
+      }
+      return this.nodes[i];
+    }
+  };
+
+  nest.prototype.find_link = function(l) {
+    var source_node, target_node;
+    source_node = this.find_node(l.source);
+    target_node = this.find_node(l.target);
+    if ((source_node == null) || (target_node == null)) {
+      return;
+    }
+    return this.matrix[source_node.index][target_node.index];
+  };
+
+  nest.prototype.rm = function(data) {
+    var _this = this;
+    data.nodes.map(function(x) {
+      _this.nodes.remove(_this.hNode[x.id]);
+    });
+    data.links.map(function(x) {
+      _this.links.remove(_this.find_link(x));
+    });
+    this.update();
+  };
+
   nest.prototype.explore = function(data) {
-    var l, source, target, x, _i, _j, _len, _len1, _ref, _ref1;
-    _ref = data.nodes;
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      x = _ref[_i];
-      this.normalize_id(x);
-      this.nodes.push(x);
-    }
-    _ref1 = data.links;
-    for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-      l = _ref1[_j];
-      this.links.push(l);
-      source = this.nodes[l.source];
-      target = this.nodes[l.target];
-      target.x = source.x + Math.random() * 100 - 50;
-      target.y = source.y + Math.random() * 100 - 50;
-    }
+    var _this = this;
+    data.nodes.map(function(x) {
+      _this.normalize_id(x);
+      if (_this.hNode[x.id] == null) {
+        _this.nodes.push(x);
+        _this.hNode[x.id] = x;
+      }
+    });
+    data.links.map(function(x) {
+      var source, target;
+      source = _this.find_node(x.source);
+      target = _this.find_node(x.target);
+      if ((source == null) || (target == null)) {
+        return;
+      }
+      _this.links.push(x);
+      target.x = source.x + Math.random() * 50 - 25;
+      target.y = source.y + Math.random() * 50 - 25;
+    });
     this.update();
   };
 
@@ -529,6 +573,7 @@ nest = (function() {
       });
     }
     $('.marker').remove().appendTo($(this.vis[0][0]));
+    this.update(false);
   };
 
   nest.prototype.update = function(start_force) {
@@ -637,6 +682,9 @@ nest = (function() {
 
 Array.prototype.remove = function(b) {
   var a;
+  if (b == null) {
+    return false;
+  }
   a = this.indexOf(b);
   if (a >= 0) {
     this.splice(a, 1);

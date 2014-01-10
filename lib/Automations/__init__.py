@@ -161,8 +161,8 @@ def do_automate(nodes,links,dic):
 			print "##no node to explore; terminated"
 			break
 		## explore this node
-		print "##exploring node",node.id.encode("gbk")
-		source=node.index
+		print "##exploring node",node.name.encode("gbk")
+		source=node.id
 		res=explore(node)
 		step={
 			"event":'explore',
@@ -171,8 +171,6 @@ def do_automate(nodes,links,dic):
 		}
 		i=0
 		for n in res.items:
-			if "_" not in n.id:
-				n.id=u"{}_{}".format(n.type,n.name)
 			if n.id in blacklist:continue
 			if n.type!="referData":
 				if i>= min(max_single_node_num,max_total_node_num-len(h_nodes)):
@@ -182,13 +180,11 @@ def do_automate(nodes,links,dic):
 				n.distance_rank=node.distance_rank+1
 				n.index=len(h_nodes)-1
 				step['nodes'].append(dictify(n))
-				target=n.index
-			else:
-				target=h_nodes[n.id].index
+			target=n.id
 			if (source,target) not in links and (target,source) not in links:
 				links.add((source,target))
-				h_nodes.values()[source].degree+=1
-				h_nodes.values()[target].degree+=1
+				h_nodes[source].degree+=1
+				h_nodes[target].degree+=1
 				step['links'].append({"source":source,"target":target})
 			i+=1
 		explored.add(node.id)

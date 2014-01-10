@@ -52,7 +52,7 @@ class baike(explore_provider_base):
 				"url":x['href'],
 				"name":text,
 				'type':t,
-				"id":text,
+				"id":u"{}_{}".format(t,text),
 			}
 		#sort urls by text occurence
 		for x in urls.itervalues():

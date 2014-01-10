@@ -16,7 +16,6 @@ class explore:
 		import json
 		web.header('Content-Type', 'application/json')
 		dic=json.loads(web.data())
-		print "###explore request",json.dumps(dic,indent=2)
 		tid=dic['keys']
 		return_id=dic['return_id']
 		if "_"in tid:

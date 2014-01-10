@@ -102,7 +102,7 @@ class nest
 		if not x.id?
 			x.id= "#{x.type}_#{x.name}"
 		x.id= x.id.replace(/^\s+|\s+$/, '')
-		return
+		return 
 	convert_link_id:  (x)=>
 		## x is string
 		if typeof(x)=="string"
@@ -191,9 +191,9 @@ class nest
 		for d in json.links
 			d.source= @normalize_text d.source
 			d.target= @normalize_text d.target
-		@nodes= json.nodes
-		@links= json.links
-		@root = json.nodes[0]
+		@nodes= json.nodes.slice()
+		@links= json.links.slice()
+		@root = @nodes[0]
 		@theFocus= @root
 		@root.isHigh= true
 		n=@nodes.length
@@ -309,20 +309,57 @@ class nest
 			@update()
 		else
 			@highlight d
-			@update(false)
 			if window.click_handler?
 				window.click_handler(d)
 		return
+	#node has to be ready
+	find_node: (linknode)=>
+		t= typeof(linknode)
+		if t=="string"
+			n=@hNode[@normalize_text linknode]
+			return n
+		else if t=="object"
+			n=@hNode[linknode.id]
+			return n
+		else if t=="number"
+			i= linknode
+			if i>@nodes.length-1 or i<0
+				return
+			return @nodes[i]
+		return
+	find_link : (l)=>
+		source_node= @find_node l.source
+		target_node= @find_node l.target
+		if not source_node? or not target_node?
+			return
+		return @matrix[source_node.index][target_node.index]
+	rm :(data)=>
+		data.nodes.map (x)=>
+			@nodes.remove  @hNode[x.id]
+			return
+		data.links.map (x)=>
+			#source and target must not be number, but object or string id
+			#or it may delete wrong links.
+			@links.remove @find_link(x)
+			return
+		@update()
+		return
 	explore : (data)=>
-		for x in data.nodes
+		data.nodes.map (x)=>
 			@normalize_id x
-			@nodes.push x
-		for l in data.links
-			@links.push l
-			source= @nodes[l.source]
-			target= @nodes[l.target]
-			target.x= source.x+Math.random()*100-50
-			target.y= source.y+Math.random()*100-50
+			if not @hNode[x.id]?
+				@nodes.push x
+				@hNode[x.id]=x
+			return
+		data.links.map (x)=>
+			source= @find_node(x.source)
+			target= @find_node(x.target)
+			if not source? or not target?
+				return
+			@links.push x
+			target.x= source.x+Math.random()*50-25
+			target.y= source.y+Math.random()*50-25
+			return
 		@update()
 		return
 	expand : (data)=>
@@ -363,6 +400,7 @@ class nest
 			.attr('x',@theFocus.x-22)
 			.attr('y':@theFocus.y-45)
 		$('.marker').remove().appendTo $(@vis[0][0])
+		@update(false)
 		return
 	update : (start_force=true)=>
 		#init graph info
@@ -468,6 +506,8 @@ class nest
 				'y':@hNode[nod].y
 		return
 Array::remove = (b) ->
+	if not b?
+		return false
 	a = @indexOf(b)
 	if a >= 0
 		@splice a, 1

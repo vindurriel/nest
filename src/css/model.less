@@ -84,17 +84,16 @@
   position: absolute;
   display: none;
   z-index: 11;
+  color:#888;
   height: 100%;
-  opacity: .3;
-  color: @color;
   background: none;
   width: 20;
   border: none;
-  font-size: 2em;
+  font-size: 40px;
   outline: none;
   cursor: pointer;
   &:hover{
-    opacity: 1;
+    color: @color;
   }
 }
 .btn-next {
@@ -413,6 +412,7 @@ body.ready #nav{
   .top{
     top:0;
     margin: 0;
+    z-index: 400;
     display: none;
   }
   .left{

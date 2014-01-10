@@ -100,6 +100,12 @@ require ['jquery','d3','nest'] , ($,d3,Nest)->
 		window.loadFunc= load_more_docs related,10
 		window.loadFunc()
 		return
+	hex= (x)->
+		hexDigits= ["0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f"]
+		if isNaN(x) then "00" else hexDigits[(x - x % 16) / 16] + hexDigits[x % 16]
+	rgb2hex= (rgb)->
+		m = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+		"#" + hex(m[1]) + hex(m[2]) + hex(m[3]);
 	load_more_docs= (items,num=10)->
 		return ()->
 			window.packery.layout()
@@ -157,15 +163,16 @@ require ['jquery','d3','nest'] , ($,d3,Nest)->
 				return
 			))
 		return
-	make_3d_obj= (url,container)->
+	make_3d_obj= (url)->
 			cv= $("""
 				<canvas class="obj" width=380 height=300 ></canvas>
 				""")
+			bgcolor= rgb2hex($(".list-item").css("background-color")) 
 			viewer = new JSC3D.Viewer(cv.get()[0])
 			viewer.setParameter('SceneUrl',	url)
 			viewer.setParameter('ModelColor',   '#0088dd')
-			viewer.setParameter('BackgroundColor1', '#ffffff')
-			viewer.setParameter('BackgroundColor2', '#ffffff')
+			viewer.setParameter('BackgroundColor1', bgcolor)
+			viewer.setParameter('BackgroundColor2', bgcolor)
 			viewer.setParameter('RenderMode', 'wireframe')
 			viewer.init()
 			viewer.update()
@@ -306,15 +313,32 @@ require ['jquery','d3','nest'] , ($,d3,Nest)->
 		$('html, body').animate({"scrollTop":400})
 		$('.busy').fadeOut()
 		return
-	play_step= ->
-		if window.current_step>=window.story.length or window.current_step<0 then return
-		s= window.story[window.current_step]
-		info= window.story[window.current_step]
-		$("#story-indicator,.btn-next,.btn-prev,.btn-automate").show()
-		$("#story-indicator").text("第#{window.current_step+1}步，共#{window.story.length}步， 节点数：#{info.nodes.length}")
+	play_step= (direction)->
+		if not window.current_step?
+			window.current_step=-1
+		if direction=="->" and window.current_step>=window.story.length-1 then return
+		else if direction=="<-" and window.current_step<=0 then return
 		$('#nest-container').parent().removeClass "hidden"
-		window.nest.draw s
+		$("#story-indicator,.btn-next,.btn-prev,.btn-automate").show()
+		if direction=="->"
+			current_step+=1
+			s= window.story[window.current_step]
+			if s.event=="draw"
+				window.nest.draw s
+			else
+				window.nest.explore s
+		else if direction=="<-"
+			s= window.story[window.current_step]
+			if s.event=="draw"
+				window.nest.draw s
+			else
+				window.nest.rm s
+			current_step-=1
+			s= window.story[window.current_step]
+		else
+			return
 		click_handler window.nest.hNode[s.current_node_id]
+		$("#story-indicator").text("第#{window.current_step+1}步，共#{window.story.length}步  #{s.current_node_id}")
 		return
 	search= (key, services)->
 		data= {
@@ -337,24 +361,41 @@ require ['jquery','d3','nest'] , ($,d3,Nest)->
 		scr= encodeURIComponent(scr)
 		close_toggle()
 		$.getJSON "/play/#{scr}", (d)->
-			console.log d
 			window.story= []
-			window.current_step=0
 			graph=
-				nodes:[], 
+				nodes:[] 
 				links:[]
-			for s in d
-				if s.event=="draw"
-					graph.nodes= s.nodes
-					graph.links= s.links
-				else
-					graph.nodes= graph.nodes.concat(s.nodes)
-					graph.links= graph.links.concat(s.links)
-				graph.current_node_id= s.current_node_id or s.nodes[0].id
-				cur= {}
-				$.extend(cur,graph)
-				window.story.push cur
-			play_step()
+			#normalize node id, make all nodes available via index
+			d.map (step)->
+				step.nodes.map (n)->
+					window.nest.normalize_id n
+					graph.nodes.push n
+					return
+				return
+			#normalize link, and make sure all link ids are not number
+			len= graph.nodes.length
+			d.map (step)->
+				step.links.map (l)->
+					f= (linknode)->
+						if typeof(linknode)!="number"
+							return linknode
+						if linknode<0 or linknode>len-1
+							return
+						return graph.nodes[linknode]
+					l.source=f l.source
+					l.target=f l.target
+					if not l.source? or not l.target?
+						l.delete= "delete"
+					return
+				step.links= step.links.filter (l)->not l.delete?
+				return
+			d.map (step)->
+				if not step.current_node_id?
+					step.current_node_id= step.nodes[0].id
+				window.story.push step
+				return
+			window.current_step=-1
+			play_step("->")
 			return
 		return
 	list_automate= ()->
@@ -538,14 +579,10 @@ require ['jquery','d3','nest'] , ($,d3,Nest)->
 				return
 			return
 		.on "click", ".btn-next", ()->
-			if window.current_step==window.story.length-1 then return
-			window.current_step+=1
-			play_step()
+			play_step("->")
 			return
 		.on "click", ".btn-prev", ()->
-			if window.current_step==0 then return
-			window.current_step-=1
-			play_step()
+			play_step("<-")
 			return
 		.on("click", '.btn-save', save)
 		.on "click", ".automates li", ()->

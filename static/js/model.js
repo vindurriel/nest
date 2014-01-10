@@ -28,7 +28,7 @@ require(['packery.pkgd.min'], function(x) {
 });
 
 require(['jquery', 'd3', 'nest'], function($, d3, Nest) {
-  var add_widget, blockUI, close_toggle, get_selected_services, init_service, list, list_automate, list_model, list_service, load_automate, load_model, load_more_docs, make_3d_obj, notify, play_step, save, search, snapshot, t_item_action, t_list_item, unblockUI, update_service, url_params;
+  var add_widget, blockUI, close_toggle, get_selected_services, hex, init_service, list, list_automate, list_model, list_service, load_automate, load_model, load_more_docs, make_3d_obj, notify, play_step, rgb2hex, save, search, snapshot, t_item_action, t_list_item, unblockUI, update_service, url_params;
   url_params = function() {
     var pair, res, x, _i, _len, _ref;
     res = {};
@@ -118,6 +118,20 @@ require(['jquery', 'd3', 'nest'], function($, d3, Nest) {
     window.loadFunc = load_more_docs(related, 10);
     window.loadFunc();
   };
+  hex = function(x) {
+    var hexDigits;
+    hexDigits = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"];
+    if (isNaN(x)) {
+      return "00";
+    } else {
+      return hexDigits[(x - x % 16) / 16] + hexDigits[x % 16];
+    }
+  };
+  rgb2hex = function(rgb) {
+    var m;
+    m = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+    return "#" + hex(m[1]) + hex(m[2]) + hex(m[3]);
+  };
   load_more_docs = function(items, num) {
     if (num == null) {
       num = 10;
@@ -185,14 +199,15 @@ require(['jquery', 'd3', 'nest'], function($, d3, Nest) {
       svg.selectAll('text').style("font-size", (1.0 / d3.event.scale) + "em");
     }));
   };
-  make_3d_obj = function(url, container) {
-    var cv, viewer;
+  make_3d_obj = function(url) {
+    var bgcolor, cv, viewer;
     cv = $("<canvas class=\"obj\" width=380 height=300 ></canvas>");
+    bgcolor = rgb2hex($(".list-item").css("background-color"));
     viewer = new JSC3D.Viewer(cv.get()[0]);
     viewer.setParameter('SceneUrl', url);
     viewer.setParameter('ModelColor', '#0088dd');
-    viewer.setParameter('BackgroundColor1', '#ffffff');
-    viewer.setParameter('BackgroundColor2', '#ffffff');
+    viewer.setParameter('BackgroundColor1', bgcolor);
+    viewer.setParameter('BackgroundColor2', bgcolor);
     viewer.setParameter('RenderMode', 'wireframe');
     viewer.init();
     viewer.update();
@@ -370,18 +385,40 @@ require(['jquery', 'd3', 'nest'], function($, d3, Nest) {
     });
     $('.busy').fadeOut();
   };
-  play_step = function() {
-    var info, s;
-    if (window.current_step >= window.story.length || window.current_step < 0) {
+  play_step = function(direction) {
+    var s;
+    if (window.current_step == null) {
+      window.current_step = -1;
+    }
+    if (direction === "->" && window.current_step >= window.story.length - 1) {
+      return;
+    } else if (direction === "<-" && window.current_step <= 0) {
       return;
     }
-    s = window.story[window.current_step];
-    info = window.story[window.current_step];
-    $("#story-indicator,.btn-next,.btn-prev,.btn-automate").show();
-    $("#story-indicator").text("第" + (window.current_step + 1) + "步，共" + window.story.length + "步， 节点数：" + info.nodes.length);
     $('#nest-container').parent().removeClass("hidden");
-    window.nest.draw(s);
+    $("#story-indicator,.btn-next,.btn-prev,.btn-automate").show();
+    if (direction === "->") {
+      current_step += 1;
+      s = window.story[window.current_step];
+      if (s.event === "draw") {
+        window.nest.draw(s);
+      } else {
+        window.nest.explore(s);
+      }
+    } else if (direction === "<-") {
+      s = window.story[window.current_step];
+      if (s.event === "draw") {
+        window.nest.draw(s);
+      } else {
+        window.nest.rm(s);
+      }
+      current_step -= 1;
+      s = window.story[window.current_step];
+    } else {
+      return;
+    }
     click_handler(window.nest.hNode[s.current_node_id]);
+    $("#story-indicator").text("第" + (window.current_step + 1) + "步，共" + window.story.length + "步  " + s.current_node_id);
   };
   search = function(key, services) {
     var data;
@@ -405,29 +442,49 @@ require(['jquery', 'd3', 'nest'], function($, d3, Nest) {
     scr = encodeURIComponent(scr);
     close_toggle();
     $.getJSON("/play/" + scr, function(d) {
-      var cur, graph, s, _i, _len;
-      console.log(d);
+      var graph, len;
       window.story = [];
-      window.current_step = 0;
       graph = {
         nodes: [],
         links: []
       };
-      for (_i = 0, _len = d.length; _i < _len; _i++) {
-        s = d[_i];
-        if (s.event === "draw") {
-          graph.nodes = s.nodes;
-          graph.links = s.links;
-        } else {
-          graph.nodes = graph.nodes.concat(s.nodes);
-          graph.links = graph.links.concat(s.links);
+      d.map(function(step) {
+        step.nodes.map(function(n) {
+          window.nest.normalize_id(n);
+          graph.nodes.push(n);
+        });
+      });
+      len = graph.nodes.length;
+      d.map(function(step) {
+        step.links.map(function(l) {
+          var f;
+          f = function(linknode) {
+            if (typeof linknode !== "number") {
+              return linknode;
+            }
+            if (linknode < 0 || linknode > len - 1) {
+              return;
+            }
+            return graph.nodes[linknode];
+          };
+          l.source = f(l.source);
+          l.target = f(l.target);
+          if ((l.source == null) || (l.target == null)) {
+            l["delete"] = "delete";
+          }
+        });
+        step.links = step.links.filter(function(l) {
+          return l["delete"] == null;
+        });
+      });
+      d.map(function(step) {
+        if (step.current_node_id == null) {
+          step.current_node_id = step.nodes[0].id;
         }
-        graph.current_node_id = s.current_node_id || s.nodes[0].id;
-        cur = {};
-        $.extend(cur, graph);
-        window.story.push(cur);
-      }
-      play_step();
+        window.story.push(step);
+      });
+      window.current_step = -1;
+      play_step("->");
     });
   };
   list_automate = function() {
@@ -638,17 +695,9 @@ require(['jquery', 'd3', 'nest'], function($, d3, Nest) {
         }
       });
     }).on("click", ".btn-next", function() {
-      if (window.current_step === window.story.length - 1) {
-        return;
-      }
-      window.current_step += 1;
-      play_step();
+      play_step("->");
     }).on("click", ".btn-prev", function() {
-      if (window.current_step === 0) {
-        return;
-      }
-      window.current_step -= 1;
-      play_step();
+      play_step("<-");
     }).on("click", '.btn-save', save).on("click", ".automates li", function() {
       load_automate($(this).text());
     }).on("click", ".snapshots li", function() {

@@ -76,37 +76,35 @@
   position: absolute;
   display: none;
   z-index: 11;
+  color: #888;
   height: 100%;
-  opacity: .3;
-  color: #3b89ec;
   background: none;
   width: 20;
   border: none;
-  font-size: 2em;
+  font-size: 40px;
   outline: none;
   cursor: pointer;
   right: 0;
 }
 .btn-next:hover {
-  opacity: 1;
+  color: #3b89ec;
 }
 .btn-prev {
   position: absolute;
   display: none;
   z-index: 11;
+  color: #888;
   height: 100%;
-  opacity: .3;
-  color: #3b89ec;
   background: none;
   width: 20;
   border: none;
-  font-size: 2em;
+  font-size: 40px;
   outline: none;
   cursor: pointer;
   left: 0;
 }
 .btn-prev:hover {
-  opacity: 1;
+  color: #3b89ec;
 }
 .node {
   cursor: pointer;
@@ -391,6 +389,7 @@ body.ready #nav {
 .list-item .top {
   top: 0;
   margin: 0;
+  z-index: 400;
   display: none;
 }
 .list-item .left {
