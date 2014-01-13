@@ -3,7 +3,7 @@ import web
 from utils import *
 def get_file_name(name,ext=".json"):
 	import base64
-	return cwd(u"static",u"files",u"{}{}".format(base64.b64encode(decode(name).encode('utf-8')),ext))
+	return cwd(u"static",u"files",u"{}{}".format(base64.b64encode(to_unicode(name).encode('utf-8')),ext))
 class model:
 	def GET(self):
 		params=web.input()
@@ -46,7 +46,7 @@ class list:
 			ext=".txt"
 		l= filter(lambda x:x.endswith(ext),l)
 		import base64,urllib2
-		l= map(lambda x: decode(base64.b64decode(x[:-len(ext)])),l)
+		l= map(lambda x: to_unicode(base64.b64decode(x[:-len(ext)])),l)
 		l= map(lambda x: (x,urllib2.quote(x.encode("utf-8"))),l)
 		if output=='html':
 			static=cwd("static")

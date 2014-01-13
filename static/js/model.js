@@ -6,11 +6,16 @@ requirejs.config({
     'jsc3d': 'jsc3d.min',
     'jsc3d_touch': 'jsc3d.touch',
     "jquery": "jquery",
-    'noty': "jquery.noty.packaged.min"
+    "dropimage": "dropimage",
+    'noty': "jquery.noty.packaged.min",
+    'draggabilly': 'draggabilly.pkgd.min'
   },
   'shim': {
     'noty': {
       "deps": ['jquery']
+    },
+    'd3': {
+      'exports': 'd3'
     }
   }
 });
@@ -18,16 +23,21 @@ requirejs.config({
 require(["jsc3d", 'jsc3d_touch'], function(a, b) {});
 
 require(['packery.pkgd.min'], function(x) {
-  require(['packery/js/packery'], function(pack) {
+  require(['packery/js/packery', 'draggabilly'], function(pack, Draggabilly) {
+    var draggie;
     window.packery = new pack("#wrapper", {
       'itemSelector': '.list-item',
       'columnWidth': 200,
       'gutter': 10
     });
+    draggie = new Draggabilly($("#nest-container").parent().get()[0], {
+      handle: ".drag-handle"
+    });
+    window.packery.bindDraggabillyEvents(draggie);
   });
 });
 
-require(['jquery', 'd3', 'nest'], function($, d3, Nest) {
+require(['jquery', 'd3', 'nest', 'draggabilly', 'dropimage'], function($, d3, Nest, Draggabilly, dropimage) {
   var add_widget, blockUI, close_toggle, get_selected_services, hex, init_service, list, list_automate, list_model, list_service, load_automate, load_model, load_more_docs, make_3d_obj, notify, play_step, rgb2hex, save, search, snapshot, t_item_action, t_list_item, unblockUI, update_service, url_params;
   url_params = function() {
     var pair, res, x, _i, _len, _ref;
@@ -40,21 +50,18 @@ require(['jquery', 'd3', 'nest'], function($, d3, Nest) {
     }
     return res;
   };
-  t_item_action = function(d) {
-    return "<a class=\"button small\" href=\"#\">收藏</a>\n<a class=\"button small\" href=\"#\">分享</a>";
+  t_item_action = function() {
+    return "<input type=\"button\" class=\"btn-small fav top left\" value=\"收藏\">\n<input type=\"button\" class=\"btn-small share top left\" value=\"分享\">";
   };
   t_list_item = function(d) {
-    var color, details, i, img_hide, imgurl, res;
+    var color, details, res;
     details = d.content != null ? d.content : "";
-    i = Math.floor(Math.random() * (10 - 0 + 1));
-    imgurl = "";
-    img_hide = "hidden";
-    if (d.img != null) {
-      imgurl = d.img;
-      img_hide = "";
-    }
     color = window.nest.color(d);
-    res = $("<div class=\"list-item normal w2\" data-nest-node=\"" + d.id + "\">\n	<header class=\"drag-handle top left\">|||</header>\n	<input type=\"button\" class=\"btn-close top right\" value=\"关闭\" />\n	<input type=\"button\" class=\"btn-resize top right\" value=\"放大\" />\n	<div class='inner'>\n		<h2 class=\"item-headline\">\n			<span style=\"border-color:" + color + "\">" + d.name + "</span>\n		</h2>\n		<div class=\"item-prop\">" + d.type + " </div>\n		<img class=\"item-image " + img_hide + "\" src=\"" + imgurl + "\"/>\n		<p class=\"item-detail\">" + details + "</p>\n	</div>\n</div>");
+    res = $("<div class=\"list-item normal w2\" data-nest-node=\"" + d.id + "\">\n	<header class=\"drag-handle top left\">|||</header>\n	<input type=\"button\" class=\"btn-close top right\" value=\"关闭\" />\n	<input type=\"button\" class=\"btn-resize top right\" value=\"放大\" />\n	<div class='inner'>\n		<h2 class=\"item-headline\">\n			<span style=\"border-color:" + color + "\">" + d.name + "</span>\n		</h2>\n		<div class=\"item-prop\">" + d.type + " </div>\n		<img class=\"item-image hidden\"/>\n		<p class=\"item-detail\">" + details + "</p>\n	</div>\n</div>");
+    if (d.img != null) {
+      res.addClass('h2');
+      res.find('.item-image').removeClass('hidden').attr('src', d.img);
+    }
     return res;
   };
   close_toggle = function() {
@@ -74,6 +81,7 @@ require(['jquery', 'd3', 'nest'], function($, d3, Nest) {
     });
   };
   add_widget = function($x, after) {
+    var draggie;
     if (after == null) {
       after = null;
     }
@@ -84,14 +92,11 @@ require(['jquery', 'd3', 'nest'], function($, d3, Nest) {
     } else {
       $('#wrapper').append($x);
       window.packery.appended($x);
-    }
-    require(['draggabilly.pkgd.min'], function(Draggabilly) {
-      var draggie;
       draggie = new Draggabilly($x.get()[0], {
         handle: ".drag-handle"
       });
       window.packery.bindDraggabillyEvents(draggie);
-    });
+    }
   };
   list = function(d) {
     var link, n, related, _i, _len, _ref, _ref1;
@@ -177,13 +182,11 @@ require(['jquery', 'd3', 'nest'], function($, d3, Nest) {
   };
   snapshot = function(d) {
     var $g, $item, $svg, svg;
-    $item = $("<div class=\"list-item w2 h2\">\n	<header class=\"drag-handle top left\">|||</header>\n	<input type=\"button\" class=\"btn-small fav top left\" value=\"收藏\">\n	<input type=\"button\" class=\"btn-small share top left\" value=\"分享\">\n	<div class=\"btn-close top right\">x</div>\n	<input type=\"button\" class=\"btn-resize top right\" value=\"放大\">\n	<div class='inner select_graph'>\n	</div>\n</div>");
+    $item = t_list_item(d).addClass("h2").removeClass('normal');
+    $item.find('.drag-handle').after(t_item_action());
     add_widget($item, $('.selected_info'));
-    if (d3 == null) {
-      d3 = window.d3;
-    }
     $svg = $('#nest-container svg').clone();
-    $item.find(".select_graph").append($svg);
+    $item.find(".inner").append($svg);
     $g = $svg.find(">g");
     svg = d3.select($svg.get()[0]);
     svg.selectAll('.node').data(window.nest.nodes).filter(function(x) {
@@ -194,6 +197,7 @@ require(['jquery', 'd3', 'nest'], function($, d3, Nest) {
     }).remove();
     svg.selectAll('.ring').remove();
     svg.selectAll('.marker').remove();
+    svg.selectAll('.selection-helper').remove();
     svg.attr("pointer-events", "all").attr("preserveAspectRatio", "XMidYMid meet").call(d3.behavior.zoom().scaleExtent([0.01, 10]).on("zoom", function() {
       $g.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")");
       svg.selectAll('text').style("font-size", (1.0 / d3.event.scale) + "em");
@@ -305,7 +309,9 @@ require(['jquery', 'd3', 'nest'], function($, d3, Nest) {
     var $item, text, url;
     url = d.url || d.name;
     text = d.name;
-    $item = $("<div  class='doc_info list-item w2 h2 expanded'>\n	<header class=\"drag-handle top left\">|||</header>\n	<input type=\"button\" class=\"btn-close top right\" value=\"关闭\">\n	<input type=\"button\" class=\"btn-resize top right\" value=\"缩小\">\n	<input type=\"button\" class=\"btn-small fav top left\"	value=\"收藏\">\n	<input type=\"button\" class=\"btn-small share  top left\"   value=\"分享\">\n	<div class='inner'>\n		<h2 class=\"item-headline\">\n			<span>" + text + "</span>\n		</h2>\n		<iframe src=\"" + url + "\" ></iframe>\n	</div>\n</div>");
+    $item = t_list_item(d).addClass('doc_info h2 expanded');
+    $item.find('.inner').append("<iframe src=\"" + url + "\" ></iframe>");
+    $item.find('.drag-handle').after(t_item_action());
     add_widget($item, $(".selected_info"));
   };
   get_selected_services = function() {
@@ -593,7 +599,6 @@ require(['jquery', 'd3', 'nest'], function($, d3, Nest) {
   init_service = function(services) {
     var res;
     res = {};
-    d3 = window.d3;
     res.svg = d3.select('#banner .overlay').append("svg");
     res.nodes = res.svg.selectAll('.node');
     res.links = res.svg.selectAll('.link');
@@ -615,7 +620,7 @@ require(['jquery', 'd3', 'nest'], function($, d3, Nest) {
     update_service();
   };
   $(function() {
-    var key, needs_nest, params, services;
+    var $holder, key, needs_nest, params, services;
     params = url_params();
     if (params.theme != null) {
       $('body').addClass(params.theme);
@@ -641,13 +646,6 @@ require(['jquery', 'd3', 'nest'], function($, d3, Nest) {
     list_automate();
     window.nest = new Nest({
       "container": "#nest-container"
-    });
-    require(['draggabilly.pkgd.min'], function(Draggabilly) {
-      var draggie;
-      draggie = new Draggabilly($("#nest-container").parent().get()[0], {
-        handle: ".drag-handle"
-      });
-      window.packery.bindDraggabillyEvents(draggie);
     });
     $(document).on("click", ".btn-close", function() {
       var ui;
@@ -756,50 +754,47 @@ require(['jquery', 'd3', 'nest'], function($, d3, Nest) {
         });
       }
     });
-    require(['dropimage'], function(dropimage) {
-      var $holder;
-      $(window).on("dragover", function() {
-        $('#dropimage-holder').addClass('dragover');
+    $(window).on("dragover", function() {
+      $('#dropimage-holder').addClass('dragover');
+      return false;
+    });
+    $(window).on("mouseup", function() {
+      $('#dropimage-holder').removeClass('dragover');
+    });
+    $holder = $('#dropimage-holder');
+    if (dropimage.tests.dnd) {
+      $holder.on('drop', function(e) {
+        var data, x, _i, _len, _ref;
+        $(this).removeClass('dragover');
+        e.preventDefault();
+        data = new FormData();
+        _ref = e.originalEvent.dataTransfer.files;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          x = _ref[_i];
+          data.append("myfile", x);
+        }
+        blockUI();
+        $.ajax({
+          url: '/search',
+          type: 'POST',
+          data: data,
+          cache: false,
+          contentType: false,
+          processData: false,
+          success: function(d) {
+            $('#nest-container').parent().removeClass("hidden");
+            window.nest.draw(d);
+            click_handler(window.nest.root);
+            unblockUI();
+          },
+          error: function(d) {
+            console.log(e);
+            unblockUI();
+          }
+        }, "json");
         return false;
       });
-      $(window).on("mouseup", function() {
-        $('#dropimage-holder').removeClass('dragover');
-      });
-      $holder = $('#dropimage-holder');
-      if (dropimage.tests.dnd) {
-        return $holder.on('drop', function(e) {
-          var data, x, _i, _len, _ref;
-          $(this).removeClass('dragover');
-          e.preventDefault();
-          data = new FormData();
-          _ref = e.originalEvent.dataTransfer.files;
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            x = _ref[_i];
-            data.append("myfile", x);
-          }
-          blockUI();
-          $.ajax({
-            url: '/search',
-            type: 'POST',
-            data: data,
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function(d) {
-              $('#nest-container').parent().removeClass("hidden");
-              window.nest.draw(d);
-              click_handler(window.nest.root);
-              unblockUI();
-            },
-            error: function(d) {
-              console.log(e);
-              unblockUI();
-            }
-          }, "json");
-          return false;
-        });
-      }
-    });
+    }
     $(window).on("scroll", function() {
       if ($(".load-more").offset().top <= $(window).scrollTop() + $(window).height()) {
         if (window.loadFunc != null) {

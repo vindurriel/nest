@@ -4,41 +4,41 @@ requirejs.config
 		'jsc3d':'jsc3d.min'
 		'jsc3d_touch':'jsc3d.touch'
 		"jquery":"jquery"
+		"dropimage":"dropimage"
 		'noty': "jquery.noty.packaged.min"
+		'draggabilly':'draggabilly.pkgd.min'
 	'shim':
 		'noty':  
 			"deps":['jquery']
+		'd3':
+			'exports': 'd3'
 require ["jsc3d",'jsc3d_touch'], (a,b)->
 	return
 require ['packery.pkgd.min'], (x)->
-	require ['packery/js/packery'] ,(pack)->
+	require ['packery/js/packery','draggabilly'] ,(pack,Draggabilly)->
 		window.packery= new pack "#wrapper",
 			'itemSelector':'.list-item'
 			'columnWidth':200,
 			'gutter':10,
+		draggie= new Draggabilly $("#nest-container").parent().get()[0],
+			handle: ".drag-handle"
+		window.packery.bindDraggabillyEvents draggie
 		return
 	return
-require ['jquery','d3','nest'] , ($,d3,Nest)->
+require ['jquery','d3','nest','draggabilly','dropimage'] , ($,d3,Nest,Draggabilly,dropimage)->
 	url_params= ()->
 		res={} 
 		for x in window.location.search.substring(1).split('&')
 			pair= x.split('=')
 			res[pair[0]]= decodeURIComponent(pair[1])
 		return res
-	t_item_action= (d)->
-			"""
-				<a class="button small" href="#">收藏</a>
-				<a class="button small" href="#">分享</a>
-			"""
+	t_item_action= ()->
+		"""
+			<input type="button" class="btn-small fav top left" value="收藏">
+			<input type="button" class="btn-small share top left" value="分享">
+		"""
 	t_list_item= (d)->
 		details= if d.content? then d.content else ""
-		i= Math.floor(Math.random() * (10 - 0 + 1))
-		# imgurl= "http://lorempixel.com/80/80/technics/#{i}"
-		imgurl= "" 
-		img_hide= "hidden"
-		if d.img?
-			imgurl= d.img
-			img_hide= ""
 		color= window.nest.color d
 		res=$("""
 		<div class="list-item normal w2" data-nest-node="#{d.id}">
@@ -50,11 +50,14 @@ require ['jquery','d3','nest'] , ($,d3,Nest)->
 					<span style="border-color:#{color}">#{d.name}</span>
 				</h2>
 				<div class="item-prop">#{d.type} </div>
-				<img class="item-image #{img_hide}" src="#{imgurl}"/>
+				<img class="item-image hidden"/>
 				<p class="item-detail">#{details}</p>
 			</div>
 		</div>
-		""") 
+		""")
+		if d.img?
+			res.addClass('h2')
+			res.find('.item-image').removeClass('hidden').attr('src',d.img)
 		return res
 	close_toggle= ()-> 
 		$('.toggle').removeClass('on')
@@ -79,11 +82,9 @@ require ['jquery','d3','nest'] , ($,d3,Nest)->
 		else
 			$('#wrapper').append($x)
 			window.packery.appended $x
-		require ['draggabilly.pkgd.min'], (Draggabilly)->
-			draggie=new Draggabilly $x.get()[0],
+			draggie= new Draggabilly $x.get()[0],
 				handle: ".drag-handle"
 			window.packery.bindDraggabillyEvents draggie
-			return
 		return
 	list= (d)-> 
 		if  $('.list-item.normal').length>0
@@ -131,28 +132,18 @@ require ['jquery','d3','nest'] , ($,d3,Nest)->
 				add_widget s
 			return 
 	snapshot= (d)->
-		$item= $("""
-			<div class="list-item w2 h2">
-				<header class="drag-handle top left">|||</header>
-				<input type="button" class="btn-small fav top left" value="收藏">
-				<input type="button" class="btn-small share top left" value="分享">
-				<div class="btn-close top right">x</div>
-				<input type="button" class="btn-resize top right" value="放大">
-				<div class='inner select_graph'>
-				</div>
-			</div>
-		""")
+		$item= t_list_item(d).addClass("h2").removeClass('normal')
+		$item.find('.drag-handle').after t_item_action()
 		add_widget $item, $('.selected_info')
-		if not d3?
-			d3= window.d3
 		$svg= $('#nest-container svg').clone()
-		$item.find(".select_graph").append $svg
+		$item.find(".inner").append $svg
 		$g= $svg.find(">g")
 		svg= d3.select($svg.get()[0])
 		svg.selectAll('.node').data(window.nest.nodes).filter((x)->not x.isHigh).remove()
 		svg.selectAll('.link').data(window.nest.links).filter((x)->not x.isHigh).remove()
 		svg.selectAll('.ring').remove()
 		svg.selectAll('.marker').remove()
+		svg.selectAll('.selection-helper').remove()
 		svg.attr("pointer-events", "all")
 		.attr("preserveAspectRatio","XMidYMid meet")
 		.call(d3.behavior.zoom()
@@ -246,21 +237,24 @@ require ['jquery','d3','nest'] , ($,d3,Nest)->
 	window.doc_handler= (d)->
 		url= d.url or d.name
 		text= d.name
-		$item= $("""
-		<div  class='doc_info list-item w2 h2 expanded'>
-			<header class="drag-handle top left">|||</header>
-			<input type="button" class="btn-close top right" value="关闭">
-			<input type="button" class="btn-resize top right" value="缩小">
-			<input type="button" class="btn-small fav top left"	value="收藏">
-			<input type="button" class="btn-small share  top left"   value="分享">
-			<div class='inner'>
-				<h2 class="item-headline">
-					<span>#{text}</span>
-				</h2>
-				<iframe src="#{url}" ></iframe>
-			</div>
-		</div>
-		""")
+		$item= t_list_item(d).addClass('doc_info h2 expanded')
+		$item.find('.inner').append("""<iframe src="#{url}" ></iframe>""")
+		$item.find('.drag-handle').after t_item_action()
+		# $("""
+		# <div  class='doc_info list-item w2 h2 expanded'>
+		# 	<header class="drag-handle top left">|||</header>
+		# 	<input type="button" class="btn-close top right" value="关闭">
+		# 	<input type="button" class="btn-resize top right" value="缩小">
+		# 	<input type="button" class="btn-small fav top left"	value="收藏">
+		# 	<input type="button" class="btn-small share  top left"   value="分享">
+		# 	<div class='inner'>
+		# 		<h2 class="item-headline">
+		# 			<span>#{text}</span>
+		# 		</h2>
+		# 		<iframe src="#{url}" ></iframe>
+		# 	</div>
+		# </div>
+		# """)
 		add_widget $item, $(".selected_info")
 		return
 	get_selected_services = ->
@@ -487,7 +481,7 @@ require ['jquery','d3','nest'] , ($,d3,Nest)->
 		return
 	init_service= (services)->
 		res= {}
-		d3= window.d3
+		# d3= window.d3
 		res.svg= d3.select('#banner .overlay').append("svg")
 		res.nodes= res.svg.selectAll('.node')
 		res.links= res.svg.selectAll('.link')
@@ -535,11 +529,6 @@ require ['jquery','d3','nest'] , ($,d3,Nest)->
 		window.nest= new Nest ({
 			"container":"#nest-container",
 		})
-		require ['draggabilly.pkgd.min'], (Draggabilly)->
-			draggie=new Draggabilly $("#nest-container").parent().get()[0],
-				handle: ".drag-handle"
-			window.packery.bindDraggabillyEvents draggie
-			return
 		$(document).on "click", ".btn-close" , ()->
 			ui= $(this).closest('div.list-item')
 			window.packery.remove ui
@@ -646,41 +635,41 @@ require ['jquery','d3','nest'] , ($,d3,Nest)->
 			if $('body').hasClass('ready')
 				$("body").animate({'scrollTop':0})
 			return
-		require ['dropimage'], (dropimage)->
-			$(window).on "dragover", ->
-				$('#dropimage-holder').addClass('dragover')
-				false
-			$(window).on "mouseup", ->
-				$('#dropimage-holder').removeClass('dragover')
-				return
-			$holder=$('#dropimage-holder')
-			if dropimage.tests.dnd
-				$holder.on 'drop', (e)->
-					$(this).removeClass('dragover')
-					e.preventDefault()
-					data= new FormData()
-					for x in e.originalEvent.dataTransfer.files
-						data.append "myfile",x
-					blockUI()
-					$.ajax
-						url: '/search',
-						type: 'POST',
-						data: data,
-						cache: false,
-						contentType: false,
-						processData: false,
-						success: (d)->
-							$('#nest-container').parent().removeClass "hidden"
-							window.nest.draw d
-							click_handler (window.nest.root)
-							unblockUI()
-							return
-						error: (d)->
-							console.log e
-							unblockUI()
-							return
-					,"json"
-					return false
+		# 拖放图片来上传
+		$(window).on "dragover", ->
+			$('#dropimage-holder').addClass('dragover')
+			false
+		$(window).on "mouseup", ->
+			$('#dropimage-holder').removeClass('dragover')
+			return
+		$holder=$('#dropimage-holder')
+		if dropimage.tests.dnd
+			$holder.on 'drop', (e)->
+				$(this).removeClass('dragover')
+				e.preventDefault()
+				data= new FormData()
+				for x in e.originalEvent.dataTransfer.files
+					data.append "myfile",x
+				blockUI()
+				$.ajax
+					url: '/search',
+					type: 'POST',
+					data: data,
+					cache: false,
+					contentType: false,
+					processData: false,
+					success: (d)->
+						$('#nest-container').parent().removeClass "hidden"
+						window.nest.draw d
+						click_handler (window.nest.root)
+						unblockUI()
+						return
+					error: (d)->
+						console.log e
+						unblockUI()
+						return
+				,"json"
+				return false
 		$(window).on "scroll", ()->
 			if $(".load-more").offset().top<=$(window).scrollTop()+$(window).height()
 				if window.loadFunc?

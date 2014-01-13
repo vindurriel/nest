@@ -1,2 +1,7 @@
 web.py
 requests
+suds
+jieba
+thrift
+elementtree
+BeautifulSoup

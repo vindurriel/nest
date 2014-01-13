@@ -1,7 +1,20 @@
-@import '/css/main.css';
-@import '/css/jquery.qtip.min.css';
-@import '/css/jquery.gridster.min.css';
 @import "/css/switcher.css";
+.small {
+  padding: 1px 3px;
+  font-size: 12px;
+  margin: 0 0 0 10px;
+}
+body {
+  font-family: 微软雅黑,simsun;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  background: #eee;
+  color: black;
+}
+a {
+  color: black;
+}
 #wrapper {
   width: 95%;
   margin: 0 auto;
@@ -698,6 +711,7 @@ body.ready .logo {
 }
 .load-more {
   position: relative;
+  top: 450px;
   display: block;
   height: 30px;
   width: 100%;

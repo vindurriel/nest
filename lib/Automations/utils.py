@@ -1,5 +1,5 @@
 #encoding=utf-8
-def decode(s):
+def to_unicode(s):
 	if type(s)==type(u""):
 		return s
 	codings=['utf-8','gbk']

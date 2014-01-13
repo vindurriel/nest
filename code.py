@@ -1,9 +1,7 @@
 #encoding=utf-8
 import os,sys,json,requests,traceback,web
 from utils import *
-web.config.debug=False
-config=web.storage(static=cwd('static'))
-web.template.Template.globals['config']=config
+
 ### router
 router="""
 / model
@@ -19,9 +17,7 @@ router="""
 /play/(.+) model.play
 /automate(?:/)? automate
 """
-###router
 urls=[]
-from search import search
 to_imports=set()
 for line in router.split("\n"):
     if line=="": continue
@@ -38,8 +34,15 @@ for x in to_imports:
         exec(cmd)
     except Exception, e:
         pass
+        
+web.config.debug=False
+web.template.Template.globals['config'] = web.storage(static=cwd('static'))
 app = web.application(urls, globals(), autoreload=True)
+application=app.wsgifunc()
 class static:
+    '''
+
+    '''
     def GET(self,media, filename):
         import mimetypes
         mime_type = mimetypes.guess_type(filename)[0]
@@ -53,12 +56,10 @@ class static:
             return f
         except IOError:
             traceback.print_exc()
-            web.notfound()
-            return '' # you can send an 404 error here if you want
+            web.notfound() #send http 404
 class favicon:
 	def GET(self):
 		web.redirect('/img/favicon.png')
-application=app.wsgifunc()
 if __name__ == "__main__":
     app.run()
     a=1
