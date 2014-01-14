@@ -14,7 +14,7 @@ requirejs.config
 			'exports': 'd3'
 require ["jsc3d",'jsc3d_touch'], (a,b)->
 	return
-require ['packery.pkgd.min'], (x)->
+require ['packery.pkgd.min','jquery'], (x,$)->
 	require ['packery/js/packery','draggabilly'] ,(pack,Draggabilly)->
 		window.packery= new pack "#wrapper",
 			'itemSelector':'.list-item'
@@ -49,7 +49,7 @@ require ['jquery','d3','nest','draggabilly','dropimage'] , ($,d3,Nest,Draggabill
 				<h2 class="item-headline">
 					<span style="border-color:#{color}">#{d.name}</span>
 				</h2>
-				<div class="item-prop">#{d.type} </div>
+				<div class="item-prop"></div>
 				<img class="item-image hidden"/>
 				<p class="item-detail">#{details}</p>
 			</div>
@@ -94,7 +94,7 @@ require ['jquery','d3','nest','draggabilly','dropimage'] , ($,d3,Nest,Draggabill
 		for link in window.nest.degree[d.index]
 			if d==link.target then continue
 			n= link.target
-			if n.type in "SearchProvider smartref_category query".split(" ") then continue
+			if n.type in "SearchProvider smartref_category query referData".split(" ") then continue
 			related.push n
 		if related.length==0
 			return
@@ -170,7 +170,6 @@ require ['jquery','d3','nest','draggabilly','dropimage'] , ($,d3,Nest,Draggabill
 			return cv
 	window.click_handler= (d)->
 		if not d? then return
-		if window.last_click? and d==window.last_click then return
 		document.title= d.name
 		list d
 		window.nest.highlight d
@@ -232,7 +231,6 @@ require ['jquery','d3','nest','draggabilly','dropimage'] , ($,d3,Nest,Draggabill
 				detail.append("<h3>相关文档</h3>")
 				for n in docs
 					detail.append("<span data-doc-id='#{n.id}'  class='doc_url' >#{n.name}</span>")
-		window.last_click=d
 		return
 	window.doc_handler= (d)->
 		url= d.url or d.name
@@ -240,21 +238,6 @@ require ['jquery','d3','nest','draggabilly','dropimage'] , ($,d3,Nest,Draggabill
 		$item= t_list_item(d).addClass('doc_info h2 expanded')
 		$item.find('.inner').append("""<iframe src="#{url}" ></iframe>""")
 		$item.find('.drag-handle').after t_item_action()
-		# $("""
-		# <div  class='doc_info list-item w2 h2 expanded'>
-		# 	<header class="drag-handle top left">|||</header>
-		# 	<input type="button" class="btn-close top right" value="关闭">
-		# 	<input type="button" class="btn-resize top right" value="缩小">
-		# 	<input type="button" class="btn-small fav top left"	value="收藏">
-		# 	<input type="button" class="btn-small share  top left"   value="分享">
-		# 	<div class='inner'>
-		# 		<h2 class="item-headline">
-		# 			<span>#{text}</span>
-		# 		</h2>
-		# 		<iframe src="#{url}" ></iframe>
-		# 	</div>
-		# </div>
-		# """)
 		add_widget $item, $(".selected_info")
 		return
 	get_selected_services = ->
@@ -320,7 +303,7 @@ require ['jquery','d3','nest','draggabilly','dropimage'] , ($,d3,Nest,Draggabill
 			if s.event=="draw"
 				window.nest.draw s
 			else
-				window.nest.explore s
+				window.nest.expand s
 		else if direction=="<-"
 			s= window.story[window.current_step]
 			if s.event=="draw"

@@ -1,27 +1,18 @@
 class nest
-	@colors :[
-			"song",
-			"artist",
-			"user",
-			"album",
-			'relationship',
-			"baiduBaikeCrawler",
-			"hudongBaikeCrawler",
-			"referData",
-		]
+	## ->和=>的区别：=>会把函数的this变量绑定到class对象本身,相当于调用func.bind(class_name)
+	## 字符@全等于this,后边跟变量名则代表this. 如 @foo代表this.foo
+	#构造函数
 	constructor: (options)->
-		@hNode= {}
-		@position_cache={}
-		@palette= d3.scale.category20()
 		@container= options.container or "#container"
 		@w = options.width or 400
 		@h = options.height or 400
-		@ctrlPressed = false
-		@altPressed = false
-		@shiftPressed = false
+		#nodes的字典
+		@hNode= {}
+		#颜色跳板，根据node type确定颜色，见color函数
+		@palette= d3.scale.category20()
 		@blacklist= []
-		@explored= []
-		_t=@
+		_t=@ #以便匿名函数引用
+		#画布，是svg下的一个g
 		@vis = d3.select(@container)
 			.append("svg:svg")
 			.style('width','inherit')
@@ -31,93 +22,81 @@ class nest
 			.attr("preserveAspectRatio","XMidYMid")
 			.call(d3.behavior.zoom().scaleExtent([0.01,10]).on("zoom", @zoom)).on('dblclick.zoom',null)
 			.append("svg:g")
-			.on('mousemove',()->
+			.on 'mousemove',()->
+				#focus函数有100ms的延迟；若在100ms内鼠标再次移动，则取消执行focus
 				if _t.timed?
 					clearTimeout _t.timed
 				_t.timed= setTimeout _t.focus, 100, d3.mouse(@)
 				return
-			).on('mouseleave',()=>
-				@mouse_on=true
-				if @timed
-					clearTimeout @timed
+			.on 'mouseleave',()->
+				#鼠标移出画布则取消
+				if _t.timed?
+					clearTimeout _t.timed
 				return
-			)
+		#voronoi图用于节点边界的分割，tick时更新
 		@voronoi = d3.geom.voronoi()
 		.x((d)->d.x)
 		.y((d)->d.y)
-
+		#画布的平移和缩放
 		@translate= [0,0]
 		@scale=1.0
-		@link = @vis.selectAll(".link")
-		@node = @vis.selectAll(".node")
+		#各种元素的选择器
+		@svg_link = @vis.selectAll(".link")
+		@svg_node = @vis.selectAll(".node")
 		@text=@vis.selectAll('text')
 		@clip=@vis.selectAll('.clip')
+		#force，用于动态更新node和link的位置
 		@force = d3.layout.force()
 		.on("tick", @tick)
-		.charge (d)->
-			if d.type=="referData" then -200 else -200
-		.linkDistance((d)->
+		#node的“电荷”，负值意思是彼此相斥，
+		#node在电荷库仑力和link的拉力下移动并达到平衡位置
+		.charge(-200)
+		#link的长短（把link想象成相当于小棍）
+		.linkDistance (d)->
 			if d.target.distance_rank?
 				return d.target.distance_rank*20
 			if d.target.type=="referData" then 5 else 20
-		)
-		.linkStrength((d)->if d.value? then 1.0-d.value else 0.1)
+		#link的张力（把ling想象成弹簧），取值0-1，1无弹性
+		.linkStrength (d)->
+			if d.value? then 1.0-d.value else 0.1
+		#force的力场大小要和画布相适应
 		.size([@w, @h])
-		@relationships={
-			'artist':[{
-					"id": (d)-> "hitsongs_of_#{d.id}",
-					'name': (d)->"Artist's best songs",
-				},{
-					"id": (d)-> "albums_of_#{d.id}",
-					'name': (d)->"Artist's album(s)",
-				}
-			],
-			'song':[{
-					"id": (d)-> "artist_of_#{d.id}",
-					'name': (d)->"Song's artist(s)",
-				},{
-					"id": (d)-> "album_of_#{d.id}",
-					'name': (d)->"Song's album",			
-				}
-			],
-			'album':[{
-					"id": (d)-> "artist_of_#{d.id}",
-					'name': (d)->"Album's artist",
-				},{
-					"id": (d)-> "songs_of_#{d.id}",
-					'name': (d)->"Album's songs",			
-				}
-			],
-			'collect':[{
-					"id": (d)-> "songs_of_#{d.id}",
-					'name': (d)->"Collection's songs",			
-				}
-			],
-		}
-		$(document).keydown @cacheIt
-		$(document).keyup @cacheIt
+		#键盘按下ctrl、shift、alt时的处理函数
+		$(document).keydown @onKey
+		$(document).keyup @onKey
 		return
-	normalize_id: (x)->
-		x.name=x.name.replace(/^\s+|\s+$/, '')
-		if not x.id?
-			x.id= "#{x.type}_#{x.name}"
-		x.id= x.id.replace(/^\s+|\s+$/, '')
-		return 
-	convert_link_id:  (x)=>
+	#使node data的name和id符合标准
+	#输入：node_data，输出：无
+	normalize_id: (d)->
+		d.name=d.name.replace(/^\s+|\s+$/, '')
+		if not d.id?
+			d.id= "#{d.type}_#{d.name}"
+		d.id= d.id.replace(/^\s+|\s+$/, '')
+		return
+	#如果link的source和target的id是string，那么根据id从hNode中找到对应的node
+	#输入：object（可能是string、object或int，只处理string），输出：object（node_data对象或者输入原样返回）
+	_convert_link_id:  (x)=>
 		## x is string
 		if typeof(x)=="string"
 			x= x.replace(/^\s+|\s+$/g, '')
 			if @hNode[x]?
 				return @hNode[x]
 		return x
+	#处理link的source和target：如果是stirng，替换成对应id的node data。
+	#输入：link data，输出：无
+	##_convert_link_id中引用了hNode,所以需要在hNode更新完成后调用（见update函数）
 	normalize_link: (l)=>
-		l.source = @convert_link_id l.source
-		l.target = @convert_link_id l.target
+		l.source = @_convert_link_id l.source
+		l.target = @_convert_link_id l.target
 		return
+	#正规化data中name、id等字符串
+	#输入：object（只处理string），输出：object（string）
 	normalize_text: (x)->
 		if typeof(x)=="string"
 			x = x.replace(/^\s+|\s+$/g, '')
 		return x
+	#生成voronoi的函数，用于平面分割，方便点选
+	#输入：node data的array，输出：voronoi所需的shapes array
 	recenterVoronoi: (nodes) =>
 		shapes = []
 		@voronoi(nodes).forEach (d)->
@@ -130,36 +109,46 @@ class nest
 			shapes.push n
 			return
 		return shapes
-	cacheIt : (e) =>
+	#处理键盘事件
+	onKey : (e) =>
 		@ctrlPressed = e.ctrlKey
 		@altPressed = e.altKey
 		@shiftPressed = e.shiftKey
-		if e.type=="keydown" and e.keyCode==68
+		if e.type=="keydown" and e.keyCode==68 #“d”
 			@toggle_doc()
 		return true
+	#处理平移和缩放事件
 	zoom : () =>
 		@scale = d3.event.scale
 		@translate=d3.event.translate
 		@vis.attr "transform", "translate(" + @translate + ")" + " scale(" + @scale + ")"
+		#根据缩放调整text大小，在一定区间内保持文字大小不变（可能会变大，跟浏览器所设置的最小字体大小有关）
 		@text.style("font-size", (1 / @scale) + "em")
-
 		return
-	focus :(e)=>
+	#鼠标悬停时显示区域中节点的text
+	focus : (e)=>
 		@center = {x:e[0],y:e[1]}
 		if not @ring?
+			#在vis的第一位插入circle，用于指示高亮区域
 			@ring=@vis.insert("circle",":first-child").classed('ring',true)
 		@ring.attr('r',150.0/@scale)
-		@ring.attr('cx',@center.x)
-		@ring.attr('cy',@center.y)
+		.attr('cx',@center.x)
+		.attr('cy',@center.y)
+		#节点到鼠标中心的距离
 		node_dist= []
-		@node.each (d)=>
+		@nodes.map (d)=>
 			node_dist.push [d.id, Math.pow((d.x-@center.x),2)+Math.pow((d.y-@center.y),2)]
 			return
+		#根据距离排序
 		node_dist.sort (a,b)-> a[1]-b[1]
-		threshold= Math.pow((150/@scale),2)
+		#选取点的总数不超过15个
 		node_dist= node_dist.slice(0,15)
+		#选取距离在150以内的点
+		threshold= Math.pow((150/@scale),2)
 		node_dist= node_dist.filter((d)->d[1]<threshold)
+		#高亮点的字典
 		hFocus= {}
+		#所有点(除选中的点外)取消高亮
 		@nodes.map (d)-> 
 			if d!=@theFocus then d.isHigh= false
 			return
@@ -167,67 +156,72 @@ class nest
 			hFocus[d[0]]=true
 			@hNode[d[0]].isHigh= true
 			return
-		@link.each (d)=>
+		#source和target都被高亮的link，也被高亮
+		@links.map (d)=>
 			d.isHigh= false
 			if hFocus[d.source.id]? and hFocus[d.target.id]
 				d.isHigh= true
 			return
 		@update(false)
 		return
-
+	#清空节点数据，初始化
+	#输入：由nodes和links组成的graph，输出：无
 	draw : (json) =>
 		if not json.nodes? or json.nodes.length==0
 			return {'error':'no nodes'}
 		if json.blacklist?
 			@blacklist= json.blacklist
-		if json.explored?
-			@explored= json.explored
+		#初始化点的位置，从而更快地达到稳定
 		i=0
-		for d in json.nodes
+		n= json.nodes.length
+		json.nodes.map (d)=>
 			@normalize_id d
 			d.x=@w*(i%10)/10
 			d.y=i*@h/n
 			i+=1
-		for d in json.links
+			return
+		json.links.map (d)=>
 			d.source= @normalize_text d.source
 			d.target= @normalize_text d.target
+			return
+		#nodes和links进行浅拷贝
 		@nodes= json.nodes.slice()
 		@links= json.links.slice()
 		@root = @nodes[0]
+		#选中root
 		@theFocus= @root
 		@root.isHigh= true
-		n=@nodes.length
-		#init node position for faster stablization
 		@root.x =@w /2
 		@root.y =@h /2
+		#为force提供数据
 		@force.nodes(@nodes).links(@links)
 		@update() 
 		return
+	#node circle的半径
 	getR : (d) =>
-		if d.type=="SearchProvider" then return 15
-		return 5
-	tick : (e)=>
-		@node.attr("transform", (d) ->
+		if d.type=="SearchProvider" then 15 else 5
+	#负责迭代更新node和link的位置、生成clip
+	#由update函数调用
+	tick : ()=>
+		#node位置更新
+		@svg_node.attr "transform", (d) ->
 			"translate(#{d.x},#{d.y})"
-		)
+		#node clip更新
 		.attr('clip-path',(d)->"url(#clip-#{d.index})")
+		#marker位置更新
 		@vis.select('.marker')
 		.attr('x',@theFocus.x-22)
 		.attr('y':@theFocus.y-45)		
-
-
-		@link.attr("x1", (d) ->
-			d.source.x
-		).attr("y1", (d) ->
-			d.source.y
-		).attr("x2", (d) ->
-			d.target.x
-		).attr("y2", (d) ->
-			d.target.y
-		)
+		#link位置更新
+		@svg_link.attr("x1", (d) -> d.source.x)
+		.attr("y1", (d) -> d.source.y)
+		.attr("x2", (d) -> d.target.x)
+		.attr("y2", (d) -> d.target.y)
+		#text位置更新
 		@text.attr "transform", (d)=>
 			dx=d.x+@.getR(d)+5*@scale
 			"translate(#{dx},#{d.y})"
+		#生成clip，便于更好的点选
 		@clip = @clip.data(@recenterVoronoi(@nodes), (d)->d.point.index)
 		@clip.enter().append('clipPath').classed('clip', true)
 		.attr('id', (d) -> 'clip-'+d.point.index)
@@ -236,71 +230,33 @@ class nest
 		@clip.append('path')
 		.attr('d', (d)-> 'M'+d.join(',')+'Z')
 		return
+	#显示或不显示type为referData的node或type为referData的link
 	toggle_doc : ()=>
 		@flag= not @flag
 		if  @flag
-			@node.classed('hidden',(d)->d.type=="referData" )
-			@link.classed('hidden',(d)->d.target.type=="referData" )		
+			@svg_node.classed('hidden',(d)->d.type=="referData" )
+			@svg_link.classed('hidden',(d)->d.target.type=="referData" )		
 			@text.classed('hidden',(d)->d.type=="referData" )
 		else
-			@node.classed('hidden',false)
-			@link.classed('hidden',false)		
+			@svg_node.classed('hidden',false)
+			@svg_link.classed('hidden',false)		
 			@text.classed('hidden',false)
+	#可自定义type对应的颜色，使用者可通过nest_instance.colors来修改
+	colors:
+			'relationship':'#0088dd'
+			'SearchProvider':'dd0000'
+	#根据type决定颜色
+	#输入：node data，输出：css支持的颜色字符串
 	color : (d) =>
-		i= nest.colors.indexOf(d.type)
+		if @colors[d.type]?
+			return @colors[d.type]
 		res= "black"
-		if d.type=="SearchProvider"
-			return "#dd0000"
 		res= @palette(d.type)
 		if d.distance_rank?
 			res= d3.hsl(res).brighter(d.distance_rank*.1).toString()
 		return res
-	dblclick : (d)=>
-		if d.type=="referData" or d.type=="doc"
-			if window.doc_handler?
-				window.doc_handler d
-			else
-				window.open if d.url? then d.url else d.name
-			return
-		if d.type=="doc"
-			window.open if d.url? then d.url else d.name
-			return
-		if d.isSearching? and d.isSearching==true
-			d.isSearching= false
-			return
-		d.isSearching = true
-		data={
-			keys:d.name
-			return_id:d.id,
-		}
-		if d.url?
-			data.url= d.url
-			if d.url.indexOf("/subview/")>=0
-				data.is_subview= true
-		$.post "/explore/", JSON.stringify(data), @expand, 'json'
-		return
-	remove : (d) =>
-		if d==@root
-			alert "不能删除根节点"
-			@shiftPressed=false
-			return
-		for link in @degree[d.index]
-			@links.remove link
-			if @degree[link.target.index].length==1 and link.target!=@root
-				@nodes.remove link.target
-			if @degree[link.source.index].length==1 and link.source!=@root
-				@nodes.remove link.source
-		@nodes.remove d
-		@blacklist.push d.id
-
-		@clip=@clip.data([])
-		@clip.exit().remove()
-
-		if window.click_handler?
-			window.click_handler @root
-		return
+	#处理节点的单击事件
 	click : (d) =>
-		d.fixed= false
 		if @shiftPressed
 			@remove d
 			@update()
@@ -312,7 +268,9 @@ class nest
 			if window.click_handler?
 				window.click_handler(d)
 		return
-	#node has to be ready
+	#通过id查找node data，id可以是string、object或number
+	#hNode必须先在update中初始化
+	#输入：id（可以是string、object或number），输出：node data
 	find_node: (linknode)=>
 		t= typeof(linknode)
 		if t=="string"
@@ -327,28 +285,23 @@ class nest
 				return
 			return @nodes[i]
 		return
+	#通过source和target查找link data，source和target可以是string、object或number
+	#hNode必须先在update中初始化
+	#输入：link data（可能是服务传过来的、未图形化），输出：link data（经过图形化的）
 	find_link : (l)=>
 		source_node= @find_node l.source
 		target_node= @find_node l.target
 		if not source_node? or not target_node?
 			return
 		return @matrix[source_node.index][target_node.index]
-	rm :(data)=>
-		data.nodes.map (x)=>
-			@nodes.remove  @hNode[x.id]
-			return
-		data.links.map (x)=>
-			#source and target must not be number, but object or string id
-			#or it may delete wrong links.
-			@links.remove @find_link(x)
-			return
-		@update()
-		return
-	explore : (data)=>
+	#扩展节点，用于automate中增加节点, 见model.coffee中的play_step
+	#输入：有node和link的graph，输出：无
+	expand : (data)=>
 		data.nodes.map (x)=>
 			@normalize_id x
 			if not @hNode[x.id]?
 				@nodes.push x
+				#在此加入hNode是为了下面link查找source和target时使用
 				@hNode[x.id]=x
 			return
 		data.links.map (x)=>
@@ -362,7 +315,46 @@ class nest
 			return
 		@update()
 		return
-	expand : (data)=>
+	#删除节点，用于automate中减少节点，见model.coffee中的play_step
+	#输入：有node和link的graph，输出：无
+	rm :(data)=>
+		data.nodes.map (x)=>
+			@nodes.remove  @hNode[x.id]
+			return
+		data.links.map (x)=>
+			#source and target must not be number, but object or string id
+			#or it may delete wrong links.
+			@links.remove @find_link(x)
+			return
+		@update()
+		return
+	#处理用户双击事件，如果是doc节点则访问url，如果是普通节点则explore该节点
+	#输入：node data，输出：无
+	dblclick : (d)=>
+		#处理doc
+		if d.type=="referData" or d.type=="doc"
+			if window.doc_handler?
+				window.doc_handler d
+			else
+				window.open if d.url? then d.url else d.name
+			return
+		#如果当前node正在搜索则返回，避免多次调用explore
+		if d.isSearching? and d.isSearching==true
+			d.isSearching= false
+			return
+		d.isSearching = true
+		data=
+			keys:d.name
+			return_id:d.id,
+		if d.url?
+			data.url= d.url
+			#对应百度百科的subview
+			if d.url.indexOf("/subview/")>=0
+				data.is_subview= true
+		$.post "/explore/", JSON.stringify(data), @explore, 'json'
+		return
+	#处理/explore服务返回的json，过滤新的节点后加入nodes
+	explore : (data)=>
 		for id of data
 			source=@hNode[id]
 			if not source?
@@ -385,6 +377,30 @@ class nest
 			source.isSearching= false
 		@update()
 		return
+	#用户操作删除节点
+	remove : (d) =>
+		if d==@root
+			alert "不能删除根节点"
+			@shiftPressed=false
+			return
+		#删除与node相连的所有link，如果相连node只有一条link，那么也删除该node（避免孤立节点出现）
+		for link in @degree[d.index]
+			@links.remove link
+			if @degree[link.target.index].length==1 and link.target!=@root
+				@nodes.remove link.target
+			if @degree[link.source.index].length==1 and link.source!=@root
+				@nodes.remove link.source
+		@nodes.remove d
+		#将node id加入blacklist，下次在explore的时候就不会再返回该node
+		@blacklist.push d.id
+		#删除clip数据，然后在update中重建clip
+		@clip=@clip.data([])
+		@clip.exit().remove()
+		#选中root
+		if window.click_handler?
+			window.click_handler @root
+		return
+	#高亮用户选中的节点，并一次性生成marker
 	highlight : (d)=>
 		for x in @links 
 			x.isHigh= false
@@ -399,54 +415,48 @@ class nest
 			.attr('height',50)
 			.attr('x',@theFocus.x-22)
 			.attr('y':@theFocus.y-45)
+		#将marker移动到vis的尾端，避免被其他元素遮挡
 		$('.marker').remove().appendTo $(@vis[0][0])
 		@update(false)
 		return
+	#start_force为true会调用force.start，更新node和link的位置
 	update : (start_force=true)=>
-		#init graph info
-		@matrix=[]
-		@degree=[]
-		@hNode={}
-		n= @nodes.length
-		for i in [0..n-1]
-			@hNode[@nodes[i].id]=@nodes[i]
-			@degree.push []
-			@matrix.push []
-			for j in [0..n-1]
-				@matrix[i].push null
+		#将link source和target中的string替换成node data object
+		hNode= {}
+		@nodes.map (d)=>
+			@hNode[d.id]=d
 		for l in @links
 			@normalize_link l
-		# Update the links…
-		@link = @link.data(@links)
-
-		# Enter any new links.
-		@link.enter()
+		#更新svg link的data
+		@svg_link = @svg_link.data(@links)
+		#添加data中有而svg中没有的link
+		@svg_link.enter()
 		.insert("line", ".node")
 		.classed("link",true)
-
-		# Exit any old links.
-		@link.exit().remove()
-
-		@node = @vis.selectAll(".node").data(@nodes,(d)->d.id)
+		#删除data中没有而svg中有的link
+		@svg_link.exit().remove()
+		#更新svg node的data
+		@svg_node = @svg_node.data(@nodes,(d)->d.id)
 		_this=@
-		#enter new nodes
-		nodeEnter=@node.enter()
+		#添加data中有而svg中没有的node
+		#nodeEnter对应的元素是svg:g
+		nodeEnter=@svg_node.enter()
 		.append("g")
 		.attr("class", "node")
 		.on("click", @click)
 		.on('dblclick',@dblclick)
 		.classed("highlight",(d)->d.isHigh==true)
 		.call(@force.drag())
-
+		#添加用于选择的大圆
 		nodeEnter.append('circle')
 		.classed('selection-helper',true)
 		.attr('r',50)
 		.style("fill", "#0088ff")
-
+		#添加表示节点的小圆
 		nodeEnter.append("circle")
 		.style("fill", "#0088ff")
 		.attr('r',@getR)
-
+		#类型为SearchProvider的node，需要添加img
 		nodeEnter.filter((d)->d.img? and d.type=="SearchProvider")
 		.append('image')
 		.attr('xlink:href',(d)->d.img)
@@ -454,29 +464,14 @@ class nest
 		.attr('height',20)
 		.attr('x',-10)
 		.attr('y',-10) 
-
+		#添加节点的tooltip（鼠标悬浮时可见）
 		nodeEnter.append('title')
 		.text((d)->d.name)
-
-		@node.exit().remove()
-
-		@vis.selectAll(".node path")
-		.attr("r", @getR)
-		.style("fill", @color)
-		
-		@vis.selectAll(".search-img").remove()
-		@vis.selectAll(".node path").filter((d) ->d.isSearching)
-		.append("animate")
-		.attr("attributeName",'cx')
-		.attr("begin",'0s')
-		.attr("dur",'0.1s')
-		.attr("from",'-5')
-		.attr("to",'5')
-		.attr("fill",'remove')
-		.attr("repeatCount",'indefinite')
-		.classed("search-img",true)
-
+		#删除data中没有而svg中有的link
+		@svg_node.exit().remove()
+		#更新text的data,只在isHigh的节点上有text
 		@text= @text.data(@nodes.filter((d)->d.isHigh),(d)->d.id)
+		#添加data中有而svg中没有的text
 		@text.enter().append('text')
 		.text((d)-> if d.name.length <=5 then d.name else d.name.slice(0,5)+"...")
 		.style("font-size", (1 / @scale) + "em")
@@ -485,25 +480,30 @@ class nest
 			"translate(#{dx},#{d.y})"
 		if @flag
 			@text.classed("hidden",(d)->d.type=="referData")
+		@svg_node.classed "highlight", (d)->d.isHigh==true
+		@svg_link.classed "highlight", (d)->d.isHigh==true
+		#删除data中没有而svg中有的text
 		@text.exit().remove()
 		if start_force
 			@force.start()
-
-		# calculate graph info
-		for x in @links
-			try
-				@degree[x.source.index].push x
-				@degree[x.target.index].push x
-				@matrix[x.source.index][x.target.index]=x
-			catch e
-				console.log x
-		@node.classed "highlight", (d)->d.isHigh==true
-		# @node.classed "focus", (d)=>d==@theFocus
-		@link.classed "highlight", (d)->d.isHigh==true	
-		for nod of @hNode
-			@position_cache[nod]= 
-				'x':@hNode[nod].x
-				'y':@hNode[nod].y
+			#重新计算link的信息
+			@matrix=[]
+			@degree=[]
+			n= @nodes.length
+			for i in [0..n-1]
+				@degree.push []
+				@matrix.push []
+				for j in [0..n-1]
+					@matrix[i].push null
+			@links.map (x)=>
+				try
+					@degree[x.source.index].push x
+					@degree[x.target.index].push x
+					@matrix[x.source.index][x.target.index]=x
+				catch e
+					console.log e
+					console.log x
+				return
 		return
 Array::remove = (b) ->
 	if not b?
@@ -512,13 +512,8 @@ Array::remove = (b) ->
 	if a >= 0
 		@splice a, 1
 		return true
-	false
-String.prototype.hashCode = ()->
-	hash = 0.0
-	for i in [0..this.length]
-		if not isNaN this.charCodeAt(i)
-			hash += this.charCodeAt(i)
-	return hash 
+	return false
+#用于和amd标准的module loader集成，例如requirejs
 if typeof(define)=="function" and define.amd?
 	define "nest", ['jquery','d3'], ($,ff)-> 
 		return nest

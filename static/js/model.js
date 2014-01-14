@@ -22,7 +22,7 @@ requirejs.config({
 
 require(["jsc3d", 'jsc3d_touch'], function(a, b) {});
 
-require(['packery.pkgd.min'], function(x) {
+require(['packery.pkgd.min', 'jquery'], function(x, $) {
   require(['packery/js/packery', 'draggabilly'], function(pack, Draggabilly) {
     var draggie;
     window.packery = new pack("#wrapper", {
@@ -57,7 +57,7 @@ require(['jquery', 'd3', 'nest', 'draggabilly', 'dropimage'], function($, d3, Ne
     var color, details, res;
     details = d.content != null ? d.content : "";
     color = window.nest.color(d);
-    res = $("<div class=\"list-item normal w2\" data-nest-node=\"" + d.id + "\">\n	<header class=\"drag-handle top left\">|||</header>\n	<input type=\"button\" class=\"btn-close top right\" value=\"关闭\" />\n	<input type=\"button\" class=\"btn-resize top right\" value=\"放大\" />\n	<div class='inner'>\n		<h2 class=\"item-headline\">\n			<span style=\"border-color:" + color + "\">" + d.name + "</span>\n		</h2>\n		<div class=\"item-prop\">" + d.type + " </div>\n		<img class=\"item-image hidden\"/>\n		<p class=\"item-detail\">" + details + "</p>\n	</div>\n</div>");
+    res = $("<div class=\"list-item normal w2\" data-nest-node=\"" + d.id + "\">\n	<header class=\"drag-handle top left\">|||</header>\n	<input type=\"button\" class=\"btn-close top right\" value=\"关闭\" />\n	<input type=\"button\" class=\"btn-resize top right\" value=\"放大\" />\n	<div class='inner'>\n		<h2 class=\"item-headline\">\n			<span style=\"border-color:" + color + "\">" + d.name + "</span>\n		</h2>\n		<div class=\"item-prop\"></div>\n		<img class=\"item-image hidden\"/>\n		<p class=\"item-detail\">" + details + "</p>\n	</div>\n</div>");
     if (d.img != null) {
       res.addClass('h2');
       res.find('.item-image').removeClass('hidden').attr('src', d.img);
@@ -112,7 +112,7 @@ require(['jquery', 'd3', 'nest', 'draggabilly', 'dropimage'], function($, d3, Ne
         continue;
       }
       n = link.target;
-      if (_ref1 = n.type, __indexOf.call("SearchProvider smartref_category query".split(" "), _ref1) >= 0) {
+      if (_ref1 = n.type, __indexOf.call("SearchProvider smartref_category query referData".split(" "), _ref1) >= 0) {
         continue;
       }
       related.push(n);
@@ -222,9 +222,6 @@ require(['jquery', 'd3', 'nest', 'draggabilly', 'dropimage'], function($, d3, Ne
     if (d == null) {
       return;
     }
-    if ((window.last_click != null) && d === window.last_click) {
-      return;
-    }
     document.title = d.name;
     list(d);
     window.nest.highlight(d);
@@ -303,7 +300,6 @@ require(['jquery', 'd3', 'nest', 'draggabilly', 'dropimage'], function($, d3, Ne
         }
       }
     }
-    window.last_click = d;
   };
   window.doc_handler = function(d) {
     var $item, text, url;
@@ -409,7 +405,7 @@ require(['jquery', 'd3', 'nest', 'draggabilly', 'dropimage'], function($, d3, Ne
       if (s.event === "draw") {
         window.nest.draw(s);
       } else {
-        window.nest.explore(s);
+        window.nest.expand(s);
       }
     } else if (direction === "<-") {
       s = window.story[window.current_step];

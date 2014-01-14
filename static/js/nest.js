@@ -2,19 +2,17 @@ var nest,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
 nest = (function() {
-  nest.colors = ["song", "artist", "user", "album", 'relationship', "baiduBaikeCrawler", "hudongBaikeCrawler", "referData"];
-
   function nest(options) {
     this.update = __bind(this.update, this);
     this.highlight = __bind(this.highlight, this);
-    this.expand = __bind(this.expand, this);
+    this.remove = __bind(this.remove, this);
     this.explore = __bind(this.explore, this);
+    this.dblclick = __bind(this.dblclick, this);
     this.rm = __bind(this.rm, this);
+    this.expand = __bind(this.expand, this);
     this.find_link = __bind(this.find_link, this);
     this.find_node = __bind(this.find_node, this);
     this.click = __bind(this.click, this);
-    this.remove = __bind(this.remove, this);
-    this.dblclick = __bind(this.dblclick, this);
     this.color = __bind(this.color, this);
     this.toggle_doc = __bind(this.toggle_doc, this);
     this.tick = __bind(this.tick, this);
@@ -22,23 +20,17 @@ nest = (function() {
     this.draw = __bind(this.draw, this);
     this.focus = __bind(this.focus, this);
     this.zoom = __bind(this.zoom, this);
-    this.cacheIt = __bind(this.cacheIt, this);
+    this.onKey = __bind(this.onKey, this);
     this.recenterVoronoi = __bind(this.recenterVoronoi, this);
     this.normalize_link = __bind(this.normalize_link, this);
-    this.convert_link_id = __bind(this.convert_link_id, this);
-    var _t,
-      _this = this;
-    this.hNode = {};
-    this.position_cache = {};
-    this.palette = d3.scale.category20();
+    this._convert_link_id = __bind(this._convert_link_id, this);
+    var _t;
     this.container = options.container || "#container";
     this.w = options.width || 400;
     this.h = options.height || 400;
-    this.ctrlPressed = false;
-    this.altPressed = false;
-    this.shiftPressed = false;
+    this.hNode = {};
+    this.palette = d3.scale.category20();
     this.blacklist = [];
-    this.explored = [];
     _t = this;
     this.vis = d3.select(this.container).append("svg:svg").style('width', 'inherit').style('height', 'inherit').attr("viewBox", "0 0 " + this.w + " " + this.h).attr("pointer-events", "all").attr("preserveAspectRatio", "XMidYMid").call(d3.behavior.zoom().scaleExtent([0.01, 10]).on("zoom", this.zoom)).on('dblclick.zoom', null).append("svg:g").on('mousemove', function() {
       if (_t.timed != null) {
@@ -46,9 +38,8 @@ nest = (function() {
       }
       _t.timed = setTimeout(_t.focus, 100, d3.mouse(this));
     }).on('mouseleave', function() {
-      _this.mouse_on = true;
-      if (_this.timed) {
-        clearTimeout(_this.timed);
+      if (_t.timed != null) {
+        clearTimeout(_t.timed);
       }
     });
     this.voronoi = d3.geom.voronoi().x(function(d) {
@@ -58,17 +49,11 @@ nest = (function() {
     });
     this.translate = [0, 0];
     this.scale = 1.0;
-    this.link = this.vis.selectAll(".link");
-    this.node = this.vis.selectAll(".node");
+    this.svg_link = this.vis.selectAll(".link");
+    this.svg_node = this.vis.selectAll(".node");
     this.text = this.vis.selectAll('text');
     this.clip = this.vis.selectAll('.clip');
-    this.force = d3.layout.force().on("tick", this.tick).charge(function(d) {
-      if (d.type === "referData") {
-        return -200;
-      } else {
-        return -200;
-      }
-    }).linkDistance(function(d) {
+    this.force = d3.layout.force().on("tick", this.tick).charge(-200).linkDistance(function(d) {
       if (d.target.distance_rank != null) {
         return d.target.distance_rank * 20;
       }
@@ -84,83 +69,20 @@ nest = (function() {
         return 0.1;
       }
     }).size([this.w, this.h]);
-    this.relationships = {
-      'artist': [
-        {
-          "id": function(d) {
-            return "hitsongs_of_" + d.id;
-          },
-          'name': function(d) {
-            return "Artist's best songs";
-          }
-        }, {
-          "id": function(d) {
-            return "albums_of_" + d.id;
-          },
-          'name': function(d) {
-            return "Artist's album(s)";
-          }
-        }
-      ],
-      'song': [
-        {
-          "id": function(d) {
-            return "artist_of_" + d.id;
-          },
-          'name': function(d) {
-            return "Song's artist(s)";
-          }
-        }, {
-          "id": function(d) {
-            return "album_of_" + d.id;
-          },
-          'name': function(d) {
-            return "Song's album";
-          }
-        }
-      ],
-      'album': [
-        {
-          "id": function(d) {
-            return "artist_of_" + d.id;
-          },
-          'name': function(d) {
-            return "Album's artist";
-          }
-        }, {
-          "id": function(d) {
-            return "songs_of_" + d.id;
-          },
-          'name': function(d) {
-            return "Album's songs";
-          }
-        }
-      ],
-      'collect': [
-        {
-          "id": function(d) {
-            return "songs_of_" + d.id;
-          },
-          'name': function(d) {
-            return "Collection's songs";
-          }
-        }
-      ]
-    };
-    $(document).keydown(this.cacheIt);
-    $(document).keyup(this.cacheIt);
+    $(document).keydown(this.onKey);
+    $(document).keyup(this.onKey);
     return;
   }
 
-  nest.prototype.normalize_id = function(x) {
-    x.name = x.name.replace(/^\s+|\s+$/, '');
-    if (x.id == null) {
-      x.id = "" + x.type + "_" + x.name;
+  nest.prototype.normalize_id = function(d) {
+    d.name = d.name.replace(/^\s+|\s+$/, '');
+    if (d.id == null) {
+      d.id = "" + d.type + "_" + d.name;
     }
-    x.id = x.id.replace(/^\s+|\s+$/, '');
+    d.id = d.id.replace(/^\s+|\s+$/, '');
   };
 
-  nest.prototype.convert_link_id = function(x) {
+  nest.prototype._convert_link_id = function(x) {
     if (typeof x === "string") {
       x = x.replace(/^\s+|\s+$/g, '');
       if (this.hNode[x] != null) {
@@ -171,8 +93,8 @@ nest = (function() {
   };
 
   nest.prototype.normalize_link = function(l) {
-    l.source = this.convert_link_id(l.source);
-    l.target = this.convert_link_id(l.target);
+    l.source = this._convert_link_id(l.source);
+    l.target = this._convert_link_id(l.target);
   };
 
   nest.prototype.normalize_text = function(x) {
@@ -200,7 +122,7 @@ nest = (function() {
     return shapes;
   };
 
-  nest.prototype.cacheIt = function(e) {
+  nest.prototype.onKey = function(e) {
     this.ctrlPressed = e.ctrlKey;
     this.altPressed = e.altKey;
     this.shiftPressed = e.shiftKey;
@@ -227,18 +149,16 @@ nest = (function() {
     if (this.ring == null) {
       this.ring = this.vis.insert("circle", ":first-child").classed('ring', true);
     }
-    this.ring.attr('r', 150.0 / this.scale);
-    this.ring.attr('cx', this.center.x);
-    this.ring.attr('cy', this.center.y);
+    this.ring.attr('r', 150.0 / this.scale).attr('cx', this.center.x).attr('cy', this.center.y);
     node_dist = [];
-    this.node.each(function(d) {
+    this.nodes.map(function(d) {
       node_dist.push([d.id, Math.pow(d.x - _this.center.x, 2) + Math.pow(d.y - _this.center.y, 2)]);
     });
     node_dist.sort(function(a, b) {
       return a[1] - b[1];
     });
-    threshold = Math.pow(150 / this.scale, 2);
     node_dist = node_dist.slice(0, 15);
+    threshold = Math.pow(150 / this.scale, 2);
     node_dist = node_dist.filter(function(d) {
       return d[1] < threshold;
     });
@@ -252,7 +172,7 @@ nest = (function() {
       hFocus[d[0]] = true;
       _this.hNode[d[0]].isHigh = true;
     });
-    this.link.each(function(d) {
+    this.links.map(function(d) {
       d.isHigh = false;
       if ((hFocus[d.source.id] != null) && hFocus[d.target.id]) {
         d.isHigh = true;
@@ -262,7 +182,8 @@ nest = (function() {
   };
 
   nest.prototype.draw = function(json) {
-    var d, i, n, _i, _j, _len, _len1, _ref, _ref1;
+    var i, n,
+      _this = this;
     if ((json.nodes == null) || json.nodes.length === 0) {
       return {
         'error': 'no nodes'
@@ -271,30 +192,23 @@ nest = (function() {
     if (json.blacklist != null) {
       this.blacklist = json.blacklist;
     }
-    if (json.explored != null) {
-      this.explored = json.explored;
-    }
     i = 0;
-    _ref = json.nodes;
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      d = _ref[_i];
-      this.normalize_id(d);
-      d.x = this.w * (i % 10) / 10;
-      d.y = i * this.h / n;
+    n = json.nodes.length;
+    json.nodes.map(function(d) {
+      _this.normalize_id(d);
+      d.x = _this.w * (i % 10) / 10;
+      d.y = i * _this.h / n;
       i += 1;
-    }
-    _ref1 = json.links;
-    for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-      d = _ref1[_j];
-      d.source = this.normalize_text(d.source);
-      d.target = this.normalize_text(d.target);
-    }
+    });
+    json.links.map(function(d) {
+      d.source = _this.normalize_text(d.source);
+      d.target = _this.normalize_text(d.target);
+    });
     this.nodes = json.nodes.slice();
     this.links = json.links.slice();
     this.root = this.nodes[0];
     this.theFocus = this.root;
     this.root.isHigh = true;
-    n = this.nodes.length;
     this.root.x = this.w / 2;
     this.root.y = this.h / 2;
     this.force.nodes(this.nodes).links(this.links);
@@ -304,13 +218,14 @@ nest = (function() {
   nest.prototype.getR = function(d) {
     if (d.type === "SearchProvider") {
       return 15;
+    } else {
+      return 5;
     }
-    return 5;
   };
 
-  nest.prototype.tick = function(e) {
+  nest.prototype.tick = function() {
     var _this = this;
-    this.node.attr("transform", function(d) {
+    this.svg_node.attr("transform", function(d) {
       return "translate(" + d.x + "," + d.y + ")";
     }).attr('clip-path', function(d) {
       return "url(#clip-" + d.index + ")";
@@ -318,7 +233,7 @@ nest = (function() {
     this.vis.select('.marker').attr('x', this.theFocus.x - 22).attr({
       'y': this.theFocus.y - 45
     });
-    this.link.attr("x1", function(d) {
+    this.svg_link.attr("x1", function(d) {
       return d.source.x;
     }).attr("y1", function(d) {
       return d.source.y;
@@ -348,29 +263,33 @@ nest = (function() {
   nest.prototype.toggle_doc = function() {
     this.flag = !this.flag;
     if (this.flag) {
-      this.node.classed('hidden', function(d) {
+      this.svg_node.classed('hidden', function(d) {
         return d.type === "referData";
       });
-      this.link.classed('hidden', function(d) {
+      this.svg_link.classed('hidden', function(d) {
         return d.target.type === "referData";
       });
       return this.text.classed('hidden', function(d) {
         return d.type === "referData";
       });
     } else {
-      this.node.classed('hidden', false);
-      this.link.classed('hidden', false);
+      this.svg_node.classed('hidden', false);
+      this.svg_link.classed('hidden', false);
       return this.text.classed('hidden', false);
     }
   };
 
+  nest.prototype.colors = {
+    'relationship': '#0088dd',
+    'SearchProvider': 'dd0000'
+  };
+
   nest.prototype.color = function(d) {
-    var i, res;
-    i = nest.colors.indexOf(d.type);
-    res = "black";
-    if (d.type === "SearchProvider") {
-      return "#dd0000";
+    var res;
+    if (this.colors[d.type] != null) {
+      return this.colors[d.type];
     }
+    res = "black";
     res = this.palette(d.type);
     if (d.distance_rank != null) {
       res = d3.hsl(res).brighter(d.distance_rank * .1).toString();
@@ -378,67 +297,7 @@ nest = (function() {
     return res;
   };
 
-  nest.prototype.dblclick = function(d) {
-    var data;
-    if (d.type === "referData" || d.type === "doc") {
-      if (window.doc_handler != null) {
-        window.doc_handler(d);
-      } else {
-        window.open(d.url != null ? d.url : d.name);
-      }
-      return;
-    }
-    if (d.type === "doc") {
-      window.open(d.url != null ? d.url : d.name);
-      return;
-    }
-    if ((d.isSearching != null) && d.isSearching === true) {
-      d.isSearching = false;
-      return;
-    }
-    d.isSearching = true;
-    data = {
-      keys: d.name,
-      return_id: d.id
-    };
-    if (d.url != null) {
-      data.url = d.url;
-      if (d.url.indexOf("/subview/") >= 0) {
-        data.is_subview = true;
-      }
-    }
-    $.post("/explore/", JSON.stringify(data), this.expand, 'json');
-  };
-
-  nest.prototype.remove = function(d) {
-    var link, _i, _len, _ref;
-    if (d === this.root) {
-      alert("不能删除根节点");
-      this.shiftPressed = false;
-      return;
-    }
-    _ref = this.degree[d.index];
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      link = _ref[_i];
-      this.links.remove(link);
-      if (this.degree[link.target.index].length === 1 && link.target !== this.root) {
-        this.nodes.remove(link.target);
-      }
-      if (this.degree[link.source.index].length === 1 && link.source !== this.root) {
-        this.nodes.remove(link.source);
-      }
-    }
-    this.nodes.remove(d);
-    this.blacklist.push(d.id);
-    this.clip = this.clip.data([]);
-    this.clip.exit().remove();
-    if (window.click_handler != null) {
-      window.click_handler(this.root);
-    }
-  };
-
   nest.prototype.click = function(d) {
-    d.fixed = false;
     if (this.shiftPressed) {
       this.remove(d);
       this.update();
@@ -481,18 +340,7 @@ nest = (function() {
     return this.matrix[source_node.index][target_node.index];
   };
 
-  nest.prototype.rm = function(data) {
-    var _this = this;
-    data.nodes.map(function(x) {
-      _this.nodes.remove(_this.hNode[x.id]);
-    });
-    data.links.map(function(x) {
-      _this.links.remove(_this.find_link(x));
-    });
-    this.update();
-  };
-
-  nest.prototype.explore = function(data) {
+  nest.prototype.expand = function(data) {
     var _this = this;
     data.nodes.map(function(x) {
       _this.normalize_id(x);
@@ -515,7 +363,46 @@ nest = (function() {
     this.update();
   };
 
-  nest.prototype.expand = function(data) {
+  nest.prototype.rm = function(data) {
+    var _this = this;
+    data.nodes.map(function(x) {
+      _this.nodes.remove(_this.hNode[x.id]);
+    });
+    data.links.map(function(x) {
+      _this.links.remove(_this.find_link(x));
+    });
+    this.update();
+  };
+
+  nest.prototype.dblclick = function(d) {
+    var data;
+    if (d.type === "referData" || d.type === "doc") {
+      if (window.doc_handler != null) {
+        window.doc_handler(d);
+      } else {
+        window.open(d.url != null ? d.url : d.name);
+      }
+      return;
+    }
+    if ((d.isSearching != null) && d.isSearching === true) {
+      d.isSearching = false;
+      return;
+    }
+    d.isSearching = true;
+    data = {
+      keys: d.name,
+      return_id: d.id
+    };
+    if (d.url != null) {
+      data.url = d.url;
+      if (d.url.indexOf("/subview/") >= 0) {
+        data.is_subview = true;
+      }
+    }
+    $.post("/explore/", JSON.stringify(data), this.explore, 'json');
+  };
+
+  nest.prototype.explore = function(data) {
     var i, id, source, target, x, _i, _len, _ref;
     for (id in data) {
       source = this.hNode[id];
@@ -553,6 +440,33 @@ nest = (function() {
     this.update();
   };
 
+  nest.prototype.remove = function(d) {
+    var link, _i, _len, _ref;
+    if (d === this.root) {
+      alert("不能删除根节点");
+      this.shiftPressed = false;
+      return;
+    }
+    _ref = this.degree[d.index];
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      link = _ref[_i];
+      this.links.remove(link);
+      if (this.degree[link.target.index].length === 1 && link.target !== this.root) {
+        this.nodes.remove(link.target);
+      }
+      if (this.degree[link.source.index].length === 1 && link.source !== this.root) {
+        this.nodes.remove(link.source);
+      }
+    }
+    this.nodes.remove(d);
+    this.blacklist.push(d.id);
+    this.clip = this.clip.data([]);
+    this.clip.exit().remove();
+    if (window.click_handler != null) {
+      window.click_handler(this.root);
+    }
+  };
+
   nest.prototype.highlight = function(d) {
     var x, _i, _j, _len, _len1, _ref, _ref1;
     _ref = this.links;
@@ -577,36 +491,28 @@ nest = (function() {
   };
 
   nest.prototype.update = function(start_force) {
-    var e, i, j, l, n, nod, nodeEnter, x, _i, _j, _k, _l, _len, _len1, _ref, _ref1, _ref2, _ref3,
+    var hNode, i, j, l, n, nodeEnter, _i, _j, _k, _len, _ref, _ref1, _ref2,
       _this = this;
     if (start_force == null) {
       start_force = true;
     }
-    this.matrix = [];
-    this.degree = [];
-    this.hNode = {};
-    n = this.nodes.length;
-    for (i = _i = 0, _ref = n - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
-      this.hNode[this.nodes[i].id] = this.nodes[i];
-      this.degree.push([]);
-      this.matrix.push([]);
-      for (j = _j = 0, _ref1 = n - 1; 0 <= _ref1 ? _j <= _ref1 : _j >= _ref1; j = 0 <= _ref1 ? ++_j : --_j) {
-        this.matrix[i].push(null);
-      }
-    }
-    _ref2 = this.links;
-    for (_k = 0, _len = _ref2.length; _k < _len; _k++) {
-      l = _ref2[_k];
+    hNode = {};
+    this.nodes.map(function(d) {
+      return _this.hNode[d.id] = d;
+    });
+    _ref = this.links;
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      l = _ref[_i];
       this.normalize_link(l);
     }
-    this.link = this.link.data(this.links);
-    this.link.enter().insert("line", ".node").classed("link", true);
-    this.link.exit().remove();
-    this.node = this.vis.selectAll(".node").data(this.nodes, function(d) {
+    this.svg_link = this.svg_link.data(this.links);
+    this.svg_link.enter().insert("line", ".node").classed("link", true);
+    this.svg_link.exit().remove();
+    this.svg_node = this.svg_node.data(this.nodes, function(d) {
       return d.id;
     });
     _this = this;
-    nodeEnter = this.node.enter().append("g").attr("class", "node").on("click", this.click).on('dblclick', this.dblclick).classed("highlight", function(d) {
+    nodeEnter = this.svg_node.enter().append("g").attr("class", "node").on("click", this.click).on('dblclick', this.dblclick).classed("highlight", function(d) {
       return d.isHigh === true;
     }).call(this.force.drag());
     nodeEnter.append('circle').classed('selection-helper', true).attr('r', 50).style("fill", "#0088ff");
@@ -619,12 +525,7 @@ nest = (function() {
     nodeEnter.append('title').text(function(d) {
       return d.name;
     });
-    this.node.exit().remove();
-    this.vis.selectAll(".node path").attr("r", this.getR).style("fill", this.color);
-    this.vis.selectAll(".search-img").remove();
-    this.vis.selectAll(".node path").filter(function(d) {
-      return d.isSearching;
-    }).append("animate").attr("attributeName", 'cx').attr("begin", '0s').attr("dur", '0.1s').attr("from", '-5').attr("to", '5').attr("fill", 'remove').attr("repeatCount", 'indefinite').classed("search-img", true);
+    this.svg_node.exit().remove();
     this.text = this.text.data(this.nodes.filter(function(d) {
       return d.isHigh;
     }), function(d) {
@@ -646,33 +547,37 @@ nest = (function() {
         return d.type === "referData";
       });
     }
+    this.svg_node.classed("highlight", function(d) {
+      return d.isHigh === true;
+    });
+    this.svg_link.classed("highlight", function(d) {
+      return d.isHigh === true;
+    });
     this.text.exit().remove();
     if (start_force) {
       this.force.start();
-    }
-    _ref3 = this.links;
-    for (_l = 0, _len1 = _ref3.length; _l < _len1; _l++) {
-      x = _ref3[_l];
-      try {
-        this.degree[x.source.index].push(x);
-        this.degree[x.target.index].push(x);
-        this.matrix[x.source.index][x.target.index] = x;
-      } catch (_error) {
-        e = _error;
-        console.log(x);
+      this.matrix = [];
+      this.degree = [];
+      n = this.nodes.length;
+      for (i = _j = 0, _ref1 = n - 1; 0 <= _ref1 ? _j <= _ref1 : _j >= _ref1; i = 0 <= _ref1 ? ++_j : --_j) {
+        this.degree.push([]);
+        this.matrix.push([]);
+        for (j = _k = 0, _ref2 = n - 1; 0 <= _ref2 ? _k <= _ref2 : _k >= _ref2; j = 0 <= _ref2 ? ++_k : --_k) {
+          this.matrix[i].push(null);
+        }
       }
-    }
-    this.node.classed("highlight", function(d) {
-      return d.isHigh === true;
-    });
-    this.link.classed("highlight", function(d) {
-      return d.isHigh === true;
-    });
-    for (nod in this.hNode) {
-      this.position_cache[nod] = {
-        'x': this.hNode[nod].x,
-        'y': this.hNode[nod].y
-      };
+      this.links.map(function(x) {
+        var e;
+        try {
+          _this.degree[x.source.index].push(x);
+          _this.degree[x.target.index].push(x);
+          _this.matrix[x.source.index][x.target.index] = x;
+        } catch (_error) {
+          e = _error;
+          console.log(e);
+          console.log(x);
+        }
+      });
     }
   };
 
@@ -691,17 +596,6 @@ Array.prototype.remove = function(b) {
     return true;
   }
   return false;
-};
-
-String.prototype.hashCode = function() {
-  var hash, i, _i, _ref;
-  hash = 0.0;
-  for (i = _i = 0, _ref = this.length; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
-    if (!isNaN(this.charCodeAt(i))) {
-      hash += this.charCodeAt(i);
-    }
-  }
-  return hash;
 };
 
 if (typeof define === "function" && (define.amd != null)) {
