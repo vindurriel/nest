@@ -1,8 +1,10 @@
-var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+var make_draggable, url_params,
+  __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
 requirejs.config({
   "baseUrl": '/js',
   "paths": {
+    'packery': 'packery.pkgd.min',
     'jsc3d': 'jsc3d.min',
     'jsc3d_touch': 'jsc3d.touch',
     "jquery": "jquery",
@@ -22,42 +24,50 @@ requirejs.config({
 
 require(["jsc3d", 'jsc3d_touch'], function(a, b) {});
 
-require(['packery.pkgd.min', 'jquery'], function(x, $) {
-  require(['packery/js/packery', 'draggabilly'], function(pack, Draggabilly) {
-    var draggie;
+require(['packery'], function(p) {
+  require(['packery/js/packery', 'jquery'], function(pack, $) {
     window.packery = new pack("#wrapper", {
       'itemSelector': '.list-item',
       'columnWidth': 200,
       'gutter': 10
     });
-    draggie = new Draggabilly($("#nest-container").parent().get()[0], {
-      handle: ".drag-handle"
-    });
-    window.packery.bindDraggabillyEvents(draggie);
+    make_draggable($("#nest-container").parent().get()[0]);
   });
 });
 
-require(['jquery', 'd3', 'nest', 'draggabilly', 'dropimage'], function($, d3, Nest, Draggabilly, dropimage) {
-  var add_widget, blockUI, close_toggle, get_selected_services, hex, init_service, list, list_automate, list_model, list_service, load_automate, load_model, load_more_docs, make_3d_obj, notify, play_step, rgb2hex, save, search, snapshot, t_item_action, t_list_item, unblockUI, update_service, url_params;
-  url_params = function() {
-    var pair, res, x, _i, _len, _ref;
-    res = {};
-    _ref = window.location.search.substring(1).split('&');
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      x = _ref[_i];
-      pair = x.split('=');
-      res[pair[0]] = decodeURIComponent(pair[1]);
-    }
-    return res;
-  };
+url_params = function() {
+  var pair, res, x, _i, _len, _ref;
+  res = {};
+  _ref = window.location.search.substring(1).split('&');
+  for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+    x = _ref[_i];
+    pair = x.split('=');
+    res[pair[0]] = decodeURIComponent(pair[1]);
+  }
+  return res;
+};
+
+make_draggable = function(item) {
+  return require(['packery'], function(ignore) {
+    require(['packery/js/packery', 'draggabilly'], function(pack, Draggabilly) {
+      var draggie;
+      draggie = new Draggabilly(item, {
+        handle: ".drag-handle"
+      });
+      window.packery.bindDraggabillyEvents(draggie);
+    });
+  });
+};
+
+require(['jquery', 'd3', 'nest', 'dropimage'], function($, d3, Nest, dropimage) {
+  var add_widget, blockUI, close_toggle, hex, init_service, list, list_automate, list_model, list_service, load_automate, load_model, load_more_docs, make_3d_obj, make_doc, make_referData, notify, play_step, rgb2hex, save, search, t_item_action, t_list_item, unblockUI, update_service;
   t_item_action = function() {
-    return "<input type=\"button\" class=\"btn-small fav top left\" value=\"收藏\">\n<input type=\"button\" class=\"btn-small share top left\" value=\"分享\">";
+    return $("<input type=\"button\" class=\"btn-small fav top left\" value=\"收藏\">\n<input type=\"button\" class=\"btn-small share top left\" value=\"分享\">");
   };
   t_list_item = function(d) {
-    var color, details, res;
-    details = d.content != null ? d.content : "";
+    var color, res;
     color = window.nest.color(d);
-    res = $("<div class=\"list-item normal w2\" data-nest-node=\"" + d.id + "\">\n	<header class=\"drag-handle top left\">|||</header>\n	<input type=\"button\" class=\"btn-close top right\" value=\"关闭\" />\n	<input type=\"button\" class=\"btn-resize top right\" value=\"放大\" />\n	<div class='inner'>\n		<h2 class=\"item-headline\">\n			<span style=\"border-color:" + color + "\">" + d.name + "</span>\n		</h2>\n		<div class=\"item-prop\"></div>\n		<img class=\"item-image hidden\"/>\n		<p class=\"item-detail\">" + details + "</p>\n	</div>\n</div>");
+    res = $("<div class=\"list-item normal w2\" data-nest-node=\"" + d.id + "\">\n	<header class=\"drag-handle top left\">|||</header>\n	<input type=\"button\" class=\"btn-close top right\" value=\"关闭\" />\n	<input type=\"button\" class=\"btn-resize top right\" value=\"放大\" />\n	<div class='inner'>\n		<h2 class=\"item-headline\">\n			<span style=\"border-color:" + color + "\">" + d.name + "</span>\n		</h2>\n		<div class=\"item-prop\"></div>\n		<img class=\"item-image hidden\"/>\n		<div class=\"item-detail\"></div>\n	</div>\n</div>");
     if (d.img != null) {
       res.addClass('h2');
       res.find('.item-image').removeClass('hidden').attr('src', d.img);
@@ -81,7 +91,6 @@ require(['jquery', 'd3', 'nest', 'draggabilly', 'dropimage'], function($, d3, Ne
     });
   };
   add_widget = function($x, after) {
-    var draggie;
     if (after == null) {
       after = null;
     }
@@ -92,36 +101,78 @@ require(['jquery', 'd3', 'nest', 'draggabilly', 'dropimage'], function($, d3, Ne
     } else {
       $('#wrapper').append($x);
       window.packery.appended($x);
-      draggie = new Draggabilly($x.get()[0], {
-        handle: ".drag-handle"
-      });
-      window.packery.bindDraggabillyEvents(draggie);
     }
+    make_draggable($x.get()[0]);
   };
   list = function(d) {
-    var link, n, related, _i, _len, _ref, _ref1;
+    var related;
     if ($('.list-item.normal').length > 0) {
       window.packery.remove($('.list-item.normal').get());
       window.packery.layout();
     }
     related = [];
-    _ref = window.nest.degree[d.index];
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      link = _ref[_i];
+    window.nest.degree[d.index].map(function(link) {
+      var n, _ref;
       if (d === link.target) {
-        continue;
+        return;
       }
       n = link.target;
-      if (_ref1 = n.type, __indexOf.call("SearchProvider smartref_category query referData".split(" "), _ref1) >= 0) {
-        continue;
+      if (_ref = n.type, __indexOf.call("SearchProvider smartref_category query".split(" "), _ref) >= 0) {
+        return;
       }
       related.push(n);
+    });
+    if (related.length > 0) {
+      window.loadFunc = load_more_docs(related, 10);
+      window.loadFunc();
     }
-    if (related.length === 0) {
+  };
+  make_referData = function(x, container) {
+    var docs, n, _i, _len;
+    docs = [];
+    window.nest.degree[x.index].map(function(link) {
+      var n;
+      if (x === link.target) {
+        return;
+      }
+      n = link.target;
+      if (n.type !== "referData") {
+        return;
+      }
+      docs.push(n);
+    });
+    if (docs.length === 0) {
       return;
     }
-    window.loadFunc = load_more_docs(related, 10);
-    window.loadFunc();
+    container.append("<h3>相关文档</h3>");
+    for (_i = 0, _len = docs.length; _i < _len; _i++) {
+      n = docs[_i];
+      container.append("<span  data-doc-id='" + n.id + "' class='doc_url'>" + n.name + "</span>");
+    }
+  };
+  load_more_docs = function(items, num) {
+    if (num == null) {
+      num = 10;
+    }
+    return function() {
+      var new_items;
+      window.packery.layout();
+      new_items = items.splice(0, num);
+      new_items.map(function(x) {
+        var detail, s;
+        s = t_list_item(x);
+        detail = s.find('.item-detail');
+        if (x.obj != null) {
+          detail.append(make_3d_obj(x.obj));
+          s.addClass("h2");
+        }
+        if (x.content != null) {
+          detail.append("<p>" + x.content + "</p>");
+        }
+        make_referData(x, detail);
+        add_widget(s);
+      });
+    };
   };
   hex = function(x) {
     var hexDigits;
@@ -137,94 +188,61 @@ require(['jquery', 'd3', 'nest', 'draggabilly', 'dropimage'], function($, d3, Ne
     m = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
     return "#" + hex(m[1]) + hex(m[2]) + hex(m[3]);
   };
-  load_more_docs = function(items, num) {
-    if (num == null) {
-      num = 10;
-    }
-    return function() {
-      var detail, docs, link, n, new_items, s, x, _i, _j, _k, _len, _len1, _len2, _ref;
-      window.packery.layout();
-      new_items = items.splice(0, num);
-      for (_i = 0, _len = new_items.length; _i < _len; _i++) {
-        x = new_items[_i];
-        s = t_list_item(x);
-        detail = s.find('.item-detail');
-        if (x.obj != null) {
-          detail.append(make_3d_obj(x.obj));
-          s.addClass("h2");
-        }
-        if (x.content != null) {
-          detail.append("<p>" + x.content + "</p>");
-        }
-        docs = [];
-        _ref = window.nest.degree[x.index];
-        for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
-          link = _ref[_j];
-          if (x === link.target) {
-            continue;
-          }
-          n = link.target;
-          if (n.type !== "referData") {
-            continue;
-          }
-          docs.push(n);
-        }
-        if (docs.length > 0) {
-          detail.append("<h3>相关文档</h3>");
-          for (_k = 0, _len2 = docs.length; _k < _len2; _k++) {
-            n = docs[_k];
-            detail.append("<span  data-doc-id='" + n.id + "' class='doc_url'>" + n.name + "</span>");
-          }
-        }
-        add_widget(s);
-      }
-    };
-  };
-  snapshot = function(d) {
-    var $g, $item, $svg, svg;
-    $item = t_list_item(d).addClass("h2").removeClass('normal');
-    $item.find('.drag-handle').after(t_item_action());
-    add_widget($item, $('.selected_info'));
-    $svg = $('#nest-container svg').clone();
-    $item.find(".inner").append($svg);
-    $g = $svg.find(">g");
-    svg = d3.select($svg.get()[0]);
-    svg.selectAll('.node').data(window.nest.nodes).filter(function(x) {
-      return !x.isHigh;
-    }).remove();
-    svg.selectAll('.link').data(window.nest.links).filter(function(x) {
-      return !x.isHigh;
-    }).remove();
-    svg.selectAll('.ring').remove();
-    svg.selectAll('.marker').remove();
-    svg.selectAll('.selection-helper').remove();
-    svg.attr("pointer-events", "all").attr("preserveAspectRatio", "XMidYMid meet").call(d3.behavior.zoom().scaleExtent([0.01, 10]).on("zoom", function() {
-      $g.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")");
-      svg.selectAll('text').style("font-size", (1.0 / d3.event.scale) + "em");
-    }));
-  };
   make_3d_obj = function(url) {
     var bgcolor, cv, viewer;
     cv = $("<canvas class=\"obj\" width=380 height=300 ></canvas>");
-    bgcolor = rgb2hex($(".list-item").css("background-color"));
     viewer = new JSC3D.Viewer(cv.get()[0]);
     viewer.setParameter('SceneUrl', url);
     viewer.setParameter('ModelColor', '#0088dd');
+    bgcolor = rgb2hex($(".list-item").css("background-color"));
     viewer.setParameter('BackgroundColor1', bgcolor);
     viewer.setParameter('BackgroundColor2', bgcolor);
     viewer.setParameter('RenderMode', 'wireframe');
+    viewer.setParameter('InitRotationX', '45');
+    viewer.setParameter('InitRotationY', '45');
     viewer.init();
     viewer.update();
     return cv;
   };
+  make_doc = function(d, container) {
+    var value;
+    $(".selected_info .item-headline a").attr('href', d.url);
+    value = window.nest.degree[d.index][0].value;
+    container.append("<p>到聚类中心的距离：" + value + "</p>");
+    container.append($("<p class='placeholder'>正在载入信息...</p>"));
+    return $.getJSON("/keyword/" + d.name, function(res) {
+      var data, x;
+      $(container).find(".placeholder").remove();
+      data = [];
+      for (x in res.keyword) {
+        data.push({
+          'k': x,
+          'v': res.keyword[x]
+        });
+      }
+      container.append("<p>词频直方图：</p>");
+      require(['barchart'], function(barchart) {
+        barchart.render(data, {
+          "container": container
+        });
+        container.append("<p>摘要：</p>");
+        container.append("<p>" + res.summary + "</p>");
+      });
+    });
+  };
+  window.clone_handler = function(d, $svg) {
+    var $item;
+    $item = t_list_item(d).addClass("h2").removeClass('normal');
+    $item.find('.drag-handle').after(t_item_action());
+    add_widget($item, $('.selected_info'));
+    $item.find('.inner').append($svg);
+  };
   window.click_handler = function(d) {
-    var $item, actions, container, detail, docs, link, n, t, value, x, _i, _j, _len, _len1, _ref;
+    var $item, actions, detail, props, t, x;
     if (d == null) {
       return;
     }
     document.title = d.name;
-    list(d);
-    window.nest.highlight(d);
     if ($(".selected_info").length === 0) {
       $item = t_list_item(d).attr('class', "selected_info list-item w2 h2");
       add_widget($item, $('#nest-container').parent());
@@ -237,99 +255,53 @@ require(['jquery', 'd3', 'nest', 'draggabilly', 'dropimage'], function($, d3, Ne
     if (d.obj != null) {
       $('.selected_info .item-prop').after(make_3d_obj(d.obj));
     }
-    if (!window.nest.snapshot) {
-      window.nest.snapshot = snapshot;
-    }
+    props = $(".selected_info .item-prop");
     actions = {
       '探索': "dblclick",
       '删除': "remove",
-      '该节点为中心的子图': "snapshot"
+      '该节点为中心的子图': "clone"
     };
     for (x in actions) {
-      $(".selected_info .item-prop").append($("<li/>").text(x).addClass('item-action button').data('nest-command', actions[x]));
+      props.append($("<li/>").text(x).addClass('item-action button').data('nest-command', actions[x]));
     }
+    detail = $(".selected_info .item-detail");
     if (d.type === "doc") {
-      $(".selected_info .item-headline a").attr('href', d.url);
-      container = ".selected_info .item-detail";
-      value = window.nest.degree[d.index][0].value;
-      $(container).empty().append("<p>到聚类中心的距离：" + value + "</p>");
-      $(container).append($("<p class='placeholder'>正在载入信息...</p>"));
-      $.getJSON("/keyword/" + d.name, function(res) {
-        var data;
-        $(container).find(".placeholder").remove();
-        data = [];
-        for (x in res.keyword) {
-          data.push({
-            'k': x,
-            'v': res.keyword[x]
-          });
-        }
-        require(['barchart'], function(barchart) {
-          barchart.render(data, {
-            "container": container
-          });
-        });
-        $(container).append("<p>" + res.summary + "</p>");
-      });
+      make_doc(d, detail.empty());
     } else {
-      detail = $(".selected_info .item-detail");
       detail.empty();
       t = d.type || "未知";
       $(".selected_info .item-headline").attr('title', "类别:" + t + " id:" + d.id);
       if (d.content != null) {
         detail.append("<p>" + d.content + "</p>");
       }
-      docs = [];
-      _ref = window.nest.degree[d.index];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        link = _ref[_i];
-        if (d === link.target) {
-          continue;
-        }
-        n = link.target;
-        if (n.type !== "referData") {
-          continue;
-        }
-        docs.push(n);
-      }
-      if (docs.length > 0) {
-        detail.append("<h3>相关文档</h3>");
-        for (_j = 0, _len1 = docs.length; _j < _len1; _j++) {
-          n = docs[_j];
-          detail.append("<span data-doc-id='" + n.id + "'  class='doc_url' >" + n.name + "</span>");
-        }
-      }
+      make_referData(d, detail);
     }
+    list(d);
+    window.nest.highlight(d);
   };
   window.doc_handler = function(d) {
-    var $item, text, url;
+    var $item, url;
+    $item = t_list_item(d).addClass('doc_info h2 expanded').removeClass('normal');
     url = d.url || d.name;
-    text = d.name;
-    $item = t_list_item(d).addClass('doc_info h2 expanded');
     $item.find('.inner').append("<iframe src=\"" + url + "\" ></iframe>");
     $item.find('.drag-handle').after(t_item_action());
+    $item.find('.btn-resize').val('缩小');
     add_widget($item, $(".selected_info"));
   };
-  get_selected_services = function() {
-    return window.services.filter(function(d) {
-      return d.select;
-    }).map(function(d) {
-      return d.id;
-    });
-  };
   save = function() {
-    var fname, l, n, p, prop_node, res, x, _i, _j, _k, _len, _len1, _len2, _ref, _ref1;
+    var l, n, p, prop_node, res, save_file_name, x, _i, _j, _k, _len, _len1, _len2, _ref, _ref1;
     res = {
       "nodes": [],
       "links": [],
       "blacklist": window.nest.blacklist
     };
     close_toggle();
-    fname = window.save_name[1].value;
-    if ((fname == null) || fname === "") {
+    save_file_name = window.save_name[1].value;
+    if ((save_file_name == null) || save_file_name === "") {
       return;
     }
-    prop_node = "id name value index type url fixed distance_rank img".split(" ");
+    save_file_name = encodeURIComponent(save_file_name);
+    prop_node = "id name value index type url x y distance_rank img".split(" ");
     _ref = window.nest.nodes;
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       x = _ref[_i];
@@ -352,7 +324,7 @@ require(['jquery', 'd3', 'nest', 'draggabilly', 'dropimage'], function($, d3, Ne
       res.links.push(l);
     }
     res = JSON.stringify(res);
-    $.post("/model?id=" + fname, res, function(d) {
+    $.post("/model?id=" + save_file_name, res, function(d) {
       if (d.error != null) {
         notify("保存出现如下错误:" + d.error);
         return;
@@ -375,8 +347,7 @@ require(['jquery', 'd3', 'nest', 'draggabilly', 'dropimage'], function($, d3, Ne
   blockUI = function() {
     $('html, body').attr({
       "scrollTop": 400
-    });
-    $('html, body').animate({
+    }).animate({
       "scrollTop": 0
     });
     $('.busy').fadeIn();
@@ -728,7 +699,11 @@ require(['jquery', 'd3', 'nest', 'draggabilly', 'dropimage'], function($, d3, Ne
     });
     $("#btn_search").click(function() {
       key = $('#q').val();
-      services = get_selected_services();
+      services = window.services.filter(function(d) {
+        return d.select;
+      }).map(function(d) {
+        return d.id;
+      });
       search(key, services);
     });
     $(window).scroll(function() {

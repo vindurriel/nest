@@ -25,7 +25,7 @@ render = (data,user_options) ->
 	x = d3.scale.linear().domain([0, d3.max(sortedData, barValue)]).range([0, maxBarWidth])
 
 # svg container element
-	chart = d3.select(options.container).append("svg")
+	chart = d3.select(options.container.get()[0]).append("svg")
 	.attr('width', maxBarWidth + barLabelWidth + valueLabelWidth)
 	.attr('height', gridLabelHeight + gridChartOffset + sortedData.length * barHeight)
 # grid line labels

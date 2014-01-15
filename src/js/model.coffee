@@ -1,44 +1,66 @@
+#requirejs中包路径的配置
 requirejs.config 
 	"baseUrl": '/js'
 	"paths":
-		'jsc3d':'jsc3d.min'
+		'packery':'packery.pkgd.min'
+		'jsc3d':'jsc3d.min' #jsc3d用于3d模型文件（.obj）的显示
 		'jsc3d_touch':'jsc3d.touch'
 		"jquery":"jquery"
-		"dropimage":"dropimage"
-		'noty': "jquery.noty.packaged.min"
-		'draggabilly':'draggabilly.pkgd.min'
+		"dropimage":"dropimage" #拖放图片到某个位置就上传图片
+		'noty': "jquery.noty.packaged.min" #jquery消息提示插件
+		'draggabilly':'draggabilly.pkgd.min' #packery的页面元素拖拽插件
+	#shim用于配置那些不支持amd加载方式的包	
 	'shim':
 		'noty':  
 			"deps":['jquery']
 		'd3':
 			'exports': 'd3'
+
 require ["jsc3d",'jsc3d_touch'], (a,b)->
 	return
-require ['packery.pkgd.min','jquery'], (x,$)->
-	require ['packery/js/packery','draggabilly'] ,(pack,Draggabilly)->
+#packery用于页面布局
+# require ['packery.pkgd.min','jquery'], (x,$)->
+# 	require ['packery/js/packery','draggabilly'] ,(pack,Draggabilly)->
+require ['packery'], (p)->
+	require ['packery/js/packery','jquery'],(pack,$)->
 		window.packery= new pack "#wrapper",
 			'itemSelector':'.list-item'
 			'columnWidth':200,
 			'gutter':10,
-		draggie= new Draggabilly $("#nest-container").parent().get()[0],
-			handle: ".drag-handle"
-		window.packery.bindDraggabillyEvents draggie
+		#让知识图谱能拖拽
+		make_draggable $("#nest-container").parent().get()[0]
 		return
 	return
-require ['jquery','d3','nest','draggabilly','dropimage'] , ($,d3,Nest,Draggabilly,dropimage)->
-	url_params= ()->
-		res={} 
-		for x in window.location.search.substring(1).split('&')
-			pair= x.split('=')
-			res[pair[0]]= decodeURIComponent(pair[1])
-		return res
+#找到所有url中的参数，并以一个object的方式返回
+#输入：无（页面url），输出：object
+url_params= ()->
+	res={} 
+	for x in window.location.search.substring(1).split('&')
+		pair= x.split('=')
+		res[pair[0]]= decodeURIComponent(pair[1])
+	return res	
+#让item能拖拽。必须先初始化window.packery。
+#输入：dom element，输出：无
+make_draggable= (item)->
+	require ['packery'], (ignore)->
+		require ['packery/js/packery','draggabilly'] ,(pack,Draggabilly)->
+			draggie= new Draggabilly item,{
+				handle: ".drag-handle"
+			}
+			window.packery.bindDraggabillyEvents draggie
+			return
+		return
+require ['jquery','d3','nest','dropimage'] , ($,d3,Nest,dropimage)->
+	#item的默认操作，出现在item的左上方，拖拽把手的后边
+	#输入：无，输出：jquery对象
 	t_item_action= ()->
-		"""
+		$("""
 			<input type="button" class="btn-small fav top left" value="收藏">
 			<input type="button" class="btn-small share top left" value="分享">
-		"""
+		""")
+	#item的默认模板
+	#输入：node data，输出：jquery对象
 	t_list_item= (d)->
-		details= if d.content? then d.content else ""
 		color= window.nest.color d
 		res=$("""
 		<div class="list-item normal w2" data-nest-node="#{d.id}">
@@ -51,7 +73,7 @@ require ['jquery','d3','nest','draggabilly','dropimage'] , ($,d3,Nest,Draggabill
 				</h2>
 				<div class="item-prop"></div>
 				<img class="item-image hidden"/>
-				<p class="item-detail">#{details}</p>
+				<div class="item-detail"></div>
 			</div>
 		</div>
 		""")
@@ -59,10 +81,12 @@ require ['jquery','d3','nest','draggabilly','dropimage'] , ($,d3,Nest,Draggabill
 			res.addClass('h2')
 			res.find('.item-image').removeClass('hidden').attr('src',d.img)
 		return res
+	#关闭.toggle-container
 	close_toggle= ()-> 
 		$('.toggle').removeClass('on')
 		$(".toggle-container").slideUp 200
 		return
+	#加载model（.json格式的graph）。先访问/model/load/:id, 成功后调用window.nest.draw
 	load_model= (id)->
 		id= encodeURIComponent id
 		close_toggle()
@@ -74,6 +98,7 @@ require ['jquery','d3','nest','draggabilly','dropimage'] , ($,d3,Nest,Draggabill
 			click_handler(window.nest.root)
 			return
 		return
+	#向wrapper中追加item。如果提供了after，则在after指定的元素之后插入item。
 	add_widget = ($x, after=null)->
 		if after?
 			$x.insertAfter after
@@ -82,98 +107,131 @@ require ['jquery','d3','nest','draggabilly','dropimage'] , ($,d3,Nest,Draggabill
 		else
 			$('#wrapper').append($x)
 			window.packery.appended $x
-			draggie= new Draggabilly $x.get()[0],
-				handle: ".drag-handle"
-			window.packery.bindDraggabillyEvents draggie
+		#为item添加拖拽功能
+		make_draggable $x.get()[0]
 		return
+	#向wrapper中添加和当前节点相连的节点对应的item
+	#实现了一个分批加载的功能，每次先加载部分item，用户浏览到底的时候（.load-more进入屏幕区域)，加载更多的item
 	list= (d)-> 
+		#删除所有.list-item.normal, 也就是除知识图谱、图谱碎片、.doc_info和.selected_info外的所有item
 		if  $('.list-item.normal').length>0
 			window.packery.remove $('.list-item.normal').get()
 			window.packery.layout()
-		related=[]	
-		for link in window.nest.degree[d.index]
-			if d==link.target then continue
+		related= []	
+		window.nest.degree[d.index].map (link)->
+			#滤掉target为当前节点的link
+			if d==link.target then return
 			n= link.target
-			if n.type in "SearchProvider smartref_category query referData".split(" ") then continue
+			if n.type in "SearchProvider smartref_category query".split(" ") then return
 			related.push n
-		if related.length==0
 			return
-		window.loadFunc= load_more_docs related,10
-		window.loadFunc()
+		if related.length>0
+			#分批加载。window.loadFunc会在.load-more进入屏幕可视区域时被调用。
+			window.loadFunc = load_more_docs related,10
+			window.loadFunc()
 		return
-	hex= (x)->
-		hexDigits= ["0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f"]
-		if isNaN(x) then "00" else hexDigits[(x - x % 16) / 16] + hexDigits[x % 16]
-	rgb2hex= (rgb)->
-		m = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
-		"#" + hex(m[1]) + hex(m[2]) + hex(m[3]);
+	#加载相关文档（type为referData）
+	make_referData= (x,container)->
+		docs= []
+		window.nest.degree[x.index].map (link)->
+			if x==link.target then return
+			n= link.target
+			if n.type!="referData" then return
+			docs.push n
+			return
+		if docs.length==0 then return
+		container.append("<h3>相关文档</h3>")
+		for n in docs
+			container.append("<span  data-doc-id='#{n.id}' class='doc_url'>#{n.name}</span>")
+		return
+	#对于输入的items，每次调用该函数，加载剩余的num个
+	#输入：items是array，num是每次加载的item个数
 	load_more_docs= (items,num=10)->
+		#闭包是为了让items持久化
 		return ()->
 			window.packery.layout()
+			#从items的前面去除num个元素，加到new_items中。如items不够num个，也能成功。
 			new_items= items.splice 0,num
-			for x in new_items
+			new_items.map (x)->
 				s= t_list_item(x)
 				detail= s.find('.item-detail')
+				#加载3d模型
 				if x.obj?
 					detail.append make_3d_obj(x.obj)
 					s.addClass("h2")
 				if x.content?
 					detail.append("<p>#{x.content}</p>")
-				docs= []
-				for link in window.nest.degree[x.index]
-					if x==link.target then continue
-					n= link.target
-					if n.type!="referData" then continue
-					docs.push n
-				if docs.length>0
-					detail.append("<h3>相关文档</h3>")
-					for n in docs
-						detail.append("<span  data-doc-id='#{n.id}' class='doc_url'>#{n.name}</span>")
+				#加载相关文档（type为referData）
+				make_referData x, detail
 				add_widget s
-			return 
-	snapshot= (d)->
-		$item= t_list_item(d).addClass("h2").removeClass('normal')
-		$item.find('.drag-handle').after t_item_action()
-		add_widget $item, $('.selected_info')
-		$svg= $('#nest-container svg').clone()
-		$item.find(".inner").append $svg
-		$g= $svg.find(">g")
-		svg= d3.select($svg.get()[0])
-		svg.selectAll('.node').data(window.nest.nodes).filter((x)->not x.isHigh).remove()
-		svg.selectAll('.link').data(window.nest.links).filter((x)->not x.isHigh).remove()
-		svg.selectAll('.ring').remove()
-		svg.selectAll('.marker').remove()
-		svg.selectAll('.selection-helper').remove()
-		svg.attr("pointer-events", "all")
-		.attr("preserveAspectRatio","XMidYMid meet")
-		.call(d3.behavior.zoom()
-			.scaleExtent([0.01,10])
-			.on("zoom",()->
-				$g.attr "transform", "translate(" + d3.event.translate + ")" + " scale(" +  d3.event.scale + ")"
-				svg.selectAll('text').style("font-size", (1.0 / d3.event.scale) + "em")
 				return
-			))
-		return
+			return 
+	#10进制转16进制
+	hex= (x)->
+		hexDigits= ["0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f"]
+		if isNaN(x) then "00" else hexDigits[(x - x % 16) / 16] + hexDigits[x % 16]
+	#rgb颜色转成hex颜色
+	#输入："rgb(255,255,255)",输出："#ffffff"
+	rgb2hex= (rgb)->
+		m = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/)
+		"#" + hex(m[1]) + hex(m[2]) + hex(m[3])
+	#读取并显示3d模型文件，格式.obj
+	#输入：url（3d模型文件的地址）;输出：jquery element
 	make_3d_obj= (url)->
 			cv= $("""
 				<canvas class="obj" width=380 height=300 ></canvas>
 				""")
-			bgcolor= rgb2hex($(".list-item").css("background-color")) 
 			viewer = new JSC3D.Viewer(cv.get()[0])
 			viewer.setParameter('SceneUrl',	url)
+			#模型颜色
 			viewer.setParameter('ModelColor',   '#0088dd')
+			#背景颜色
+			bgcolor= rgb2hex($(".list-item").css("background-color")) 
 			viewer.setParameter('BackgroundColor1', bgcolor)
 			viewer.setParameter('BackgroundColor2', bgcolor)
+			#渲染模式，可选择flat,wireframe,smooth,texture,point
 			viewer.setParameter('RenderMode', 'wireframe')
+			#角度
+			viewer.setParameter('InitRotationX', '45')
+			viewer.setParameter('InitRotationY', '45')
 			viewer.init()
 			viewer.update()
 			return cv
+	#处理类型为doc的node data
+	#输入：nodedata，输出：无
+	make_doc= (d,container)->
+			$(".selected_info .item-headline a").attr('href',d.url)
+			value= window.nest.degree[d.index][0].value
+			container.append """<p>到聚类中心的距离：#{value}</p>"""
+			container.append $("<p class='placeholder'>正在载入信息...</p>")
+			$.getJSON "/keyword/#{d.name}", (res)->
+				$(container).find(".placeholder").remove()
+				data= []
+				for x of res.keyword
+					data.push {'k':x,'v':res.keyword[x]}
+				container.append """<p>词频直方图：</p>"""
+				require ['barchart'], (barchart)->
+					barchart.render data, {
+						"container":container,
+					}
+					container.append """<p>摘要：</p>"""
+					container.append """<p>#{res.summary}</p>"""
+					return
+				return
+	#负责将nest.clone生成的svg图包装成item加入到整体布局中
+	window.clone_handler= (d,$svg)->
+		$item= t_list_item(d).addClass("h2").removeClass('normal')
+		#添加item actions（收藏、分享等
+		$item.find('.drag-handle').after t_item_action()
+		add_widget $item, $('.selected_info')
+		$item.find('.inner').append $svg
+		return
+	#负责处理click事件，主要是.selected_info这个item的创建和更新
 	window.click_handler= (d)->
 		if not d? then return
 		document.title= d.name
-		list d
-		window.nest.highlight d
 		if $(".selected_info").length==0
+			#创建选中node信息的item
 			$item=  t_list_item(d).attr('class',"selected_info list-item w2 h2")
 			add_widget $item, $('#nest-container').parent()
 		$(".selected_info .item-headline span").text(d.name)
@@ -181,77 +239,63 @@ require ['jquery','d3','nest','draggabilly','dropimage'] , ($,d3,Nest,Draggabill
 		$(".selected_info .item-prop").empty()
 		$(".selected_info .item-image").attr('src',d.img or "")
 		$(".selected_info .obj").remove()
+		#3d模型的显示
 		if d.obj?
 			$('.selected_info .item-prop').after make_3d_obj(d.obj)
-		if not window.nest.snapshot
-			window.nest.snapshot= snapshot
+		props=$(".selected_info .item-prop")
+		#动态添加一些选中节点支持的操作，key为显示的操作名，value为nest中支持的函数名
 		actions= {
 			'探索':"dblclick",
 			'删除':"remove",
-			'该节点为中心的子图':"snapshot",
+			'该节点为中心的子图':"clone",
 		}
 		for x of actions
-			$(".selected_info .item-prop").append $("<li/>").text(x)
+			props.append $("<li/>").text(x)
 			.addClass('item-action button')
 			.data('nest-command',actions[x])
+		detail=$(".selected_info .item-detail")
 		if d.type=="doc"
-			$(".selected_info .item-headline a").attr('href',d.url)
-			container= ".selected_info .item-detail"
-			value= window.nest.degree[d.index][0].value
-			$(container).empty().append """<p>到聚类中心的距离：#{value}</p>"""
-			$(container).append $("<p class='placeholder'>正在载入信息...</p>")
-			$.getJSON "/keyword/#{d.name}", (res)->
-				$(container).find(".placeholder").remove()
-				data= []
-				for x of res.keyword
-					data.push {'k':x,'v':res.keyword[x]}
-				require ['barchart'], (barchart)->
-					barchart.render data, {
-						"container":container,
-					}
-					return
-				$(container).append """<p>#{res.summary}</p>"""
-				return
-		else
-			detail=$(".selected_info .item-detail")
+			make_doc d, detail.empty()
+		#在此可添加对其他type的node data的显示模板，例如：
+		#else if d.type=="new_type"
+		else #默认的显示模板
 			detail.empty()
 			t= d.type or "未知"
-			$(".selected_info .item-headline").attr('title',"""
-				类别:#{t} id:#{d.id}
-			""")
+			$(".selected_info .item-headline").attr('title',"""类别:#{t} id:#{d.id}""")
 			if d.content?
 				detail.append("<p>#{d.content}</p>")
-			docs= []
-			for link in window.nest.degree[d.index]
-				if d==link.target then continue
-				n= link.target
-				if n.type!="referData" then continue
-				docs.push n
-			if docs.length>0
-				detail.append("<h3>相关文档</h3>")
-				for n in docs
-					detail.append("<span data-doc-id='#{n.id}'  class='doc_url' >#{n.name}</span>")
+			#更新相关文档
+			make_referData d,detail
+		#加载选中节点相关的节点
+		list d
+		#高亮节点，主要是为了更新.marker的位置
+		window.nest.highlight d
 		return
+	#负责处理打开referData和doc类型的操作
 	window.doc_handler= (d)->
+		$item= t_list_item(d).addClass('doc_info h2 expanded').removeClass('normal')
 		url= d.url or d.name
-		text= d.name
-		$item= t_list_item(d).addClass('doc_info h2 expanded')
+		#通过一个iframe来打开node data中的url
 		$item.find('.inner').append("""<iframe src="#{url}" ></iframe>""")
 		$item.find('.drag-handle').after t_item_action()
+		$item.find('.btn-resize').val('缩小') 
+		#加到.selected_info后面
 		add_widget $item, $(".selected_info")
 		return
-	get_selected_services = ->
-		return window.services.filter((d)->d.select).map((d)->d.id)
-	save = ->
+	#保存
+	save = ()->
 		res= {
 			"nodes":[],
 			"links":[],
 			"blacklist":window.nest.blacklist,
 		}
 		close_toggle()
-		fname= window.save_name[1].value
-		if not fname? or fname=="" then return
-		prop_node= "id name value index type url fixed distance_rank img".split(" ")
+		#因为toggle-container中是clone的元素，所以window.save_name有两个，用户修改过的是第二个。
+		save_file_name= window.save_name[1].value
+		if not save_file_name? or save_file_name=="" then return
+		save_file_name= encodeURIComponent save_file_name
+		#需要储存的节点属性列表
+		prop_node= "id name value index type url x y distance_rank img".split(" ")
 		for x in window.nest.nodes
 			n= {}
 			for p in prop_node
@@ -264,28 +308,32 @@ require ['jquery','d3','nest','draggabilly','dropimage'] , ($,d3,Nest,Draggabill
 				"target":x.target.id
 			res.links.push l
 		res= JSON.stringify res
-		$.post "/model?id=#{fname}", res, (d)->
+		$.post "/model?id=#{save_file_name}", res, (d)->
 			if d.error?
 				notify "保存出现如下错误:"+ d.error
 				return
 			notify "已保存"
+			#保存后需要重新获取model list
 			list_model()
 		return
+	#使用jquery noty来显示
+	#输入：string，输出:无
 	notify = (what)->
 		require ['noty'], (noty)->
 			window.noty
 				text: what
-				type: 'error'
+				type: 'error' #因为红色醒目~
 				timeout:3000
-				closeWith: ['click']
+				closeWith: ['click'] #点击关闭
 				layout:'bottomRight'
 			return
 		return
+	#通过显示.busy表明正在进行后台操作
 	blockUI= ()->
-		$('html, body').attr({"scrollTop":400})
-		$('html, body').animate({"scrollTop":0})
+		$('html, body').attr({"scrollTop":400}).animate({"scrollTop":0})
 		$('.busy').fadeIn()
 		return
+	#通过隐藏.busy表明后台操作结束
 	unblockUI= ()->
 		$('html, body').animate({"scrollTop":400})
 		$('.busy').fadeOut()
@@ -590,18 +638,13 @@ require ['jquery','d3','nest','draggabilly','dropimage'] , ($,d3,Nest,Draggabill
 		.on "mouseenter",".drag-handle", ->
 			$(this).attr('title',"按住拖动")
 			return
-		# .on "mouseup", ".list-item", ()->
-		# 	n= window.nest.hNode[$(@).attr('data-nest-node')]
-		# 	if n?
-		# 		click_handler n
-		# 	return
 		.on "click",".doc_url", ()->
 			id= $(@).attr('data-doc-id')
 			window.doc_handler window.nest.hNode[id]
 			return
 		$("#btn_search").click ->
 			key=$('#q').val()
-			services= get_selected_services()
+			services= window.services.filter((d)->d.select).map((d)->d.id)
 			search(key,services)
 			return
 		$(window).scroll ->

@@ -63,7 +63,7 @@ class keyword:
 		import os,json
 		if not os.path.isfile(fname):
 			return json.dumps({"error":"json file not found"})
-		# web.header('Content-Type', 'application/json')
+		web.header('Content-Type', 'application/json')
 		sentence=file(fname,'r').read()
 		import jieba,jieba.analyse
 		tags=jieba.analyse.extract_tags(sentence,10)
@@ -82,6 +82,7 @@ class keyword:
 		import summarize
 		summary=summarize.summarize(sentence)
 		summary=summary.replace('\n',"<br>")
+		print summary
 		return json.dumps({"keyword":tags,"summary":summary})
 class load:
 	def GET(self,key="机器学习"):

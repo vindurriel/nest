@@ -31,7 +31,7 @@ render = function(data, user_options) {
     return y(d, i) + yScale.rangeBand() / 2;
   };
   x = d3.scale.linear().domain([0, d3.max(sortedData, barValue)]).range([0, maxBarWidth]);
-  chart = d3.select(options.container).append("svg").attr('width', maxBarWidth + barLabelWidth + valueLabelWidth).attr('height', gridLabelHeight + gridChartOffset + sortedData.length * barHeight);
+  chart = d3.select(options.container.get()[0]).append("svg").attr('width', maxBarWidth + barLabelWidth + valueLabelWidth).attr('height', gridLabelHeight + gridChartOffset + sortedData.length * barHeight);
   gridContainer = chart.append('g').attr('transform', 'translate(' + barLabelWidth + ',' + gridLabelHeight + ')');
   gridContainer.selectAll("text").data(x.ticks(10)).enter().append("text").attr("x", x).attr("dy", -3).attr("text-anchor", "middle").text(String);
   gridContainer.selectAll("line").data(x.ticks(10)).enter().append("line").attr("x1", x).attr("x2", x).attr("y1", 0).attr("y2", yScale.rangeExtent()[1] + gridChartOffset).style("stroke", "#ccc");

@@ -142,6 +142,9 @@ text {
   opacity: 1;
   fill: black;
   stroke: none;
+  transition: font-size 0.1s;
+  -webkit-transition: font-size 0.1s;
+  -moz-transition: font-size 0.1s;
 }
 .selection-helper {
   fill-opacity: 0.05;

@@ -4,6 +4,7 @@ var nest,
 nest = (function() {
   function nest(options) {
     this.update = __bind(this.update, this);
+    this.clone = __bind(this.clone, this);
     this.highlight = __bind(this.highlight, this);
     this.remove = __bind(this.remove, this);
     this.explore = __bind(this.explore, this);
@@ -136,7 +137,7 @@ nest = (function() {
     this.scale = d3.event.scale;
     this.translate = d3.event.translate;
     this.vis.attr("transform", "translate(" + this.translate + ")" + " scale(" + this.scale + ")");
-    this.text.style("font-size", (1 / this.scale) + "em");
+    this.text.style("font-size", this.scale < 0.5 ? "0em" : (1 / this.scale) + "em");
   };
 
   nest.prototype.focus = function(e) {
@@ -182,8 +183,7 @@ nest = (function() {
   };
 
   nest.prototype.draw = function(json) {
-    var i, n,
-      _this = this;
+    var _this = this;
     if ((json.nodes == null) || json.nodes.length === 0) {
       return {
         'error': 'no nodes'
@@ -192,13 +192,8 @@ nest = (function() {
     if (json.blacklist != null) {
       this.blacklist = json.blacklist;
     }
-    i = 0;
-    n = json.nodes.length;
     json.nodes.map(function(d) {
-      _this.normalize_id(d);
-      d.x = _this.w * (i % 10) / 10;
-      d.y = i * _this.h / n;
-      i += 1;
+      return _this.normalize_id(d);
     });
     json.links.map(function(d) {
       d.source = _this.normalize_text(d.source);
@@ -490,6 +485,32 @@ nest = (function() {
     this.update(false);
   };
 
+  nest.prototype.clone = function(d) {
+    var $g, $svg, svg;
+    $svg = $('#nest-container svg').clone();
+    $g = $svg.find(">g");
+    svg = d3.select($svg.get()[0]);
+    svg.selectAll('.node').data(window.nest.nodes).filter(function(x) {
+      return !x.isHigh;
+    }).remove();
+    svg.selectAll('.link').data(window.nest.links).filter(function(x) {
+      return !x.isHigh;
+    }).remove();
+    svg.selectAll('.ring').remove();
+    svg.selectAll('.marker').remove();
+    svg.selectAll('.selection-helper').remove();
+    svg.attr("pointer-events", "all").attr("preserveAspectRatio", "XMidYMid meet").call(d3.behavior.zoom().scaleExtent([0.01, 10]).on("zoom", function() {
+      var scale;
+      scale = d3.event.scale;
+      $g.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + scale + ")");
+      svg.selectAll('text').style("font-size", scale < 0.5 ? "0em" : (1 / scale) + "em");
+    }));
+    if (window.clone_handler != null) {
+      window.clone_handler(d, $svg);
+    }
+    return $svg;
+  };
+
   nest.prototype.update = function(start_force) {
     var hNode, i, j, l, n, nodeEnter, _i, _j, _k, _len, _ref, _ref1, _ref2,
       _this = this;
@@ -537,7 +558,7 @@ nest = (function() {
       } else {
         return d.name.slice(0, 5) + "...";
       }
-    }).style("font-size", (1 / this.scale) + "em").attr("transform", function(d) {
+    }).style("font-size", this.scale < 0.5 ? "0em" : (1 / this.scale) + "em").attr("transform", function(d) {
       var dx;
       dx = d.x + _this.getR(d) + 5 * _this.scale;
       return "translate(" + dx + "," + d.y + ")";

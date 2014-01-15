@@ -122,8 +122,8 @@ class nest
 		@scale = d3.event.scale
 		@translate=d3.event.translate
 		@vis.attr "transform", "translate(" + @translate + ")" + " scale(" + @scale + ")"
-		#根据缩放调整text大小，在一定区间内保持文字大小不变（可能会变大，跟浏览器所设置的最小字体大小有关）
-		@text.style("font-size", (1 / @scale) + "em")
+		#根据缩放调整text大小，在一定区间内保持文字大小不变;如果缩放值太小，则不显示text
+		@text.style("font-size", if @scale<0.5 then "0em" else (1 / @scale) + "em")
 		return
 	#鼠标悬停时显示区域中节点的text
 	focus : (e)=>
@@ -171,15 +171,8 @@ class nest
 			return {'error':'no nodes'}
 		if json.blacklist?
 			@blacklist= json.blacklist
-		#初始化点的位置，从而更快地达到稳定
-		i=0
-		n= json.nodes.length
-		json.nodes.map (d)=>
-			@normalize_id d
-			d.x=@w*(i%10)/10
-			d.y=i*@h/n
-			i+=1
-			return
+		#正规化node的id和name
+		json.nodes.map (d)=> @normalize_id(d)
 		json.links.map (d)=>
 			d.source= @normalize_text d.source
 			d.target= @normalize_text d.target
@@ -419,6 +412,34 @@ class nest
 		$('.marker').remove().appendTo $(@vis[0][0])
 		@update(false)
 		return
+	#创建知识图的片段拷贝
+	clone: (d)=>
+		#克隆#nest-container,然后删除多余的东西
+		$svg= $('#nest-container svg').clone()
+		$g= $svg.find(">g")
+		svg= d3.select($svg.get()[0])
+		#删除非高亮的节点
+		svg.selectAll('.node').data(window.nest.nodes).filter((x)->not x.isHigh).remove()
+		svg.selectAll('.link').data(window.nest.links).filter((x)->not x.isHigh).remove()
+		#删除所有多余的视觉元素
+		svg.selectAll('.ring').remove()
+		svg.selectAll('.marker').remove()
+		svg.selectAll('.selection-helper').remove()
+		#添加平移和缩放功能
+		svg.attr("pointer-events", "all")
+		.attr("preserveAspectRatio","XMidYMid meet")
+		.call(d3.behavior.zoom()
+			.scaleExtent([0.01,10])
+			.on("zoom",()->
+				scale= d3.event.scale
+				$g.attr "transform", "translate(" + d3.event.translate + ")" + " scale(" +  scale + ")"
+				svg.selectAll('text').style("font-size", if scale<0.5 then "0em" else (1 / scale) + "em")
+				return
+			))
+		if window.clone_handler?
+			window.clone_handler d,$svg
+		return $svg
+	#负责更新视图，包括节点highlight状况、force layout等
 	#start_force为true会调用force.start，更新node和link的位置
 	update : (start_force=true)=>
 		#将link source和target中的string替换成node data object
@@ -474,7 +495,7 @@ class nest
 		#添加data中有而svg中没有的text
 		@text.enter().append('text')
 		.text((d)-> if d.name.length <=5 then d.name else d.name.slice(0,5)+"...")
-		.style("font-size", (1 / @scale) + "em")
+		.style("font-size", if @scale<0.5 then "0em" else (1 / @scale) + "em")
 		.attr "transform", (d)=>
 			dx= d.x+@.getR(d)+5*@scale
 			"translate(#{dx},#{d.y})"
