@@ -118,7 +118,7 @@ require ['jquery','d3','nest','dropimage'] , ($,d3,Nest,dropimage)->
 			window.packery.remove $('.list-item.normal').get()
 			window.packery.layout()
 		related= []	
-		window.nest.degree[d.index].map (link)->
+		window.nest.degree[d.id].map (link)->
 			#滤掉target为当前节点的link
 			if d==link.target then return
 			n= link.target
@@ -133,7 +133,7 @@ require ['jquery','d3','nest','dropimage'] , ($,d3,Nest,dropimage)->
 	#加载相关文档（type为referData）
 	make_referData= (x,container)->
 		docs= []
-		window.nest.degree[x.index].map (link)->
+		window.nest.degree[x.id].map (link)->
 			if x==link.target then return
 			n= link.target
 			if n.type!="referData" then return
@@ -201,7 +201,7 @@ require ['jquery','d3','nest','dropimage'] , ($,d3,Nest,dropimage)->
 	#输入：nodedata，输出：无
 	make_doc= (d,container)->
 			$(".selected_info .item-headline a").attr('href',d.url)
-			value= window.nest.degree[d.index][0].value
+			value= window.nest.degree[d.id][0].value
 			container.append """<p>到聚类中心的距离：#{value}</p>"""
 			container.append $("<p class='placeholder'>正在载入信息...</p>")
 			$.getJSON "/keyword/#{d.name}", (res)->
@@ -354,6 +354,8 @@ require ['jquery','d3','nest','dropimage'] , ($,d3,Nest,dropimage)->
 				window.nest.expand s
 		else if direction=="<-"
 			s= window.story[window.current_step]
+			if s.modified == true
+				return
 			if s.event=="draw"
 				window.nest.draw s
 			else
@@ -560,6 +562,19 @@ require ['jquery','d3','nest','dropimage'] , ($,d3,Nest,dropimage)->
 		window.nest= new Nest ({
 			"container":"#nest-container",
 		})
+		window.nest.events.on "explore_node", (e)->
+			if window.story?
+				window.story[window.current_step].modified= true
+			return
+		.on "remove_node", (e)->
+			#选中root
+			click_handler window.nest.root
+			if window.story?
+				window.story[window.current_step].modified= true
+			return			
+		.on("click_doc",(e,d)->doc_handler(d))
+		.on("clone_graph",(e,d,$svg)->clone_handler(d,$svg))
+		.on('click',(e,d)->click_handler(d))
 		$(document).on "click", ".btn-close" , ()->
 			ui= $(this).closest('div.list-item')
 			window.packery.remove ui

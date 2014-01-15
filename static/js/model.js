@@ -111,7 +111,7 @@ require(['jquery', 'd3', 'nest', 'dropimage'], function($, d3, Nest, dropimage) 
       window.packery.layout();
     }
     related = [];
-    window.nest.degree[d.index].map(function(link) {
+    window.nest.degree[d.id].map(function(link) {
       var n, _ref;
       if (d === link.target) {
         return;
@@ -130,7 +130,7 @@ require(['jquery', 'd3', 'nest', 'dropimage'], function($, d3, Nest, dropimage) 
   make_referData = function(x, container) {
     var docs, n, _i, _len;
     docs = [];
-    window.nest.degree[x.index].map(function(link) {
+    window.nest.degree[x.id].map(function(link) {
       var n;
       if (x === link.target) {
         return;
@@ -207,7 +207,7 @@ require(['jquery', 'd3', 'nest', 'dropimage'], function($, d3, Nest, dropimage) 
   make_doc = function(d, container) {
     var value;
     $(".selected_info .item-headline a").attr('href', d.url);
-    value = window.nest.degree[d.index][0].value;
+    value = window.nest.degree[d.id][0].value;
     container.append("<p>到聚类中心的距离：" + value + "</p>");
     container.append($("<p class='placeholder'>正在载入信息...</p>"));
     return $.getJSON("/keyword/" + d.name, function(res) {
@@ -380,6 +380,9 @@ require(['jquery', 'd3', 'nest', 'dropimage'], function($, d3, Nest, dropimage) 
       }
     } else if (direction === "<-") {
       s = window.story[window.current_step];
+      if (s.modified === true) {
+        return;
+      }
       if (s.event === "draw") {
         window.nest.draw(s);
       } else {
@@ -613,6 +616,22 @@ require(['jquery', 'd3', 'nest', 'dropimage'], function($, d3, Nest, dropimage) 
     list_automate();
     window.nest = new Nest({
       "container": "#nest-container"
+    });
+    window.nest.events.on("explore_node", function(e) {
+      if (window.story != null) {
+        window.story[window.current_step].modified = true;
+      }
+    }).on("remove_node", function(e) {
+      click_handler(window.nest.root);
+      if (window.story != null) {
+        window.story[window.current_step].modified = true;
+      }
+    }).on("click_doc", function(e, d) {
+      return doc_handler(d);
+    }).on("clone_graph", function(e, d, $svg) {
+      return clone_handler(d, $svg);
+    }).on('click', function(e, d) {
+      return click_handler(d);
     });
     $(document).on("click", ".btn-close", function() {
       var ui;

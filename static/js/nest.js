@@ -43,6 +43,7 @@ nest = (function() {
         clearTimeout(_t.timed);
       }
     });
+    this.events = $(this.vis[0]);
     this.voronoi = d3.geom.voronoi().x(function(d) {
       return d.x;
     }).y(function(d) {
@@ -193,7 +194,7 @@ nest = (function() {
       this.blacklist = json.blacklist;
     }
     json.nodes.map(function(d) {
-      return _this.normalize_id(d);
+      _this.normalize_id(d);
     });
     json.links.map(function(d) {
       d.source = _this.normalize_text(d.source);
@@ -301,9 +302,7 @@ nest = (function() {
       this.update();
     } else {
       this.highlight(d);
-      if (window.click_handler != null) {
-        window.click_handler(d);
-      }
+      this.events.trigger("click", [d]);
     }
   };
 
@@ -332,7 +331,7 @@ nest = (function() {
     if ((source_node == null) || (target_node == null)) {
       return;
     }
-    return this.matrix[source_node.index][target_node.index];
+    return this.matrix[source_node.id][target_node.id];
   };
 
   nest.prototype.expand = function(data) {
@@ -372,11 +371,7 @@ nest = (function() {
   nest.prototype.dblclick = function(d) {
     var data;
     if (d.type === "referData" || d.type === "doc") {
-      if (window.doc_handler != null) {
-        window.doc_handler(d);
-      } else {
-        window.open(d.url != null ? d.url : d.name);
-      }
+      this.events.trigger("click_doc", [d]);
       return;
     }
     if ((d.isSearching != null) && d.isSearching === true) {
@@ -423,7 +418,7 @@ nest = (function() {
           i += 1;
           target = x;
         }
-        if (this.matrix[source.index][target.index] == null) {
+        if (this.matrix[source.id][target.id] == null) {
           this.links.push({
             "source": source,
             "target": target
@@ -432,6 +427,7 @@ nest = (function() {
       }
       source.isSearching = false;
     }
+    this.events.trigger('explore_node');
     this.update();
   };
 
@@ -442,14 +438,14 @@ nest = (function() {
       this.shiftPressed = false;
       return;
     }
-    _ref = this.degree[d.index];
+    _ref = this.degree[d.id];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       link = _ref[_i];
       this.links.remove(link);
-      if (this.degree[link.target.index].length === 1 && link.target !== this.root) {
+      if (this.degree[link.target.id].length === 1 && link.target !== this.root) {
         this.nodes.remove(link.target);
       }
-      if (this.degree[link.source.index].length === 1 && link.source !== this.root) {
+      if (this.degree[link.source.id].length === 1 && link.source !== this.root) {
         this.nodes.remove(link.source);
       }
     }
@@ -457,9 +453,8 @@ nest = (function() {
     this.blacklist.push(d.id);
     this.clip = this.clip.data([]);
     this.clip.exit().remove();
-    if (window.click_handler != null) {
-      window.click_handler(this.root);
-    }
+    this.events.trigger("remove_node");
+    this.update();
   };
 
   nest.prototype.highlight = function(d) {
@@ -505,21 +500,19 @@ nest = (function() {
       $g.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + scale + ")");
       svg.selectAll('text').style("font-size", scale < 0.5 ? "0em" : (1 / scale) + "em");
     }));
-    if (window.clone_handler != null) {
-      window.clone_handler(d, $svg);
-    }
-    return $svg;
+    this.events.trigger("clone_graph", [d, $svg]);
   };
 
   nest.prototype.update = function(start_force) {
-    var hNode, i, j, l, n, nodeEnter, _i, _j, _k, _len, _ref, _ref1, _ref2,
+    var l, n, nodeEnter, x, y, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2,
       _this = this;
     if (start_force == null) {
       start_force = true;
     }
-    hNode = {};
-    this.nodes.map(function(d) {
-      return _this.hNode[d.id] = d;
+    this.hNode = {};
+    this.nodes.forEach(function(d, i) {
+      _this.hNode[d.id] = d;
+      d.index = i;
     });
     _ref = this.links;
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -577,26 +570,29 @@ nest = (function() {
     this.text.exit().remove();
     if (start_force) {
       this.force.start();
-      this.matrix = [];
-      this.degree = [];
+      this.matrix = {};
+      this.degree = {};
       n = this.nodes.length;
-      for (i = _j = 0, _ref1 = n - 1; 0 <= _ref1 ? _j <= _ref1 : _j >= _ref1; i = 0 <= _ref1 ? ++_j : --_j) {
-        this.degree.push([]);
-        this.matrix.push([]);
-        for (j = _k = 0, _ref2 = n - 1; 0 <= _ref2 ? _k <= _ref2 : _k >= _ref2; j = 0 <= _ref2 ? ++_k : --_k) {
-          this.matrix[i].push(null);
+      _ref1 = this.nodes;
+      for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+        x = _ref1[_j];
+        this.degree[x.id] = [];
+        this.matrix[x.id] = {};
+        _ref2 = this.nodes;
+        for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
+          y = _ref2[_k];
+          this.matrix[x.id][y.id] = null;
         }
       }
       this.links.map(function(x) {
         var e;
         try {
-          _this.degree[x.source.index].push(x);
-          _this.degree[x.target.index].push(x);
-          _this.matrix[x.source.index][x.target.index] = x;
+          _this.degree[x.source.id].push(x);
+          _this.degree[x.target.id].push(x);
+          _this.matrix[x.source.id][x.target.id] = x;
         } catch (_error) {
           e = _error;
-          console.log(e);
-          console.log(x);
+          console.log(_this.degree);
         }
       });
     }

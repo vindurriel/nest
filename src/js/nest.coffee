@@ -33,6 +33,8 @@ class nest
 				if _t.timed?
 					clearTimeout _t.timed
 				return
+		#使用jquery的event trigger机制
+		@events=$(@vis[0])
 		#voronoi图用于节点边界的分割，tick时更新
 		@voronoi = d3.geom.voronoi()
 		.x((d)->d.x)
@@ -82,7 +84,7 @@ class nest
 			if @hNode[x]?
 				return @hNode[x]
 		return x
-	#处理link的source和target：如果是stirng，替换成对应id的node data。
+	#处理link的source和target：如果是string，替换成对应id的node data。
 	#输入：link data，输出：无
 	##_convert_link_id中引用了hNode,所以需要在hNode更新完成后调用（见update函数）
 	normalize_link: (l)=>
@@ -172,7 +174,9 @@ class nest
 		if json.blacklist?
 			@blacklist= json.blacklist
 		#正规化node的id和name
-		json.nodes.map (d)=> @normalize_id(d)
+		json.nodes.map (d)=> 
+			@normalize_id d
+			return
 		json.links.map (d)=>
 			d.source= @normalize_text d.source
 			d.target= @normalize_text d.target
@@ -258,8 +262,7 @@ class nest
 			@update()
 		else
 			@highlight d
-			if window.click_handler?
-				window.click_handler(d)
+			@events.trigger "click", [d]
 		return
 	#通过id查找node data，id可以是string、object或number
 	#hNode必须先在update中初始化
@@ -286,7 +289,7 @@ class nest
 		target_node= @find_node l.target
 		if not source_node? or not target_node?
 			return
-		return @matrix[source_node.index][target_node.index]
+		return @matrix[source_node.id][target_node.id]
 	#扩展节点，用于automate中增加节点, 见model.coffee中的play_step
 	#输入：有node和link的graph，输出：无
 	expand : (data)=>
@@ -326,10 +329,7 @@ class nest
 	dblclick : (d)=>
 		#处理doc
 		if d.type=="referData" or d.type=="doc"
-			if window.doc_handler?
-				window.doc_handler d
-			else
-				window.open if d.url? then d.url else d.name
+			@events.trigger "click_doc", [d]
 			return
 		#如果当前node正在搜索则返回，避免多次调用explore
 		if d.isSearching? and d.isSearching==true
@@ -361,13 +361,14 @@ class nest
 				if not target?
 					if i==5 and x.type!="referData" then continue
 					@nodes.push x
-					x.x=source.x+Math.random()*100-50
-					x.y=source.y+Math.random()*100-50
+					x.x= source.x+Math.random()*100-50
+					x.y= source.y+Math.random()*100-50
 					i+=1
 					target=x
-				if not @matrix[source.index][target.index]?
+				if not @matrix[source.id][target.id]?
 					@links.push {"source":source,"target":target }
 			source.isSearching= false
+		@events.trigger 'explore_node'
 		@update()
 		return
 	#用户操作删除节点
@@ -377,11 +378,11 @@ class nest
 			@shiftPressed=false
 			return
 		#删除与node相连的所有link，如果相连node只有一条link，那么也删除该node（避免孤立节点出现）
-		for link in @degree[d.index]
+		for link in @degree[d.id]
 			@links.remove link
-			if @degree[link.target.index].length==1 and link.target!=@root
+			if @degree[link.target.id].length==1 and link.target!=@root
 				@nodes.remove link.target
-			if @degree[link.source.index].length==1 and link.source!=@root
+			if @degree[link.source.id].length==1 and link.source!=@root
 				@nodes.remove link.source
 		@nodes.remove d
 		#将node id加入blacklist，下次在explore的时候就不会再返回该node
@@ -389,9 +390,8 @@ class nest
 		#删除clip数据，然后在update中重建clip
 		@clip=@clip.data([])
 		@clip.exit().remove()
-		#选中root
-		if window.click_handler?
-			window.click_handler @root
+		@events.trigger "remove_node"
+		@update()
 		return
 	#高亮用户选中的节点，并一次性生成marker
 	highlight : (d)=>
@@ -436,16 +436,17 @@ class nest
 				svg.selectAll('text').style("font-size", if scale<0.5 then "0em" else (1 / scale) + "em")
 				return
 			))
-		if window.clone_handler?
-			window.clone_handler d,$svg
-		return $svg
+		@events.trigger "clone_graph",[d,$svg]
+		return
 	#负责更新视图，包括节点highlight状况、force layout等
 	#start_force为true会调用force.start，更新node和link的位置
 	update : (start_force=true)=>
 		#将link source和target中的string替换成node data object
-		hNode= {}
-		@nodes.map (d)=>
+		@hNode= {}
+		@nodes.forEach (d,i)=>
 			@hNode[d.id]=d
+			d.index=i
+			return
 		for l in @links
 			@normalize_link l
 		#更新svg link的data
@@ -508,22 +509,26 @@ class nest
 		if start_force
 			@force.start()
 			#重新计算link的信息
-			@matrix=[]
-			@degree=[]
+			@matrix={}
+			@degree={}
 			n= @nodes.length
-			for i in [0..n-1]
-				@degree.push []
-				@matrix.push []
-				for j in [0..n-1]
-					@matrix[i].push null
+			for x in @nodes
+				@degree[x.id]=[]
+				@matrix[x.id]={}
+				for y in @nodes
+					@matrix[x.id][y.id]=null
+			# for i in [0..n-1]
+			# 	@degree.push []
+			# 	@matrix.push []
+			# 	for j in [0..n-1]
+			# 		@matrix[i].push null
 			@links.map (x)=>
 				try
-					@degree[x.source.index].push x
-					@degree[x.target.index].push x
-					@matrix[x.source.index][x.target.index]=x
+					@degree[x.source.id].push x
+					@degree[x.target.id].push x
+					@matrix[x.source.id][x.target.id]=x
 				catch e
-					console.log e
-					console.log x
+					console.log @degree
 				return
 		return
 Array::remove = (b) ->
