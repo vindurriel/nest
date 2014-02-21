@@ -338,11 +338,13 @@ require ['jquery','d3','nest','dropimage'] , ($,d3,Nest,dropimage)->
 		$('html, body').animate({"scrollTop":400})
 		$('.busy').fadeOut()
 		return
+	#播放automation
+	#direction 为方向，可能的取值有 -> 和 <-
 	play_step= (direction)->
-		if not window.current_step?
-			window.current_step=-1
+		#边界检测
 		if direction=="->" and window.current_step>=window.story.length-1 then return
-		else if direction=="<-" and window.current_step<=0 then return
+		if direction=="<-" and window.current_step<=0 then return
+		#显示nest控件
 		$('#nest-container').parent().removeClass "hidden"
 		$("#story-indicator,.btn-next,.btn-prev,.btn-automate").show()
 		if direction=="->"

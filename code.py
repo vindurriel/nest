@@ -41,7 +41,6 @@ app = web.application(urls, globals(), autoreload=True)
 application=app.wsgifunc()
 class static:
     '''
-
     '''
     def GET(self,media, filename):
         import mimetypes
