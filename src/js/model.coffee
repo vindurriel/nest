@@ -338,7 +338,8 @@ require ['jquery','d3','nest','dropimage'] , ($,d3,Nest,dropimage)->
 		$('html, body').animate({"scrollTop":400})
 		$('.busy').fadeOut()
 		return
-	#播放automation
+	#播放automation，操作对象为window.story
+	#window.story为节点探索的log文件
 	#direction 为方向，可能的取值有 -> 和 <-
 	play_step= (direction)->
 		#边界检测
@@ -347,15 +348,19 @@ require ['jquery','d3','nest','dropimage'] , ($,d3,Nest,dropimage)->
 		#显示nest控件
 		$('#nest-container').parent().removeClass "hidden"
 		$("#story-indicator,.btn-next,.btn-prev,.btn-automate").show()
+		#正向播放，current_step指针先后移
 		if direction=="->"
 			current_step+=1
 			s= window.story[window.current_step]
+			#根据event来决定是draw或expand
 			if s.event=="draw"
 				window.nest.draw s
 			else
 				window.nest.expand s
+		#逆向播放，先执行当前操作的反操作（expand<->rm)，然后current_step - 1
 		else if direction=="<-"
 			s= window.story[window.current_step]
+			#如果用户在当前step上更改了图，则无法进行回退操作
 			if s.modified == true
 				return
 			if s.event=="draw"
@@ -366,9 +371,11 @@ require ['jquery','d3','nest','dropimage'] , ($,d3,Nest,dropimage)->
 			s= window.story[window.current_step]
 		else
 			return
+		#更新控件显示
 		click_handler window.nest.hNode[s.current_node_id]
 		$("#story-indicator").text("第#{window.current_step+1}步，共#{window.story.length}步  #{s.current_node_id}")
 		return
+	#搜索，调用 POST /search服务
 	search= (key, services)->
 		data= {
 			'keys':key,
@@ -386,6 +393,8 @@ require ['jquery','d3','nest','dropimage'] , ($,d3,Nest,dropimage)->
 				return
 			,'json'
 		return
+	#根据名称加载automate，调用 GET /play 服务，得到json对象，进行数据清理后存入window.story
+	#scr：automate的文件（全名为scr.txt)
 	load_automate= (scr)->
 		scr= encodeURIComponent(scr)
 		close_toggle()
@@ -394,14 +403,14 @@ require ['jquery','d3','nest','dropimage'] , ($,d3,Nest,dropimage)->
 			graph=
 				nodes:[] 
 				links:[]
-			#normalize node id, make all nodes available via index
+			#将节点id正规化
 			d.map (step)->
 				step.nodes.map (n)->
 					window.nest.normalize_id n
 					graph.nodes.push n
 					return
 				return
-			#normalize link, and make sure all link ids are not number
+			#删掉 source 或 target 不存在的link
 			len= graph.nodes.length
 			d.map (step)->
 				step.links.map (l)->
@@ -418,15 +427,18 @@ require ['jquery','d3','nest','dropimage'] , ($,d3,Nest,dropimage)->
 					return
 				step.links= step.links.filter (l)->not l.delete?
 				return
+			#添加current_node_id
 			d.map (step)->
 				if not step.current_node_id?
 					step.current_node_id= step.nodes[0].id
 				window.story.push step
 				return
+			#播放第一步
 			window.current_step=-1
 			play_step("->")
 			return
 		return
+	#获得可用的automate列表，更新 .automates视图
 	list_automate= ()->
 		$.getJSON "/list?output=json&type=automate", (d)->
 			if not d or d.error?
@@ -439,6 +451,7 @@ require ['jquery','d3','nest','dropimage'] , ($,d3,Nest,dropimage)->
 				""")
 			return
 		return
+	#获得可用的model列表，更新 .snapshots视图
 	list_model= ()->
 		$.getJSON "/list?output=json&type=model", (d)->
 			if not d or d.error?
@@ -454,6 +467,7 @@ require ['jquery','d3','nest','dropimage'] , ($,d3,Nest,dropimage)->
 				return
 			return
 		return
+	#获得可用的搜索sevice列表，更新.services视图，并调用init_service更新banner中的service_nest
 	list_service= ()->
 		$.getJSON "/services",(d)->
 			if not d or d.error?
@@ -479,41 +493,11 @@ require ['jquery','d3','nest','dropimage'] , ($,d3,Nest,dropimage)->
 				if checked=="checked"
 					$item.addClass('on')
 				$('.services').append $item
+			#更新
 			init_service(window.services)
 			return
 		return
-	update_service= ()->
-		r= window.service_nest
-		ns= window.services.filter((x)->x.select)
-		o=$('.logo').offset()
-		ns.splice(0,0,
-			'id':'services_root','name':"",'select':true,
-			'desc':'',
-			'img':'',
-			'fixed':true,
-			'x':o.left+64,
-			'y':o.top+64,
-		)
-		ls= []
-		i=0
-		for i in [0..ns.length-1]
-			if i==0 then  continue
-			ls.push {source:0,target:i}
-		r.force.nodes(ns).links(ls).start()
-		r.nodes= r.nodes.data(r.force.nodes(),(d)->d.id)
-		r.links= r.links.data(r.force.links())
-		ne= r.nodes.enter().append('g').classed('node',true)
-		ne.append('image')
-		.attr('width',30)
-		.attr('height',30)
-		.attr('xlink:href',(d)->d.img)
-		.call(r.force.drag)
-		ne.append('title').text((d)->d.desc)
-		ne.append('text').text((d)->d.name).attr('dx',-10).attr('dy',20).attr('text-anchor','end')
-		r.nodes.exit().remove()
-		r.links.enter().insert("line", ".node").classed('link',true)
-		r.links.exit().remove()
-		return
+	#更新banner中的service_nest，使用了d3.layout.force
 	init_service= (services)->
 		res= {}
 		# d3= window.d3
@@ -541,29 +525,77 @@ require ['jquery','d3','nest','dropimage'] , ($,d3,Nest,dropimage)->
 		window.service_nest= res
 		update_service()
 		return
+	update_service= ()->
+		r= window.service_nest
+		#节点的数据源为选中的services
+		ns= window.services.filter((x)->x.select)
+		o=$('.logo').offset()
+		#添加一个假的的root
+		ns.splice(0,0,
+			'id':'services_root','name':"",'select':true,
+			'desc':'',
+			'img':'',
+			'fixed':true,
+			'x':o.left+64,
+			'y':o.top+64,
+		)
+		#建立从root到每个选中的services的连线
+		ls= []
+		i=0
+		for i in [0..ns.length-1]
+			if i==0 then  continue
+			ls.push {source:0,target:i}
+		r.force.nodes(ns).links(ls).start()
+		r.nodes= r.nodes.data(r.force.nodes(),(d)->d.id)
+		r.links= r.links.data(r.force.links())
+		#节点的样式
+		ne= r.nodes.enter().append('g').classed('node',true)
+		ne.append('image')
+		.attr('width',30)
+		.attr('height',30)
+		.attr('xlink:href',(d)->d.img)
+		.call(r.force.drag)
+		ne.append('title').text((d)->d.desc)
+		ne.append('text').text((d)->d.name).attr('dx',-10).attr('dy',20).attr('text-anchor','end')
+		r.nodes.exit().remove()
+		#连线的样式
+		r.links.enter().insert("line", ".node").classed('link',true)
+		r.links.exit().remove()
+		return
+	#jquery在document.ready后做的事情
 	$ ->
+		#获取当前页面url中的参数
 		params= url_params()
+		#theme参数决定页面样式，目前有两个选项：light和dark。body的class在css中控制页面的样式
 		if params.theme?
 			$('body').addClass(params.theme)
+		#no_nav参数出现，则隐藏导航栏（在css中实现）
 		if params.no_nav?
 			$('body').addClass("no-nav")
-		needs_nest= false			
+		#q为query，如果有，需要调用search函数。
 		if params.q?
 			key= params.q
 			services=  ['baike']
+			#services为可选参数，用|分割想调用的搜索服务。
 			if params.services?
 				services= params.services.split('|')
-			search(key,services)
+			search key,services
+		#id表示需要加载model，调用load_model
 		else if params.id?
 			load_model params.id
+		#automate表示需要加载model，调用load_automate
 		else if params.automate?
 			load_automate params.automate
+		#参数q、id和automate三者优先级递减，如果存在优先级较高的参数，则不会执行低优先级的参数。
+		#加载UI上的service、model(快照)和automate
 		list_service()
 		list_model()
 		list_automate()
+		#初始化主nest控件
 		window.nest= new Nest ({
 			"container":"#nest-container",
 		})
+		#在explore_node或remove_node事件发生时，将当前step.modified设为true（story无法回退）
 		window.nest.events.on "explore_node", (e)->
 			if window.story?
 				window.story[window.current_step].modified= true
@@ -577,44 +609,54 @@ require ['jquery','d3','nest','dropimage'] , ($,d3,Nest,dropimage)->
 		.on("click_doc",(e,d)->doc_handler(d))
 		.on("clone_graph",(e,d,$svg)->clone_handler(d,$svg))
 		.on('click',(e,d)->click_handler(d))
-		$(document).on "click", ".btn-close" , ()->
+		#点击.btn-close，关闭其所在的.list-item
+		$("body").on "click", ".btn-close" , ()->
 			ui= $(this).closest('div.list-item')
 			window.packery.remove ui
 			window.packery.layout()
 			return
-		$("body")
+		#点击.selected_info .item-action时，执行绑定在data-nest-command属性上的命令，该命令的执行者为window.nest
 		.on "click", ".selected_info .item-action", ()->
 			cmd=$(@).data('nest-command')
 			window.nest[cmd](window.nest.theFocus)
 			window.nest.update()
 			return
+		#点击.btn-no，关闭选项视图
 		.on "click", ".btn-no", ()->
 			close_toggle()
 			return
+		#点击.fav处理收藏事件
 		.on "click", ".fav", ()->
 			notify "已收藏"
-			return		
+			return
+		#点击.share处理分享事件
 		.on "click", ".share", ()->
 			notify "已分享"
-			return		
+			return
+		#点击.btn-automate-yes，则开始执行新的automate脚本
 		.on "click", ".btn-automate-yes", ()->
 			close_toggle()
 			dic=
 				"nodes":window.nest.nodes,
 				"links":window.nest.links.map((d)->{"source":d.source.index,"target":d.target.index}),
 				"blacklist":window.nest.blacklist,
+			#获取用户输入的停止条件参数
 			for p in "max_total_node_num max_single_node_num timeout_seconds max_depth out_fname".split(" ")
+				#之所以是window[p][1]而不是window[p][0],原因是用户更改的选项是经过clone的控件元素
 				dic[p]=window[p][1].value
 			console.log dic
 			notify "宏 #{dic.out_fname} 已开始运行"
+			#调用 POST /automate
 			$.post "/automate",	JSON.stringify(dic), (d)->
 				if d.error?
 					notify "宏 #{dic.out_fname} 运行出现如下错误 "+d.error
 				else
 					notify "宏 #{dic.out_fname} 已完成运行"
+					#完成运行后需更新automate列表，用户才能查看结果
 					list_automate()
 				return
 			return
+		#点击.btn-next和.btn-prev用来控制automate控件,播放automate的下一步
 		.on "click", ".btn-next", ()->
 			play_step("->")
 			return
@@ -622,12 +664,15 @@ require ['jquery','d3','nest','dropimage'] , ($,d3,Nest,dropimage)->
 			play_step("<-")
 			return
 		.on("click", '.btn-save', save)
+		#.automates列表项的交互
 		.on "click", ".automates li", ()->
 			load_automate $(@).text()
 			return
+		#.snapshots列表项的交互
 		.on "click", ".snapshots li", ()->
 			load_model $(@).text()
 			return
+		#.services列表项的交互
 		.on 'click','.services li', (e)->
 			checkbox=$(@).find('input[type=checkbox]')
 			checkbox.prop("checked", !checkbox.prop("checked"))
@@ -643,6 +688,7 @@ require ['jquery','d3','nest','dropimage'] , ($,d3,Nest,dropimage)->
 			.prop("checked",checked)
 			update_service()
 			return
+		#.btn-resize的事件处理
 		.on "click", ".btn-resize", ()->
 			ui=$(@).closest('.list-item')
 			ui.toggleClass('expanded')
@@ -652,28 +698,34 @@ require ['jquery','d3','nest','dropimage'] , ($,d3,Nest,dropimage)->
 			$(@).val(if flag then "缩小" else  "放大")
 			window.packery.layout()
 			return
+		#.drag-handle的事件处理
 		.on "mouseenter",".drag-handle", ->
 			$(this).attr('title',"按住拖动")
 			return
+		#.doc_url的事件处理
 		.on "click",".doc_url", ()->
 			id= $(@).attr('data-doc-id')
 			window.doc_handler window.nest.hNode[id]
 			return
+		#点击#btn_search,调用search函数
 		$("#btn_search").click ->
 			key=$('#q').val()
 			services= window.services.filter((d)->d.select).map((d)->d.id)
 			search(key,services)
 			return
+		#处理页面滚动，body的ready用来控制logo等页面元素的变化
 		$(window).scroll ->
 			if $(window).scrollTop()>400
 				$("body").addClass "ready"
 			else
 				$("body").removeClass "ready"
 			return
+		#用户输入焦点在#q（文本框）中时按下回车，等于按下#btn_search
 		$('#q').keypress (e) ->
 			if e.keyCode==13
 				$('#btn_search').click()
 			return
+		#点击logo的处理事件
 		$(".logo").on "click", ()->
 			if $('body').hasClass('ready')
 				$("body").animate({'scrollTop':0})
@@ -713,16 +765,21 @@ require ['jquery','d3','nest','dropimage'] , ($,d3,Nest,dropimage)->
 						return
 				,"json"
 				return false
+		#在页面滚动事件中处理延迟加载
 		$(window).on "scroll", ()->
+			#当.load-more出现在视图中时，调用loadFunc。
 			if $(".load-more").offset().top<=$(window).scrollTop()+$(window).height()
 				if window.loadFunc?
 					window.loadFunc()
 			return
+		#.toggle元素的控制
 		$("#nav-buttons .toggle").on "click",()->
+			#除了当前点击的.toggle有on这个class,其他.toggle全部没有
 			$("#nav-buttons .toggle").not($(@)).removeClass 'on'
 			$(@).toggleClass 'on'
 			c=$(".toggle-container")
 			if $(@).hasClass 'on'
+				#data-toggle-id为要克隆的元素的id
 				id=$(@).data('toggleId')
 				c.children(":first").empty().append($(id).clone().removeAttr('id').show())
 				c.slideDown 200

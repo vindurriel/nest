@@ -52,29 +52,5 @@ def create_summary(sentences,frequencies):
 def summarize(text):
 	frequencies = token_frequency(text)
 	sentences = split_to_sentences(text)
-	
 	summary = create_summary(sentences,frequencies)
 	return summary
-
-
-if __name__ == '__main__':
-	import os
-	dirname=r'E:\workspace\vindurriel.github.com\_posts'
-	fnames=os.listdir(dirname)
-	for fname in fnames:
-		if not fname.endswith(".md"):continue
-		fname=os.path.join(dirname,fname)
-		print fname
-		orgtext=None
-		with open(fname,'r') as f:
-			orgtext=f.read().decode('utf-8')
-		if u"---\n\n"  in orgtext:
-			text=orgtext.split(u"---\n\n")[1]
-		summary=summarize(text)
-		import cgi
-		summary=cgi.escape(summary,quote=True).replace(u"\n",u"<br/>")
-		import re
-		regex=re.compile("description:\s*\"(.*?)\"")
-		orgtext=regex.sub(u"description: \"{}\"".format(summary),orgtext)
-		with open(fname,'w') as f:
-			f.write(orgtext.encode('utf-8'))

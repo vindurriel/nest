@@ -1,8 +1,10 @@
 #encoding=utf-8
-import os,sys,json,requests,traceback,web
+'''
+网站主文件，用法：python code.py <PORT>
+'''
 from utils import *
-
-### router
+import os,sys,json,requests,traceback,web
+# url路由
 router="""
 / model
 /list model.list
@@ -13,11 +15,13 @@ router="""
 /favicon.ico favicon
 /(js|css|files|img)/(.+) static
 /services(?:/)?  search.service
-/keyword/(.+) model.keyword
+/keyword/(.+) keywords
 /play/(.+) model.play
 /automate(?:/)? automate
 """
+#web.py 接收一个list作为路由，键值对依次排列
 urls=[]
+#根据字符串来记录需要import的包
 to_imports=set()
 for line in router.split("\n"):
     if line=="": continue
@@ -26,6 +30,7 @@ for line in router.split("\n"):
     urls.append(m)
     if '.' in m:
         m=m.split('.')[0]
+    #只引入当前没有的包
     if not hasattr(sys.modules[__name__],m):
         to_imports.add(m)
 for x in to_imports:
@@ -34,14 +39,16 @@ for x in to_imports:
         exec(cmd)
     except Exception, e:
         pass
-        
 web.config.debug=False
 web.template.Template.globals['config'] = web.storage(static=cwd('static'))
 app = web.application(urls, globals(), autoreload=True)
-application=app.wsgifunc()
+#可挂接其他支持wsgi方式的PaaS,如AppFog
+wsgi_application=app.wsgifunc()
 class static:
     '''
+    用来处理静态文件，包括图像、javascript、css、和files
     '''
+    #media：静态文件类型， 可选项：js|css|files|img
     def GET(self,media, filename):
         import mimetypes
         mime_type = mimetypes.guess_type(filename)[0]
@@ -57,8 +64,10 @@ class static:
             traceback.print_exc()
             web.notfound() #send http 404
 class favicon:
-	def GET(self):
+    '''
+    负责处理 GET /favicon.ico
+    '''
+    def GET(self):
 		web.redirect('/img/favicon.png')
 if __name__ == "__main__":
     app.run()
-    a=1

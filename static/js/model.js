@@ -360,12 +360,10 @@ require(['jquery', 'd3', 'nest', 'dropimage'], function($, d3, Nest, dropimage) 
   };
   play_step = function(direction) {
     var s;
-    if (window.current_step == null) {
-      window.current_step = -1;
-    }
     if (direction === "->" && window.current_step >= window.story.length - 1) {
       return;
-    } else if (direction === "<-" && window.current_step <= 0) {
+    }
+    if (direction === "<-" && window.current_step <= 0) {
       return;
     }
     $('#nest-container').parent().removeClass("hidden");
@@ -519,6 +517,29 @@ require(['jquery', 'd3', 'nest', 'dropimage'], function($, d3, Nest, dropimage) 
       init_service(window.services);
     });
   };
+  init_service = function(services) {
+    var res;
+    res = {};
+    res.svg = d3.select('#banner .overlay').append("svg");
+    res.nodes = res.svg.selectAll('.node');
+    res.links = res.svg.selectAll('.link');
+    res.force = d3.layout.force().charge(-1000).linkDistance(150).linkStrength(1).size([200, 200]).on('tick', function() {
+      res.nodes.attr("transform", function(d) {
+        return "translate(" + d.x + "," + d.y + ")";
+      });
+      return res.links.attr("x1", function(d) {
+        return d.source.x;
+      }).attr("y1", function(d) {
+        return d.source.y;
+      }).attr("x2", function(d) {
+        return d.target.x;
+      }).attr("y2", function(d) {
+        return d.target.y;
+      });
+    });
+    window.service_nest = res;
+    update_service();
+  };
   update_service = function() {
     var i, ls, ne, ns, o, r, _i, _ref;
     r = window.service_nest;
@@ -566,31 +587,8 @@ require(['jquery', 'd3', 'nest', 'dropimage'], function($, d3, Nest, dropimage) 
     r.links.enter().insert("line", ".node").classed('link', true);
     r.links.exit().remove();
   };
-  init_service = function(services) {
-    var res;
-    res = {};
-    res.svg = d3.select('#banner .overlay').append("svg");
-    res.nodes = res.svg.selectAll('.node');
-    res.links = res.svg.selectAll('.link');
-    res.force = d3.layout.force().charge(-1000).linkDistance(150).linkStrength(1).size([200, 200]).on('tick', function() {
-      res.nodes.attr("transform", function(d) {
-        return "translate(" + d.x + "," + d.y + ")";
-      });
-      return res.links.attr("x1", function(d) {
-        return d.source.x;
-      }).attr("y1", function(d) {
-        return d.source.y;
-      }).attr("x2", function(d) {
-        return d.target.x;
-      }).attr("y2", function(d) {
-        return d.target.y;
-      });
-    });
-    window.service_nest = res;
-    update_service();
-  };
   $(function() {
-    var $holder, key, needs_nest, params, services;
+    var $holder, key, params, services;
     params = url_params();
     if (params.theme != null) {
       $('body').addClass(params.theme);
@@ -598,7 +596,6 @@ require(['jquery', 'd3', 'nest', 'dropimage'], function($, d3, Nest, dropimage) 
     if (params.no_nav != null) {
       $('body').addClass("no-nav");
     }
-    needs_nest = false;
     if (params.q != null) {
       key = params.q;
       services = ['baike'];
@@ -633,13 +630,12 @@ require(['jquery', 'd3', 'nest', 'dropimage'], function($, d3, Nest, dropimage) 
     }).on('click', function(e, d) {
       return click_handler(d);
     });
-    $(document).on("click", ".btn-close", function() {
+    $("body").on("click", ".btn-close", function() {
       var ui;
       ui = $(this).closest('div.list-item');
       window.packery.remove(ui);
       window.packery.layout();
-    });
-    $("body").on("click", ".selected_info .item-action", function() {
+    }).on("click", ".selected_info .item-action", function() {
       var cmd;
       cmd = $(this).data('nest-command');
       window.nest[cmd](window.nest.theFocus);

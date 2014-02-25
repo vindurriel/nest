@@ -1,11 +1,11 @@
-#encoding=utf-8 
+#encoding=utf-8
+#automate的rest服务封装
+#automate在lib/Automations/__init__.py
 from utils import *
 import sys,web,time,json,requests,traceback
 sys.path.append(cwd('lib'))
 from multiprocessing import Process
 class automate(object):
-	def __init__(self):
-		pass
 	def POST(self):
 		from Automations import do_automate
 		web.header('Content-Type', 'application/json')

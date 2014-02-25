@@ -7,7 +7,7 @@ import requests as r
 def storage_name(s):
 	return u"/temp_docs/"+unicode(md5(s))
 class Node(object):
-	"""docstring for Node"""
+	"""节点实体类，做了一些验证"""
 	def __init__(self,dic):
 		self.id=unicode(dic.get('id',""))
 		self.name=unicode(dic.get('name',""))
@@ -28,7 +28,7 @@ class Node(object):
 			"distance_rank":self.distance_rank
 		}
 class Link(object):
-	"""docstring for Link"""
+	"""连线实体类，做了一些验证"""
 	def __init__(self, dic):
 		self.source=dic['source']
 		self.target=dic['target']

@@ -1,10 +1,12 @@
 #encoding=utf-8
 import web
 from utils import *
+#对字符串name进行base64编码，这样做既能规避不能用在文件名中的字符，又能不丢失信息第解码。
 def get_file_name(name,ext=".json"):
 	import base64
 	return cwd(u"static",u"files",u"{}{}".format(base64.b64encode(to_unicode(name).encode('utf-8')),ext))
 class model:
+	#GET方法用来显示model.htm
 	def GET(self):
 		params=web.input()
 		theme=params.get("theme","light")
@@ -14,10 +16,8 @@ class model:
 			print "###model.search##",unicode(params.q).encode('gbk')
 		render=web.template.render(cwd('templates'),globals=locals())
 		return render.model()
+	#post方法用来保存静态graph文件
 	def POST(self):
-		'''
-		save
-		'''
 		import json
 		web.header('Content-Type', 'application/json')
 		print "###model.post##"
@@ -33,11 +33,14 @@ class model:
 			import traceback
 			traceback.print_exc()
 			return json.dumps({"error":unicode(e)})
-		
 class list:
+	#返回一个项目列表，输出可以是html，也可以是json，元素类型可以是model，也可以是automate
 	def GET(self):
+		#theme可选项：light|dark
 		theme=web.input().get("theme","light")
+		#output可选项：html|json
 		output=web.input().get("output","html")
+		#类型的可选项：model|automate
 		t=web.input().get("type","model")
 		import os
 		l=os.listdir(cwd('static','files'))
@@ -46,7 +49,9 @@ class list:
 			ext=".txt"
 		l= filter(lambda x:x.endswith(ext),l)
 		import base64,urllib2
+		#base64解码
 		l= map(lambda x: to_unicode(base64.b64decode(x[:-len(ext)])),l)
+		#为了能在html和json中显示
 		l= map(lambda x: (x,urllib2.quote(x.encode("utf-8"))),l)
 		if output=='html':
 			static=cwd("static")
@@ -56,35 +61,8 @@ class list:
 			import json
 			web.header('Content-Type', 'application/json')
 			return json.dumps(l)
-class keyword:
-	def GET(self,key="机器学习"):
-		fname=cwd("static","files", "cluster",key)
-		res={}
-		import os,json
-		if not os.path.isfile(fname):
-			return json.dumps({"error":"json file not found"})
-		web.header('Content-Type', 'application/json')
-		sentence=file(fname,'r').read()
-		import jieba,jieba.analyse
-		tags=jieba.analyse.extract_tags(sentence,10)
-		words = jieba.cut(sentence)
-		freq = {}
-		total=0.0
-		stop_words= set([
-		"where","the","of","is","and","to","in","that","we","for","an","are","by","be","as","on","with","can","if","from","which","you","it","this","then","at","have","all","not","one","has","or","that"
-		])
-		for w in words:
-		    if len(w.strip())<2: continue
-		    if w.lower() in stop_words: continue
-		    freq[w]=freq.get(w,0.0)+1.0
-		    total+=freq[w]
-		tags=dict([(x,freq[x])  for x in tags])
-		import summarize
-		summary=summarize.summarize(sentence)
-		summary=summary.replace('\n',"<br>")
-		print summary
-		return json.dumps({"keyword":tags,"summary":summary})
 class load:
+	#根据文件名来返回单个model
 	def GET(self,key="机器学习"):
 		web.header('Content-Type', 'application/json')
 		web.header('Cache-Control', 'private, must-revalidate, max-age=0')
@@ -99,10 +77,13 @@ class load:
 		raw=file(fname,"r").read()
 		return json.dumps(json.loads(raw),indent=2)
 class play:
+	#根据文件名来返回单个automate，格式为json
 	def GET(self,key="机器学习"):
 		import os
 		web.header('Content-Type', 'text/plain')
 		fname=get_file_name(key,ext=".txt")
 		print fname
+		if not os.path.isfile(fname):
+			return json.dumps({"error":"json file not found"})
 		raw=file(fname,"r").read()
 		return raw

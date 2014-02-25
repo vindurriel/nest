@@ -1,8 +1,9 @@
 #encoding=utf-8
-import web
+#将输入转换成unicode
 def to_unicode(s):
 	if type(s)==type(u""):
 		return s
+	#按优先级进行解码
 	codings=['utf-8','gbk']
 	for cod in codings:
 		try:
@@ -10,6 +11,7 @@ def to_unicode(s):
 		except Exception, e:
 			pass
 	raise Exception("cannot decode")
+#获得python执行主脚本的绝对路径，保证在非当前路径运行的时候路径识别正确。
 def cwd(*args):
     import sys,os
     res=os.path.realpath(os.path.dirname(__file__))
