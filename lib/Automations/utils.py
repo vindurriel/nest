@@ -15,6 +15,3 @@ def cwd(*args):
     for x in args:
         res=os.path.join(res,x)
     return res
-def md5(raw):
-	import hashlib
-	return hashlib.md5(raw).hexdigest() 

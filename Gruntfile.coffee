@@ -3,9 +3,9 @@ module.exports= (grunt)->
 		less:
 			dev:
 				options:
-					paths: ['src/css']
+					paths: ['src/less']
 				expand: true
-				cwd: "src/css"
+				cwd: "src/less"
 				src: ["*.less"]
 				dest: "static/css"
 				ext: ".css"
@@ -14,19 +14,20 @@ module.exports= (grunt)->
 				options:
 					bare:true
 				expand: true
-				cwd: "src/js"
+				cwd: "src/coffee"
 				src: ["*.coffee"]
-				dest: "static/js"
+				dest: "static/js/dev"
 				ext: ".js"
 		watch: 
 			coffeescript:
-				files: 'src/js/*.coffee'
+				files: 'src/coffee/*.coffee'
 				tasks: ['newer:coffee']
 			less:
-				files: 'src/css/*.less'
+				files: 'src/less/*.less'
 				tasks:['newer:less']
 	grunt.loadNpmTasks 'grunt-newer'
 	grunt.loadNpmTasks 'grunt-contrib-coffee'
 	grunt.loadNpmTasks 'grunt-contrib-less'
 	grunt.loadNpmTasks 'grunt-contrib-watch'
+	grunt.registerTask('default',['watch'])
 	return

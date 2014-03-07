@@ -1,7 +1,7 @@
 #encoding=utf-8
 __all__=['do_automate']
-import os,sys,json,traceback
-host="http://localhost:8888"
+import os,sys,json,traceback,web
+host="http://"+web.ctx.host
 from utils import *
 import requests as r
 def storage_name(s):

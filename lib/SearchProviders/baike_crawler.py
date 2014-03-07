@@ -6,7 +6,7 @@ class baike_crawler(search_provider_base):
 		self.result={}
 		serviceType=dic.get('serviceType','baiduBaikeCrawler')
 		node_prefix=u"知识点:"
-		url='http://192.168.4.228:8080/ContentService/CrawledIndex?wsdl'
+		url=self.config.get("url",'http://192.168.4.228:8080/ContentService/CrawledIndex?wsdl')
 		try:
 			client = suds.client.Client(url)
 		except Exception, e:
@@ -59,3 +59,5 @@ class baike_crawler(search_provider_base):
 			"nodes": res,
 			'links':[]
 		}
+if __name__ == '__main__':
+	baike_crawler().search("me")

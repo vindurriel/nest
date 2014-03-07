@@ -5,12 +5,12 @@ requirejs.config
 		'packery':'packery.pkgd.min'
 		'jsc3d':'jsc3d.min' #jsc3d用于3d模型文件（.obj）的显示
 		'jsc3d_touch':'jsc3d.touch'
-		"jquery":"jquery"
+		"jquery":"jquery"  
 		"dropimage":"dropimage" #拖放图片到某个位置就上传图片
 		'noty': "jquery.noty.packaged.min" #jquery消息提示插件
 		'draggabilly':'draggabilly.pkgd.min' #packery的页面元素拖拽插件
 	#shim用于配置那些不支持amd加载方式的包	
-	'shim':
+	'shim':  
 		'noty':  
 			"deps":['jquery']
 		'd3':

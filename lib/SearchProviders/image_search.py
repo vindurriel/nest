@@ -8,7 +8,7 @@ class image_search(search_provider_base):
 				"nodes": [],
 				'links':[]
 			}
-		url='http://192.168.4.228:8080/MagicTaskService/ModelSearch?wsdl'
+		url=self.config.get('url','http://192.168.4.228:8080/MagicTaskService/ModelSearch?wsdl') 
 		try:
 			client = suds.client.Client(url)
 		except Exception, e:

@@ -1,0 +1,11 @@
+/ model
+/list model.list
+/model/load/(.+) model.load
+/model(?:/)?  model
+/explore(?:/)?  explore
+/search(?:/)?  search
+/favicon.ico favicon
+/(js|css|files|img)/(.+) static
+/services(?:/)?  search.service
+/keyword/(.+) keywords
+/play/(.+) model.play

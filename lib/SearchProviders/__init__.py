@@ -16,3 +16,4 @@ def factory(cl,*args):
 if __name__ == '__main__':
 	s= factory('baike_crawler')
 	res=s.search(u'联邦政府',{'serviceType':"baiduBaikeCrawler"})
+

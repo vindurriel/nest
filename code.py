@@ -19,6 +19,9 @@ router="""
 /play/(.+) model.play
 /automate(?:/)? automate
 """
+router_fname=cwd("router.txt")
+if os.path.isfile(router_fname):
+    router=file(router_fname,'r').read()
 #web.py 接收一个list作为路由，键值对依次排列
 urls=[]
 #根据字符串来记录需要import的包
@@ -68,6 +71,6 @@ class favicon:
     负责处理 GET /favicon.ico
     '''
     def GET(self):
-		web.redirect('/img/favicon.png')
+        web.redirect('/img/favicon.png')
 if __name__ == "__main__":
     app.run()

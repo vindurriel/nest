@@ -37,3 +37,7 @@ class wolfram_alpha(search_provider_base):
 			"nodes": result,
 			'links':[]
 		}
+if __name__ == '__main__':
+	import json
+	res=wolfram_alpha().search('12 * 3',{})
+	print json.dumps(res,indent=2)

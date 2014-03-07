@@ -15,7 +15,6 @@ class FileTransferClient(object):
 	def __getattr__(self,attr):
 		if hasattr(self.hdfs,attr):
 			return getattr(self.hdfs,attr)
-		print "sdfasfasdf"
 		raise AttributeError()
 	def __enter__(self):
 		self.transport.open()

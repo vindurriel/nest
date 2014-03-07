@@ -2,8 +2,8 @@ render = (data,user_options) ->
 	options= $.extend {}, {
 		"kName":"k",
 		'vName':'v',
-		'container':'#chart',
-	},user_options
+		'container':'#chart', 
+	},user_options 
 	valueLabelWidth = 40 # space reserved for value labels (right)
 	barHeight = 20 # height of one bar
 	barLabelWidth = 100 # space reserved for bar labels
@@ -79,7 +79,7 @@ render = (data,user_options) ->
 		.attr("y2", yScale.rangeExtent()[1] + gridChartOffset)
 		.style("stroke", "#000")
 	return
-if not define? then return
-define ['d3'], (d3)-> {
-	'render':render,
-}
+if define?
+	define ['d3'], (d3)-> {
+		'render':render,
+	}

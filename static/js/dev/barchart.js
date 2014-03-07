@@ -49,12 +49,10 @@ render = function(data, user_options) {
   barsContainer.append("line").attr("y1", -gridChartOffset).attr("y2", yScale.rangeExtent()[1] + gridChartOffset).style("stroke", "#000");
 };
 
-if (typeof define === "undefined" || define === null) {
-  return;
+if (typeof define !== "undefined" && define !== null) {
+  define(['d3'], function(d3) {
+    return {
+      'render': render
+    };
+  });
 }
-
-define(['d3'], function(d3) {
-  return {
-    'render': render
-  };
-});

@@ -11,9 +11,10 @@ def normalize_text(s):
 def jsonfy(dic):
 	import json
 	return json.dumps(dic,indent=2)
-class explore_provider_base:
+class explore_provider_base(object):
 	def __init__(self):
 		self.result={}
+		self.config=self.load_config()
 	def json(self,res):
 		import json
 		return json.dumps(res,indent=2)
@@ -21,3 +22,12 @@ class explore_provider_base:
 		import json
 		res=[]
 		return self.json(res)
+	def load_config(self):
+		fname=cwd("{}.conf".format(self.__class__.__name__))
+		import json
+		try:
+			return json.loads(file(fname,'r').read())
+		except Exception, e:
+			import traceback
+			traceback.print_exc()
+			return {}
