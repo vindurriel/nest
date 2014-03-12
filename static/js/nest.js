@@ -276,7 +276,8 @@ nest = (function() {
   };
 
   nest.prototype.colors = {
-    'relationship': '#0088dd',
+    'referData': '#aaaaaa',
+    'relationship': '#0088ff',
     'SearchProvider': 'dd0000'
   };
 
@@ -285,8 +286,7 @@ nest = (function() {
     if (this.colors[d.type] != null) {
       return this.colors[d.type];
     }
-    res = "black";
-    res = this.palette(d.type);
+    res = "#0088ff";
     if (d.distance_rank != null) {
       res = d3.hsl(res).brighter(d.distance_rank * .1).toString();
     }
@@ -530,7 +530,7 @@ nest = (function() {
       return d.isHigh === true;
     }).call(this.force.drag());
     nodeEnter.append('circle').classed('selection-helper', true).attr('r', 50).style("fill", "#0088ff");
-    nodeEnter.append("circle").style("fill", "#0088ff").attr('r', this.getR);
+    nodeEnter.append("circle").style("fill", this.color).attr('r', this.getR);
     nodeEnter.filter(function(d) {
       return (d.img != null) && d.type === "SearchProvider";
     }).append('image').attr('xlink:href', function(d) {

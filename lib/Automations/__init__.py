@@ -1,8 +1,8 @@
 #encoding=utf-8
 __all__=['do_automate']
 import os,sys,json,traceback,web
-host="http://"+web.ctx.host
 from utils import *
+host=get_config("Automations").get("host","http://localhost:1234")
 import requests as r
 def storage_name(s):
 	return u"/temp_docs/"+unicode(md5(s))

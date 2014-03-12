@@ -8,6 +8,12 @@ def normalize_text(s):
 		except Exception, e:
 			pass
 	raise Exception("cannot decode")
+def cwd(*args):
+    import sys,os
+    res=os.path.realpath(os.path.dirname(__file__))
+    for x in args:
+        res=os.path.join(res,x)
+    return res
 def jsonfy(dic):
 	import json
 	return json.dumps(dic,indent=2)

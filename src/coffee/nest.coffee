@@ -240,15 +240,16 @@ class nest
 			@text.classed('hidden',false)
 	#可自定义type对应的颜色，使用者可通过nest_instance.colors来修改
 	colors:
-			'relationship':'#0088dd'
+			'referData':'#aaaaaa'
+			'relationship':'#0088ff'
 			'SearchProvider':'dd0000'
 	#根据type决定颜色
 	#输入：node data，输出：css支持的颜色字符串
 	color : (d) =>
 		if @colors[d.type]?
 			return @colors[d.type]
-		res= "black"
-		res= @palette(d.type)
+		res= "#0088ff" 
+		# res= @palette(d.type)
 		if d.distance_rank?
 			res= d3.hsl(res).brighter(d.distance_rank*.1).toString()
 		return res
@@ -354,6 +355,8 @@ class nest
 				continue
 			i=0
 			for x in data[id]
+				##有些浏览器会出现错误，x=="[" 或 "]"
+				# if typeof(x)=="string" then continue
 				@normalize_id x
 				if @blacklist.indexOf(x.id)>=0
 					continue
@@ -476,7 +479,7 @@ class nest
 		.style("fill", "#0088ff")
 		#添加表示节点的小圆
 		nodeEnter.append("circle")
-		.style("fill", "#0088ff")
+		.style("fill", @color)
 		.attr('r',@getR)
 		#类型为SearchProvider的node，需要添加img
 		nodeEnter.filter((d)->d.img? and d.type=="SearchProvider")

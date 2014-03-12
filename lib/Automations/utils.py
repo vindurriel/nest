@@ -15,3 +15,13 @@ def cwd(*args):
     for x in args:
         res=os.path.join(res,x)
     return res
+def get_config(config_name):
+	config={}
+	try:
+		import json
+		s=file(cwd(config_name+".conf"),'r').read()
+		config=json.loads(s)
+	except Exception, e:
+		import traceback
+		traceback.print_exc()
+	return config

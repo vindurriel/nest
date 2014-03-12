@@ -16,7 +16,7 @@ module.exports= (grunt)->
 				expand: true
 				cwd: "src/coffee"
 				src: ["*.coffee"]
-				dest: "static/js/dev"
+				dest: "static/js"
 				ext: ".js"
 		watch: 
 			coffeescript:
