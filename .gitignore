@@ -1,4 +1,6 @@
 *.py[cod]
+ship/*
+node_modules/*
 static/files/
 # C extensions
 *.so

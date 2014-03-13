@@ -302,7 +302,7 @@ nest = (function() {
       this.update();
     } else {
       this.highlight(d);
-      this.events.trigger("click", [d]);
+      this.events.trigger("click_node", [d]);
     }
   };
 
@@ -369,7 +369,6 @@ nest = (function() {
   };
 
   nest.prototype.dblclick = function(d) {
-    var data;
     if (d.type === "referData" || d.type === "doc") {
       this.events.trigger("click_doc", [d]);
       return;
@@ -379,17 +378,7 @@ nest = (function() {
       return;
     }
     d.isSearching = true;
-    data = {
-      keys: d.name,
-      return_id: d.id
-    };
-    if (d.url != null) {
-      data.url = d.url;
-      if (d.url.indexOf("/subview/") >= 0) {
-        data.is_subview = true;
-      }
-    }
-    $.post("/explore/", JSON.stringify(data), this.explore, 'json');
+    this.events.trigger('dblclick');
   };
 
   nest.prototype.explore = function(data) {

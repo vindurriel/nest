@@ -263,7 +263,7 @@ class nest
 			@update()
 		else
 			@highlight d
-			@events.trigger "click", [d]
+			@events.trigger "click_node", [d]
 		return
 	#通过id查找node data，id可以是string、object或number
 	#hNode必须先在update中初始化
@@ -337,15 +337,7 @@ class nest
 			d.isSearching= false
 			return
 		d.isSearching = true
-		data=
-			keys:d.name
-			return_id:d.id,
-		if d.url?
-			data.url= d.url
-			#对应百度百科的subview
-			if d.url.indexOf("/subview/")>=0
-				data.is_subview= true
-		$.post "/explore/", JSON.stringify(data), @explore, 'json'
+		@events.trigger 'dblclick'
 		return
 	#处理/explore服务返回的json，过滤新的节点后加入nodes
 	explore : (data)=>

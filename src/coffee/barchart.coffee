@@ -10,7 +10,7 @@ render = (data,user_options) ->
 	barLabelPadding = 5 # padding between bar and bar labels (left)
 	gridLabelHeight = 18 # space reserved for gridline labels
 	gridChartOffset = 3 # space between start of grid and first bar
-	maxBarWidth = 220 # width of the bar with the max value
+	maxBarWidth = 220 # width of the bar with the max value 
 # accessor s 
 	barLabel = (d) -> d[options.kName]
 	barValue = (d) -> parseFloat(d[options.vName])

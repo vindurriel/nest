@@ -20,3 +20,14 @@ def cwd(*args):
     return res
 if __name__ == '__main__':
 	print cwd("lib")
+
+def get_config(config_name):
+	config={}
+	try:
+		import json
+		s=file(cwd(config_name+".conf"),'r').read()
+		config=json.loads(s)
+	except Exception, e:
+		import traceback
+		traceback.print_exc()
+	return config

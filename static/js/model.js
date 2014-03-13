@@ -60,7 +60,7 @@ make_draggable = function(item) {
 };
 
 require(['jquery', 'd3', 'nest', 'dropimage'], function($, d3, Nest, dropimage) {
-  var add_widget, blockUI, close_toggle, hex, init_service, list, list_automate, list_model, list_service, load_automate, load_model, load_more_docs, make_3d_obj, make_doc, make_referData, notify, play_step, rgb2hex, save, search, t_item_action, t_list_item, unblockUI, update_service;
+  var add_widget, blockUI, click_handler, clone_handler, close_toggle, dblclick_handler, hex, init_service, list, list_automate, list_model, list_service, load_automate, load_model, load_more_docs, make_3d_obj, make_doc, make_referData, notify, play_step, rgb2hex, save, search, t_item_action, t_list_item, unblockUI, update_service;
   t_item_action = function() {
     return $("<input type=\"button\" class=\"btn-small fav top left\" value=\"收藏\">\n<input type=\"button\" class=\"btn-small share top left\" value=\"分享\">");
   };
@@ -230,14 +230,28 @@ require(['jquery', 'd3', 'nest', 'dropimage'], function($, d3, Nest, dropimage) 
       });
     });
   };
-  window.clone_handler = function(d, $svg) {
+  dblclick_handler = function(d) {
+    var data;
+    data = {
+      keys: d.name,
+      return_id: d.id
+    };
+    if (d.url != null) {
+      data.url = d.url;
+      if (d.url.indexOf("/subview/") >= 0) {
+        data.is_subview = true;
+      }
+    }
+    $.post("/explore/", JSON.stringify(data), window.nest.explore, 'json');
+  };
+  clone_handler = function(d, $svg) {
     var $item;
     $item = t_list_item(d).addClass("h2").removeClass('normal');
     $item.find('.drag-handle').after(t_item_action());
     add_widget($item, $('.selected_info'));
     $item.find('.inner').append($svg);
   };
-  window.click_handler = function(d) {
+  click_handler = function(d) {
     var $item, actions, detail, props, t, x;
     if (d == null) {
       return;
@@ -627,8 +641,10 @@ require(['jquery', 'd3', 'nest', 'dropimage'], function($, d3, Nest, dropimage) 
       return doc_handler(d);
     }).on("clone_graph", function(e, d, $svg) {
       return clone_handler(d, $svg);
-    }).on('click', function(e, d) {
+    }).on('click_node', function(e, d) {
       return click_handler(d);
+    }).on('dblclick_node', function(e, d) {
+      return dblclick_handler(d);
     });
     $("body").on("click", ".btn-close", function() {
       var ui;

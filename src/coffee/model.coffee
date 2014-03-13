@@ -218,8 +218,20 @@ require ['jquery','d3','nest','dropimage'] , ($,d3,Nest,dropimage)->
 					container.append """<p>#{res.summary}</p>"""
 					return
 				return
+	#负责处理dblclick_node事件，主要是explore选中的节点
+	dblclick_handler=(d)->
+		data=
+			keys:d.name
+			return_id:d.id,
+		if d.url?
+			data.url= d.url
+			#对应百度百科的subview
+			if d.url.indexOf("/subview/")>=0
+				data.is_subview= true
+		$.post "/explore/", JSON.stringify(data), window.nest.explore, 'json'
+		return
 	#负责将nest.clone生成的svg图包装成item加入到整体布局中
-	window.clone_handler= (d,$svg)->
+	clone_handler= (d,$svg)->
 		$item= t_list_item(d).addClass("h2").removeClass('normal')
 		#添加item actions（收藏、分享等
 		$item.find('.drag-handle').after t_item_action()
@@ -227,7 +239,7 @@ require ['jquery','d3','nest','dropimage'] , ($,d3,Nest,dropimage)->
 		$item.find('.inner').append $svg
 		return
 	#负责处理click事件，主要是.selected_info这个item的创建和更新
-	window.click_handler= (d)->
+	click_handler= (d)->
 		if not d? then return
 		document.title= d.name
 		if $(".selected_info").length==0
@@ -608,7 +620,8 @@ require ['jquery','d3','nest','dropimage'] , ($,d3,Nest,dropimage)->
 			return			
 		.on("click_doc",(e,d)->doc_handler(d))
 		.on("clone_graph",(e,d,$svg)->clone_handler(d,$svg))
-		.on('click',(e,d)->click_handler(d))
+		.on('click_node',(e,d)->click_handler(d))
+		.on('dblclick_node',(e,d)->dblclick_handler(d))
 		#点击.btn-close，关闭其所在的.list-item
 		$("body").on "click", ".btn-close" , ()->
 			ui= $(this).closest('div.list-item')
