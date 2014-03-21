@@ -47,6 +47,7 @@ class nest
 		@svg_node = @vis.selectAll(".node")
 		@text=@vis.selectAll('text')
 		@clip=@vis.selectAll('.clip')
+		@marker=@vis.selectAll('.marker')
 		#force，用于动态更新node和link的位置
 		@force = d3.layout.force()
 		.on("tick", @tick)
@@ -192,7 +193,7 @@ class nest
 		@root.y =@h /2
 		#为force提供数据
 		@force.nodes(@nodes).links(@links)
-		@update() 
+		@update(true,true) 
 		return
 	#node circle的半径
 	getR : (d) =>
@@ -206,7 +207,7 @@ class nest
 		#node clip更新
 		.attr('clip-path',(d)->"url(#clip-#{d.index})")
 		#marker位置更新
-		@vis.select('.marker')
+		@marker
 		.attr('x',@theFocus.x-22)
 		.attr('y':@theFocus.y-45)		
 		#link位置更新
@@ -337,7 +338,7 @@ class nest
 			d.isSearching= false
 			return
 		d.isSearching = true
-		@events.trigger 'dblclick'
+		@events.trigger 'dblclick_node', [d]
 		return
 	#处理/explore服务返回的json，过滤新的节点后加入nodes
 	explore : (data)=>
@@ -396,15 +397,14 @@ class nest
 			x.isHigh= false
 		d.isHigh= true
 		@theFocus = d
-		if $(".marker").length==0
-			@vis.append('image').classed('marker',true)
+		@marker=@vis.selectAll('.marker').data([d],(x)->x.id)
+		@marker.exit().remove()
+		@marker.enter().append('image').classed('marker',true)
 			.attr('xlink:href',"/img/marker.svg")
 			.attr('width',50)
 			.attr('height',50)
 			.attr('x',@theFocus.x-22)
 			.attr('y':@theFocus.y-45)
-		#将marker移动到vis的尾端，避免被其他元素遮挡
-		$('.marker').remove().appendTo $(@vis[0][0])
 		@update(false)
 		return
 	#创建知识图的片段拷贝
@@ -435,7 +435,7 @@ class nest
 		return
 	#负责更新视图，包括节点highlight状况、force layout等
 	#start_force为true会调用force.start，更新node和link的位置
-	update : (start_force=true)=>
+	update : (start_force=true,fast_forward=false)=>
 		#将link source和target中的string替换成node data object
 		@hNode= {}
 		@nodes.forEach (d,i)=>
@@ -463,7 +463,7 @@ class nest
 		.on("click", @click)
 		.on('dblclick',@dblclick)
 		.classed("highlight",(d)->d.isHigh==true)
-		.call(@force.drag())
+		# .call(@force.drag())
 		#添加用于选择的大圆
 		nodeEnter.append('circle')
 		.classed('selection-helper',true)
@@ -503,6 +503,17 @@ class nest
 		@text.exit().remove()
 		if start_force
 			@force.start()
+			maxIter= 100
+			minAlpha=0.05
+			#不显示节点前先快速迭代，保证图在出现时是接近稳定的
+			if fast_forward
+				$(@container).css('opacity','.2')
+				for i in [0..maxIter]
+					if @force.alpha()<minAlpha
+						break
+					document.title= "正在加载 #{i}%"
+					@force.tick()
+				$(@container).css('opacity','1')
 			#重新计算link的信息
 			@matrix={}
 			@degree={}
@@ -512,11 +523,6 @@ class nest
 				@matrix[x.id]={}
 				for y in @nodes
 					@matrix[x.id][y.id]=null
-			# for i in [0..n-1]
-			# 	@degree.push []
-			# 	@matrix.push []
-			# 	for j in [0..n-1]
-			# 		@matrix[i].push null
 			@links.map (x)=>
 				try
 					@degree[x.source.id].push x

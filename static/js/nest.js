@@ -55,6 +55,7 @@ nest = (function() {
     this.svg_node = this.vis.selectAll(".node");
     this.text = this.vis.selectAll('text');
     this.clip = this.vis.selectAll('.clip');
+    this.marker = this.vis.selectAll('.marker');
     this.force = d3.layout.force().on("tick", this.tick).charge(-200).linkDistance(function(d) {
       if (d.target.distance_rank != null) {
         return d.target.distance_rank * 20;
@@ -208,7 +209,7 @@ nest = (function() {
     this.root.x = this.w / 2;
     this.root.y = this.h / 2;
     this.force.nodes(this.nodes).links(this.links);
-    this.update();
+    this.update(true, true);
   };
 
   nest.prototype.getR = function(d) {
@@ -226,7 +227,7 @@ nest = (function() {
     }).attr('clip-path', function(d) {
       return "url(#clip-" + d.index + ")";
     });
-    this.vis.select('.marker').attr('x', this.theFocus.x - 22).attr({
+    this.marker.attr('x', this.theFocus.x - 22).attr({
       'y': this.theFocus.y - 45
     });
     this.svg_link.attr("x1", function(d) {
@@ -378,7 +379,7 @@ nest = (function() {
       return;
     }
     d.isSearching = true;
-    this.events.trigger('dblclick');
+    this.events.trigger('dblclick_node', [d]);
   };
 
   nest.prototype.explore = function(data) {
@@ -460,12 +461,13 @@ nest = (function() {
     }
     d.isHigh = true;
     this.theFocus = d;
-    if ($(".marker").length === 0) {
-      this.vis.append('image').classed('marker', true).attr('xlink:href', "/img/marker.svg").attr('width', 50).attr('height', 50).attr('x', this.theFocus.x - 22).attr({
-        'y': this.theFocus.y - 45
-      });
-    }
-    $('.marker').remove().appendTo($(this.vis[0][0]));
+    this.marker = this.vis.selectAll('.marker').data([d], function(x) {
+      return x.id;
+    });
+    this.marker.exit().remove();
+    this.marker.enter().append('image').classed('marker', true).attr('xlink:href', "/img/marker.svg").attr('width', 50).attr('height', 50).attr('x', this.theFocus.x - 22).attr({
+      'y': this.theFocus.y - 45
+    });
     this.update(false);
   };
 
@@ -492,11 +494,14 @@ nest = (function() {
     this.events.trigger("clone_graph", [d, $svg]);
   };
 
-  nest.prototype.update = function(start_force) {
-    var l, n, nodeEnter, x, y, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2,
+  nest.prototype.update = function(start_force, fast_forward) {
+    var i, l, maxIter, minAlpha, n, nodeEnter, x, y, _i, _j, _k, _l, _len, _len1, _len2, _ref, _ref1, _ref2,
       _this = this;
     if (start_force == null) {
       start_force = true;
+    }
+    if (fast_forward == null) {
+      fast_forward = false;
     }
     this.hNode = {};
     this.nodes.forEach(function(d, i) {
@@ -517,7 +522,7 @@ nest = (function() {
     _this = this;
     nodeEnter = this.svg_node.enter().append("g").attr("class", "node").on("click", this.click).on('dblclick', this.dblclick).classed("highlight", function(d) {
       return d.isHigh === true;
-    }).call(this.force.drag());
+    });
     nodeEnter.append('circle').classed('selection-helper', true).attr('r', 50).style("fill", "#0088ff");
     nodeEnter.append("circle").style("fill", this.color).attr('r', this.getR);
     nodeEnter.filter(function(d) {
@@ -559,17 +564,30 @@ nest = (function() {
     this.text.exit().remove();
     if (start_force) {
       this.force.start();
+      maxIter = 100;
+      minAlpha = 0.05;
+      if (fast_forward) {
+        $(this.container).css('opacity', '.2');
+        for (i = _j = 0; 0 <= maxIter ? _j <= maxIter : _j >= maxIter; i = 0 <= maxIter ? ++_j : --_j) {
+          if (this.force.alpha() < minAlpha) {
+            break;
+          }
+          document.title = "正在加载 " + i + "%";
+          this.force.tick();
+        }
+        $(this.container).css('opacity', '1');
+      }
       this.matrix = {};
       this.degree = {};
       n = this.nodes.length;
       _ref1 = this.nodes;
-      for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-        x = _ref1[_j];
+      for (_k = 0, _len1 = _ref1.length; _k < _len1; _k++) {
+        x = _ref1[_k];
         this.degree[x.id] = [];
         this.matrix[x.id] = {};
         _ref2 = this.nodes;
-        for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
-          y = _ref2[_k];
+        for (_l = 0, _len2 = _ref2.length; _l < _len2; _l++) {
+          y = _ref2[_l];
           this.matrix[x.id][y.id] = null;
         }
       }

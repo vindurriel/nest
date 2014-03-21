@@ -59,6 +59,8 @@ class static:
             mime_type="image/png" 
         elif filename.lower().endswith(".svg"):
             mime_type="image/svg+xml"
+            web.header('Cache-Control', "public")
+            web.header('max-age', "31536000")
         web.header('Content-Type', "%s"%mime_type)
         try:
             f = file(cwd("static",media,filename), 'rb').read()
