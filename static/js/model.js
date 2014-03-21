@@ -67,7 +67,7 @@ require(['jquery', 'd3', 'nest', 'dropimage'], function($, d3, Nest, dropimage) 
   t_list_item = function(d) {
     var color, res;
     color = window.nest.color(d);
-    res = $("<div class=\"list-item normal w2\" data-nest-node=\"" + d.id + "\">\n	<header class=\"drag-handle top left\">|||</header>\n	<input type=\"button\" class=\"btn-close top right\" value=\"关闭\" />\n	<input type=\"button\" class=\"btn-resize top right\" value=\"放大\" />\n	<div class='inner'>\n		<h2 class=\"item-headline\">\n			<span style=\"border-color:" + color + "\">" + d.name + "</span>\n		</h2>\n		<div class=\"item-prop\"></div>\n		<img class=\"item-image hidden\"/>\n		<div class=\"item-detail\"></div>\n	</div>\n</div>");
+    res = $("<div class=\"list-item normal w2\" data-nest-node=\"" + d.id + "\">\n	<header class=\"drag-handle top left\">|||</header>\n	<input type=\"button\" class=\"btn-close top right\" value=\"关闭\" />\n	<input type=\"button\" class=\"btn-resize top right\" value=\"放大\" />\n	<input type=\"button\" class=\"btn-new-window btn-small top right\" value=\"新窗口\" />\n	<div class='inner'>\n		<h2 class=\"item-headline\">\n			<span style=\"border-color:" + color + "\">" + d.name + "</span>\n		</h2>\n		<div class=\"item-prop\"></div>\n		<img class=\"item-image hidden\"/>\n		<div class=\"item-detail\"></div>\n	</div>\n</div>");
     if (d.img != null) {
       res.addClass('h2');
       res.find('.item-image').removeClass('hidden').attr('src', d.img);
@@ -290,6 +290,7 @@ require(['jquery', 'd3', 'nest', 'dropimage'], function($, d3, Nest, dropimage) 
       }
       make_referData(d, detail);
     }
+    $(".selected_info").attr("data-nest-node", d.id);
     list(d);
     window.nest.highlight(d);
   };
@@ -662,6 +663,12 @@ require(['jquery', 'd3', 'nest', 'dropimage'], function($, d3, Nest, dropimage) 
       notify("已收藏");
     }).on("click", ".share", function() {
       notify("已分享");
+    }).on("click", ".btn-new-window", function() {
+      var ui, url;
+      ui = $(this).closest('.list-item');
+      url = nest.hNode[ui.data('nest-node')].url;
+      console.log("url:" + url);
+      window.open(url, "_blank");
     }).on("click", ".btn-automate-yes", function() {
       var dic, p, _i, _len, _ref;
       close_toggle();

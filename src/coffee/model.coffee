@@ -67,6 +67,7 @@ require ['jquery','d3','nest','dropimage'] , ($,d3,Nest,dropimage)->
 			<header class="drag-handle top left">|||</header>
 			<input type="button" class="btn-close top right" value="关闭" />
 			<input type="button" class="btn-resize top right" value="放大" />
+			<input type="button" class="btn-new-window btn-small top right" value="新窗口" />
 			<div class='inner'>
 				<h2 class="item-headline">
 					<span style="border-color:#{color}">#{d.name}</span>
@@ -278,6 +279,7 @@ require ['jquery','d3','nest','dropimage'] , ($,d3,Nest,dropimage)->
 				detail.append("<p>#{d.content}</p>")
 			#更新相关文档
 			make_referData d,detail
+		$(".selected_info").attr("data-nest-node",d.id)
 		#加载选中节点相关的节点
 		list d
 		#高亮节点，主要是为了更新.marker的位置
@@ -646,6 +648,13 @@ require ['jquery','d3','nest','dropimage'] , ($,d3,Nest,dropimage)->
 		.on "click", ".share", ()->
 			notify "已分享"
 			return
+		#.btn-new-window的事件处理
+		.on "click", ".btn-new-window", ()->
+			ui=$(@).closest('.list-item')
+			url=nest.hNode[ui.data('nest-node')].url
+			console.log "url:#{url}"
+			window.open(url,"_blank")
+			return	
 		#点击.btn-automate-yes，则开始执行新的automate脚本
 		.on "click", ".btn-automate-yes", ()->
 			close_toggle()

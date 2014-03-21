@@ -77,8 +77,8 @@ def create_summary(sentences):
 	#恢复原来句子的顺序
 	score.sort(key=lambda s:s[0])
 	summary=[sentences[x[0]] for x in score]
-	return set([x[0] for x in score])
-	# return '\n'.join(summary)
+	# return set([x[0] for x in score])
+	return u'\n'.join(summary)
 def decode_text(text):
 	for x in ['utf-8','gbk']:
 		try:
@@ -92,7 +92,8 @@ def summarize(text):
 	frequencies = token_frequency(text)
 	sentences = split_to_sentences(text)
 	index = create_summary(sentences)
-	return (sentences,index)
+	return index
+	# return (sentences,index)
 if __name__ == '__main__':
 	from colorize import Color
 	clr = Color()  

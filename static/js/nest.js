@@ -56,7 +56,9 @@ nest = (function() {
     this.text = this.vis.selectAll('text');
     this.clip = this.vis.selectAll('.clip');
     this.marker = this.vis.selectAll('.marker');
-    this.force = d3.layout.force().on("tick", this.tick).charge(-200).linkDistance(function(d) {
+    this.force = d3.layout.force().on("tick", this.tick).charge(function(d) {
+      return -200;
+    }).linkDistance(function(d) {
       if (d.target.distance_rank != null) {
         return d.target.distance_rank * 20;
       }

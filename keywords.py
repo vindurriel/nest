@@ -33,7 +33,7 @@ class keywords:
 		tags=dict([(x,freq[x])  for x in tags])
 		summary=summarize.summarize(sentence)
 		#\n换成<br>，为了在html中显示
-		summary=summary.replace('\n',"<br>")
+		summary=summary.replace(u'\n',u"<br>")
 		# print summary
 		return json.dumps({"keyword":tags,"summary":summary})
 if __name__ == '__main__':

@@ -53,7 +53,9 @@ class nest
 		.on("tick", @tick)
 		#node的“电荷”，负值意思是彼此相斥，
 		#node在电荷库仑力和link的拉力下移动并达到平衡位置
-		.charge(-200)
+		.charge((d)->
+			return -200
+		)
 		#link的长短（把link想象成相当于小棍）
 		.linkDistance (d)->
 			if d.target.distance_rank?
