@@ -298,7 +298,9 @@ require(['jquery', 'd3', 'nest', 'dropimage'], function($, d3, Nest, dropimage) 
     var $item, url;
     $item = t_list_item(d).addClass('doc_info h2 expanded').removeClass('normal');
     url = d.url || d.name;
-    $item.find('.inner').append("<iframe src=\"" + url + "\" ></iframe>");
+    url = encodeURIComponent(url);
+    $item.find('.inner').append("<iframe src=\"/go?url=" + url + "\"></iframe>");
+    $item.find('.item-headline').attr("data-url", d.url);
     $item.find('.drag-handle').after(t_item_action());
     $item.find('.btn-resize').val('缩小');
     add_widget($item, $(".selected_info"));

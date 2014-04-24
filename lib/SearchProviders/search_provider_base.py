@@ -31,7 +31,6 @@ class search_provider_base(object):
 		try:
 			return json.loads(file(fname,'r').read())
 		except Exception, e:
-			raise
 			import traceback
 			traceback.print_exc()
 			return {}

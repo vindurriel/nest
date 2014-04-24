@@ -19,6 +19,10 @@ def distinct(l,id_fun=iso):
 			res.append(x)
 			seen.add(id_fun(x))
 	return res
+def normalize_url(url):
+	if url.startswith("/"):
+		return "http://baike.baidu.com"+url
+	return url
 def get_docs(term,dic={},limit=10):
 	import re,uuid
 	import requests as r
@@ -55,7 +59,7 @@ def get_docs(term,dic={},limit=10):
 			if text==u"":
 				continue
 			urls.append({
-				"url":x['href'],
+				"url":normalize_url(x['href']),
 				"name":text,
 				'type':u'referData',
 				"id":u'referData_'+text
@@ -68,7 +72,6 @@ def get_docs(term,dic={},limit=10):
 def json_print(dic):
 	import json
 	return json.dumps(dic,indent=2)
-#encoding=utf-8
 from search_provider_base import search_provider_base
 class baike(search_provider_base):
 	def search(self,key,dic={}):

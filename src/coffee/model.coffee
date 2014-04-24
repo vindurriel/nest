@@ -60,7 +60,7 @@ require ['jquery','d3','nest','dropimage'] , ($,d3,Nest,dropimage)->
 		""")
 	#item的默认模板
 	#输入：node data，输出：jquery对象
-	t_list_item= (d)->
+	t_list_item= (d)-> 
 		color= window.nest.color d
 		res=$("""
 		<div class="list-item normal w2" data-nest-node="#{d.id}">
@@ -289,8 +289,10 @@ require ['jquery','d3','nest','dropimage'] , ($,d3,Nest,dropimage)->
 	window.doc_handler= (d)->
 		$item= t_list_item(d).addClass('doc_info h2 expanded').removeClass('normal')
 		url= d.url or d.name
+		url= encodeURIComponent(url)
 		#通过一个iframe来打开node data中的url
-		$item.find('.inner').append("""<iframe src="#{url}" ></iframe>""")
+		$item.find('.inner').append("""<iframe src="/go?url=#{url}"></iframe>""")
+		$item.find('.item-headline').attr("data-url",d.url)
 		$item.find('.drag-handle').after t_item_action()
 		$item.find('.btn-resize').val('缩小') 
 		#加到.selected_info后面

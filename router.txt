@@ -9,3 +9,4 @@
 /services(?:/)?  search.service
 /keyword/(.+) keywords
 /play/(.+) model.play
+/go go

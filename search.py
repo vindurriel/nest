@@ -7,11 +7,11 @@ from utils import *
 class service:
 	def all(self):
 		return [
-				{	'id':'baike','name':"百科",'select':True,
+				{	'id':'baike','name':"百科",'select':False,
 					'desc':'使用百度百科搜索知识点和关联',
 					'img':'/img/baidu.png',
 				},				
-				{	'id':'smartref','name':"Smart Ref",'select':True,
+				{	'id':'smartref','name':"Smart Ref",'select':False,
 					'desc':'搜索smart ref的零件库',
 					'img':'/img/coins.png',
 				},
@@ -29,6 +29,10 @@ class service:
 				},
 				{	'id':'image_search','name':"草图搜索",'select':False,
 					'desc':'上传草图来搜索零件库中的零件',
+					'img':'/img/map.png',
+				},				
+				{	'id':'cnki','name':"中国知网",'select':True,
+					'desc':'搜索中国知网的论文',
 					'img':'/img/map.png',
 				},
 			]
@@ -96,7 +100,7 @@ class search:
 		#根节点
 		key_node = {
 			'type':"query",
-			'name':key,
+			'name':u"搜索："+key,
 			'id':"query_"+key,
 		}
 		if "img" in dic:

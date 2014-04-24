@@ -4,6 +4,9 @@
 '''
 from utils import *
 import os,sys,json,requests,traceback,web
+# from web.wsgiserver import CherryPyWSGIServer
+# CherryPyWSGIServer.ssl_certificate = cwd("server.crt")
+# CherryPyWSGIServer.ssl_private_key  = cwd("server.key")
 # url路由
 router="""
 / model
