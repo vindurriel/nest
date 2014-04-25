@@ -10,6 +10,7 @@ body {
   padding: 0;
   width: 100%;
   background: #eee;
+  min-width: 500px;
   color: black;
 }
 a {
@@ -260,34 +261,34 @@ body.ready #nav {
 }
 #nav #search-wrap {
   display: inline;
-  position: absolute;
-  left: 380px;
-  width: 500px;
+  float: left;
+  position: relative;
   top: 4px;
   height: 2em;
 }
 #nav #q {
   color: black;
-  min-width: 400px;
-  height: 100%;
-  width: 400px;
+  position: relative;
+  float: left;
+  height: 32px;
+  width: 310px;
   padding: 2px;
   margin: 0;
   font-size: 1em;
 }
 #nav #btn_search {
-  left: 400px;
-  height: 100%;
+  left: 300px;
+  height: 32px;
   width: 100px;
-  position: absolute;
-  margin-left: 0;
+  float: left;
+  margin-right: 0;
 }
 #nav #nav-buttons {
   height: 2em;
   display: inline;
-  position: absolute;
-  left: 880px;
+  float: left;
   top: 4px;
+  position: relative;
 }
 #nav #nav-buttons .button {
   margin: 0 0 0 5px;
