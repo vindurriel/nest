@@ -306,7 +306,7 @@ require(['jquery', 'd3', 'nest', 'dropimage'], function($, d3, Nest, dropimage) 
     add_widget($item, $(".selected_info"));
   };
   save = function() {
-    var l, n, p, prop_node, res, save_file_name, x, _i, _j, _k, _len, _len1, _len2, _ref, _ref1;
+    var $svg, l, n, p, prop_node, res, save_file_name, serializer, x, _i, _j, _k, _len, _len1, _len2, _ref, _ref1;
     res = {
       "nodes": [],
       "links": [],
@@ -340,6 +340,15 @@ require(['jquery', 'd3', 'nest', 'dropimage'], function($, d3, Nest, dropimage) 
       };
       res.links.push(l);
     }
+    $svg = window.nest.clone({
+      no_trigger: true,
+      keep_all: true
+    });
+    $svg.find('image').remove();
+    $svg.find('.link').css('stroke', 'white');
+    $svg.find('text').css('fill', 'white');
+    serializer = new XMLSerializer();
+    res.svg = serializer.serializeToString($svg[0]);
     res = JSON.stringify(res);
     $.post("/model?id=" + save_file_name, res, function(d) {
       if (d.error != null) {
@@ -480,7 +489,7 @@ require(['jquery', 'd3', 'nest', 'dropimage'], function($, d3, Nest, dropimage) 
   };
   list_automate = function() {
     $.getJSON("/list?output=json&type=automate", function(d) {
-      var x, _i, _len;
+      var $x, x, _i, _len;
       if (!d || (d.error != null)) {
         console.log('error get services');
         return;
@@ -488,13 +497,17 @@ require(['jquery', 'd3', 'nest', 'dropimage'], function($, d3, Nest, dropimage) 
       $('.automates').empty();
       for (_i = 0, _len = d.length; _i < _len; _i++) {
         x = d[_i];
-        $('.automates').append($("<li class=\"list\" >" + x[0] + "</li>"));
+        $x = $("<li class=\"list\" >" + x.name + "\n</li>");
+        if (x.img != null) {
+          $x.append("<img src=\"" + x.img + "\"/>");
+        }
+        $('.automates').append($x);
       }
     });
   };
   list_model = function() {
     $.getJSON("/list?output=json&type=model", function(d) {
-      var x, _i, _len;
+      var $x, x, _i, _len;
       if (!d || (d.error != null)) {
         console.log('error get services');
         return;
@@ -502,7 +515,11 @@ require(['jquery', 'd3', 'nest', 'dropimage'], function($, d3, Nest, dropimage) 
       $('.snapshots').empty();
       for (_i = 0, _len = d.length; _i < _len; _i++) {
         x = d[_i];
-        $('.snapshots').append($("<li class=\"list\" >" + x[0] + "</li>"));
+        $x = $("<li class=\"list\" >" + x.name + "</li>");
+        if (x.img != null) {
+          $x.append("<img src=\"" + x.img + "\" class=\"thumbnail\"/>");
+        }
+        $('.snapshots').append($x);
       }
       $("body").on("click", ".snapshots li", function() {
         load_model($(this).text());

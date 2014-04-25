@@ -478,12 +478,14 @@ nest = (function() {
     $svg = $('#nest-container svg').clone();
     $g = $svg.find(">g");
     svg = d3.select($svg.get()[0]);
-    svg.selectAll('.node').data(window.nest.nodes).filter(function(x) {
-      return !x.isHigh;
-    }).remove();
-    svg.selectAll('.link').data(window.nest.links).filter(function(x) {
-      return !x.isHigh;
-    }).remove();
+    if (d.keep_all == null) {
+      svg.selectAll('.node').data(window.nest.nodes).filter(function(x) {
+        return !x.isHigh;
+      }).remove();
+      svg.selectAll('.link').data(window.nest.links).filter(function(x) {
+        return !x.isHigh;
+      }).remove();
+    }
     svg.selectAll('.ring').remove();
     svg.selectAll('.marker').remove();
     svg.selectAll('.selection-helper').remove();
@@ -493,6 +495,9 @@ nest = (function() {
       $g.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + scale + ")");
       svg.selectAll('text').style("font-size", scale < 0.5 ? "0em" : (1 / scale) + "em");
     }));
+    if (d.no_trigger != null) {
+      return $svg;
+    }
     this.events.trigger("clone_graph", [d, $svg]);
   };
 
@@ -516,7 +521,7 @@ nest = (function() {
       this.normalize_link(l);
     }
     this.svg_link = this.svg_link.data(this.links);
-    this.svg_link.enter().insert("line", ".node").classed("link", true);
+    this.svg_link.enter().insert("line", ".node").classed("link", true).style("stroke", "black").style("stroke-width", "1px").style("opacity", "0.2");
     this.svg_link.exit().remove();
     this.svg_node = this.svg_node.data(this.nodes, function(d) {
       return d.id;

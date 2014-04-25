@@ -300,7 +300,7 @@ body.ready #nav {
   top: 50px;
   width: 100%;
   display: none;
-  height: auto;
+  height: 500px;
 }
 .toggle-container ::-webkit-scrollbar-track {
   border: 1px solid #333;
@@ -313,7 +313,8 @@ body.ready #nav {
   background-color: #555;
 }
 .toggle-container .toggle-inner {
-  width: 500px;
+  width: 600px;
+  height: 100%;
   margin: 0 auto;
   max-height: 500px;
   overflow-y: auto;
@@ -718,12 +719,34 @@ body.ready .logo {
 .list {
   cursor: pointer;
   list-style: none;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
   margin-bottom: 1em;
-  opacity: .7;
+  padding: 5px;
   color: white;
+  opacity: .7;
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  -ms-border-radius: 0px;
+  -o-border-radius: 0px;
+  border-radius: 0px;
+  width: 400px;
+  height: 100px;
+  background-color: #222;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  border-radius: 5px;
+  border: 1px solid #555;
 }
 .list:hover {
   opacity: 1;
+}
+.list img {
+  float: right;
+  margin-left: 1em;
+  margin-top: -25px;
+  width: 150px;
+  height: 150px;
 }
 .load-more {
   position: relative;

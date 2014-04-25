@@ -323,7 +323,7 @@ body.ready #nav{
     top:50px;
     width: 100%;
     display: none;
-    height: auto;
+    height: 500px;
     ::-webkit-scrollbar-track{
       border: 1px solid #333;
       background-color: #000;
@@ -335,7 +335,8 @@ body.ready #nav{
       background-color: #555;
     }  
     .toggle-inner{
-      width: 500px;
+      width: 600px;
+      height: 100%;
       margin: 0 auto;
       max-height: 500px;
       overflow-y: auto;
@@ -370,7 +371,7 @@ body.ready #nav{
   height: 600px !important;
 }
 
-.list-item{
+.list-item,{
   .rounded-corners;
   -moz-box-sizing:border-box;
   box-sizing:border-box;
@@ -737,11 +738,29 @@ body.ready .logo{
 .list{
   cursor: pointer;
   list-style: none;
+  box-sizing:border-box;
+  -moz-box-sizing:border-box;
   margin-bottom: 1em;
-  opacity: .7;
+  padding: 5px;
   color: white;
+  opacity: .7;
+  .rounded-corners();
+  width: 400px;
+  height: 100px;
+  background-color: #222;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  border-radius: 5px;
+  border: 1px solid #555;
   &:hover{
     opacity: 1;
+  }
+  img{
+    float: right;
+    margin-left: 1em;
+    margin-top: -25px;
+    width: 150px;
+    height: 150px;
   }
 }
 

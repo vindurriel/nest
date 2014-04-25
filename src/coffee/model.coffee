@@ -323,6 +323,14 @@ require ['jquery','d3','nest','dropimage'] , ($,d3,Nest,dropimage)->
 				"source":x.source.id
 				"target":x.target.id
 			res.links.push l
+		$svg=window.nest.clone 
+			no_trigger:true
+			keep_all:true
+		$svg.find('image').remove()
+		$svg.find('.link').css('stroke','white')
+		$svg.find('text').css('fill','white')
+		serializer = new XMLSerializer()
+		res.svg= serializer.serializeToString($svg[0])
 		res= JSON.stringify res
 		$.post "/model?id=#{save_file_name}", res, (d)->
 			if d.error?
@@ -462,9 +470,13 @@ require ['jquery','d3','nest','dropimage'] , ($,d3,Nest,dropimage)->
 				return
 			$('.automates').empty()
 			for x in d
-				$('.automates').append $("""
-					<li class="list" >#{x[0]}</li>
+				$x= $("""
+					<li class="list" >#{x.name}
+					</li>
 				""")
+				if x.img?
+					$x.append "<img src=\"#{x.img}\"/>"
+				$('.automates').append $x
 			return
 		return
 	#获得可用的model列表，更新 .snapshots视图
@@ -475,9 +487,12 @@ require ['jquery','d3','nest','dropimage'] , ($,d3,Nest,dropimage)->
 				return
 			$('.snapshots').empty()	
 			for x in d
-				$('.snapshots').append $("""
-					<li class="list" >#{x[0]}</li>
+				$x= $("""
+					<li class="list" >#{x.name}</li>
 				""")
+				if x.img?
+					$x.append "<img src=\"#{x.img}\" class=\"thumbnail\"/>"
+				$('.snapshots').append $x
 			$("body").on "click", ".snapshots li", ()->
 				load_model $(@).text()
 				return

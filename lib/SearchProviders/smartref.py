@@ -23,7 +23,7 @@ class smartref(search_provider_base):
 		else:
 			dad.append(normalize_text(this['text']))
 			for child in this['children']:
-				parse_tree(self,child,dad,g)
+				self.parse_tree(child,dad,g)
 	def search(self,key,dic={}):
 		g={
 			'nodes':[],

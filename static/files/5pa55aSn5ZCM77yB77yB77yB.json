@@ -3,414 +3,481 @@
   "nodes": [
     {
       "index": 0, 
-      "fixed": true, 
+      "name": "\u65b9\u5927\u540c", 
+      "y": 200, 
+      "x": 200, 
       "type": "artist", 
-      "id": "artist_216", 
-      "name": "\u65b9\u5927\u540c"
+      "id": "artist_216"
     }, 
     {
       "index": 1, 
+      "name": "\u6797\u5ba5\u5609", 
+      "y": 148.77400349792586, 
+      "x": 60.53937133892636, 
       "type": "artist", 
-      "id": "artist_23517", 
-      "name": "\u6797\u5ba5\u5609"
+      "id": "artist_23517"
     }, 
     {
       "index": 2, 
+      "name": "\u738b\u529b\u5b8f", 
+      "y": 308.9659378532492, 
+      "x": 182.9882403008781, 
       "type": "artist", 
-      "id": "artist_906", 
-      "name": "\u738b\u529b\u5b8f"
+      "id": "artist_906"
     }, 
     {
       "index": 3, 
+      "name": "\u5b59\u71d5\u59ff", 
+      "y": 226.35410427553208, 
+      "x": 222.74394481033477, 
       "type": "artist", 
-      "id": "artist_2132", 
-      "name": "\u5b59\u71d5\u59ff"
+      "id": "artist_2132"
     }, 
     {
       "index": 4, 
+      "name": "\u9648\u5955\u8fc5", 
+      "y": 277.6639696017978, 
+      "x": 150.8190967349467, 
       "type": "artist", 
-      "id": "artist_135", 
-      "name": "\u9648\u5955\u8fc5"
+      "id": "artist_135"
     }, 
     {
       "index": 5, 
+      "name": "\u9676\u5586", 
+      "y": 264.5938694815222, 
+      "x": 222.38613015399733, 
       "type": "artist", 
-      "id": "artist_870", 
-      "name": "\u9676\u5586"
+      "id": "artist_870"
     }, 
     {
       "index": 6, 
+      "name": "\u6881\u9759\u8339", 
+      "y": 182.58517797172334, 
+      "x": 125.45902657483404, 
       "type": "artist", 
-      "id": "artist_1836", 
-      "name": "\u6881\u9759\u8339"
+      "id": "artist_1836"
     }, 
     {
       "index": 7, 
+      "name": "\u5468\u6770\u4f26", 
+      "y": 271.35795615204734, 
+      "x": 186.8669062036808, 
       "type": "artist", 
-      "id": "artist_1260", 
-      "name": "\u5468\u6770\u4f26"
+      "id": "artist_1260"
     }, 
     {
       "index": 8, 
+      "name": "\u8427\u656c\u817e", 
+      "y": 279.74404073740095, 
+      "x": 314.59942915883175, 
       "type": "artist", 
-      "id": "artist_23748", 
-      "name": "\u8427\u656c\u817e"
+      "id": "artist_23748"
     }, 
     {
       "index": 9, 
+      "name": "\u9648\u7eee\u8d1e", 
+      "y": 119.15182641987097, 
+      "x": 103.69044248061984, 
       "type": "artist", 
-      "id": "artist_1414", 
-      "name": "\u9648\u7eee\u8d1e"
+      "id": "artist_1414"
     }, 
     {
       "index": 10, 
+      "name": "\u6797\u4fca\u6770", 
+      "y": 236.13013444413858, 
+      "x": 162.34444801905062, 
       "type": "artist", 
-      "id": "artist_615", 
-      "name": "\u6797\u4fca\u6770"
+      "id": "artist_615"
     }, 
     {
       "index": 11, 
+      "name": "\u8521\u5065\u96c5", 
+      "y": 283.35438236370067, 
+      "x": 264.9060632732378, 
       "type": "artist", 
-      "id": "artist_1341", 
-      "name": "\u8521\u5065\u96c5"
+      "id": "artist_1341"
     }, 
     {
       "index": 12, 
+      "name": "S.H.E", 
+      "y": 315.2597447711463, 
+      "x": 98.36400897153864, 
       "type": "artist", 
-      "id": "artist_2931", 
-      "name": "S.H.E"
+      "id": "artist_2931"
     }, 
     {
       "index": 13, 
+      "name": "\u5f90\u4f73\u83b9", 
+      "y": 252.38376571953668, 
+      "x": 30.213638575902735, 
       "type": "artist", 
-      "id": "artist_58825", 
-      "name": "\u5f90\u4f73\u83b9"
+      "id": "artist_58825"
     }, 
     {
       "index": 14, 
+      "name": "\u5149\u826f", 
+      "y": 186.34628809223454, 
+      "x": 252.9182626108519, 
       "type": "artist", 
-      "id": "artist_298", 
-      "name": "\u5149\u826f"
+      "id": "artist_298"
     }, 
     {
       "index": 15, 
+      "name": "\u7f57\u5fd7\u7965", 
+      "y": 339.9148217889303, 
+      "x": 242.95506764322982, 
       "type": "artist", 
-      "id": "artist_720", 
-      "name": "\u7f57\u5fd7\u7965"
+      "id": "artist_720"
     }, 
     {
       "index": 16, 
+      "name": "\u4e94\u6708\u5929", 
+      "y": 272.3313368386382, 
+      "x": 111.53979756910091, 
       "type": "artist", 
-      "id": "artist_3110", 
-      "name": "\u4e94\u6708\u5929"
+      "id": "artist_3110"
     }, 
     {
       "index": 17, 
+      "name": "\u5f20\u5b66\u53cb", 
+      "y": 388.94472193287913, 
+      "x": 188.70658889891791, 
       "type": "artist", 
-      "id": "artist_1198", 
-      "name": "\u5f20\u5b66\u53cb"
+      "id": "artist_1198"
     }, 
     {
       "index": 18, 
+      "name": "\u738b\u83f2", 
+      "y": 373.8679093141069, 
+      "x": 123.50987903318173, 
       "type": "artist", 
-      "id": "artist_2177", 
-      "name": "\u738b\u83f2"
+      "id": "artist_2177"
     }, 
     {
       "index": 19, 
+      "name": "\u66f2\u5a49\u5a77", 
+      "y": 258.6649890821898, 
+      "x": 349.5821192531348, 
       "type": "artist", 
-      "id": "artist_78980", 
-      "name": "\u66f2\u5a49\u5a77"
+      "id": "artist_78980"
     }, 
     {
       "index": 20, 
+      "name": "\u6f58\u73ae\u67cf", 
+      "y": 372.731928113258, 
+      "x": 282.57620479918364, 
       "type": "artist", 
-      "id": "artist_768", 
-      "name": "\u6f58\u73ae\u67cf"
+      "id": "artist_768"
     }, 
     {
       "index": 21, 
+      "name": "Leona Lewis", 
+      "y": 226.21324033645533, 
+      "x": 77.59499450761746, 
       "type": "artist", 
-      "id": "artist_24095", 
-      "name": "Leona Lewis"
+      "id": "artist_24095"
     }, 
     {
       "index": 22, 
+      "name": "\u65b9\u5927\u540c\u7684\u70ed\u95e8\u6b4c\u66f2", 
+      "y": 103.72642467339719, 
+      "x": 233.86472488129152, 
       "type": "relationship", 
-      "id": "hitsongs_of_artist_216", 
-      "name": "\u65b9\u5927\u540c\u7684\u70ed\u95e8\u6b4c\u66f2"
+      "id": "hitsongs_of_artist_216"
     }, 
     {
       "index": 23, 
+      "name": "\u65b9\u5927\u540c\u7684\u4e13\u8f91", 
+      "y": 127.83642647516838, 
+      "x": 167.51381927626815, 
       "type": "relationship", 
-      "id": "albums_of_artist_216", 
-      "name": "\u65b9\u5927\u540c\u7684\u4e13\u8f91"
+      "id": "albums_of_artist_216"
     }, 
     {
       "index": 24, 
+      "name": "Nothing's Gonna Change My Love For You", 
+      "y": 159.68530353064156, 
+      "x": 320.61829234890854, 
       "type": "song", 
-      "id": "song_1769033726", 
-      "name": "Nothing's Gonna Change My Love For You"
+      "id": "song_1769033726"
     }, 
     {
       "index": 25, 
+      "name": "\u4e09\u4eba\u6e38", 
+      "y": 35.935742103581475, 
+      "x": 238.040829007166, 
       "type": "song", 
-      "id": "song_3455516", 
-      "name": "\u4e09\u4eba\u6e38"
+      "id": "song_3455516"
     }, 
     {
       "index": 26, 
+      "name": "Red Bean \u7ea2\u8c46", 
+      "y": 142.97976714587793, 
+      "x": 366.24666156383046, 
       "type": "song", 
-      "id": "song_1769033730", 
-      "name": "Red Bean \u7ea2\u8c46"
+      "id": "song_1769033730"
     }, 
     {
       "index": 27, 
+      "name": "\u7231\u7231\u7231", 
+      "y": 40.73696037302345, 
+      "x": 167.88643491567606, 
       "type": "song", 
-      "id": "song_10938", 
-      "name": "\u7231\u7231\u7231"
+      "id": "song_10938"
     }, 
     {
       "index": 28, 
+      "name": "\u597d\u4e0d\u5bb9\u6613", 
+      "y": 49.54577671072654, 
+      "x": 123.11571244302534, 
       "type": "song", 
-      "id": "song_1770146051", 
-      "name": "\u597d\u4e0d\u5bb9\u6613"
+      "id": "song_1770146051"
     }, 
     {
       "index": 29, 
+      "name": "\u81ea\u4ee5\u4e3a", 
+      "y": 6.552828868356559, 
+      "x": 199.45430905927975, 
       "type": "song", 
-      "id": "song_1770146047", 
-      "name": "\u81ea\u4ee5\u4e3a"
+      "id": "song_1770146047"
     }, 
     {
       "index": 30, 
+      "name": "\u6bcf\u4e2a\u4eba\u90fd\u4f1a", 
+      "y": 85.38669726765848, 
+      "x": 349.6529778595121, 
       "type": "song", 
-      "id": "song_3455517", 
-      "name": "\u6bcf\u4e2a\u4eba\u90fd\u4f1a"
+      "id": "song_3455517"
     }, 
     {
       "index": 31, 
+      "name": "\u7231\u7acb\u523b", 
+      "y": 107.29377661542209, 
+      "x": 294.315217548311, 
       "type": "song", 
-      "id": "song_1771449898", 
-      "name": "\u7231\u7acb\u523b"
+      "id": "song_1771449898"
     }, 
     {
       "index": 32, 
+      "name": "Singalongsong (English)", 
+      "y": 13.575360419466264, 
+      "x": 283.4194424131655, 
       "type": "song", 
-      "id": "song_3455510", 
-      "name": "Singalongsong (English)"
+      "id": "song_3455510"
     }, 
     {
       "index": 33, 
+      "name": "\u5343\u7eb8\u9e64", 
+      "y": 55.22365912106824, 
+      "x": 307.13757266042575, 
       "type": "song", 
-      "id": "song_1771271426", 
-      "name": "\u5343\u7eb8\u9e64"
+      "id": "song_1771271426"
     }
   ], 
   "links": [
     {
-      "source": 0, 
-      "target": 1
+      "source": "artist_216", 
+      "target": "artist_23517"
     }, 
     {
-      "source": 0, 
-      "target": 2
+      "source": "artist_216", 
+      "target": "artist_906"
     }, 
     {
-      "source": 0, 
-      "target": 3
+      "source": "artist_216", 
+      "target": "artist_2132"
     }, 
     {
-      "source": 0, 
-      "target": 4
+      "source": "artist_216", 
+      "target": "artist_135"
     }, 
     {
-      "source": 0, 
-      "target": 5
+      "source": "artist_216", 
+      "target": "artist_870"
     }, 
     {
-      "source": 0, 
-      "target": 6
+      "source": "artist_216", 
+      "target": "artist_1836"
     }, 
     {
-      "source": 0, 
-      "target": 7
+      "source": "artist_216", 
+      "target": "artist_1260"
     }, 
     {
-      "source": 0, 
-      "target": 8
+      "source": "artist_216", 
+      "target": "artist_23748"
     }, 
     {
-      "source": 0, 
-      "target": 9
+      "source": "artist_216", 
+      "target": "artist_1414"
     }, 
     {
-      "source": 0, 
-      "target": 10
+      "source": "artist_216", 
+      "target": "artist_615"
     }, 
     {
-      "source": 10, 
-      "target": 2
+      "source": "artist_615", 
+      "target": "artist_906"
     }, 
     {
-      "source": 10, 
-      "target": 7
+      "source": "artist_615", 
+      "target": "artist_1260"
     }, 
     {
-      "source": 10, 
-      "target": 11
+      "source": "artist_615", 
+      "target": "artist_1341"
     }, 
     {
-      "source": 10, 
-      "target": 6
+      "source": "artist_615", 
+      "target": "artist_1836"
     }, 
     {
-      "source": 10, 
-      "target": 3
+      "source": "artist_615", 
+      "target": "artist_2132"
     }, 
     {
-      "source": 10, 
-      "target": 12
+      "source": "artist_615", 
+      "target": "artist_2931"
     }, 
     {
-      "source": 10, 
-      "target": 13
+      "source": "artist_615", 
+      "target": "artist_58825"
     }, 
     {
-      "source": 10, 
-      "target": 14
+      "source": "artist_615", 
+      "target": "artist_298"
     }, 
     {
-      "source": 10, 
-      "target": 15
+      "source": "artist_615", 
+      "target": "artist_720"
     }, 
     {
-      "source": 7, 
-      "target": 2
+      "source": "artist_1260", 
+      "target": "artist_906"
     }, 
     {
-      "source": 7, 
-      "target": 4
+      "source": "artist_1260", 
+      "target": "artist_135"
     }, 
     {
-      "source": 7, 
-      "target": 10
+      "source": "artist_1260", 
+      "target": "artist_615"
     }, 
     {
-      "source": 7, 
-      "target": 16
+      "source": "artist_1260", 
+      "target": "artist_3110"
     }, 
     {
-      "source": 7, 
-      "target": 5
+      "source": "artist_1260", 
+      "target": "artist_870"
     }, 
     {
-      "source": 7, 
-      "target": 3
+      "source": "artist_1260", 
+      "target": "artist_2132"
     }, 
     {
-      "source": 7, 
-      "target": 17
+      "source": "artist_1260", 
+      "target": "artist_1198"
     }, 
     {
-      "source": 7, 
-      "target": 18
+      "source": "artist_1260", 
+      "target": "artist_2177"
     }, 
     {
-      "source": 7, 
-      "target": 0
+      "source": "artist_1260", 
+      "target": "artist_216"
     }, 
     {
-      "source": 7, 
-      "target": 12
+      "source": "artist_1260", 
+      "target": "artist_2931"
     }, 
     {
-      "source": 5, 
-      "target": 2
+      "source": "artist_870", 
+      "target": "artist_906"
     }, 
     {
-      "source": 5, 
-      "target": 7
+      "source": "artist_870", 
+      "target": "artist_1260"
     }, 
     {
-      "source": 5, 
-      "target": 0
+      "source": "artist_870", 
+      "target": "artist_216"
     }, 
     {
-      "source": 5, 
-      "target": 4
+      "source": "artist_870", 
+      "target": "artist_135"
     }, 
     {
-      "source": 5, 
-      "target": 16
+      "source": "artist_870", 
+      "target": "artist_3110"
     }, 
     {
-      "source": 5, 
-      "target": 10
+      "source": "artist_870", 
+      "target": "artist_615"
     }, 
     {
-      "source": 5, 
-      "target": 19
+      "source": "artist_870", 
+      "target": "artist_78980"
     }, 
     {
-      "source": 5, 
-      "target": 20
+      "source": "artist_870", 
+      "target": "artist_768"
     }, 
     {
-      "source": 5, 
-      "target": 11
+      "source": "artist_870", 
+      "target": "artist_1341"
     }, 
     {
-      "source": 5, 
-      "target": 21
+      "source": "artist_870", 
+      "target": "artist_24095"
     }, 
     {
-      "source": 0, 
-      "target": 22
+      "source": "artist_216", 
+      "target": "hitsongs_of_artist_216"
     }, 
     {
-      "source": 0, 
-      "target": 23
+      "source": "artist_216", 
+      "target": "albums_of_artist_216"
     }, 
     {
-      "source": 22, 
-      "target": 24
+      "source": "hitsongs_of_artist_216", 
+      "target": "song_1769033726"
     }, 
     {
-      "source": 22, 
-      "target": 25
+      "source": "hitsongs_of_artist_216", 
+      "target": "song_3455516"
     }, 
     {
-      "source": 22, 
-      "target": 26
+      "source": "hitsongs_of_artist_216", 
+      "target": "song_1769033730"
     }, 
     {
-      "source": 22, 
-      "target": 27
+      "source": "hitsongs_of_artist_216", 
+      "target": "song_10938"
     }, 
     {
-      "source": 22, 
-      "target": 28
+      "source": "hitsongs_of_artist_216", 
+      "target": "song_1770146051"
     }, 
     {
-      "source": 22, 
-      "target": 29
+      "source": "hitsongs_of_artist_216", 
+      "target": "song_1770146047"
     }, 
     {
-      "source": 22, 
-      "target": 30
+      "source": "hitsongs_of_artist_216", 
+      "target": "song_3455517"
     }, 
     {
-      "source": 22, 
-      "target": 31
+      "source": "hitsongs_of_artist_216", 
+      "target": "song_1771449898"
     }, 
     {
-      "source": 22, 
-      "target": 32
+      "source": "hitsongs_of_artist_216", 
+      "target": "song_3455510"
     }, 
     {
-      "source": 22, 
-      "target": 33
+      "source": "hitsongs_of_artist_216", 
+      "target": "song_1771271426"
     }
   ]
 }

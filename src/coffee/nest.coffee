@@ -416,8 +416,9 @@ class nest
 		$g= $svg.find(">g")
 		svg= d3.select($svg.get()[0])
 		#删除非高亮的节点
-		svg.selectAll('.node').data(window.nest.nodes).filter((x)->not x.isHigh).remove()
-		svg.selectAll('.link').data(window.nest.links).filter((x)->not x.isHigh).remove()
+		unless d.keep_all?
+			svg.selectAll('.node').data(window.nest.nodes).filter((x)->not x.isHigh).remove()
+			svg.selectAll('.link').data(window.nest.links).filter((x)->not x.isHigh).remove()
 		#删除所有多余的视觉元素
 		svg.selectAll('.ring').remove()
 		svg.selectAll('.marker').remove()
@@ -433,6 +434,8 @@ class nest
 				svg.selectAll('text').style("font-size", if scale<0.5 then "0em" else (1 / scale) + "em")
 				return
 			))
+		if d.no_trigger?
+			return $svg
 		@events.trigger "clone_graph",[d,$svg]
 		return
 	#负责更新视图，包括节点highlight状况、force layout等
@@ -452,6 +455,9 @@ class nest
 		@svg_link.enter()
 		.insert("line", ".node")
 		.classed("link",true)
+		.style("stroke","black")
+		.style("stroke-width","1px")
+		.style("opacity","0.2")
 		#删除data中没有而svg中有的link
 		@svg_link.exit().remove()
 		#更新svg node的data
